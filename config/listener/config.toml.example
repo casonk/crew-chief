@@ -1,0 +1,108 @@
+# config/listener/config.toml.example
+# Copy to config/listener/config.toml and fill in your local values.
+# config/listener/config.toml is gitignored — do not commit it.
+#
+# Install the listener extras before running:
+#   pip install "crew-chief[listener]"      # Python 3.10
+#   pip install -e .                         # Python 3.11+ (tomllib built-in)
+#
+# Start the listener:
+#   crew-chief listen --config config/listener/config.toml
+
+# ---------------------------------------------------------------------------
+# Listener loop
+# ---------------------------------------------------------------------------
+[listener]
+# Seconds between full poll cycles (Signal blocks for ~5s per cycle).
+poll_interval_seconds = 30
+
+# ---------------------------------------------------------------------------
+# LLM settings
+# ---------------------------------------------------------------------------
+[llm]
+# Ollama model to use for command interpretation.
+model = "llama3.2"
+
+# When true, natural-language messages are passed through the LLM for command
+# extraction.  When false, only messages starting with "!" are processed.
+natural_language = true
+
+# Base URL of the running Ollama service (crew-chief container or local).
+base_url = "http://localhost:11434"
+
+# LLM request timeout in seconds.
+timeout_seconds = 60
+
+# ---------------------------------------------------------------------------
+# Signal channel
+# ---------------------------------------------------------------------------
+[signal]
+enabled = false
+
+# Absolute path to the shock-relay services/signal-cli directory.
+shock_relay_dir = "/path/to/shock-relay/services/signal-cli"
+
+# Path to the signal-cli config.local.yaml used by shock-relay.
+config_path = "/path/to/shock-relay/services/signal-cli/config.local.yaml"
+
+# Only process incoming messages from these phone numbers.
+# Messages from any other number are silently ignored.
+trusted_senders = ["+15551234567"]
+
+# Phone number to send replies to (usually your own Signal number).
+reply_to = "+15551234567"
+
+# ---------------------------------------------------------------------------
+# Gmail channel
+# ---------------------------------------------------------------------------
+[gmail]
+enabled = false
+
+# Absolute path to the shock-relay services/gmail-imap directory.
+shock_relay_dir = "/path/to/shock-relay/services/gmail-imap"
+
+# Path to the gmail-imap config.local.yaml used by shock-relay.
+config_path = "/path/to/shock-relay/services/gmail-imap/config.local.yaml"
+
+# Only process incoming messages from these email addresses.
+# Messages from any other address are silently ignored.
+trusted_senders = ["you@example.com"]
+
+# Address to send command output replies to.
+reply_to = "you@example.com"
+
+# Only look at messages received within the last N days per poll cycle.
+since_days = 1
+
+# Maximum unseen messages to retrieve per poll cycle.
+limit = 5
+
+# ---------------------------------------------------------------------------
+# Command dispatch
+# ---------------------------------------------------------------------------
+[dispatch]
+# Hard timeout per command in seconds.
+timeout_seconds = 30
+
+# Maximum output bytes included in the reply message.
+# Long output is truncated with a "[output truncated]" notice.
+output_max_bytes = 2000
+
+# fnmatch-style glob patterns matched against the full command string.
+# The command must match at least one pattern before it is executed.
+# Adjust this list carefully — each entry represents commands you are
+# comfortable running from a remote message.
+allowed_commands = [
+  "df*",
+  "free*",
+  "uptime",
+  "hostname",
+  "date",
+  "ping -c *",
+  "ls *",
+  "uname*",
+  "whoami",
+  "systemctl status *",
+  "journalctl -n *",
+  "ps aux",
+]

@@ -11,6 +11,11 @@ license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = []
 
+[project.optional-dependencies]
+# Required on Python 3.10 for TOML parsing in the listener feature.
+# Python 3.11+ ships tomllib in the standard library.
+listener = ["tomli>=2.0; python_version < '3.11'"]
+
 [project.scripts]
 crew-chief = "crew_chief.cli:main"
 

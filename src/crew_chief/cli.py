@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import logging
 import sys
 
 from crew_chief.client import DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_TIMEOUT, CrewChiefClient
@@ -37,6 +38,30 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("health", aliases=["h"], help="Check if the service is reachable.")
     sub.add_parser("models", aliases=["m"], help="List available models on the server.")
+
+    listen_p = sub.add_parser(
+        "listen",
+        aliases=["l"],
+        help="Start the shock-relay listener: poll Signal/Gmail, dispatch commands, reply.",
+    )
+    listen_p.add_argument(
+        "--config",
+        required=True,
+        metavar="PATH",
+        help="Path to the listener config TOML file (e.g. config/listener/config.toml).",
+    )
+    listen_p.add_argument(
+        "--once",
+        action="store_true",
+        help="Run a single poll cycle and exit (useful for testing).",
+    )
+    listen_p.add_argument(
+        "--log-level",
+        default="INFO",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Logging verbosity (default: INFO).",
+    )
+
     return p
 
 
@@ -54,6 +79,21 @@ def main(argv: list[str] | None = None) -> None:
     elif args.command in ("models", "m"):
         for name in client.list_models():
             print(name)
+    elif args.command in ("listen", "l"):
+        logging.basicConfig(
+            level=getattr(logging, args.log_level),
+            format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        )
+        from crew_chief.config_loader import ConfigError, load
+        from crew_chief.listener import run
+
+        try:
+            cfg = load(args.config)
+        except ConfigError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(2)
+
+        run(cfg, once=args.once)
 
 
 if __name__ == "__main__":
