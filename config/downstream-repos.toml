@@ -1,0 +1,9 @@
+# config/downstream-repos.toml
+# Known downstream repositories that integrate with crew-chief.
+# Paths are relative to the portfolio root.
+# Update this file in the same change that adds or removes a cross-repo dependency.
+
+[[downstream]]
+# path = "util-repos/example-repo"
+# integration = "Python client (crew_chief.client.CrewChiefClient)"
+# notes = "Uses crew-chief for trivial classification tasks."

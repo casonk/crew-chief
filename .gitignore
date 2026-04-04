@@ -1,0 +1,33 @@
+# Local session memory — not for tracking
+CHATHISTORY.md
+.codex
+CLAUDE.md
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.env
+
+# Test and lint caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+
+# Tachometer profiling outputs (local only)
+.tachometer/
+
+# Local Ollama config override (contains host-specific values)
+config/ollama/config.env
+
+# Editor artifacts
+.idea/
+.vscode/
+*.swp
