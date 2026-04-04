@@ -3,7 +3,9 @@
 # Paths are relative to the portfolio root.
 # Update this file in the same change that adds or removes a cross-repo dependency.
 
-[[downstream]]
-# path = "util-repos/example-repo"
-# integration = "Python client (crew_chief.client.CrewChiefClient)"
-# notes = "Uses crew-chief for trivial classification tasks."
+# crew-chief depends on shock-relay to send/receive Signal and Gmail messages
+# in the listener feature.  The listener calls shock-relay scripts as subprocesses.
+[[upstream]]
+path = "util-repos/shock-relay"
+integration = "subprocess calls to services/signal-cli/send_message.py, services/signal-cli/receive_messages.py (indirectly via signal-cli), services/gmail-imap/check_inbox.py, services/gmail-imap/send_email.py"
+notes = "Required for the crew-chief listen command.  Paths configured in config/listener/config.toml."
