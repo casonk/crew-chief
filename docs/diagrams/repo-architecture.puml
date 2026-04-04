@@ -1,0 +1,39 @@
+@startuml
+!pragma layout elk
+title crew-chief repository architecture
+
+package "crew_chief Python package" {
+  component "client.py\nCrewChiefClient" as CLIENT
+  component "cli.py\ncrew-chief CLI" as CLI
+}
+
+package "Podman container" {
+  component "ollama serve\nREST API :11434" as OLLAMA
+}
+
+database "crew-chief-models\nPodman volume" as MODELS
+cloud "calling repo\npip install -e ./util-repos/crew-chief" as CALLER
+artifact "Containerfile\nFROM ollama/ollama:latest" as CTR_DEF
+folder "scripts/\nstart / stop / status / pull_model" as SCRIPTS
+folder "config/ollama/\nenv var template" as CONFIG
+
+CALLER --> CLIENT : from crew_chief import CrewChiefClient
+CALLER --> CLI : crew-chief generate/health/models
+CLI --> CLIENT
+CLIENT --> OLLAMA : HTTP /api/generate\n/api/chat\n/api/tags
+OLLAMA --> MODELS : load/store weights
+CTR_DEF --> OLLAMA : podman build + run
+SCRIPTS --> OLLAMA : lifecycle management
+CONFIG --> OLLAMA : OLLAMA_HOST / env overrides
+
+note right of CLIENT
+  stdlib-only (json, urllib).
+  No third-party dependencies.
+end note
+
+note right of MODELS
+  Weights persist across
+  container rebuilds.
+end note
+
+@enduml
