@@ -27,6 +27,13 @@ htmlcov/
 # Local Ollama config override (contains host-specific values)
 config/ollama/config.env
 
+# Local listener config (contains shock-relay paths and trusted sender lists)
+config/listener/config.toml
+
+# Listener runtime artifacts
+.crew-chief-listener.pid
+.crew-chief-listener.log
+
 # Editor artifacts
 .idea/
 .vscode/
