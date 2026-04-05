@@ -58,12 +58,20 @@ if (( ${#GPU_DEVICES[@]} > 0 )); then
     for lib in \
         libcuda.so.1 \
         libnvidia-ml.so.1 \
-        libnvidia-allocator.so.1; do
+        libnvidia-allocator.so.1 \
+        libnvidia-ptxjitcompiler.so.1 \
+        libnvidia-nvvm.so.4; do
         host_path="${HOST_NVIDIA_LIB}/${lib}"
         real_path="$(readlink -f "${host_path}" 2>/dev/null || true)"
         if [[ -f "$real_path" ]]; then
             GPU_LIB_MOUNTS+=(-v "${real_path}:${CONTAINER_NVIDIA_LIB}/${lib}:ro")
         fi
+    done
+    # libnvidia-gpucomp has a version-specific soname (no .so.1 alias);
+    # resolve the versioned file and mount it under its own versioned name.
+    for lib_glob in "${HOST_NVIDIA_LIB}"/libnvidia-gpucomp.so.*; do
+        [[ -f "$lib_glob" && ! -L "$lib_glob" ]] && \
+            GPU_LIB_MOUNTS+=(-v "${lib_glob}:${CONTAINER_NVIDIA_LIB}/$(basename "${lib_glob}"):ro") && break
     done
     echo "GPU passthrough: ${GPU_DEVICES[*]}"
     echo "GPU lib mounts:  ${GPU_LIB_MOUNTS[*]:-none}"
@@ -82,6 +90,7 @@ exec podman run --rm --replace \
     -p "${PORT}:11434" \
     -v "${MODELS_VOLUME}:/root/.ollama" \
     --security-opt label=disable \
+    --security-opt seccomp=unconfined \
     "${GPU_DEVICES[@]}" \
     "${GPU_LIB_MOUNTS[@]}" \
     "$IMAGE_NAME"
