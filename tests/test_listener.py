@@ -95,6 +95,17 @@ class TestPollSignal(unittest.TestCase):
             {"envelope": {"sourceNumber": source, "dataMessage": {"message": message}}}
         )
 
+    def _sync_envelope(self, source: str, message: str) -> str:
+        """Linked-device sync envelope (note-to-self from primary device)."""
+        return json.dumps(
+            {
+                "envelope": {
+                    "sourceNumber": source,
+                    "syncMessage": {"sentMessage": {"destination": source, "message": message}},
+                }
+            }
+        )
+
     def test_disabled_returns_empty(self):
         self.assertEqual(poll_signal(SignalConfig(enabled=False)), [])
 
@@ -134,6 +145,23 @@ class TestPollSignal(unittest.TestCase):
         ):
             result = poll_signal(self._cfg())
         self.assertEqual(result, [])
+
+    def test_handles_sync_message_from_linked_device(self):
+        """Note-to-self from the primary device arrives as syncMessage.sentMessage."""
+        recorder = ProcessRecorder(
+            responses=[
+                build_completed_process(stdout=self._sync_envelope("+15551234567", "!uptime"))
+            ]
+        )
+        yaml = "signal_cli:\n  account: +15551234567\n"
+        with (
+            patch("crew_chief.listener.Path.read_text", return_value=yaml),
+            SubprocessPatch(recorder, target=_SIGNAL_TARGET),
+        ):
+            result = poll_signal(self._cfg())
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].text, "!uptime")
+        self.assertEqual(result[0].sender, "+15551234567")
 
     def test_signal_cli_not_found(self):
         yaml = "signal_cli:\n  account: +15551234567\n"
