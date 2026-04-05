@@ -86,7 +86,10 @@ else
 fi
 
 # Substitute placeholders into a temp manifest.
-TMP_MANIFEST="$(mktemp)"
+# Use XDG_RUNTIME_DIR (e.g. /run/user/1000) if /tmp is unavailable.
+_TMPDIR="${TMPDIR:-${XDG_RUNTIME_DIR:-${HOME}/.cache/crew-chief}}"
+mkdir -p "${_TMPDIR}"
+TMP_MANIFEST="$(mktemp -p "${_TMPDIR}")"
 trap 'rm -f "${TMP_MANIFEST}"' EXIT
 
 sed \

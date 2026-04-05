@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 import subprocess
 import sys
@@ -57,6 +58,19 @@ from crew_chief.config_loader import GmailConfig, ListenerConfig, SignalConfig
 from crew_chief.dispatcher import Dispatcher, DispatchResult
 
 log = logging.getLogger(__name__)
+
+
+def _java_env() -> dict[str, str]:
+    """Return os.environ with JAVA_TOOL_OPTIONS redirecting tmpdir.
+
+    signal-cli extracts its native libsignal to java.io.tmpdir at startup.
+    On some systems /tmp is not writable from a user-service context;
+    XDG_RUNTIME_DIR (/run/user/<uid>) is always writable.
+    """
+    xdg = os.environ.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}"
+    env = os.environ.copy()
+    env["JAVA_TOOL_OPTIONS"] = f"-Djava.io.tmpdir={xdg}"
+    return env
 
 # ---------------------------------------------------------------------------
 # Prompt template
@@ -170,7 +184,7 @@ def poll_signal(cfg: SignalConfig) -> list[IncomingMessage]:
 
     cmd = ["signal-cli", "--output=json", "-a", account, "receive", "--timeout", "5"]
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15, env=_java_env())
     except FileNotFoundError:
         log.error("signal-cli not found — is it installed and on PATH?")
         return []
@@ -178,11 +192,26 @@ def poll_signal(cfg: SignalConfig) -> list[IncomingMessage]:
         log.warning("signal-cli receive timed out unexpectedly.")
         return []
 
+    if result.returncode != 0:
+        log.error("signal-cli receive failed (rc=%d): %s", result.returncode, result.stderr.strip()[:300])
+        return []
+    log.info("signal-cli rc=0 stdout=%r stderr=%r", result.stdout[:500], result.stderr[:200])
+
     messages: list[IncomingMessage] = []
     for envelope in _parse_signal_json_lines(result.stdout):
         env = envelope.get("envelope", {})
         source = env.get("sourceNumber") or env.get("source", "")
+
+        # Regular incoming message.
         dm = env.get("dataMessage")
+
+        # Linked-device sync: note-to-self messages sent from the primary device
+        # arrive as syncMessage.sentMessage rather than dataMessage.
+        if not dm:
+            sent = env.get("syncMessage", {}).get("sentMessage", {})
+            if sent:
+                dm = sent
+
         if not dm:
             continue  # receipt, typing indicator, etc.
         text = dm.get("message", "")
@@ -207,7 +236,7 @@ def reply_signal(cfg: SignalConfig, recipient: str, text: str) -> None:
         text,
     ]
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30, env=_java_env())
         if result.returncode != 0:
             log.error("Signal reply failed (rc=%d): %s", result.returncode, result.stderr.strip())
     except subprocess.TimeoutExpired:
