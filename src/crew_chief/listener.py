@@ -60,17 +60,31 @@ from crew_chief.dispatcher import Dispatcher, DispatchResult
 log = logging.getLogger(__name__)
 
 
-def _java_env() -> dict[str, str]:
-    """Return os.environ with JAVA_TOOL_OPTIONS redirecting tmpdir.
+def _signal_tmpdir() -> str:
+    """Return a writable tmpdir for signal-cli's native library extraction.
 
-    signal-cli extracts its native libsignal to java.io.tmpdir at startup.
-    On some systems /tmp is not writable from a user-service context;
+    signal-cli (GraalVM native image) extracts libsignal to java.io.tmpdir at
+    startup.  /tmp may be restricted in a user-service context (e.g. SELinux);
     XDG_RUNTIME_DIR (/run/user/<uid>) is always writable.
     """
-    xdg = os.environ.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}"
+    return os.environ.get("XDG_RUNTIME_DIR") or f"/run/user/{os.getuid()}"
+
+
+def _signal_env() -> dict[str, str]:
+    """Return os.environ extended with signal-cli tmpdir overrides.
+
+    Sets both TMPDIR (so any subprocess that shells out to signal-cli inherits
+    it) and JAVA_TOOL_OPTIONS (belt-and-suspenders for non-native JVM callers).
+    The -Djava.io.tmpdir flag must be passed directly on the signal-cli command
+    line for GraalVM native images — JAVA_TOOL_OPTIONS is silently ignored by
+    them — but TMPDIR is read by the runtime and is the reliable path.
+    """
+    tmpdir = _signal_tmpdir()
     env = os.environ.copy()
-    env["JAVA_TOOL_OPTIONS"] = f"-Djava.io.tmpdir={xdg}"
+    env["TMPDIR"] = tmpdir
+    env["JAVA_TOOL_OPTIONS"] = f"-Djava.io.tmpdir={tmpdir}"
     return env
+
 
 # ---------------------------------------------------------------------------
 # Prompt template
@@ -182,9 +196,19 @@ def poll_signal(cfg: SignalConfig) -> list[IncomingMessage]:
         log.error("No signal_cli.account found in %s", cfg.config_path)
         return []
 
-    cmd = ["signal-cli", "--output=json", "-a", account, "receive", "--timeout", "5"]
+    tmpdir = _signal_tmpdir()
+    cmd = [
+        "signal-cli",
+        f"-Djava.io.tmpdir={tmpdir}",  # GraalVM native images require -D on the CLI
+        "--output=json",
+        "-a",
+        account,
+        "receive",
+        "--timeout",
+        "5",
+    ]
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15, env=_java_env())
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15, env=_signal_env())
     except FileNotFoundError:
         log.error("signal-cli not found — is it installed and on PATH?")
         return []
@@ -193,7 +217,9 @@ def poll_signal(cfg: SignalConfig) -> list[IncomingMessage]:
         return []
 
     if result.returncode != 0:
-        log.error("signal-cli receive failed (rc=%d): %s", result.returncode, result.stderr.strip()[:300])
+        log.error(
+            "signal-cli receive failed (rc=%d): %s", result.returncode, result.stderr.strip()[:300]
+        )
         return []
     log.info("signal-cli rc=0 stdout=%r stderr=%r", result.stdout[:500], result.stderr[:200])
 
@@ -236,7 +262,7 @@ def reply_signal(cfg: SignalConfig, recipient: str, text: str) -> None:
         text,
     ]
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30, env=_java_env())
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30, env=_signal_env())
         if result.returncode != 0:
             log.error("Signal reply failed (rc=%d): %s", result.returncode, result.stderr.strip())
     except subprocess.TimeoutExpired:

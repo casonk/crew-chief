@@ -16,4 +16,4 @@ service_install_wanted_by = ["default.target"]
 CREW_CHIEF_LISTENER_CONFIG = "__REPO_ROOT__/config/listener/config.toml"
 PYTHONPATH = "__REPO_ROOT__/src"
 AUTO_PASS_NOTIFY_PASSWORD_RETRIEVAL_EVERY_N = "10"
-JAVA_TOOL_OPTIONS = "-Djava.io.tmpdir=/run/user/1000"
+TMPDIR = "/run/user/1000"
