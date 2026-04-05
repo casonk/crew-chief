@@ -15,6 +15,12 @@ dependencies = []
 # Required on Python 3.10 for TOML parsing in the listener feature.
 # Python 3.11+ ships tomllib in the standard library.
 listener = ["tomli>=2.0; python_version < '3.11'"]
+dev = [
+    "pytest",
+    "ruff",
+    "black",
+    "dyno_lab @ git+https://github.com/casonk/dyno-lab.git",
+]
 
 [project.scripts]
 crew-chief = "crew_chief.cli:main"

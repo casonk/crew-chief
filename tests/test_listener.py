@@ -6,11 +6,9 @@ import json
 import unittest
 from unittest.mock import MagicMock, patch
 
-from crew_chief.config_loader import (
-    GmailConfig,
-    ListenerConfig,
-    SignalConfig,
-)
+from dyno_lab.proc import ProcessRecorder, SubprocessPatch, build_completed_process
+
+from crew_chief.config_loader import GmailConfig, ListenerConfig, SignalConfig
 from crew_chief.listener import (
     _extract_email_address,
     _parse_signal_account,
@@ -23,6 +21,10 @@ from crew_chief.listener import (
     resolve_command,
 )
 
+_SIGNAL_TARGET = "crew_chief.listener.subprocess.run"
+_GMAIL_TARGET = "crew_chief.listener.subprocess.run"
+
+
 # ---------------------------------------------------------------------------
 # _parse_signal_account
 # ---------------------------------------------------------------------------
@@ -31,7 +33,7 @@ from crew_chief.listener import (
 class TestParseSignalAccount(unittest.TestCase):
     def test_extracts_quoted_account(self):
         yaml = 'signal_cli:\n  account: "+15551234567"\n'
-        with patch("builtins.open"), patch("crew_chief.listener.Path.read_text", return_value=yaml):
+        with patch("crew_chief.listener.Path.read_text", return_value=yaml):
             result = _parse_signal_account("/fake/config.local.yaml")
         self.assertEqual(result, "+15551234567")
 
@@ -74,7 +76,7 @@ class TestParseSignalJsonLines(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
-# poll_signal
+# poll_signal (uses SubprocessPatch / ProcessRecorder)
 # ---------------------------------------------------------------------------
 
 
@@ -88,28 +90,22 @@ class TestPollSignal(unittest.TestCase):
             reply_to="+15551234567",
         )
 
-    def _make_envelope(self, source: str, message: str) -> str:
+    def _envelope(self, source: str, message: str) -> str:
         return json.dumps(
-            {
-                "envelope": {
-                    "sourceNumber": source,
-                    "dataMessage": {"message": message},
-                }
-            }
+            {"envelope": {"sourceNumber": source, "dataMessage": {"message": message}}}
         )
 
     def test_disabled_returns_empty(self):
-        cfg = SignalConfig(enabled=False)
-        result = poll_signal(cfg)
-        self.assertEqual(result, [])
+        self.assertEqual(poll_signal(SignalConfig(enabled=False)), [])
 
     def test_returns_message_from_trusted_sender(self):
-        output = self._make_envelope("+15551234567", "uptime")
-        mock_proc = MagicMock(stdout=output, returncode=0)
+        recorder = ProcessRecorder(
+            responses=[build_completed_process(stdout=self._envelope("+15551234567", "uptime"))]
+        )
         yaml = "signal_cli:\n  account: +15551234567\n"
         with (
             patch("crew_chief.listener.Path.read_text", return_value=yaml),
-            patch("crew_chief.listener.subprocess.run", return_value=mock_proc),
+            SubprocessPatch(recorder, target=_SIGNAL_TARGET),
         ):
             result = poll_signal(self._cfg())
         self.assertEqual(len(result), 1)
@@ -117,24 +113,24 @@ class TestPollSignal(unittest.TestCase):
         self.assertEqual(result[0].sender, "+15551234567")
 
     def test_ignores_untrusted_sender(self):
-        output = self._make_envelope("+19999999999", "uptime")
-        mock_proc = MagicMock(stdout=output, returncode=0)
+        recorder = ProcessRecorder(
+            responses=[build_completed_process(stdout=self._envelope("+19999999999", "uptime"))]
+        )
         yaml = "signal_cli:\n  account: +15551234567\n"
         with (
             patch("crew_chief.listener.Path.read_text", return_value=yaml),
-            patch("crew_chief.listener.subprocess.run", return_value=mock_proc),
+            SubprocessPatch(recorder, target=_SIGNAL_TARGET),
         ):
             result = poll_signal(self._cfg())
         self.assertEqual(result, [])
 
     def test_ignores_non_data_envelopes(self):
-        # receipt message, no dataMessage
-        output = json.dumps({"envelope": {"sourceNumber": "+15551234567", "receiptMessage": {}}})
-        mock_proc = MagicMock(stdout=output, returncode=0)
+        receipt = json.dumps({"envelope": {"sourceNumber": "+15551234567", "receiptMessage": {}}})
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=receipt)])
         yaml = "signal_cli:\n  account: +15551234567\n"
         with (
             patch("crew_chief.listener.Path.read_text", return_value=yaml),
-            patch("crew_chief.listener.subprocess.run", return_value=mock_proc),
+            SubprocessPatch(recorder, target=_SIGNAL_TARGET),
         ):
             result = poll_signal(self._cfg())
         self.assertEqual(result, [])
@@ -143,14 +139,31 @@ class TestPollSignal(unittest.TestCase):
         yaml = "signal_cli:\n  account: +15551234567\n"
         with (
             patch("crew_chief.listener.Path.read_text", return_value=yaml),
-            patch("crew_chief.listener.subprocess.run", side_effect=FileNotFoundError),
+            SubprocessPatch(
+                lambda *a, **kw: (_ for _ in ()).throw(FileNotFoundError()),
+                target=_SIGNAL_TARGET,
+            ),
         ):
             result = poll_signal(self._cfg())
         self.assertEqual(result, [])
 
+    def test_signal_cli_command_constructed_correctly(self):
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout="")])
+        yaml = "signal_cli:\n  account: +15551234567\n"
+        with (
+            patch("crew_chief.listener.Path.read_text", return_value=yaml),
+            SubprocessPatch(recorder, target=_SIGNAL_TARGET),
+        ):
+            poll_signal(self._cfg())
+        cmd = recorder.calls[0].args
+        self.assertIn("signal-cli", cmd)
+        self.assertIn("--output=json", cmd)
+        self.assertIn("+15551234567", cmd)
+        self.assertIn("receive", cmd)
+
 
 # ---------------------------------------------------------------------------
-# poll_gmail
+# poll_gmail (uses SubprocessPatch / ProcessRecorder)
 # ---------------------------------------------------------------------------
 
 
@@ -164,59 +177,69 @@ class TestPollGmail(unittest.TestCase):
             reply_to="me@example.com",
         )
 
-    def _make_payload(self, sender: str, subject: str, snippet: str) -> str:
+    def _payload(self, sender: str, subject: str, snippet: str) -> str:
         return json.dumps(
-            {
-                "messages": [
-                    {
-                        "uid": 1,
-                        "from": sender,
-                        "subject": subject,
-                        "snippet": snippet,
-                    }
-                ]
-            }
+            {"messages": [{"uid": 1, "from": sender, "subject": subject, "snippet": snippet}]}
         )
 
     def test_disabled_returns_empty(self):
-        cfg = GmailConfig(enabled=False)
-        result = poll_gmail(cfg)
-        self.assertEqual(result, [])
+        self.assertEqual(poll_gmail(GmailConfig(enabled=False)), [])
 
     def test_returns_message_from_trusted_sender(self):
-        payload = self._make_payload("alice@example.com", "cmd", "!uptime")
-        mock_proc = MagicMock(stdout=payload, returncode=0)
-        with patch("crew_chief.listener.subprocess.run", return_value=mock_proc):
+        recorder = ProcessRecorder(
+            responses=[
+                build_completed_process(stdout=self._payload("alice@example.com", "cmd", "!uptime"))
+            ]
+        )
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
             result = poll_gmail(self._cfg())
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0].text, "!uptime")
         self.assertEqual(result[0].sender, "alice@example.com")
 
     def test_ignores_untrusted_sender(self):
-        payload = self._make_payload("evil@hacker.com", "cmd", "!rm -rf /")
-        mock_proc = MagicMock(stdout=payload, returncode=0)
-        with patch("crew_chief.listener.subprocess.run", return_value=mock_proc):
+        recorder = ProcessRecorder(
+            responses=[
+                build_completed_process(stdout=self._payload("evil@hacker.com", "cmd", "!rm -rf /"))
+            ]
+        )
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
             result = poll_gmail(self._cfg())
         self.assertEqual(result, [])
 
     def test_handles_display_name_in_from(self):
-        payload = self._make_payload("Alice Smith <alice@example.com>", "cmd", "!hostname")
-        mock_proc = MagicMock(stdout=payload, returncode=0)
-        with patch("crew_chief.listener.subprocess.run", return_value=mock_proc):
+        recorder = ProcessRecorder(
+            responses=[
+                build_completed_process(
+                    stdout=self._payload("Alice Smith <alice@example.com>", "cmd", "!hostname")
+                )
+            ]
+        )
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
             result = poll_gmail(self._cfg())
         self.assertEqual(len(result), 1)
 
     def test_check_inbox_failure_returns_empty(self):
-        mock_proc = MagicMock(stdout="", returncode=1, stderr="error")
-        with patch("crew_chief.listener.subprocess.run", return_value=mock_proc):
+        recorder = ProcessRecorder(
+            responses=[build_completed_process(returncode=1, stderr="error")]
+        )
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
             result = poll_gmail(self._cfg())
         self.assertEqual(result, [])
 
     def test_invalid_json_returns_empty(self):
-        mock_proc = MagicMock(stdout="not json", returncode=0)
-        with patch("crew_chief.listener.subprocess.run", return_value=mock_proc):
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout="not json")])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
             result = poll_gmail(self._cfg())
         self.assertEqual(result, [])
+
+    def test_check_inbox_called_with_unseen_flag(self):
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout='{"messages": []}')])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            poll_gmail(self._cfg())
+        cmd = recorder.calls[0].args
+        self.assertIn("--unseen", cmd)
+        self.assertIn("check_inbox.py", cmd[1])
 
 
 # ---------------------------------------------------------------------------
@@ -249,18 +272,21 @@ class TestExtractCommandViaLlm(unittest.TestCase):
         return client
 
     def test_returns_command_on_valid_json(self):
-        client = self._client('{"command": "df -h"}')
-        result = extract_command_via_llm("disk space?", client, ["df*"])
+        result = extract_command_via_llm(
+            "disk space?", self._client('{"command": "df -h"}'), ["df*"]
+        )
         self.assertEqual(result, "df -h")
 
     def test_returns_none_when_command_is_null(self):
-        client = self._client('{"command": null, "reason": "not allowed"}')
-        result = extract_command_via_llm("delete everything", client, ["df*"])
+        result = extract_command_via_llm(
+            "delete everything",
+            self._client('{"command": null, "reason": "not allowed"}'),
+            ["df*"],
+        )
         self.assertIsNone(result)
 
     def test_returns_none_on_invalid_json(self):
-        client = self._client("Sure, here is your answer!")
-        result = extract_command_via_llm("uptime", client, ["uptime"])
+        result = extract_command_via_llm("uptime", self._client("Sure!"), ["uptime"])
         self.assertIsNone(result)
 
     def test_returns_none_on_llm_error(self):
@@ -269,10 +295,12 @@ class TestExtractCommandViaLlm(unittest.TestCase):
         result = extract_command_via_llm("uptime", client, ["uptime"])
         self.assertIsNone(result)
 
-    def test_strips_surrounding_text_from_json(self):
-        # Model adds a markdown code fence — we should still extract the JSON.
-        client = self._client('```json\n{"command": "uptime"}\n```')
-        result = extract_command_via_llm("how long has the system been up?", client, ["uptime"])
+    def test_strips_markdown_fences(self):
+        result = extract_command_via_llm(
+            "how long up?",
+            self._client('```json\n{"command": "uptime"}\n```'),
+            ["uptime"],
+        )
         self.assertEqual(result, "uptime")
 
 
@@ -289,45 +317,38 @@ class TestResolveCommand(unittest.TestCase):
         return cfg
 
     def test_direct_prefix_bypasses_llm(self):
-        cfg = self._cfg()
         client = MagicMock()
-        result = resolve_command("!uptime", cfg, client)
+        result = resolve_command("!uptime", self._cfg(), client)
         self.assertEqual(result, "uptime")
         client.chat.assert_not_called()
 
     def test_direct_prefix_with_args(self):
-        cfg = self._cfg()
-        result = resolve_command("!df -h", cfg, MagicMock())
-        self.assertEqual(result, "df -h")
+        self.assertEqual(resolve_command("!df -h", self._cfg(), MagicMock()), "df -h")
 
     def test_natural_language_routes_to_llm(self):
-        cfg = self._cfg(natural_language=True)
         client = MagicMock()
         client.chat.return_value = '{"command": "uptime"}'
-        result = resolve_command("how long has the machine been running?", cfg, client)
+        result = resolve_command("how long running?", self._cfg(True), client)
         self.assertEqual(result, "uptime")
         client.chat.assert_called_once()
 
     def test_natural_language_false_ignores_plain_text(self):
-        cfg = self._cfg(natural_language=False)
         client = MagicMock()
-        result = resolve_command("check disk space", cfg, client)
+        result = resolve_command("check disk space", self._cfg(False), client)
         self.assertIsNone(result)
         client.chat.assert_not_called()
 
     def test_empty_direct_command_returns_none(self):
-        cfg = self._cfg()
-        result = resolve_command("!", cfg, MagicMock())
-        self.assertIsNone(result)
+        self.assertIsNone(resolve_command("!", self._cfg(), MagicMock()))
 
 
 # ---------------------------------------------------------------------------
-# reply helpers (smoke tests — verify subprocess is called correctly)
+# reply helpers — verify subprocess args via ProcessRecorder
 # ---------------------------------------------------------------------------
 
 
-class TestReplySigal(unittest.TestCase):
-    def test_calls_send_script(self):
+class TestReplySignal(unittest.TestCase):
+    def test_calls_send_script_with_correct_args(self):
         cfg = SignalConfig(
             enabled=True,
             shock_relay_dir="/fake/signal",
@@ -335,17 +356,17 @@ class TestReplySigal(unittest.TestCase):
             trusted_senders=["+15551234567"],
             reply_to="+15551234567",
         )
-        mock_proc = MagicMock(returncode=0, stderr="")
-        with patch("crew_chief.listener.subprocess.run", return_value=mock_proc) as mock_run:
+        recorder = ProcessRecorder(responses=[build_completed_process()])
+        with SubprocessPatch(recorder, target=_SIGNAL_TARGET):
             reply_signal(cfg, "+15551234567", "output here")
-        args = mock_run.call_args[0][0]
+        args = recorder.calls[0].args
         self.assertIn("send_message.py", args[1])
         self.assertIn("+15551234567", args)
         self.assertIn("output here", args)
 
 
 class TestReplyGmail(unittest.TestCase):
-    def test_calls_send_script(self):
+    def test_calls_send_script_with_correct_args(self):
         cfg = GmailConfig(
             enabled=True,
             shock_relay_dir="/fake/gmail",
@@ -353,10 +374,10 @@ class TestReplyGmail(unittest.TestCase):
             trusted_senders=["a@b.com"],
             reply_to="a@b.com",
         )
-        mock_proc = MagicMock(returncode=0, stderr="")
-        with patch("crew_chief.listener.subprocess.run", return_value=mock_proc) as mock_run:
-            reply_gmail(cfg, "a@b.com", "Re: cmd", "output here")
-        args = mock_run.call_args[0][0]
+        recorder = ProcessRecorder(responses=[build_completed_process()])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            reply_gmail(cfg, "a@b.com", "cmd", "output here")
+        args = recorder.calls[0].args
         self.assertIn("send_email.py", args[1])
         self.assertIn("a@b.com", args)
 
