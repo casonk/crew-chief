@@ -1,0 +1,20 @@
+[[jobs]]
+name = "crew-chief-ollama"
+description = "crew-chief Ollama LLM service — local inference on port 11434"
+scope = "user"
+service_type = "simple"
+working_directory = "__REPO_ROOT__"
+exec_start = "__REPO_ROOT__/scripts/run_ollama.sh"
+after = ["network.target"]
+restart = "on-failure"
+restart_sec = "5"
+standard_output = "journal"
+standard_error = "journal"
+service_install_wanted_by = ["default.target"]
+
+[jobs.environment]
+CREW_CHIEF_CONTAINER = "crew-chief"
+CREW_CHIEF_IMAGE = "crew-chief:latest"
+CREW_CHIEF_PORT = "11434"
+CREW_CHIEF_MODELS_VOLUME = "crew-chief-models"
+TMPDIR = "/run/user/1000"
