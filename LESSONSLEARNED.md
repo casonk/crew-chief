@@ -17,6 +17,7 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 - Document the repository around its real execution, curation, or integration flow instead of only the top-level folder list.
 - Keep local-only, private, reference-only, or generated boundaries explicit so published or runtime behavior is not confused with offline material or non-committable inputs.
+- **Always run `pre-commit run --all-files && pytest -q` before every commit, without exception.** ruff-format and ruff lint auto-fix files on the first run (exit 1); re-run immediately after to confirm clean (exit 0), then stage the formatter's changes and commit. Skipping this is what causes CI failures. The check takes under 5 seconds and must not be omitted even for "docs-only" or "trivial" changes — formatting violations have appeared in `.py` files touched incidentally.
 - Re-run repo-appropriate validation after changing generated artifacts, diagrams, workflows, or other CI-facing files so formatting and compatibility issues are caught before push.
 - The Python client (`crew_chief.client`) is intentionally stdlib-only; keep it dependency-free so any portfolio repo can install it without pulling in extra transitive dependencies.
 - Model weights live in the named Podman volume `crew-chief-models`, not in the container image itself; rebuilding the image does not lose pulled models.
