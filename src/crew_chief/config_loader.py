@@ -58,6 +58,10 @@ class LlmConfig:
     # ------------------------------------------------------------------ #
     # Name of the environment variable that holds the Anthropic API key.
     api_key_env: str = "ANTHROPIC_API_KEY"
+    # auto-pass KeePass entry path for the Anthropic API key.
+    # Used when ANTHROPIC_API_KEY is not set in the environment.
+    # e.g. "api-keys/anthropic"  (entry must have a Password field)
+    api_key_auto_pass_entry: str = ""
     # Upper bound on generated tokens.
     max_tokens: int = 4096
 
@@ -83,6 +87,10 @@ class LlmConfig:
     # ------------------------------------------------------------------ #
     # Name of the environment variable that holds the OpenAI API key.
     openai_api_key_env: str = "OPENAI_API_KEY"
+    # auto-pass KeePass entry path for the OpenAI API key.
+    # Used when OPENAI_API_KEY is not set in the environment.
+    # e.g. "api-keys/openai"  (entry must have a Password field)
+    openai_api_key_auto_pass_entry: str = ""
     # Model ID for the OpenAI provider.
     openai_model: str = "gpt-4o"
 
@@ -125,6 +133,12 @@ class AgentConfig:
     # 0.0 disables confidence checking entirely (no extra call, no escalation).
     # Recommended starting value: 0.7
     confidence_threshold: float = 0.0
+
+    # Per-request timeout for agent operations in seconds.
+    # Agent tasks (especially those involving file I/O and CLI tools) need
+    # much more time than simple one-shot LLM calls.
+    # 0 = inherit llm.timeout_seconds.
+    timeout_seconds: int = 0
 
 
 @dataclass
@@ -258,6 +272,10 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.llm.fallback_chain = _str_list(llm["fallback_chain"], "llm.fallback_chain")
     if "api_key_env" in llm:
         cfg.llm.api_key_env = _str(llm["api_key_env"], "llm.api_key_env")
+    if "api_key_auto_pass_entry" in llm:
+        cfg.llm.api_key_auto_pass_entry = _str(
+            llm["api_key_auto_pass_entry"], "llm.api_key_auto_pass_entry"
+        )
     if "max_tokens" in llm:
         cfg.llm.max_tokens = _int(llm["max_tokens"], "llm.max_tokens")
     if "claude_cli_model" in llm:
@@ -272,6 +290,10 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.llm.codex_cli_sandbox = _str(llm["codex_cli_sandbox"], "llm.codex_cli_sandbox")
     if "openai_api_key_env" in llm:
         cfg.llm.openai_api_key_env = _str(llm["openai_api_key_env"], "llm.openai_api_key_env")
+    if "openai_api_key_auto_pass_entry" in llm:
+        cfg.llm.openai_api_key_auto_pass_entry = _str(
+            llm["openai_api_key_auto_pass_entry"], "llm.openai_api_key_auto_pass_entry"
+        )
     if "openai_model" in llm:
         cfg.llm.openai_model = _str(llm["openai_model"], "llm.openai_model")
 
@@ -294,6 +316,8 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.agent.confidence_threshold = _float(
             agt["confidence_threshold"], "agent.confidence_threshold"
         )
+    if "timeout_seconds" in agt:
+        cfg.agent.timeout_seconds = _int(agt["timeout_seconds"], "agent.timeout_seconds")
 
     sig = raw.get("signal", {})
     if "enabled" in sig:

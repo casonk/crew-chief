@@ -138,7 +138,9 @@ class OllamaProvider:
             ]
 
         body = self._post("/api/chat", payload)
-        return _parse_chat_response(body)
+        result = _parse_chat_response(body)
+        result.model = self.model
+        return result
 
     # ------------------------------------------------------------------
     # Convenience helpers (matches CrewChiefClient API surface)

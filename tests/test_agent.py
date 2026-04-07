@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from unittest.mock import MagicMock
 
-from crew_chief.agent import Agent
+from crew_chief.agent import Agent, AgentCascade, LowConfidenceError
 from crew_chief.providers.base import ChatResult, ToolUse
 from crew_chief.tools import Tool
 
@@ -174,6 +174,117 @@ class TestAgentMaxIterations(unittest.TestCase):
         agent.run("hi")
         _, kwargs = provider.chat.call_args
         self.assertIsNone(kwargs.get("tools"))
+
+
+class TestConfidenceCheck(unittest.TestCase):
+    """Agent raises LowConfidenceError when self-assessment is below threshold."""
+
+    def _agent_with_responses(self, main_response: ChatResult, confidence_json: str) -> Agent:
+        """Return an agent whose provider returns main_response then a confidence score."""
+        provider = MagicMock()
+        confidence_result = ChatResult(content=confidence_json)
+        provider.chat.side_effect = [main_response, confidence_result]
+        return Agent(provider=provider, confidence_threshold=0.7)
+
+    def test_high_confidence_returns_content(self):
+        agent = self._agent_with_responses(
+            ChatResult(content="disk is 80% full"),
+            '{"confidence": 0.9}',
+        )
+        output = agent.run("how full is the disk?")
+        self.assertEqual(output, "disk is 80% full")
+
+    def test_low_confidence_raises_error(self):
+        agent = self._agent_with_responses(
+            ChatResult(content="I would check the disk space"),
+            '{"confidence": 0.4}',
+        )
+        with self.assertRaises(LowConfidenceError) as ctx:
+            agent.run("check disk space")
+        self.assertAlmostEqual(ctx.exception.confidence, 0.4)
+        self.assertEqual(ctx.exception.content, "I would check the disk space")
+
+    def test_confidence_check_parse_failure_assumes_confident(self):
+        """Unparseable confidence reply should not escalate (assume 1.0)."""
+        provider = MagicMock()
+        provider.chat.side_effect = [
+            ChatResult(content="some response"),
+            ChatResult(content="not json at all"),
+        ]
+        agent = Agent(provider=provider, confidence_threshold=0.7)
+        output = agent.run("hi")
+        self.assertEqual(output, "some response")
+
+    def test_confidence_check_exception_assumes_confident(self):
+        """If the confidence call raises, do not escalate."""
+        provider = MagicMock()
+        provider.chat.side_effect = [
+            ChatResult(content="response"),
+            RuntimeError("network down"),
+        ]
+        agent = Agent(provider=provider, confidence_threshold=0.7)
+        output = agent.run("hi")
+        self.assertEqual(output, "response")
+
+    def test_zero_threshold_skips_check(self):
+        """confidence_threshold=0.0 should make no extra chat() call."""
+        provider = _make_provider(ChatResult(content="ok"))
+        agent = Agent(provider=provider, confidence_threshold=0.0)
+        agent.run("hi")
+        self.assertEqual(provider.chat.call_count, 1)
+
+
+class TestAgentCascade(unittest.TestCase):
+    """AgentCascade escalates on LowConfidenceError and returns first confident result."""
+
+    def _agent(self, response: str, confidence: float, threshold: float = 0.7) -> Agent:
+        """Return an agent that replies with *response* and self-rates *confidence*."""
+        provider = MagicMock()
+        provider.chat.side_effect = [
+            ChatResult(content=response),
+            ChatResult(content=f'{{"confidence": {confidence}}}'),
+        ]
+        return Agent(provider=provider, confidence_threshold=threshold)
+
+    def _failing_agent(self, error: Exception) -> Agent:
+        """Return an agent whose provider raises on every call."""
+        provider = MagicMock()
+        provider.chat.side_effect = error
+        return Agent(provider=provider, confidence_threshold=0.7)
+
+    def test_first_agent_confident_no_escalation(self):
+        a1 = self._agent("great answer", confidence=0.9)
+        a2 = self._agent("fallback answer", confidence=0.95)
+        cascade = AgentCascade([a1, a2])
+        result = cascade.run("question")
+        self.assertEqual(result, "great answer")
+        # a2 should never be called
+        a2.provider.chat.assert_not_called()
+
+    def test_escalates_on_low_confidence(self):
+        a1 = self._agent("vague answer", confidence=0.3)
+        a2 = self._agent("precise answer", confidence=0.9)
+        cascade = AgentCascade([a1, a2])
+        result = cascade.run("question")
+        self.assertEqual(result, "precise answer")
+
+    def test_escalates_on_provider_failure(self):
+        a1 = self._failing_agent(RuntimeError("ollama down"))
+        a2 = self._agent("fallback works", confidence=0.9)
+        cascade = AgentCascade([a1, a2])
+        result = cascade.run("question")
+        self.assertEqual(result, "fallback works")
+
+    def test_all_low_confidence_returns_last_content(self):
+        a1 = self._agent("low1", confidence=0.2)
+        a2 = self._agent("low2", confidence=0.3)
+        cascade = AgentCascade([a1, a2])
+        result = cascade.run("question")
+        self.assertEqual(result, "low2")
+
+    def test_empty_cascade_raises(self):
+        with self.assertRaises(ValueError):
+            AgentCascade([])
 
 
 if __name__ == "__main__":

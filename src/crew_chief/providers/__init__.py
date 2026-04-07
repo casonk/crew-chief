@@ -32,6 +32,7 @@ __all__ = [
     "ProviderUnavailableError",
     "ToolParam",
     "ToolUse",
+    "build_provider",
     "get_provider",
 ]
 
@@ -101,10 +102,51 @@ class FallbackProvider:
 # ---------------------------------------------------------------------------
 
 
+def _resolve_api_key(env_var: str, auto_pass_entry: str) -> str:
+    """Return an API key, trying *env_var* first then auto-pass.
+
+    If *env_var* is set in the environment its value is returned immediately.
+    Otherwise, if *auto_pass_entry* is non-empty, ``auto-pass get <entry>
+    --field password`` is called as a subprocess and its stdout is used.
+    Returns an empty string when both sources are absent or fail.
+    """
+    import os
+    import subprocess
+
+    key = os.environ.get(env_var, "")
+    if key:
+        return key
+    if not auto_pass_entry:
+        return ""
+    try:
+        result = subprocess.run(
+            ["auto-pass", "get", auto_pass_entry, "--field", "password"],
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        if result.returncode == 0:
+            key = result.stdout.strip()
+            if key:
+                log.debug(
+                    "Loaded %s from auto-pass entry %r.", env_var, auto_pass_entry
+                )
+                return key
+        log.warning(
+            "auto-pass lookup for %r failed (rc=%d): %s",
+            auto_pass_entry,
+            result.returncode,
+            result.stderr.strip()[:200],
+        )
+    except FileNotFoundError:
+        log.debug("auto-pass not found on PATH — skipping key lookup for %r.", env_var)
+    except Exception as exc:
+        log.warning("auto-pass lookup for %r raised: %s", auto_pass_entry, exc)
+    return ""
+
+
 def _build_single_provider(name: str, cfg: Any) -> Any:
     """Build one provider from its name and a LlmConfig-like *cfg* object."""
-    import os
-
     if name == "ollama":
         return OllamaProvider(
             base_url=cfg.base_url,
@@ -128,7 +170,8 @@ def _build_single_provider(name: str, cfg: Any) -> Any:
 
     if name == "anthropic":
         api_key_env = getattr(cfg, "api_key_env", "ANTHROPIC_API_KEY")
-        api_key = os.environ.get(api_key_env, "")
+        auto_pass_entry = getattr(cfg, "api_key_auto_pass_entry", "")
+        api_key = _resolve_api_key(api_key_env, auto_pass_entry)
         max_tokens = getattr(cfg, "max_tokens", 4096)
         return AnthropicProvider(
             api_key=api_key,
@@ -139,7 +182,8 @@ def _build_single_provider(name: str, cfg: Any) -> Any:
 
     if name == "openai":
         api_key_env = getattr(cfg, "openai_api_key_env", "OPENAI_API_KEY")
-        api_key = os.environ.get(api_key_env, "")
+        auto_pass_entry = getattr(cfg, "openai_api_key_auto_pass_entry", "")
+        api_key = _resolve_api_key(api_key_env, auto_pass_entry)
         model = getattr(cfg, "openai_model", _DEFAULT_OPENAI_MODEL) or _DEFAULT_OPENAI_MODEL
         max_tokens = getattr(cfg, "max_tokens", 4096)
         return OpenAIProvider(
@@ -153,6 +197,16 @@ def _build_single_provider(name: str, cfg: Any) -> Any:
         f"Unknown provider name {name!r}.  "
         "Supported: 'ollama', 'claude-cli', 'codex-cli', 'anthropic', 'openai', 'fallback'."
     )
+
+
+def build_provider(name: str, cfg: Any) -> Any:
+    """Public alias for building a single named provider from *cfg*.
+
+    Convenience wrapper around :func:`_build_single_provider` for callers that
+    need to construct individual providers (e.g. to build per-provider agent
+    instances for a confidence-based cascade).
+    """
+    return _build_single_provider(name, cfg)
 
 
 def get_provider(cfg: Any) -> Any:

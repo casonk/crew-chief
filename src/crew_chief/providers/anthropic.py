@@ -178,7 +178,9 @@ class AnthropicProvider:
             payload["tools"] = _to_anthropic_tools(tools)
 
         body = self._post("/v1/messages", payload)
-        return _parse_response(body)
+        result = _parse_response(body)
+        result.model = self.model
+        return result
 
     # ------------------------------------------------------------------
     # Internal

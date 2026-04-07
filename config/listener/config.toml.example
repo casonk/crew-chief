@@ -79,12 +79,21 @@ natural_language = true
 # The key itself must be set in config/env (or exported before starting).
 # api_key_env = "ANTHROPIC_API_KEY"
 
+# auto-pass KeePass entry path for the Anthropic API key.
+# When set, the key is read from KeePass via the auto-pass CLI if
+# ANTHROPIC_API_KEY is not already in the environment.
+# Requires the auto-pass repo to be installed and configured.
+# api_key_auto_pass_entry = "api-keys/anthropic"
+
 # Upper bound on tokens generated per response (cloud API providers only).
 # max_tokens = 4096
 
 # ── OpenAI API settings ──────────────────────────────────────────────────────
 # Name of the environment variable that holds the OpenAI API key.
 # openai_api_key_env = "OPENAI_API_KEY"
+
+# auto-pass KeePass entry path for the OpenAI API key.
+# openai_api_key_auto_pass_entry = "api-keys/openai"
 
 # OpenAI model to use.  Defaults to "gpt-4o".
 # openai_model = "gpt-4o"
@@ -93,10 +102,10 @@ natural_language = true
 # Model alias or full ID for the claude CLI.  Empty = CLI default.
 # claude_cli_model = ""
 
-# Tool names to allow (e.g. "Bash,Read,Edit").
+# Tool names to allow (e.g. "Bash,Read,Edit,Write").
 # Empty string = no tools (pure text generation — safest, fastest for Q&A).
-# For agentic use set to "Bash" or "Bash,Read,Edit".
-# claude_cli_allowed_tools = ""
+# For code-change requests set to "Bash,Read,Edit,Write" so the CLI can modify files.
+# claude_cli_allowed_tools = "Bash,Read,Edit,Write"
 
 # ── Codex CLI settings ───────────────────────────────────────────────────────
 # Model name for the codex CLI.  Empty = CLI default (e.g. "o3").
@@ -125,17 +134,36 @@ max_iterations = 10
 # "shell"      — run allowlisted shell commands (uses dispatch.allowed_commands)
 # "read_file"  — read files within agent.allowed_paths
 # "write_file" — write files within agent.allowed_paths
-tools = ["shell"]
+tools = ["shell", "read_file", "write_file"]
 
 # Absolute path prefixes the model may read/write via file tools.
 # An empty list means unrestricted — only safe if all paths on the machine
 # are acceptable for the model to access.
 # SECURITY: always restrict to specific directories in production.
-# allowed_paths = ["/home/youruser/safe-data/"]
+# allowed_paths = ["/home/youruser/projects/myrepo"]
 allowed_paths = []
 
 # Override the agent system prompt.  Leave empty to use the built-in default.
 # system_prompt = "You are a helpful automation assistant..."
+
+# Agent-specific provider override.
+# When set, the agent uses this provider/chain instead of the top-level [llm]
+# settings.  Combine with confidence_threshold to keep fast local models first
+# while automatically escalating complex tasks to higher-fidelity providers.
+# provider = "fallback"
+# fallback_chain = ["ollama", "claude-cli", "codex-cli", "anthropic", "openai"]
+
+# Minimum self-assessed confidence (0.0–1.0) required to accept a response.
+# After the agent loop completes, the model is asked to rate how well it
+# addressed the request.  Scores below this threshold trigger escalation to
+# the next provider in fallback_chain.  0.0 disables the check entirely.
+# confidence_threshold = 0.7
+
+# Per-agent-request timeout in seconds (overrides llm.timeout_seconds).
+# Agent tasks involve multiple LLM calls plus file I/O and CLI execution,
+# so they need a much longer timeout than a single-shot query.
+# 0 = inherit llm.timeout_seconds.
+# timeout_seconds = 300
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Signal channel

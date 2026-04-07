@@ -53,11 +53,11 @@ from email.utils import parseaddr
 from pathlib import Path
 from typing import Any
 
-from crew_chief.agent import Agent
+from crew_chief.agent import Agent, AgentCascade
 from crew_chief.client import CrewChiefClient
 from crew_chief.config_loader import GmailConfig, ListenerConfig, SignalConfig
 from crew_chief.dispatcher import Dispatcher, DispatchResult
-from crew_chief.providers import get_provider
+from crew_chief.providers import build_provider, get_provider
 from crew_chief.tools import build_tools
 
 log = logging.getLogger(__name__)
@@ -478,29 +478,38 @@ def _process_message(
     cfg: ListenerConfig,
     llm_client: CrewChiefClient,
     dispatcher: Dispatcher,
-    agent: Agent | None = None,
+    agent: Agent | AgentCascade | None = None,
 ) -> None:
     """Interpret, dispatch, and reply to a single incoming message.
 
     When *agent* is provided (``cfg.agent.enabled = True``), the message text
-    is handed directly to the multi-step Agent loop.  Otherwise the original
-    single-command dispatch flow is used.
+    is handed directly to the multi-step Agent loop (or cascade).  Otherwise
+    the original single-command dispatch flow is used.
     """
     log.info("[%s] Message from %s: %r", msg.channel, msg.sender, msg.text[:80])
 
     if agent is not None:
         log.info("[%s] Routing to agent loop.", msg.channel)
         reply_text = agent.run(msg.text)
+        model_label = getattr(agent, "last_used_model", "") or "unknown"
+        model_header = f"[Model: {model_label}]"
     else:
         command = resolve_command(msg.text, cfg, llm_client)
         if command is None:
             log.info("[%s] No actionable command extracted from message.", msg.channel)
             return
 
+        # Determine whether a model was involved in routing this command.
+        if msg.text.strip().startswith(DIRECT_PREFIX):
+            model_header = "[Model: none — direct command]"
+        else:
+            model_header = f"[Model: {llm_client.model} (command routing)]"
+
         log.info("[%s] Dispatching: %r", msg.channel, command)
         result: DispatchResult = dispatcher.run(command)
         reply_text = result.reply_text()
 
+    reply_text = f"{model_header}\n\n{reply_text}"
     log.info("[%s] Reply (%d chars): %r", msg.channel, len(reply_text), reply_text[:80])
 
     if msg.channel == "signal":
@@ -531,24 +540,64 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
         max_output_bytes=cfg.dispatch.output_max_bytes,
     )
 
-    # Build the agent if agent mode is enabled.
-    agent: Agent | None = None
+    # Build the agent (or cascade) if agent mode is enabled.
+    agent: Agent | AgentCascade | None = None
     if cfg.agent.enabled:
-        provider = get_provider(cfg.llm)
+        import dataclasses
+
+        # Resolve the effective provider chain and timeout for agent tasks.
+        agent_provider = cfg.agent.provider or cfg.llm.provider
+        agent_chain = cfg.agent.fallback_chain or cfg.llm.fallback_chain
+        agent_timeout = cfg.agent.timeout_seconds or cfg.llm.timeout_seconds
+        agent_llm_cfg = dataclasses.replace(
+            cfg.llm,
+            provider=agent_provider,
+            fallback_chain=agent_chain,
+            timeout_seconds=agent_timeout,
+        )
+
         tools = build_tools(cfg)
-        agent = Agent(
-            provider=provider,
-            tools=tools,
-            system_prompt=cfg.agent.system_prompt,
-            max_iterations=cfg.agent.max_iterations,
-        )
-        log.info(
-            "Agent mode enabled (provider=%s, model=%s, tools=%s, max_iter=%d).",
-            cfg.llm.provider,
-            cfg.llm.model,
-            [t.name for t in tools],
-            cfg.agent.max_iterations,
-        )
+        threshold = cfg.agent.confidence_threshold
+
+        if threshold > 0.0 and agent_provider == "fallback":
+            # Confidence cascade: one Agent per provider, escalate on low score.
+            agents = [
+                Agent(
+                    provider=build_provider(name, agent_llm_cfg),
+                    tools=tools,
+                    system_prompt=cfg.agent.system_prompt,
+                    max_iterations=cfg.agent.max_iterations,
+                    confidence_threshold=threshold,
+                )
+                for name in agent_chain
+            ]
+            agent = AgentCascade(agents)
+            log.info(
+                "Agent cascade enabled (chain=%s, threshold=%.2f, timeout=%ds, "
+                "tools=%s, max_iter=%d).",
+                agent_chain,
+                threshold,
+                agent_timeout,
+                [t.name for t in tools],
+                cfg.agent.max_iterations,
+            )
+        else:
+            # Single agent backed by FallbackProvider (or a named provider).
+            provider = get_provider(agent_llm_cfg)
+            agent = Agent(
+                provider=provider,
+                tools=tools,
+                system_prompt=cfg.agent.system_prompt,
+                max_iterations=cfg.agent.max_iterations,
+                confidence_threshold=threshold,
+            )
+            log.info(
+                "Agent mode enabled (provider=%s, timeout=%ds, tools=%s, max_iter=%d).",
+                agent_provider,
+                agent_timeout,
+                [t.name for t in tools],
+                cfg.agent.max_iterations,
+            )
 
     log.info(
         "crew-chief listener started (Signal=%s, Gmail=%s, interval=%ds, agent=%s).",
