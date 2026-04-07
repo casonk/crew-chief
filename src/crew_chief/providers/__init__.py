@@ -170,7 +170,7 @@ def _build_single_provider(name: str, cfg: Any) -> Any:
 
     if name == "anthropic":
         api_key_env = getattr(cfg, "api_key_env", "ANTHROPIC_API_KEY")
-        auto_pass_entry = getattr(cfg, "api_key_auto_pass_entry", "")
+        auto_pass_entry = getattr(cfg, "anthropic_api_key_auto_pass_entry", "")
         api_key = _resolve_api_key(api_key_env, auto_pass_entry)
         max_tokens = getattr(cfg, "max_tokens", 4096)
         return AnthropicProvider(
@@ -182,7 +182,7 @@ def _build_single_provider(name: str, cfg: Any) -> Any:
 
     if name == "openai":
         api_key_env = getattr(cfg, "openai_api_key_env", "OPENAI_API_KEY")
-        auto_pass_entry = getattr(cfg, "openai_api_key_auto_pass_entry", "")
+        auto_pass_entry = getattr(cfg, "openai_anthropic_api_key_auto_pass_entry", "")
         api_key = _resolve_api_key(api_key_env, auto_pass_entry)
         model = getattr(cfg, "openai_model", _DEFAULT_OPENAI_MODEL) or _DEFAULT_OPENAI_MODEL
         max_tokens = getattr(cfg, "max_tokens", 4096)
