@@ -138,6 +138,9 @@ class Agent:
         # Build a name→tool lookup once
         self._tool_map: dict[str, Any] = {t.name: t for t in self.tools}
 
+        # Set after each run() call; holds the model ID of the last provider response.
+        self.last_used_model: str = ""
+
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
@@ -168,6 +171,7 @@ class Agent:
                 system=self.system_prompt,
             )
             last_content = result.content
+            self.last_used_model = result.model
 
             if result.stop_reason != "tool_use" or not result.tool_uses:
                 log.debug("Agent finished after %d iteration(s).", iteration + 1)
@@ -293,6 +297,8 @@ class AgentCascade:
         if not agents:
             raise ValueError("AgentCascade requires at least one agent.")
         self.agents = agents
+        # Set after each run() call; mirrors the winning agent's last_used_model.
+        self.last_used_model: str = ""
 
     def run(self, prompt: str) -> str:
         """Run the cascade for *prompt* and return the first confident response."""
@@ -300,7 +306,9 @@ class AgentCascade:
         for agent in self.agents:
             provider_name = type(agent.provider).__name__
             try:
-                return agent.run(prompt)
+                content = agent.run(prompt)
+                self.last_used_model = agent.last_used_model
+                return content
             except LowConfidenceError as exc:
                 log.info(
                     "Cascade: %s confidence %.2f below threshold %.2f — escalating.",
@@ -309,6 +317,7 @@ class AgentCascade:
                     agent.confidence_threshold,
                 )
                 last_content = exc.content
+                self.last_used_model = agent.last_used_model
             except Exception as exc:
                 log.warning(
                     "Cascade: %s failed (%s) — escalating.",

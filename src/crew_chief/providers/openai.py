@@ -193,7 +193,9 @@ class OpenAIProvider:
             payload["tools"] = _to_openai_tools(tools)
 
         body = self._post("/v1/chat/completions", payload)
-        return _parse_response(body)
+        result = _parse_response(body)
+        result.model = self.model
+        return result
 
     # ------------------------------------------------------------------
     # Internal

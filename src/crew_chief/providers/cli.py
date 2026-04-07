@@ -228,6 +228,7 @@ class ClaudeCliProvider:
             content=data.get("result", ""),
             tool_uses=[],
             stop_reason=data.get("stop_reason", "end_turn"),
+            model=self.model or "claude-cli",
         )
 
     # ------------------------------------------------------------------
@@ -318,7 +319,7 @@ class CodexCliProvider:
         finally:
             Path(out_path).unlink(missing_ok=True)
 
-        return ChatResult(content=content, tool_uses=[], stop_reason="end_turn")
+        return ChatResult(content=content, tool_uses=[], stop_reason="end_turn", model=self.model or "codex-cli")
 
     # ------------------------------------------------------------------
     # Internal

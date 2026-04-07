@@ -42,6 +42,9 @@ class ChatResult:
     tool_uses: list[ToolUse] = field(default_factory=list)
     # "end_turn" | "tool_use" | "max_tokens"
     stop_reason: str = "end_turn"
+    # Identifier of the model that produced this response (e.g. "llama3.2", "claude-opus-4-6").
+    # Empty string when the provider does not report a model name.
+    model: str = ""
 
 
 __all__ = [
