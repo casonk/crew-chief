@@ -102,12 +102,18 @@ class FallbackProvider:
 # ---------------------------------------------------------------------------
 
 
-def _resolve_api_key(env_var: str, auto_pass_entry: str) -> str:
+def _resolve_api_key(env_var: str, auto_pass_entry: str, auto_pass_env_file: str = "") -> str:
     """Return an API key, trying *env_var* first then auto-pass.
 
     If *env_var* is set in the environment its value is returned immediately.
-    Otherwise, if *auto_pass_entry* is non-empty, ``auto-pass get <entry>
-    --field password`` is called as a subprocess and its stdout is used.
+    Otherwise, if *auto_pass_entry* is non-empty, ``auto-pass [--env-file
+    <path>] get <entry> --field password`` is called as a subprocess.
+
+    *auto_pass_env_file* should be the absolute path to the auto-pass
+    ``config/auto-pass.env.local`` file.  This is required when the listener
+    is not started from the auto-pass repo root, since auto-pass otherwise
+    resolves its env file relative to the current working directory.
+
     Returns an empty string when both sources are absent or fail.
     """
     import os
@@ -119,18 +125,15 @@ def _resolve_api_key(env_var: str, auto_pass_entry: str) -> str:
     if not auto_pass_entry:
         return ""
     try:
-        result = subprocess.run(
-            ["auto-pass", "get", auto_pass_entry, "--field", "password"],
-            capture_output=True,
-            text=True,
-            timeout=15,
-        )
+        cmd = ["auto-pass"]
+        if auto_pass_env_file:
+            cmd += ["--env-file", auto_pass_env_file]
+        cmd += ["get", auto_pass_entry, "--field", "password"]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
         if result.returncode == 0:
             key = result.stdout.strip()
             if key:
-                log.debug(
-                    "Loaded %s from auto-pass entry %r.", env_var, auto_pass_entry
-                )
+                log.debug("Loaded %s from auto-pass entry %r.", env_var, auto_pass_entry)
                 return key
         log.warning(
             "auto-pass lookup for %r failed (rc=%d): %s",
@@ -171,7 +174,8 @@ def _build_single_provider(name: str, cfg: Any) -> Any:
     if name == "anthropic":
         api_key_env = getattr(cfg, "api_key_env", "ANTHROPIC_API_KEY")
         auto_pass_entry = getattr(cfg, "anthropic_api_key_auto_pass_entry", "")
-        api_key = _resolve_api_key(api_key_env, auto_pass_entry)
+        auto_pass_env_file = getattr(cfg, "auto_pass_env_file", "")
+        api_key = _resolve_api_key(api_key_env, auto_pass_entry, auto_pass_env_file)
         max_tokens = getattr(cfg, "max_tokens", 4096)
         return AnthropicProvider(
             api_key=api_key,
@@ -182,8 +186,9 @@ def _build_single_provider(name: str, cfg: Any) -> Any:
 
     if name == "openai":
         api_key_env = getattr(cfg, "openai_api_key_env", "OPENAI_API_KEY")
-        auto_pass_entry = getattr(cfg, "openai_anthropic_api_key_auto_pass_entry", "")
-        api_key = _resolve_api_key(api_key_env, auto_pass_entry)
+        auto_pass_entry = getattr(cfg, "openai_api_key_auto_pass_entry", "")
+        auto_pass_env_file = getattr(cfg, "auto_pass_env_file", "")
+        api_key = _resolve_api_key(api_key_env, auto_pass_entry, auto_pass_env_file)
         model = getattr(cfg, "openai_model", _DEFAULT_OPENAI_MODEL) or _DEFAULT_OPENAI_MODEL
         max_tokens = getattr(cfg, "max_tokens", 4096)
         return OpenAIProvider(

@@ -60,8 +60,13 @@ class LlmConfig:
     api_key_env: str = "ANTHROPIC_API_KEY"
     # auto-pass KeePass entry path for the Anthropic API key.
     # Used when ANTHROPIC_API_KEY is not set in the environment.
-    # e.g. "api-keys/anthropic"  (entry must have a Password field)
+    # e.g. "AnthropicClaudeConsole-api-key-continue#fedora"
     anthropic_api_key_auto_pass_entry: str = ""
+    # Path to the auto-pass env file (auto-pass.env.local).
+    # Required when the listener is not started from the auto-pass repo root,
+    # because auto-pass resolves config/auto-pass.env.local relative to CWD.
+    # Set to the absolute path so it works regardless of working directory.
+    auto_pass_env_file: str = ""
     # Upper bound on generated tokens.
     max_tokens: int = 4096
 
@@ -90,7 +95,7 @@ class LlmConfig:
     # auto-pass KeePass entry path for the OpenAI API key.
     # Used when OPENAI_API_KEY is not set in the environment.
     # e.g. "api-keys/openai"  (entry must have a Password field)
-    openai_anthropic_api_key_auto_pass_entry: str = ""
+    openai_api_key_auto_pass_entry: str = ""
     # Model ID for the OpenAI provider.
     openai_model: str = "gpt-4o"
 
@@ -276,6 +281,8 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.llm.anthropic_api_key_auto_pass_entry = _str(
             llm["anthropic_api_key_auto_pass_entry"], "llm.anthropic_api_key_auto_pass_entry"
         )
+    if "auto_pass_env_file" in llm:
+        cfg.llm.auto_pass_env_file = _str(llm["auto_pass_env_file"], "llm.auto_pass_env_file")
     if "max_tokens" in llm:
         cfg.llm.max_tokens = _int(llm["max_tokens"], "llm.max_tokens")
     if "claude_cli_model" in llm:
@@ -290,9 +297,9 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.llm.codex_cli_sandbox = _str(llm["codex_cli_sandbox"], "llm.codex_cli_sandbox")
     if "openai_api_key_env" in llm:
         cfg.llm.openai_api_key_env = _str(llm["openai_api_key_env"], "llm.openai_api_key_env")
-    if "openai_anthropic_api_key_auto_pass_entry" in llm:
-        cfg.llm.openai_anthropic_api_key_auto_pass_entry = _str(
-            llm["openai_anthropic_api_key_auto_pass_entry"], "llm.openai_anthropic_api_key_auto_pass_entry"
+    if "openai_api_key_auto_pass_entry" in llm:
+        cfg.llm.openai_api_key_auto_pass_entry = _str(
+            llm["openai_api_key_auto_pass_entry"], "llm.openai_api_key_auto_pass_entry"
         )
     if "openai_model" in llm:
         cfg.llm.openai_model = _str(llm["openai_model"], "llm.openai_model")

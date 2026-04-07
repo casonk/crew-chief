@@ -79,11 +79,14 @@ natural_language = true
 # The key itself must be set in config/env (or exported before starting).
 # api_key_env = "ANTHROPIC_API_KEY"
 
+# Absolute path to the auto-pass env file (config/auto-pass.env.local).
+# Required when crew-chief is not started from the auto-pass repo root.
+# auto_pass_env_file = "/path/to/auto-pass/config/auto-pass.env.local"
+
 # auto-pass KeePass entry path for the Anthropic API key.
 # When set, the key is read from KeePass via the auto-pass CLI if
 # ANTHROPIC_API_KEY is not already in the environment.
-# Requires the auto-pass repo to be installed and configured.
-# anthropic_api_key_auto_pass_entry = "api-keys/anthropic"
+# anthropic_api_key_auto_pass_entry = "AnthropicClaudeConsole-api-key-continue#fedora"
 
 # Upper bound on tokens generated per response (cloud API providers only).
 # max_tokens = 4096
@@ -93,7 +96,7 @@ natural_language = true
 # openai_api_key_env = "OPENAI_API_KEY"
 
 # auto-pass KeePass entry path for the OpenAI API key.
-# openai_anthropic_api_key_auto_pass_entry = "api-keys/openai"
+# openai_api_key_auto_pass_entry = "api-keys/openai"
 
 # OpenAI model to use.  Defaults to "gpt-4o".
 # openai_model = "gpt-4o"
