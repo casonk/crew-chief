@@ -103,6 +103,29 @@ class AgentConfig:
     # An empty list permits all paths (no restriction).
     allowed_paths: list[str] = field(default_factory=list)
 
+    # ------------------------------------------------------------------ #
+    # Agent-specific provider override                                     #
+    # ------------------------------------------------------------------ #
+    # Provider to use for agent tasks.  Empty string = inherit llm.provider.
+    # Set to "fallback" with a custom fallback_chain to use a different set
+    # of providers for agentic work than for simple dispatch (e.g. skip Ollama
+    # which cannot reliably call tools for complex tasks).
+    provider: str = ""
+    # Ordered provider names used when agent.provider = "fallback".
+    # Empty list = inherit llm.fallback_chain.
+    fallback_chain: list[str] = field(default_factory=list)
+
+    # ------------------------------------------------------------------ #
+    # Confidence-based escalation                                         #
+    # ------------------------------------------------------------------ #
+    # Minimum self-assessed confidence score (0.0–1.0) required to accept a
+    # response.  When > 0, each provider is asked to rate its own response
+    # after the agent loop completes.  Scores below this threshold cause the
+    # cascade to escalate to the next provider.
+    # 0.0 disables confidence checking entirely (no extra call, no escalation).
+    # Recommended starting value: 0.7
+    confidence_threshold: float = 0.0
+
 
 @dataclass
 class SignalConfig:
@@ -186,6 +209,12 @@ def _bool(value: Any, key: str) -> bool:
     return value
 
 
+def _float(value: Any, key: str) -> float:
+    if not isinstance(value, float | int):
+        raise ConfigError(f"Config key '{key}' must be a number, got {type(value).__name__}.")
+    return float(value)
+
+
 def _str_list(value: Any, key: str) -> list[str]:
     if not isinstance(value, list) or not all(isinstance(v, str) for v in value):
         raise ConfigError(f"Config key '{key}' must be a list of strings.")
@@ -257,6 +286,14 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.agent.tools = _str_list(agt["tools"], "agent.tools")
     if "allowed_paths" in agt:
         cfg.agent.allowed_paths = _str_list(agt["allowed_paths"], "agent.allowed_paths")
+    if "provider" in agt:
+        cfg.agent.provider = _str(agt["provider"], "agent.provider")
+    if "fallback_chain" in agt:
+        cfg.agent.fallback_chain = _str_list(agt["fallback_chain"], "agent.fallback_chain")
+    if "confidence_threshold" in agt:
+        cfg.agent.confidence_threshold = _float(
+            agt["confidence_threshold"], "agent.confidence_threshold"
+        )
 
     sig = raw.get("signal", {})
     if "enabled" in sig:
