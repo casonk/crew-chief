@@ -139,6 +139,22 @@ When `agent.enabled = false` (default): single-command flow — extract one shel
 
 When `agent.enabled = true`: full agent loop — `Agent.run(message_text)` is called; the model may invoke tools across multiple iterations before producing the final reply.
 
+## Security: What Must Never Be Committed
+
+The following are **sensitive identifiers** that must exist only in gitignored local files:
+
+| Sensitive value | Gitignored location | Safe placeholder in `.example` |
+|---|---|---|
+| KeePass entry paths (`anthropic_api_key_auto_pass_entry`, etc.) | `config/listener/config.toml` | `"your-keepass-entry-path"` |
+| Phone numbers (`signal.trusted_senders`, `signal.reply_to`) | `config/listener/config.toml` | `"+15551234567"` |
+| Email addresses (`gmail.trusted_senders`, `gmail.reply_to`) | `config/listener/config.toml` | `"you@example.com"` |
+| Absolute filesystem paths (`shock_relay_dir`, `config_path`, `auto_pass_env_file`) | `config/listener/config.toml` | `"/path/to/..."` |
+| API keys | `config/env` | `# export KEY="sk-..."` |
+
+**Rule**: `.example` and template files are committed to git and therefore public.  They must contain only generic, non-identifying placeholders — never real entry paths, real phone numbers, real email addresses, or real filesystem paths.  Even if a value looks harmless (e.g. a KeePass entry name), it can reveal account structure, service names, or naming conventions that are personal and should not be public.
+
+When in doubt, make the value gitignored.
+
 ## Change Guidance
 
 - Keep the Python client dependency-free.  Introduce a dependency only if it is universally available (already in the portfolio's standard Python environment) and the benefit clearly outweighs the friction.
