@@ -221,7 +221,5 @@ class OpenAIProvider:
             except Exception:
                 msg = body_text
             if exc.code in (401, 403):
-                raise ProviderUnavailableError(
-                    f"OpenAI API auth error {exc.code}: {msg}"
-                ) from exc
+                raise ProviderUnavailableError(f"OpenAI API auth error {exc.code}: {msg}") from exc
             raise RuntimeError(f"OpenAI API error {exc.code}: {msg}") from exc
