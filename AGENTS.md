@@ -162,6 +162,17 @@ Pre-commit validation:
 pre-commit run --all-files
 ```
 
+## Local CI Verification
+
+Run before every push:
+
+```bash
+pre-commit run --all-files
+pytest -q
+```
+
+Do not push changes that have not passed all checks locally.
+
 ## Portfolio Standards Reference
 
 For portfolio-wide repository standards and baseline conventions, consult the control-plane repo at `./util-repos/traction-control` from the portfolio root.
