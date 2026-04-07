@@ -53,9 +53,12 @@ from email.utils import parseaddr
 from pathlib import Path
 from typing import Any
 
+from crew_chief.agent import Agent
 from crew_chief.client import CrewChiefClient
 from crew_chief.config_loader import GmailConfig, ListenerConfig, SignalConfig
 from crew_chief.dispatcher import Dispatcher, DispatchResult
+from crew_chief.providers import get_provider
+from crew_chief.tools import build_tools
 
 log = logging.getLogger(__name__)
 
@@ -475,19 +478,29 @@ def _process_message(
     cfg: ListenerConfig,
     llm_client: CrewChiefClient,
     dispatcher: Dispatcher,
+    agent: Agent | None = None,
 ) -> None:
-    """Interpret, dispatch, and reply to a single incoming message."""
+    """Interpret, dispatch, and reply to a single incoming message.
+
+    When *agent* is provided (``cfg.agent.enabled = True``), the message text
+    is handed directly to the multi-step Agent loop.  Otherwise the original
+    single-command dispatch flow is used.
+    """
     log.info("[%s] Message from %s: %r", msg.channel, msg.sender, msg.text[:80])
 
-    command = resolve_command(msg.text, cfg, llm_client)
-    if command is None:
-        log.info("[%s] No actionable command extracted from message.", msg.channel)
-        return
+    if agent is not None:
+        log.info("[%s] Routing to agent loop.", msg.channel)
+        reply_text = agent.run(msg.text)
+    else:
+        command = resolve_command(msg.text, cfg, llm_client)
+        if command is None:
+            log.info("[%s] No actionable command extracted from message.", msg.channel)
+            return
 
-    log.info("[%s] Dispatching: %r", msg.channel, command)
-    result: DispatchResult = dispatcher.run(command)
+        log.info("[%s] Dispatching: %r", msg.channel, command)
+        result: DispatchResult = dispatcher.run(command)
+        reply_text = result.reply_text()
 
-    reply_text = result.reply_text()
     log.info("[%s] Reply (%d chars): %r", msg.channel, len(reply_text), reply_text[:80])
 
     if msg.channel == "signal":
@@ -518,21 +531,41 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
         max_output_bytes=cfg.dispatch.output_max_bytes,
     )
 
+    # Build the agent if agent mode is enabled.
+    agent: Agent | None = None
+    if cfg.agent.enabled:
+        provider = get_provider(cfg.llm)
+        tools = build_tools(cfg)
+        agent = Agent(
+            provider=provider,
+            tools=tools,
+            system_prompt=cfg.agent.system_prompt,
+            max_iterations=cfg.agent.max_iterations,
+        )
+        log.info(
+            "Agent mode enabled (provider=%s, model=%s, tools=%s, max_iter=%d).",
+            cfg.llm.provider,
+            cfg.llm.model,
+            [t.name for t in tools],
+            cfg.agent.max_iterations,
+        )
+
     log.info(
-        "crew-chief listener started (Signal=%s, Gmail=%s, interval=%ds).",
+        "crew-chief listener started (Signal=%s, Gmail=%s, interval=%ds, agent=%s).",
         cfg.signal.enabled,
         cfg.gmail.enabled,
         cfg.poll_interval_seconds,
+        cfg.agent.enabled,
     )
 
     while True:
         cycle_start = time.monotonic()
 
         for msg in poll_signal(cfg.signal):
-            _process_message(msg, cfg, llm_client, dispatcher)
+            _process_message(msg, cfg, llm_client, dispatcher, agent)
 
         for msg in poll_gmail(cfg.gmail):
-            _process_message(msg, cfg, llm_client, dispatcher)
+            _process_message(msg, cfg, llm_client, dispatcher, agent)
 
         if once:
             break

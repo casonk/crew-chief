@@ -1,41 +1,148 @@
 # config/listener/config.toml.example
-# Copy to config/listener/config.toml and fill in your local values.
-# config/listener/config.toml is gitignored — do not commit it.
+# ─────────────────────────────────────────────────────────────────────────────
+# SECURITY NOTICE
+# ─────────────────────────────────────────────────────────────────────────────
+# This file is a template.  Copy it to config/listener/config.toml and fill in
+# your local values.  config/listener/config.toml is gitignored and must never
+# be committed.
 #
-# Install the listener extras before running:
+# Fields that must stay out of version control
+# ─────────────────────────────────────────────
+#   signal.trusted_senders   — your phone number(s)
+#   signal.reply_to          — your phone number
+#   signal.shock_relay_dir   — absolute path on this machine
+#   signal.config_path       — absolute path on this machine
+#   gmail.trusted_senders    — your email address(es)
+#   gmail.reply_to           — your email address
+#   gmail.shock_relay_dir    — absolute path on this machine
+#   gmail.config_path        — absolute path on this machine
+#   dispatch.allowed_commands — reveals your permitted command surface
+#   agent.allowed_paths      — reveals your permitted filesystem surface
+#
+# API keys are NOT stored here.  They are read from environment variables.
+# See config/env.example for the complete list of required env vars.
+#
+# Install listener extras before running:
 #   pip install "crew-chief[listener]"      # Python 3.10
-#   pip install -e .                         # Python 3.11+ (tomllib built-in)
+#   pip install -e .                        # Python 3.11+ (tomllib built-in)
 #
 # Start the listener:
+#   source config/env                       # load API keys into the shell
 #   crew-chief listen --config config/listener/config.toml
+#
+# Or use the managed scripts:
+#   bash scripts/start_listener.sh          # background (sources config/env automatically)
+#   bash scripts/run_listener.sh            # foreground / systemd  (same)
 
-# ---------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
 # Listener loop
-# ---------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
 [listener]
-# Seconds between full poll cycles (Signal blocks for ~5s per cycle).
+# Seconds between full poll cycles.  Signal itself blocks for ~5 s per cycle.
 poll_interval_seconds = 30
 
-# ---------------------------------------------------------------------------
-# LLM settings
-# ---------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
+# LLM / provider settings
+# ─────────────────────────────────────────────────────────────────────────────
 [llm]
-# Ollama model to use for command interpretation.
+# ── Provider selection ───────────────────────────────────────────────────────
+# "fallback"   — try each entry in fallback_chain in order (recommended)
+# "ollama"     — local Ollama service only
+# "claude-cli" — claude CLI only (browser-authenticated, no API key needed)
+# "codex-cli"  — codex CLI only  (browser-authenticated, no API key needed)
+# "anthropic"  — Anthropic Messages API only (requires ANTHROPIC_API_KEY)
+# "openai"     — OpenAI Chat Completions API only (requires OPENAI_API_KEY)
+provider = "fallback"
+
+# Ordered provider names tried by FallbackProvider.
+# A provider is skipped silently when it is unavailable (service down, CLI not
+# installed / not logged in, API key absent or invalid).
+fallback_chain = ["ollama", "claude-cli", "codex-cli", "anthropic", "openai"]
+
+# ── Ollama settings ──────────────────────────────────────────────────────────
+# Model used by OllamaProvider for both generate and chat calls.
 model = "llama3.2"
 
-# When true, natural-language messages are passed through the LLM for command
-# extraction.  When false, only messages starting with "!" are processed.
-natural_language = true
-
-# Base URL of the running Ollama service (crew-chief container or local).
+# Base URL of the running Ollama service.
 base_url = "http://localhost:11434"
 
-# LLM request timeout in seconds.
+# Request timeout in seconds (applies to all providers unless overridden below).
 timeout_seconds = 60
 
-# ---------------------------------------------------------------------------
+# When true, natural-language messages are passed through the LLM for command
+# extraction.  When false, only messages prefixed with "!" are processed.
+# Ignored when agent.enabled = true (agent mode handles its own routing).
+natural_language = true
+
+# ── Anthropic API settings ───────────────────────────────────────────────────
+# Name of the environment variable that holds the Anthropic API key.
+# The key itself must be set in config/env (or exported before starting).
+# api_key_env = "ANTHROPIC_API_KEY"
+
+# Upper bound on tokens generated per response (cloud API providers only).
+# max_tokens = 4096
+
+# ── OpenAI API settings ──────────────────────────────────────────────────────
+# Name of the environment variable that holds the OpenAI API key.
+# openai_api_key_env = "OPENAI_API_KEY"
+
+# OpenAI model to use.  Defaults to "gpt-4o".
+# openai_model = "gpt-4o"
+
+# ── Claude CLI settings ──────────────────────────────────────────────────────
+# Model alias or full ID for the claude CLI.  Empty = CLI default.
+# claude_cli_model = ""
+
+# Tool names to allow (e.g. "Bash,Read,Edit").
+# Empty string = no tools (pure text generation — safest, fastest for Q&A).
+# For agentic use set to "Bash" or "Bash,Read,Edit".
+# claude_cli_allowed_tools = ""
+
+# ── Codex CLI settings ───────────────────────────────────────────────────────
+# Model name for the codex CLI.  Empty = CLI default (e.g. "o3").
+# codex_cli_model = ""
+
+# Sandbox policy for Codex agent tool execution.
+# "read-only"          — no writes (safest)
+# "workspace-write"    — can write inside the working directory (default)
+# "danger-full-access" — unrestricted (not recommended)
+# codex_cli_sandbox = "workspace-write"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Agent mode  (multi-step plan → act → observe loop)
+# ─────────────────────────────────────────────────────────────────────────────
+[agent]
+# Set to true to replace the single-command dispatch flow with the Agent loop.
+# When enabled, the full message text is passed to the Agent; the model may
+# call tools across multiple iterations before producing the final reply.
+enabled = false
+
+# Maximum tool-use cycles before the agent returns its last partial response.
+# Increase for complex multi-step tasks; lower values reduce runaway cost.
+max_iterations = 10
+
+# Built-in tools to make available to the agent.
+# "shell"      — run allowlisted shell commands (uses dispatch.allowed_commands)
+# "read_file"  — read files within agent.allowed_paths
+# "write_file" — write files within agent.allowed_paths
+tools = ["shell"]
+
+# Absolute path prefixes the model may read/write via file tools.
+# An empty list means unrestricted — only safe if all paths on the machine
+# are acceptable for the model to access.
+# SECURITY: always restrict to specific directories in production.
+# allowed_paths = ["/home/youruser/safe-data/"]
+allowed_paths = []
+
+# Override the agent system prompt.  Leave empty to use the built-in default.
+# system_prompt = "You are a helpful automation assistant..."
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Signal channel
-# ---------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
+# SECURITY: trusted_senders and reply_to contain real phone numbers.
+#           shock_relay_dir and config_path are absolute paths on this machine.
+#           None of these should appear in version control.
 [signal]
 enabled = false
 
@@ -45,16 +152,19 @@ shock_relay_dir = "/path/to/shock-relay/services/signal-cli"
 # Path to the signal-cli config.local.yaml used by shock-relay.
 config_path = "/path/to/shock-relay/services/signal-cli/config.local.yaml"
 
-# Only process incoming messages from these phone numbers.
-# Messages from any other number are silently ignored.
+# Phone numbers allowed to send commands.  Messages from any other number are
+# silently discarded before any LLM or dispatch processing.
 trusted_senders = ["+15551234567"]
 
-# Phone number to send replies to (usually your own Signal number).
+# Phone number replies are sent to (usually your own Signal number).
 reply_to = "+15551234567"
 
-# ---------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
 # Gmail channel
-# ---------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
+# SECURITY: trusted_senders and reply_to contain real email addresses.
+#           shock_relay_dir and config_path are absolute paths on this machine.
+#           None of these should appear in version control.
 [gmail]
 enabled = false
 
@@ -64,34 +174,35 @@ shock_relay_dir = "/path/to/shock-relay/services/gmail-imap"
 # Path to the gmail-imap config.local.yaml used by shock-relay.
 config_path = "/path/to/shock-relay/services/gmail-imap/config.local.yaml"
 
-# Only process incoming messages from these email addresses.
-# Messages from any other address are silently ignored.
+# Email addresses allowed to send commands.  All other senders are discarded.
 trusted_senders = ["you@example.com"]
 
-# Address to send command output replies to.
+# Address replies are sent to.
 reply_to = "you@example.com"
 
-# Only look at messages received within the last N days per poll cycle.
+# Only scan messages received within the last N days on each poll cycle.
 since_days = 1
 
-# Maximum unseen messages to retrieve per poll cycle.
+# Maximum unseen messages to fetch per poll cycle.
 limit = 5
 
-# ---------------------------------------------------------------------------
-# Command dispatch
-# ---------------------------------------------------------------------------
+# ─────────────────────────────────────────────────────────────────────────────
+# Command dispatch  (shell tool and single-command mode)
+# ─────────────────────────────────────────────────────────────────────────────
+# SECURITY: allowed_commands defines what the LLM (or a remote sender) can run
+#           on this machine.  Treat this list as an explicit attack surface.
+#           Every pattern here is a command a trusted sender can execute.
+#           Use the most specific globs possible.  Avoid "rm*", "sudo*", "*".
 [dispatch]
 # Hard timeout per command in seconds.
 timeout_seconds = 30
 
-# Maximum output bytes included in the reply message.
-# Long output is truncated with a "[output truncated]" notice.
+# Maximum output bytes in the reply.  Long output is truncated with a notice.
 output_max_bytes = 2000
 
-# fnmatch-style glob patterns matched against the full command string.
-# The command must match at least one pattern before it is executed.
-# Adjust this list carefully — each entry represents commands you are
-# comfortable running from a remote message.
+# fnmatch-style globs matched against the full command string.
+# The command must match at least one pattern before any subprocess is launched.
+# Start with the minimum set you actually need and expand deliberately.
 allowed_commands = [
   "df*",
   "free*",
@@ -102,7 +213,8 @@ allowed_commands = [
   "ls *",
   "uname*",
   "whoami",
-  "systemctl status *",
-  "journalctl -n *",
-  "ps aux",
+  # Uncomment with care — these reveal more system state:
+  # "systemctl status *",
+  # "journalctl -n *",
+  # "ps aux",
 ]

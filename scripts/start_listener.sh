@@ -12,6 +12,16 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG_PATH="${1:-${REPO_ROOT}/config/listener/config.toml}"
 LOG_FILE="${REPO_ROOT}/.crew-chief-listener.log"
 PID_FILE="${REPO_ROOT}/.crew-chief-listener.pid"
+ENV_FILE="${REPO_ROOT}/config/env"
+
+# Source the local env file if it exists.  This injects API keys
+# (ANTHROPIC_API_KEY, OPENAI_API_KEY, …) so the background process inherits
+# them without storing secrets in any tracked file.
+# Copy config/env.example → config/env and fill in your keys.
+if [ -f "$ENV_FILE" ]; then
+    # shellcheck source=/dev/null
+    source "$ENV_FILE"
+fi
 
 if [ ! -f "$CONFIG_PATH" ]; then
     echo "Error: listener config not found at $CONFIG_PATH" >&2

@@ -37,6 +37,72 @@ class LlmConfig:
     base_url: str = "http://localhost:11434"
     timeout_seconds: int = 60
 
+    # ------------------------------------------------------------------ #
+    # Provider selection                                                   #
+    # ------------------------------------------------------------------ #
+    # Supported values:
+    #   "ollama"     — local Ollama service (default)
+    #   "claude-cli" — claude CLI logged in via browser account
+    #   "codex-cli"  — codex CLI logged in via browser account
+    #   "anthropic"  — Anthropic Messages API (requires api_key_env)
+    #   "fallback"   — try each provider in fallback_chain order
+    provider: str = "ollama"
+
+    # Ordered list of provider names used when provider = "fallback".
+    fallback_chain: list[str] = field(
+        default_factory=lambda: ["ollama", "claude-cli", "codex-cli", "anthropic", "openai"]
+    )
+
+    # ------------------------------------------------------------------ #
+    # Anthropic API settings                                               #
+    # ------------------------------------------------------------------ #
+    # Name of the environment variable that holds the Anthropic API key.
+    api_key_env: str = "ANTHROPIC_API_KEY"
+    # Upper bound on generated tokens.
+    max_tokens: int = 4096
+
+    # ------------------------------------------------------------------ #
+    # Claude CLI settings                                                  #
+    # ------------------------------------------------------------------ #
+    # Model alias/ID for the claude CLI.  Empty = CLI default.
+    claude_cli_model: str = ""
+    # Tool names to allow (e.g. "Bash,Read,Edit").  Empty = no tools
+    # (pure text generation — fastest for simple Q&A).
+    claude_cli_allowed_tools: str = ""
+
+    # ------------------------------------------------------------------ #
+    # Codex CLI settings                                                   #
+    # ------------------------------------------------------------------ #
+    # Model name for the codex CLI.  Empty = CLI default.
+    codex_cli_model: str = ""
+    # Sandbox policy: "read-only", "workspace-write", "danger-full-access".
+    codex_cli_sandbox: str = "workspace-write"
+
+    # ------------------------------------------------------------------ #
+    # OpenAI API settings                                                  #
+    # ------------------------------------------------------------------ #
+    # Name of the environment variable that holds the OpenAI API key.
+    openai_api_key_env: str = "OPENAI_API_KEY"
+    # Model ID for the OpenAI provider.
+    openai_model: str = "gpt-4o"
+
+
+@dataclass
+class AgentConfig:
+    # When True, incoming messages are handled by the multi-step Agent loop
+    # instead of the single-command dispatch flow.
+    enabled: bool = False
+    # Hard cap on tool-use cycles per request to prevent infinite loops.
+    max_iterations: int = 10
+    # System prompt sent to the model on every agent call.  Empty string uses
+    # the default prompt defined in crew_chief.agent.
+    system_prompt: str = ""
+    # Built-in tool names to enable: "shell", "read_file", "write_file".
+    tools: list[str] = field(default_factory=lambda: ["shell"])
+    # Path prefixes the model is allowed to read/write via file tools.
+    # An empty list permits all paths (no restriction).
+    allowed_paths: list[str] = field(default_factory=list)
+
 
 @dataclass
 class SignalConfig:
@@ -96,6 +162,7 @@ class ListenerConfig:
     # Seconds to sleep between full poll cycles (Signal + Gmail).
     poll_interval_seconds: int = 30
     llm: LlmConfig = field(default_factory=LlmConfig)
+    agent: AgentConfig = field(default_factory=AgentConfig)
     signal: SignalConfig = field(default_factory=SignalConfig)
     gmail: GmailConfig = field(default_factory=GmailConfig)
     dispatch: DispatchConfig = field(default_factory=DispatchConfig)
@@ -156,6 +223,40 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.llm.base_url = _str(llm["base_url"], "llm.base_url")
     if "timeout_seconds" in llm:
         cfg.llm.timeout_seconds = _int(llm["timeout_seconds"], "llm.timeout_seconds")
+    if "provider" in llm:
+        cfg.llm.provider = _str(llm["provider"], "llm.provider")
+    if "fallback_chain" in llm:
+        cfg.llm.fallback_chain = _str_list(llm["fallback_chain"], "llm.fallback_chain")
+    if "api_key_env" in llm:
+        cfg.llm.api_key_env = _str(llm["api_key_env"], "llm.api_key_env")
+    if "max_tokens" in llm:
+        cfg.llm.max_tokens = _int(llm["max_tokens"], "llm.max_tokens")
+    if "claude_cli_model" in llm:
+        cfg.llm.claude_cli_model = _str(llm["claude_cli_model"], "llm.claude_cli_model")
+    if "claude_cli_allowed_tools" in llm:
+        cfg.llm.claude_cli_allowed_tools = _str(
+            llm["claude_cli_allowed_tools"], "llm.claude_cli_allowed_tools"
+        )
+    if "codex_cli_model" in llm:
+        cfg.llm.codex_cli_model = _str(llm["codex_cli_model"], "llm.codex_cli_model")
+    if "codex_cli_sandbox" in llm:
+        cfg.llm.codex_cli_sandbox = _str(llm["codex_cli_sandbox"], "llm.codex_cli_sandbox")
+    if "openai_api_key_env" in llm:
+        cfg.llm.openai_api_key_env = _str(llm["openai_api_key_env"], "llm.openai_api_key_env")
+    if "openai_model" in llm:
+        cfg.llm.openai_model = _str(llm["openai_model"], "llm.openai_model")
+
+    agt = raw.get("agent", {})
+    if "enabled" in agt:
+        cfg.agent.enabled = _bool(agt["enabled"], "agent.enabled")
+    if "max_iterations" in agt:
+        cfg.agent.max_iterations = _int(agt["max_iterations"], "agent.max_iterations")
+    if "system_prompt" in agt:
+        cfg.agent.system_prompt = _str(agt["system_prompt"], "agent.system_prompt")
+    if "tools" in agt:
+        cfg.agent.tools = _str_list(agt["tools"], "agent.tools")
+    if "allowed_paths" in agt:
+        cfg.agent.allowed_paths = _str_list(agt["allowed_paths"], "agent.allowed_paths")
 
     sig = raw.get("signal", {})
     if "enabled" in sig:

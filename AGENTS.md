@@ -2,12 +2,13 @@
 
 ## Purpose
 
-`crew-chief` is a local LLM service backed by [Ollama](https://ollama.com), containerized with Podman, and exposed via a zero-dependency Python client.  Other portfolio repositories call it for trivial inference tasks (classification, summarization, brief generation) without requiring cloud API access.
+`crew-chief` is a local LLM service and agentic workflow engine backed by [Ollama](https://ollama.com) (local) and the Anthropic API (cloud), containerized with Podman, and exposed via a zero-dependency Python client.  Other portfolio repositories call it for inference tasks (classification, summarization, brief generation, multi-step tool-use workflows) without requiring extra HTTP libraries.
 
-The repo ships two things:
+The repo ships three layers:
 
 1. **Container definition** (`Containerfile`) — builds a Podman image wrapping the upstream `ollama/ollama` image and exposes the REST API on port 11434.
-2. **Python client package** (`src/crew_chief/`) — a stdlib-only HTTP wrapper around Ollama's `/api/generate` and `/api/chat` endpoints so any repo can call the service without pulling in extra HTTP libraries.
+2. **Python client package** (`src/crew_chief/`) — stdlib-only provider backends, a multi-step `Agent` loop, and built-in tools (`shell`, `read_file`, `write_file`).
+3. **Listener service** (`src/crew_chief/listener.py`) — polls Signal and Gmail, routes messages through the LLM (single-command or full agent mode), dispatches allowlisted shell commands, and replies.
 
 ## Repository Layout
 
@@ -18,10 +19,25 @@ crew-chief/
 ├── src/crew_chief/
 │   ├── __init__.py                        # Public re-exports, __version__
 │   ├── __main__.py                        # python -m crew_chief entry point
-│   ├── client.py                          # CrewChiefClient — HTTP client for Ollama
-│   └── cli.py                             # crew-chief CLI (generate / health / models)
+│   ├── client.py                          # CrewChiefClient — legacy Ollama HTTP client
+│   ├── cli.py                             # CLI: generate / health / models / listen / agent
+│   ├── agent.py                           # Agent — multi-step plan→act→observe loop
+│   ├── tools.py                           # Tool base class + ShellTool / ReadFileTool / WriteFileTool
+│   ├── providers/
+│   │   ├── __init__.py                    # get_provider() factory + re-exports
+│   │   ├── base.py                        # Provider protocol, ToolParam, ToolUse, ChatResult
+│   │   ├── ollama.py                      # OllamaProvider — local Ollama REST API
+│   │   └── anthropic.py                   # AnthropicProvider — Anthropic Messages API
+│   ├── dispatcher.py                      # Allowlisted shell command execution
+│   ├── listener.py                        # Signal/Gmail poll loop + agent/dispatch routing
+│   └── config_loader.py                   # TOML config: ListenerConfig + AgentConfig
 ├── tests/
-│   └── test_client.py                     # Offline unit tests (no real service required)
+│   ├── test_client.py                     # Offline unit tests for CrewChiefClient
+│   ├── test_dispatcher.py                 # Offline unit tests for Dispatcher
+│   ├── test_listener.py                   # Offline unit tests for listener
+│   ├── test_providers.py                  # Offline unit tests for OllamaProvider / AnthropicProvider
+│   ├── test_agent.py                      # Offline unit tests for Agent loop
+│   └── test_tools.py                      # Unit tests for ShellTool / ReadFileTool / WriteFileTool
 ├── scripts/
 │   ├── start.sh                           # Build image (if absent) + start container
 │   ├── stop.sh                            # Stop running container
@@ -29,6 +45,7 @@ crew-chief/
 │   └── pull_model.sh                      # Pull a model into the running service
 ├── config/
 │   ├── ollama/config.env.example          # Ollama env vars template (do not commit config.env)
+│   ├── listener/config.toml               # Listener + agent + dispatch config
 │   └── downstream-repos.toml             # Tracked inventory of downstream consumers
 └── docs/
     ├── contributor-architecture-blueprint.md
@@ -69,14 +86,58 @@ print(client.generate("What is 2+2?"))
 | `CREW_CHIEF_IMAGE` | `crew-chief:latest` | Podman image name |
 | `CREW_CHIEF_PORT` | `11434` | Host port to bind |
 | `CREW_CHIEF_MODELS_VOLUME` | `crew-chief-models` | Podman volume for model weights |
+| `ANTHROPIC_API_KEY` | *(unset)* | API key for the Anthropic provider (set `llm.api_key_env` to use a different name) |
 
 ## Architecture Notes
 
 - The container is stateless; model weights are persisted in the named Podman volume `crew-chief-models`.
-- The Python client is stdlib-only (`json`, `urllib`) — no third-party dependencies.
-- `CrewChiefClient.generate(prompt)` wraps `/api/generate` (single-turn).
-- `CrewChiefClient.chat(messages)` wraps `/api/chat` (multi-turn).
-- `stream` is always `False`; streaming is not exposed through the current client API.
+- The entire Python package is stdlib-only (`json`, `urllib`) — no third-party runtime dependencies.
+- `stream` is always `False`; streaming is not exposed through the current client or provider APIs.
+
+### Provider layer (`src/crew_chief/providers/`)
+
+Three tiers, tried in order when `provider = "fallback"`:
+
+| Tier | Class | Backend | Auth | Tool calling |
+|---|---|---|---|---|
+| 1 | `OllamaProvider` | Local Ollama service (port 11434) | None — local service | Yes — Ollama `/api/chat` with `tools:` |
+| 2 | `ClaudeCliProvider` | `claude -p --output-format json` | Browser login (Claude account) | Claude's own internal tools (`--allowedTools Bash,…`) |
+| 2 | `CodexCliProvider` | `codex exec --json -o <file>` | Browser login (OpenAI account) | Codex's own internal agentic loop |
+| 3 | `AnthropicProvider` | Anthropic Messages API | `ANTHROPIC_API_KEY` env var | Yes — `tools:` + `tool_use` content blocks |
+
+All four implement the `Provider` protocol (`chat()` + `generate()`).  `get_provider(cfg)` builds the right backend (or a `FallbackProvider` wrapping a chain) based on `cfg.provider`.
+
+`ProviderUnavailableError` is raised when a provider cannot serve (service down, CLI not installed, not logged in, no API key, quota exhausted).  `FallbackProvider` catches it and advances to the next tier; other exceptions cause a WARNING log and also advance.
+
+The providers share a normalized internal message format:
+- Plain turn: `{"role": "user"|"assistant", "content": str}`
+- Tool-use turn: `{"role": "assistant", "content": str, "tool_uses": [{"id", "name", "arguments"}]}`
+- Tool results: `{"role": "tool_result", "results": [{"tool_use_id", "name", "content"}]}`
+
+CLI providers (tiers 2) convert the full message history to a single prompt string and let the CLI's own agent loop handle any tool use; they always return `ChatResult` with no `tool_uses`.
+
+### Agent loop (`src/crew_chief/agent.py`)
+
+`Agent.run(prompt)` drives a plan → act → observe cycle:
+1. Call `provider.chat(messages, tools, system)`.
+2. If `stop_reason == "tool_use"`: execute each requested tool, append results, repeat.
+3. If plain text response or `max_iterations` reached: return the content.
+
+### Built-in tools (`src/crew_chief/tools.py`)
+
+| Tool | Class | Safety |
+|---|---|---|
+| `shell` | `ShellTool` | Dispatcher allowlist — only matched fnmatch patterns are run |
+| `read_file` | `ReadFileTool` | Optional `allowed_paths` prefix list |
+| `write_file` | `WriteFileTool` | Optional `allowed_paths` prefix list |
+
+`build_tools(cfg)` instantiates tools from `cfg.agent.tools` and wires the `Dispatcher` from `cfg.dispatch`.
+
+### Listener routing (`src/crew_chief/listener.py`)
+
+When `agent.enabled = false` (default): single-command flow — extract one shell command via LLM or `!` prefix, dispatch, reply.
+
+When `agent.enabled = true`: full agent loop — `Agent.run(message_text)` is called; the model may invoke tools across multiple iterations before producing the final reply.
 
 ## Change Guidance
 

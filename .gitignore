@@ -30,6 +30,9 @@ config/ollama/config.env
 # Local listener config (contains shock-relay paths and trusted sender lists)
 config/listener/config.toml
 
+# Local API keys env file (contains ANTHROPIC_API_KEY, OPENAI_API_KEY, etc.)
+config/env
+
 # Listener runtime artifacts
 .crew-chief-listener.pid
 .crew-chief-listener.log
