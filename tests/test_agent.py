@@ -9,7 +9,6 @@ from crew_chief.agent import Agent
 from crew_chief.providers.base import ChatResult, ToolUse
 from crew_chief.tools import Tool
 
-
 # ---------------------------------------------------------------------------
 # Minimal stub tool
 # ---------------------------------------------------------------------------

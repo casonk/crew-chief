@@ -6,15 +6,20 @@ import json
 import unittest
 from unittest.mock import MagicMock, patch
 
-from crew_chief.providers.anthropic import AnthropicProvider, _parse_response, _to_anthropic_messages
-from crew_chief.providers.base import ChatResult, ToolParam, ToolUse
+from crew_chief.providers.anthropic import (
+    AnthropicProvider,
+    _parse_response,
+    _to_anthropic_messages,
+)
+from crew_chief.providers.base import ChatResult, ToolParam
 from crew_chief.providers.ollama import OllamaProvider, _parse_chat_response, _to_ollama_messages
 from crew_chief.providers.openai import (
     OpenAIProvider,
-    _parse_response as _parse_openai_response,
     _to_openai_messages,
 )
-
+from crew_chief.providers.openai import (
+    _parse_response as _parse_openai_response,
+)
 
 # ---------------------------------------------------------------------------
 # Shared helper
@@ -89,9 +94,7 @@ class TestParseOllamaChatResponse(unittest.TestCase):
             "message": {
                 "role": "assistant",
                 "content": "",
-                "tool_calls": [
-                    {"function": {"name": "shell", "arguments": {"command": "uptime"}}}
-                ],
+                "tool_calls": [{"function": {"name": "shell", "arguments": {"command": "uptime"}}}],
             }
         }
         result = _parse_chat_response(body)
@@ -310,9 +313,7 @@ class TestAnthropicProviderChat(unittest.TestCase):
         }
         mock_resp = _make_urlopen_mock(body)
         with patch("urllib.request.urlopen", return_value=mock_resp):
-            result = AnthropicProvider(api_key="test-key").chat(
-                [{"role": "user", "content": "hi"}]
-            )
+            result = AnthropicProvider(api_key="test-key").chat([{"role": "user", "content": "hi"}])
         self.assertEqual(result.content, "Sure!")
 
     def test_chat_sends_system_and_tools(self):
@@ -390,8 +391,13 @@ class TestClaudeCliProvider(unittest.TestCase):
         from crew_chief.providers.cli import ClaudeCliProvider
 
         payload = json.dumps(
-            {"type": "result", "subtype": "success", "is_error": False, "result": "Hello!",
-             "stop_reason": "end_turn"}
+            {
+                "type": "result",
+                "subtype": "success",
+                "is_error": False,
+                "result": "Hello!",
+                "stop_reason": "end_turn",
+            }
         )
         with patch("subprocess.run", return_value=self._mock_run(payload)):
             result = ClaudeCliProvider().chat([{"role": "user", "content": "hi"}])
@@ -411,10 +417,12 @@ class TestClaudeCliProvider(unittest.TestCase):
         from crew_chief.providers.base import ProviderUnavailableError
         from crew_chief.providers.cli import ClaudeCliProvider
 
-        payload = json.dumps({
-            "is_error": True,
-            "result": "Not logged in · Please run /login",
-        })
+        payload = json.dumps(
+            {
+                "is_error": True,
+                "result": "Not logged in · Please run /login",
+            }
+        )
         with patch("subprocess.run", return_value=self._mock_run(payload, returncode=1)):
             with self.assertRaises(ProviderUnavailableError):
                 ClaudeCliProvider().chat([{"role": "user", "content": "hi"}])
@@ -442,9 +450,7 @@ class TestClaudeCliProvider(unittest.TestCase):
             return r
 
         with patch("subprocess.run", side_effect=fake_run):
-            ClaudeCliProvider().chat(
-                [{"role": "user", "content": "hi"}], system="Be concise."
-            )
+            ClaudeCliProvider().chat([{"role": "user", "content": "hi"}], system="Be concise.")
 
         cmd_str = " ".join(captured["cmd"])
         self.assertIn("--append-system-prompt", cmd_str)
@@ -483,9 +489,7 @@ class TestClaudeCliProvider(unittest.TestCase):
             return r
 
         with patch("subprocess.run", side_effect=fake_run):
-            ClaudeCliProvider(allowed_tools="Bash,Read").chat(
-                [{"role": "user", "content": "hi"}]
-            )
+            ClaudeCliProvider(allowed_tools="Bash,Read").chat([{"role": "user", "content": "hi"}])
 
         self.assertIn("--allowedTools", captured["cmd"])
 
@@ -718,9 +722,7 @@ class TestToOpenAIMessages(unittest.TestCase):
 
 class TestParseOpenAIResponse(unittest.TestCase):
     def test_plain_text(self):
-        body = {
-            "choices": [{"message": {"content": "Hello!"}, "finish_reason": "stop"}]
-        }
+        body = {"choices": [{"message": {"content": "Hello!"}, "finish_reason": "stop"}]}
         result = _parse_openai_response(body)
         self.assertEqual(result.content, "Hello!")
         self.assertEqual(result.tool_uses, [])
@@ -773,14 +775,10 @@ class TestOpenAIProviderChat(unittest.TestCase):
             OpenAIProvider(api_key="").chat([{"role": "user", "content": "hi"}])
 
     def test_chat_plain_response(self):
-        body = {
-            "choices": [{"message": {"content": "Sure!"}, "finish_reason": "stop"}]
-        }
+        body = {"choices": [{"message": {"content": "Sure!"}, "finish_reason": "stop"}]}
         mock_resp = _make_urlopen_mock(body)
         with patch("urllib.request.urlopen", return_value=mock_resp):
-            result = OpenAIProvider(api_key="sk-test").chat(
-                [{"role": "user", "content": "hi"}]
-            )
+            result = OpenAIProvider(api_key="sk-test").chat([{"role": "user", "content": "hi"}])
         self.assertEqual(result.content, "Sure!")
 
     def test_chat_sends_bearer_auth(self):

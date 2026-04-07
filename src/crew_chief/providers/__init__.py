@@ -6,7 +6,13 @@ import logging
 from typing import Any
 
 from crew_chief.providers.anthropic import AnthropicProvider
-from crew_chief.providers.base import ChatResult, Provider, ProviderUnavailableError, ToolParam, ToolUse
+from crew_chief.providers.base import (
+    ChatResult,
+    Provider,
+    ProviderUnavailableError,
+    ToolParam,
+    ToolUse,
+)
 from crew_chief.providers.cli import ClaudeCliProvider, CodexCliProvider
 from crew_chief.providers.ollama import OllamaProvider
 from crew_chief.providers.openai import _DEFAULT_MODEL as _DEFAULT_OPENAI_MODEL
