@@ -6,6 +6,8 @@ import json
 import unittest
 from unittest.mock import MagicMock, patch
 
+from dyno_lab.proc import ProcessRecorder, SubprocessPatch, build_completed_process
+
 from crew_chief.config_loader import GmailConfig, ListenerConfig, SignalConfig
 from crew_chief.listener import (
     _extract_email_address,
@@ -18,7 +20,6 @@ from crew_chief.listener import (
     reply_signal,
     resolve_command,
 )
-from dyno_lab.proc import ProcessRecorder, SubprocessPatch, build_completed_process
 
 _SIGNAL_TARGET = "crew_chief.listener.subprocess.run"
 _GMAIL_TARGET = "crew_chief.listener.subprocess.run"

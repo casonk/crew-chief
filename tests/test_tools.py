@@ -5,11 +5,9 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import MagicMock
 
 from crew_chief.dispatcher import Dispatcher
 from crew_chief.tools import ReadFileTool, ShellTool, Tool, WriteFileTool
-
 
 # ---------------------------------------------------------------------------
 # Tool base

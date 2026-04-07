@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import subprocess
 import tempfile
 from pathlib import Path
@@ -88,9 +87,7 @@ def _messages_to_prompt(
             if text:
                 parts.append(f"Assistant: {text}")
             for tu in msg["tool_uses"]:
-                parts.append(
-                    f"[Called tool {tu['name']!r} with {json.dumps(tu['arguments'])}]"
-                )
+                parts.append(f"[Called tool {tu['name']!r} with {json.dumps(tu['arguments'])}]")
 
         else:
             content = msg.get("content", "")
@@ -197,14 +194,17 @@ class ClaudeCliProvider:
                 "Install Claude Code: https://claude.ai/code"
             ) from exc
         except subprocess.TimeoutExpired as exc:
-            raise RuntimeError(
-                f"claude CLI timed out after {self.timeout}s"
-            ) from exc
+            raise RuntimeError(f"claude CLI timed out after {self.timeout}s") from exc
 
         stdout = result.stdout.strip()
         stderr = result.stderr.strip()
 
-        log.debug("ClaudeCliProvider rc=%d stdout=%r stderr=%r", result.returncode, stdout[:200], stderr[:200])
+        log.debug(
+            "ClaudeCliProvider rc=%d stdout=%r stderr=%r",
+            result.returncode,
+            stdout[:200],
+            stderr[:200],
+        )
 
         # Parse the JSON result object
         try:
@@ -213,8 +213,10 @@ class ClaudeCliProvider:
             # Non-JSON output on failure (e.g. auth prompt printed to stdout)
             raw = (stdout or stderr).lower()
             if any(phrase in raw for phrase in _CLAUDE_UNAVAILABLE_PHRASES):
-                raise ProviderUnavailableError(f"claude CLI not authenticated: {stdout or stderr}")
-            raise RuntimeError(f"claude CLI returned non-JSON output: {stdout or stderr}")
+                raise ProviderUnavailableError(
+                    f"claude CLI not authenticated: {stdout or stderr}"
+                ) from None
+            raise RuntimeError(f"claude CLI returned non-JSON output: {stdout or stderr}") from None
 
         if data.get("is_error"):
             result_text = data.get("result", "")
@@ -389,9 +391,7 @@ class CodexCliProvider:
 
             if event.get("type") in ("error", "turn.failed"):
                 msg = (
-                    event.get("message")
-                    or (event.get("error") or {}).get("message")
-                    or str(event)
+                    event.get("message") or (event.get("error") or {}).get("message") or str(event)
                 )
                 if any(phrase in msg.lower() for phrase in _CODEX_UNAVAILABLE_PHRASES):
                     raise ProviderUnavailableError(f"codex CLI unavailable: {msg}")
