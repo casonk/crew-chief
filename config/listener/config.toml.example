@@ -86,7 +86,7 @@ natural_language = true
 # auto-pass KeePass entry path for the Anthropic API key.
 # When set, the key is read from KeePass via the auto-pass CLI if
 # ANTHROPIC_API_KEY is not already in the environment.
-# anthropic_api_key_auto_pass_entry = "AnthropicClaudeConsole-api-key-continue#fedora"
+# anthropic_api_key_auto_pass_entry = "your-keepass-entry-path-for-anthropic"
 
 # Upper bound on tokens generated per response (cloud API providers only).
 # max_tokens = 4096
