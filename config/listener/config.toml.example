@@ -41,6 +41,12 @@
 # Seconds between full poll cycles.  Signal itself blocks for ~5 s per cycle.
 poll_interval_seconds = 30
 
+# Maximum total replies sent across all channels in one poll cycle.
+# 0 = unlimited.  Set to a small positive integer (e.g. 3) to cap blast radius
+# if a reply loop starts before the loop guards stop it.  Any messages beyond
+# this limit in the same cycle are dropped with a WARNING log.
+max_replies_per_cycle = 0
+
 # ─────────────────────────────────────────────────────────────────────────────
 # LLM / provider settings
 # ─────────────────────────────────────────────────────────────────────────────
@@ -216,6 +222,19 @@ since_days = 1
 
 # Maximum unseen messages to fetch per poll cycle.
 limit = 5
+
+# Case-insensitive substrings matched against incoming email subjects.
+# Any message whose subject contains one of these strings is silently dropped
+# before any LLM or dispatch processing.  Use this to exclude automated
+# notification pipelines that share the same inbox address as crew-chief.
+#
+# Example: exclude receipt-processing notifications from the intake pipeline
+# (which sends self-emails with subjects like "[intake] Receipt processed: ..."):
+#   subject_exclude_patterns = ["[intake]"]
+#
+# You can list any number of patterns:
+#   subject_exclude_patterns = ["[intake]", "[noreply]", "automated reply"]
+subject_exclude_patterns = []
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Command dispatch  (shell tool and single-command mode)

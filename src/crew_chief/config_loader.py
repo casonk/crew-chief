@@ -174,6 +174,12 @@ class GmailConfig:
     since_days: int = 1
     # Maximum unseen messages to retrieve per poll cycle.
     limit: int = 5
+    # Case-insensitive substrings matched against incoming email subjects.
+    # Any message whose subject contains one of these strings is silently
+    # dropped before any LLM or dispatch processing.  Use this to exclude
+    # automated notification pipelines that share the same inbox address
+    # (e.g. "[intake]" for receipt-processing notifications).
+    subject_exclude_patterns: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -203,6 +209,10 @@ class DispatchConfig:
 class ListenerConfig:
     # Seconds to sleep between full poll cycles (Signal + Gmail).
     poll_interval_seconds: int = 30
+    # Maximum total replies sent across all channels in a single poll cycle.
+    # 0 means unlimited.  Set to a low value (e.g. 3) to cap blast radius if
+    # a reply loop starts before the loop guards can stop it.
+    max_replies_per_cycle: int = 0
     llm: LlmConfig = field(default_factory=LlmConfig)
     agent: AgentConfig = field(default_factory=AgentConfig)
     signal: SignalConfig = field(default_factory=SignalConfig)
@@ -260,6 +270,10 @@ def load(path: str | Path) -> ListenerConfig:
     if "poll_interval_seconds" in top:
         cfg.poll_interval_seconds = _int(
             top["poll_interval_seconds"], "listener.poll_interval_seconds"
+        )
+    if "max_replies_per_cycle" in top:
+        cfg.max_replies_per_cycle = _int(
+            top["max_replies_per_cycle"], "listener.max_replies_per_cycle"
         )
 
     llm = raw.get("llm", {})
@@ -353,6 +367,10 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.gmail.since_days = _int(gm["since_days"], "gmail.since_days")
     if "limit" in gm:
         cfg.gmail.limit = _int(gm["limit"], "gmail.limit")
+    if "subject_exclude_patterns" in gm:
+        cfg.gmail.subject_exclude_patterns = _str_list(
+            gm["subject_exclude_patterns"], "gmail.subject_exclude_patterns"
+        )
 
     dis = raw.get("dispatch", {})
     if "timeout_seconds" in dis:

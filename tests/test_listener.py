@@ -15,12 +15,14 @@ from crew_chief.listener import (
     _is_auto_reply,
     _parse_signal_account,
     _parse_signal_json_lines,
+    _subject_is_excluded,
     extract_command_via_llm,
     poll_gmail,
     poll_signal,
     reply_gmail,
     reply_signal,
     resolve_command,
+    run,
 )
 
 _SIGNAL_TARGET = "crew_chief.listener.subprocess.run"
@@ -577,6 +579,140 @@ class TestIsAutoReply(unittest.TestCase):
 
     def test_non_dict_headers_returns_false(self):
         self.assertFalse(_is_auto_reply({"headers": ["X-Auto-Reply: yes"]}))
+
+
+# ---------------------------------------------------------------------------
+# _subject_is_excluded
+# ---------------------------------------------------------------------------
+
+
+class TestSubjectIsExcluded(unittest.TestCase):
+    def test_empty_patterns_never_excludes(self):
+        self.assertFalse(_subject_is_excluded("[intake] Receipt processed: kroger $43.78", []))
+
+    def test_matching_pattern_excludes(self):
+        self.assertTrue(
+            _subject_is_excluded("[intake] Receipt processed: kroger $43.78", ["[intake]"])
+        )
+
+    def test_non_matching_pattern_does_not_exclude(self):
+        self.assertFalse(_subject_is_excluded("Hello from Alice", ["[intake]"]))
+
+    def test_match_is_case_insensitive(self):
+        self.assertTrue(_subject_is_excluded("[INTAKE] Receipt", ["[intake]"]))
+        self.assertTrue(_subject_is_excluded("[intake] Receipt", ["[INTAKE]"]))
+
+    def test_multiple_patterns_any_match_excludes(self):
+        self.assertTrue(_subject_is_excluded("Automated reply", ["[intake]", "automated reply"]))
+
+    def test_substring_match_not_whole_word(self):
+        self.assertTrue(_subject_is_excluded("FWD: [intake] something", ["[intake]"]))
+
+
+# ---------------------------------------------------------------------------
+# poll_gmail — subject exclusion filter
+# ---------------------------------------------------------------------------
+
+
+class TestPollGmailSubjectExclusion(unittest.TestCase):
+    def _cfg(self, patterns: list[str]) -> GmailConfig:
+        return GmailConfig(
+            enabled=True,
+            shock_relay_dir="/fake/gmail",
+            config_path="/fake/gmail/config.local.yaml",
+            trusted_senders=["alice@example.com"],
+            reply_to="me@example.com",
+            subject_exclude_patterns=patterns,
+        )
+
+    def _payload(self, subject: str, snippet: str = "body text") -> str:
+        return json.dumps(
+            {"messages": [{"from": "alice@example.com", "subject": subject, "snippet": snippet}]}
+        )
+
+    def test_excluded_subject_drops_message(self):
+        payload = self._payload("[intake] Receipt processed: kroger $43.78")
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target="crew_chief.listener.subprocess.run"):
+            result = poll_gmail(self._cfg(["[intake]"]))
+        self.assertEqual(result, [])
+
+    def test_non_excluded_subject_passes(self):
+        payload = self._payload("!uptime")
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target="crew_chief.listener.subprocess.run"):
+            result = poll_gmail(self._cfg(["[intake]"]))
+        self.assertEqual(len(result), 1)
+
+    def test_empty_exclude_list_passes_all(self):
+        payload = self._payload("[intake] something")
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target="crew_chief.listener.subprocess.run"):
+            result = poll_gmail(self._cfg([]))
+        self.assertEqual(len(result), 1)
+
+    def test_multiple_patterns_any_match_drops(self):
+        payload = self._payload("noreply: account notification")
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target="crew_chief.listener.subprocess.run"):
+            result = poll_gmail(self._cfg(["[intake]", "noreply"]))
+        self.assertEqual(result, [])
+
+
+# ---------------------------------------------------------------------------
+# run() — max_replies_per_cycle cap
+# ---------------------------------------------------------------------------
+
+
+class TestRunMaxRepliesPerCycle(unittest.TestCase):
+    """Verify that max_replies_per_cycle limits how many replies are sent per cycle."""
+
+    def _make_gmail_payload(self, n: int) -> str:
+        """Return a Gmail JSON payload with *n* messages from a trusted sender."""
+        messages = [
+            {"from": "alice@example.com", "subject": "cmd", "snippet": f"!uptime{i}"}
+            for i in range(n)
+        ]
+        return json.dumps({"messages": messages})
+
+    def _cfg(self, max_replies: int) -> ListenerConfig:
+        cfg = ListenerConfig()
+        cfg.max_replies_per_cycle = max_replies
+        cfg.gmail.enabled = True
+        cfg.gmail.shock_relay_dir = "/fake/gmail"
+        cfg.gmail.config_path = "/fake/gmail/config.local.yaml"
+        cfg.gmail.trusted_senders = ["alice@example.com"]
+        cfg.gmail.reply_to = "me@example.com"
+        cfg.dispatch.allowed_commands = ["uptime*"]
+        return cfg
+
+    def test_zero_limit_sends_all_replies(self):
+        """max_replies_per_cycle=0 (unlimited) sends all three replies."""
+        payload = self._make_gmail_payload(3)
+        # Per message: 1 dispatch subprocess + 1 send_email subprocess = 2.
+        # Total: 1 check_inbox + 3 * 2 = 7 subprocess calls.
+        responses = [build_completed_process(stdout=payload)] + [
+            build_completed_process() for _ in range(6)
+        ]
+        recorder = ProcessRecorder(responses=responses)
+        cfg = self._cfg(max_replies=0)
+        with SubprocessPatch(recorder, target="crew_chief.listener.subprocess.run"):
+            run(cfg, once=True)
+        self.assertEqual(recorder.call_count, 7)
+
+    def test_cap_limits_replies(self):
+        """max_replies_per_cycle=2 sends at most 2 replies even when 3 arrive."""
+        payload = self._make_gmail_payload(3)
+        # Per message: 1 dispatch + 1 send_email = 2; only 2 messages processed.
+        # Total: 1 check_inbox + 2 * 2 = 5 subprocess calls.
+        responses = [build_completed_process(stdout=payload)] + [
+            build_completed_process() for _ in range(4)
+        ]
+        recorder = ProcessRecorder(responses=responses)
+        cfg = self._cfg(max_replies=2)
+        with SubprocessPatch(recorder, target="crew_chief.listener.subprocess.run"):
+            run(cfg, once=True)
+        self.assertEqual(recorder.call_count, 5)
 
 
 if __name__ == "__main__":
