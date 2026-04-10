@@ -139,6 +139,25 @@ When `agent.enabled = false` (default): single-command flow — extract one shel
 
 When `agent.enabled = true`: full agent loop — `Agent.run(message_text)` is called; the model may invoke tools across multiple iterations before producing the final reply.
 
+## Coexisting Email Pipelines and Channel Isolation
+
+crew-chief's Gmail channel trusts a sender address, not a dedicated mailbox.  If other automated pipelines also send email to (or from) the same Gmail account, those messages will appear as trusted inbound traffic and trigger crew-chief's agent loop.
+
+**Known coexisting pipeline:** The receipt-intake pipeline sends self-emails (FROM and TO the same Gmail account) with subjects like `[intake] Receipt processed: <merchant> $<amount>`.  This pipeline uses the inbox as a notification channel; its emails must never be processed by crew-chief.
+
+**How to isolate:**
+
+Use `gmail.subject_exclude_patterns` to drop emails from non-crew-chief pipelines before any LLM or dispatch processing:
+
+```toml
+[gmail]
+subject_exclude_patterns = ["[intake]"]
+```
+
+Any message whose subject contains a pattern (case-insensitive substring match) is silently skipped.  Add one entry per pipeline that shares the inbox.
+
+**General rule:** If a new automated pipeline begins sending self-emails to the same Gmail account, add its subject prefix to `subject_exclude_patterns` in `config/listener/config.toml` before enabling crew-chief's Gmail channel.  Failure to do so will cause crew-chief to process the pipeline's notifications as user commands and may trigger a reply loop.
+
 ## Security: What Must Never Be Committed
 
 The following are **sensitive identifiers** that must exist only in gitignored local files:

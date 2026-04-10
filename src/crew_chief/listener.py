@@ -353,6 +353,16 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
             continue
 
         subject = msg.get("subject", "")
+
+        # Subject exclusion filter: drop emails from pipelines that share the inbox.
+        if _subject_is_excluded(subject, cfg.subject_exclude_patterns):
+            log.info(
+                "Gmail: skipping email from %s with excluded subject %r.",
+                sender,
+                subject,
+            )
+            continue
+
         body = msg.get("snippet", msg.get("body", ""))
         if not body:
             continue
@@ -422,6 +432,12 @@ _REPLY_LOOP_MARKER = "<!-- crew-chief-id -->"
 # Header names whose *presence alone* (regardless of value) signals an
 # automated reply.  Checked case-insensitively.
 _AUTO_REPLY_HEADER_NAMES = frozenset({"x-auto-reply", "x-autoreply"})
+
+
+def _subject_is_excluded(subject: str, patterns: list[str]) -> bool:
+    """Return ``True`` if *subject* contains any pattern (case-insensitive substring)."""
+    lower = subject.lower()
+    return any(p.lower() in lower for p in patterns)
 
 
 def _is_auto_reply(msg_raw: dict) -> bool:
@@ -546,12 +562,15 @@ def _process_message(
     llm_client: CrewChiefClient,
     dispatcher: Dispatcher,
     agent: Agent | AgentCascade | None = None,
-) -> None:
+) -> bool:
     """Interpret, dispatch, and reply to a single incoming message.
 
     When *agent* is provided (``cfg.agent.enabled = True``), the message text
     is handed directly to the multi-step Agent loop (or cascade).  Otherwise
     the original single-command dispatch flow is used.
+
+    Returns ``True`` if a reply was sent, ``False`` if the message was dropped
+    (e.g. no actionable command in single-command mode).
     """
     log.info("[%s] Message from %s: %r", msg.channel, msg.sender, msg.text[:80])
 
@@ -564,7 +583,7 @@ def _process_message(
         command = resolve_command(msg.text, cfg, llm_client)
         if command is None:
             log.info("[%s] No actionable command extracted from message.", msg.channel)
-            return
+            return False
 
         # Determine whether a model was involved in routing this command.
         if msg.text.strip().startswith(DIRECT_PREFIX):
@@ -583,6 +602,7 @@ def _process_message(
         reply_signal(cfg.signal, msg.sender, reply_text)
     elif msg.channel == "gmail":
         reply_gmail(cfg.gmail, cfg.gmail.reply_to or msg.sender, msg.subject, reply_text)
+    return True
 
 
 def run(cfg: ListenerConfig, *, once: bool = False) -> None:
@@ -676,12 +696,32 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
 
     while True:
         cycle_start = time.monotonic()
+        cycle_replies = 0
+        max_replies = cfg.max_replies_per_cycle
 
         for msg in poll_signal(cfg.signal):
-            _process_message(msg, cfg, llm_client, dispatcher, agent)
+            if max_replies > 0 and cycle_replies >= max_replies:
+                log.warning(
+                    "Reply cap reached (%d/cycle); dropping Signal message from %s. "
+                    "Increase listener.max_replies_per_cycle to allow more.",
+                    max_replies,
+                    msg.sender,
+                )
+                continue
+            if _process_message(msg, cfg, llm_client, dispatcher, agent):
+                cycle_replies += 1
 
         for msg in poll_gmail(cfg.gmail):
-            _process_message(msg, cfg, llm_client, dispatcher, agent)
+            if max_replies > 0 and cycle_replies >= max_replies:
+                log.warning(
+                    "Reply cap reached (%d/cycle); dropping Gmail message from %s. "
+                    "Increase listener.max_replies_per_cycle to allow more.",
+                    max_replies,
+                    msg.sender,
+                )
+                continue
+            if _process_message(msg, cfg, llm_client, dispatcher, agent):
+                cycle_replies += 1
 
         if once:
             break
