@@ -6,11 +6,11 @@ import json
 import unittest
 from unittest.mock import MagicMock, patch
 
-from dyno_lab.proc import ProcessRecorder, SubprocessPatch, build_completed_process
-
 from crew_chief.config_loader import GmailConfig, ListenerConfig, SignalConfig
 from crew_chief.listener import (
+    _REPLY_LOOP_MARKER,
     _extract_email_address,
+    _is_auto_reply,
     _parse_signal_account,
     _parse_signal_json_lines,
     extract_command_via_llm,
@@ -20,6 +20,7 @@ from crew_chief.listener import (
     reply_signal,
     resolve_command,
 )
+from dyno_lab.proc import ProcessRecorder, SubprocessPatch, build_completed_process
 
 _SIGNAL_TARGET = "crew_chief.listener.subprocess.run"
 _GMAIL_TARGET = "crew_chief.listener.subprocess.run"
@@ -269,6 +270,116 @@ class TestPollGmail(unittest.TestCase):
         self.assertIn("--unseen", cmd)
         self.assertIn("check_inbox.py", cmd[1])
 
+    def test_drops_self_sent_message(self):
+        """Messages from crew-chief's own reply-to address are dropped (loop guard 1)."""
+        # reply_to = "me@example.com", sender = "me@example.com" → loop
+        payload = json.dumps(
+            {
+                "messages": [
+                    {"from": "me@example.com", "subject": "Re: cmd", "snippet": "some reply"}
+                ]
+            }
+        )
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            result = poll_gmail(self._cfg())
+        self.assertEqual(result, [])
+
+    def test_drops_auto_submitted_header(self):
+        """Auto-Submitted: auto-replied triggers loop guard 2."""
+        payload = json.dumps(
+            {
+                "messages": [
+                    {
+                        "from": "alice@example.com",
+                        "subject": "Out of office",
+                        "snippet": "I am away",
+                        "headers": {"Auto-Submitted": "auto-replied"},
+                    }
+                ]
+            }
+        )
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            result = poll_gmail(self._cfg())
+        self.assertEqual(result, [])
+
+    def test_drops_x_auto_reply_header(self):
+        """X-Auto-Reply header triggers loop guard 2."""
+        payload = json.dumps(
+            {
+                "messages": [
+                    {
+                        "from": "alice@example.com",
+                        "subject": "Re:",
+                        "snippet": "automated",
+                        "headers": {"X-Auto-Reply": "1"},
+                    }
+                ]
+            }
+        )
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            result = poll_gmail(self._cfg())
+        self.assertEqual(result, [])
+
+    def test_drops_precedence_bulk_header(self):
+        """Precedence: bulk triggers loop guard 2."""
+        payload = json.dumps(
+            {
+                "messages": [
+                    {
+                        "from": "alice@example.com",
+                        "subject": "newsletter",
+                        "snippet": "click here",
+                        "headers": {"Precedence": "bulk"},
+                    }
+                ]
+            }
+        )
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            result = poll_gmail(self._cfg())
+        self.assertEqual(result, [])
+
+    def test_auto_submitted_no_is_not_filtered(self):
+        """Auto-Submitted: no must NOT be filtered (it explicitly opts out of auto-reply)."""
+        payload = json.dumps(
+            {
+                "messages": [
+                    {
+                        "from": "alice@example.com",
+                        "subject": "real message",
+                        "snippet": "hello",
+                        "headers": {"Auto-Submitted": "no"},
+                    }
+                ]
+            }
+        )
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            result = poll_gmail(self._cfg())
+        self.assertEqual(len(result), 1)
+
+    def test_drops_message_with_reply_marker(self):
+        """Body containing the crew-chief marker is dropped (loop guard 3)."""
+        body_with_marker = f"Some forwarded text\n\n{_REPLY_LOOP_MARKER}"
+        payload = json.dumps(
+            {
+                "messages": [
+                    {
+                        "from": "alice@example.com",
+                        "subject": "Fwd: reply",
+                        "snippet": body_with_marker,
+                    }
+                ]
+            }
+        )
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            result = poll_gmail(self._cfg())
+        self.assertEqual(result, [])
+
 
 # ---------------------------------------------------------------------------
 # _extract_email_address
@@ -394,20 +505,77 @@ class TestReplySignal(unittest.TestCase):
 
 
 class TestReplyGmail(unittest.TestCase):
-    def test_calls_send_script_with_correct_args(self):
-        cfg = GmailConfig(
+    def _cfg(self):
+        return GmailConfig(
             enabled=True,
             shock_relay_dir="/fake/gmail",
             config_path="/fake/gmail/config.local.yaml",
             trusted_senders=["a@b.com"],
             reply_to="a@b.com",
         )
+
+    def test_calls_send_script_with_correct_args(self):
         recorder = ProcessRecorder(responses=[build_completed_process()])
         with SubprocessPatch(recorder, target=_GMAIL_TARGET):
-            reply_gmail(cfg, "a@b.com", "cmd", "output here")
+            reply_gmail(self._cfg(), "a@b.com", "cmd", "output here")
         args = recorder.calls[0].args
         self.assertIn("send_email.py", args[1])
         self.assertIn("a@b.com", args)
+
+    def test_appends_loop_marker_to_body(self):
+        """Every outgoing Gmail reply must carry the loop-prevention marker."""
+        recorder = ProcessRecorder(responses=[build_completed_process()])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            reply_gmail(self._cfg(), "a@b.com", "cmd", "result text")
+        # The body argument (last positional arg) should contain the marker.
+        body_arg = recorder.calls[0].args[-1]
+        self.assertIn(_REPLY_LOOP_MARKER, body_arg)
+        self.assertIn("result text", body_arg)
+
+
+# ---------------------------------------------------------------------------
+# _is_auto_reply
+# ---------------------------------------------------------------------------
+
+
+class TestIsAutoReply(unittest.TestCase):
+    def test_no_headers_returns_false(self):
+        self.assertFalse(_is_auto_reply({}))
+        self.assertFalse(_is_auto_reply({"snippet": "hello"}))
+
+    def test_x_auto_reply_returns_true(self):
+        self.assertTrue(_is_auto_reply({"headers": {"X-Auto-Reply": "yes"}}))
+
+    def test_x_autoreply_returns_true(self):
+        self.assertTrue(_is_auto_reply({"headers": {"X-Autoreply": "1"}}))
+
+    def test_auto_submitted_auto_replied_returns_true(self):
+        self.assertTrue(_is_auto_reply({"headers": {"Auto-Submitted": "auto-replied"}}))
+
+    def test_auto_submitted_auto_generated_returns_true(self):
+        self.assertTrue(_is_auto_reply({"headers": {"Auto-Submitted": "auto-generated"}}))
+
+    def test_auto_submitted_no_returns_false(self):
+        self.assertFalse(_is_auto_reply({"headers": {"Auto-Submitted": "no"}}))
+
+    def test_precedence_bulk_returns_true(self):
+        self.assertTrue(_is_auto_reply({"headers": {"Precedence": "bulk"}}))
+
+    def test_precedence_junk_returns_true(self):
+        self.assertTrue(_is_auto_reply({"headers": {"Precedence": "junk"}}))
+
+    def test_precedence_auto_reply_returns_true(self):
+        self.assertTrue(_is_auto_reply({"headers": {"Precedence": "auto_reply"}}))
+
+    def test_precedence_first_class_returns_false(self):
+        self.assertFalse(_is_auto_reply({"headers": {"Precedence": "first-class"}}))
+
+    def test_header_names_case_insensitive(self):
+        self.assertTrue(_is_auto_reply({"headers": {"AUTO-SUBMITTED": "auto-replied"}}))
+        self.assertTrue(_is_auto_reply({"headers": {"x-auto-reply": "yes"}}))
+
+    def test_non_dict_headers_returns_false(self):
+        self.assertFalse(_is_auto_reply({"headers": ["X-Auto-Reply: yes"]}))
 
 
 if __name__ == "__main__":
