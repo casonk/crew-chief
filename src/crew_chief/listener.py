@@ -329,6 +329,7 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
         return []
 
     trusted_lower = {addr.lower() for addr in cfg.trusted_senders}
+    own_address = (cfg.reply_to or "").lower().strip()
     messages: list[IncomingMessage] = []
     for msg in payload.get("messages", []):
         sender_raw = msg.get("from", "")
@@ -336,10 +337,34 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
         if sender not in trusted_lower:
             log.debug("Gmail: ignoring message from untrusted sender %s", sender)
             continue
+
+        # Loop guard 1: never process crew-chief's own outgoing replies.
+        if own_address and sender == own_address:
+            log.warning("Gmail: dropping self-sent message from %s — loop guard.", sender)
+            continue
+
+        # Loop guard 2: honour standard email auto-reply headers.
+        if _is_auto_reply(msg):
+            log.warning(
+                "Gmail: dropping auto-reply from %s (subject=%r) — loop guard.",
+                sender,
+                msg.get("subject", ""),
+            )
+            continue
+
         subject = msg.get("subject", "")
         body = msg.get("snippet", msg.get("body", ""))
         if not body:
             continue
+
+        # Loop guard 3: drop messages containing crew-chief's own reply marker.
+        if _REPLY_LOOP_MARKER in body:
+            log.warning(
+                "Gmail: dropping message from %s containing crew-chief marker — loop guard.",
+                sender,
+            )
+            continue
+
         messages.append(
             IncomingMessage(
                 channel="gmail",
@@ -356,6 +381,9 @@ def reply_gmail(cfg: GmailConfig, recipient: str, subject: str, body: str) -> No
     """Send *body* to *recipient* via the shock-relay send_email.py script."""
     send_script = Path(cfg.shock_relay_dir) / "send_email.py"
     reply_subject = f"Re: {subject}" if subject else "crew-chief reply"
+    # Append the loop-prevention marker so any system that routes this reply
+    # back to crew-chief's inbox will have it filtered out on ingest.
+    stamped_body = f"{body}\n\n{_REPLY_LOOP_MARKER}"
     cmd = [
         sys.executable,
         str(send_script),
@@ -363,7 +391,7 @@ def reply_gmail(cfg: GmailConfig, recipient: str, subject: str, body: str) -> No
         cfg.config_path,
         recipient,
         reply_subject,
-        body,
+        stamped_body,
     ]
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
@@ -381,6 +409,45 @@ def reply_gmail(cfg: GmailConfig, recipient: str, subject: str, body: str) -> No
 
 # Prefix that triggers direct-command mode without LLM involvement.
 DIRECT_PREFIX = "!"
+
+# ---------------------------------------------------------------------------
+# Loop-prevention helpers
+# ---------------------------------------------------------------------------
+
+# Machine-readable marker appended to every outgoing Gmail reply.  Inbound
+# messages that contain this token are treated as crew-chief's own replies and
+# dropped before any processing occurs.
+_REPLY_LOOP_MARKER = "<!-- crew-chief-id -->"
+
+# Header names whose *presence alone* (regardless of value) signals an
+# automated reply.  Checked case-insensitively.
+_AUTO_REPLY_HEADER_NAMES = frozenset({"x-auto-reply", "x-autoreply"})
+
+
+def _is_auto_reply(msg_raw: dict) -> bool:
+    """Return ``True`` if *msg_raw* carries standard auto-reply email headers.
+
+    Checks:
+    - ``X-Auto-Reply`` / ``X-Autoreply``: presence alone is sufficient.
+    - ``Auto-Submitted``: any value other than ``"no"`` (RFC 3834).
+    - ``Precedence: auto_reply | bulk | junk``.
+
+    Returns ``False`` when no ``headers`` dict is present (e.g. older
+    check_inbox.py output that doesn't expose raw headers).
+    """
+    headers: dict = msg_raw.get("headers", {})
+    if not isinstance(headers, dict):
+        return False
+    for name, value in headers.items():
+        key = name.lower().strip()
+        val = str(value).lower().strip()
+        if key in _AUTO_REPLY_HEADER_NAMES:
+            return True
+        if key == "auto-submitted" and val != "no":
+            return True
+        if key == "precedence" and val in ("auto_reply", "bulk", "junk"):
+            return True
+    return False
 
 
 def _build_system_prompt(allowed_commands: list[str]) -> str:
