@@ -1,4 +1,4 @@
-# REFS-PUBLIC.md — Public References
+# REFS-PUBLIC.md - Public References
 
 > Record external public repositories, datasets, documentation, APIs, or other
 > public resources that this repository utilizes or depends on.
@@ -6,22 +6,17 @@
 
 ## Public Repositories
 
-<!-- External repos this project depends on, forks, or integrates with:
-- https://github.com/org/repo — description of usage
--->
+- https://github.com/ollama/ollama - upstream local LLM runtime used by the service layer
 
 ## Public Datasets and APIs
 
-<!-- Publicly accessible data sources, REST APIs, or external feeds consumed here:
-- https://example.com/dataset — description of usage
--->
+- https://ollama.com/ - local inference runtime and model distribution surface used by this repo
 
 ## Documentation and Specifications
 
-<!-- Reference docs, RFCs, standards, or upstream project documentation:
-- https://docs.example.com — description
--->
+- https://podman.io/ - container runtime reference for local service deployment
+- https://podman.io/getting-started/installation - Podman installation guidance
 
 ## Notes
 
-<!-- Any context about how these public references are used or versioned -->
+- crew-chief is intentionally local-first and does not require a cloud inference API by default. Public refs only cover the local runtime stack it wraps.
