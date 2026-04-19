@@ -9,6 +9,10 @@ import urllib.request
 from typing import Any
 
 from crew_chief.providers.base import ChatResult, ProviderUnavailableError, ToolParam, ToolUse
+from crew_chief.providers.prompt_utils import (
+    looks_like_embedded_transcript,
+    wrap_literal_user_message,
+)
 
 DEFAULT_BASE_URL: str = os.environ.get("CREW_CHIEF_URL", "http://localhost:11434")
 DEFAULT_MODEL: str = os.environ.get("CREW_CHIEF_MODEL", "llama3.2")
@@ -50,7 +54,10 @@ def _to_ollama_messages(
             for result in msg.get("results", []):
                 native.append({"role": "tool", "content": result["content"]})
         else:
-            native.append({"role": role, "content": msg.get("content", "")})
+            content = msg.get("content", "")
+            if role == "user" and looks_like_embedded_transcript(content):
+                content = wrap_literal_user_message(content)
+            native.append({"role": role, "content": content})
 
     return native
 
@@ -88,6 +95,8 @@ class OllamaProvider:
     Supports :meth:`generate` (single prompt) and :meth:`chat` (multi-turn,
     with optional tool calling) against the local Ollama service.
     """
+
+    reports_tool_use = True
 
     def __init__(
         self,

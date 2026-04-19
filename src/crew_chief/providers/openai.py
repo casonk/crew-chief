@@ -19,6 +19,10 @@ import urllib.request
 from typing import Any
 
 from crew_chief.providers.base import ChatResult, ProviderUnavailableError, ToolParam, ToolUse
+from crew_chief.providers.prompt_utils import (
+    looks_like_embedded_transcript,
+    wrap_literal_user_message,
+)
 
 _API_BASE = "https://api.openai.com"
 _DEFAULT_MODEL = "gpt-4o"
@@ -77,7 +81,10 @@ def _to_openai_messages(
                 )
 
         else:
-            native.append({"role": role, "content": msg.get("content", "")})
+            content = msg.get("content", "")
+            if role == "user" and looks_like_embedded_transcript(content):
+                content = wrap_literal_user_message(content)
+            native.append({"role": role, "content": content})
 
     return native
 
@@ -143,6 +150,8 @@ class OpenAIProvider:
         Override the API base URL (useful for testing, proxies, or
         OpenAI-compatible endpoints such as local llama.cpp servers).
     """
+
+    reports_tool_use = True
 
     def __init__(
         self,
