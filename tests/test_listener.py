@@ -971,7 +971,9 @@ class TestSubjectIsExcluded(unittest.TestCase):
     def test_production_pattern_excludes_outbound_notification(self):
         """The deployed pattern must exclude intake outbound notifications."""
         pattern = ["[intake] Receipt processed*"]
-        self.assertTrue(_subject_is_excluded("[intake] Receipt processed: kroger $86.05", pattern))
+        self.assertTrue(
+            _subject_is_excluded("[intake] Receipt processed: kroger $86.05", pattern)
+        )
 
     def test_production_pattern_allows_user_replies(self):
         """The deployed pattern must NOT exclude user replies to intake notifications."""
