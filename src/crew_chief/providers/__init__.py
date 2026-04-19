@@ -58,6 +58,8 @@ class FallbackProvider:
         if not providers:
             raise ValueError("FallbackProvider requires at least one provider.")
         self.providers = providers
+        self.last_provider_name: str = ""
+        self.last_reports_tool_use: bool | None = None
 
     def chat(
         self,
@@ -66,10 +68,14 @@ class FallbackProvider:
         system: str | None = None,
     ) -> ChatResult:
         last_exc: Exception | None = None
+        self.last_provider_name = ""
+        self.last_reports_tool_use = None
         for provider in self.providers:
             name = type(provider).__name__
             try:
                 result = provider.chat(messages, tools=tools, system=system)
+                self.last_provider_name = name
+                self.last_reports_tool_use = bool(getattr(provider, "reports_tool_use", True))
                 log.debug("FallbackProvider: %s succeeded.", name)
                 return result
             except ProviderUnavailableError as exc:

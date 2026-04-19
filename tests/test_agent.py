@@ -27,6 +27,19 @@ class EchoTool(Tool):
         return arguments.get("text", "")
 
 
+class ShellStubTool(Tool):
+    name = "shell"
+    description = "Pretends to run a shell command."
+    parameters = {
+        "type": "object",
+        "properties": {"command": {"type": "string"}},
+        "required": ["command"],
+    }
+
+    def execute(self, arguments):
+        return f"ran: {arguments.get('command', '')}"
+
+
 # ---------------------------------------------------------------------------
 # Helper to build a mock provider
 # ---------------------------------------------------------------------------
@@ -57,7 +70,7 @@ class TestAgentRunNoTools(unittest.TestCase):
         result = ChatResult(content="done")
         provider = _make_provider(result)
         agent = Agent(provider=provider, system_prompt="Be concise.")
-        agent.run("hi")
+        agent.run("Summarize this.")
         _, kwargs = provider.chat.call_args
         self.assertEqual(kwargs.get("system"), "Be concise.")
 
@@ -65,9 +78,110 @@ class TestAgentRunNoTools(unittest.TestCase):
         result = ChatResult(content="ok")
         provider = _make_provider(result)
         agent = Agent(provider=provider, system_prompt="")
-        agent.run("hi")
+        agent.run("Summarize this.")
         _, kwargs = provider.chat.call_args
         self.assertIn("automation", kwargs.get("system", "").lower())
+
+    def test_simple_greeting_returns_direct_response_without_provider_call(self):
+        provider = _make_provider(ChatResult(content="should not be used"))
+        agent = Agent(provider=provider)
+
+        output = agent.run("Hello!")
+
+        self.assertIn("Hello! I'm Crew Chief", output)
+        self.assertIn("disk space", output)
+        self.assertIn("uptime", output)
+        self.assertNotIn("type a number", output.lower())
+        provider.chat.assert_not_called()
+
+    def test_common_greeting_variants_return_direct_response_without_provider_call(self):
+        for prompt in ("Hello there!", "Good morning."):
+            with self.subTest(prompt=prompt):
+                provider = _make_provider(ChatResult(content="should not be used"))
+                agent = Agent(provider=provider)
+
+                output = agent.run(prompt)
+
+                self.assertIn("Hello! I'm Crew Chief", output)
+                provider.chat.assert_not_called()
+
+    def test_conversational_pseudo_tool_call_retries_to_plain_text(self):
+        provider = _make_provider(
+            ChatResult(content='{"name": "greeting", "parameters": {"message": "Hello! I"}}'),
+            ChatResult(content="Hello! I'm Crew Chief."),
+        )
+        agent = Agent(provider=provider, tools=[EchoTool()])
+        output = agent.run("Hello! I")
+
+        self.assertEqual(output, "Hello! I'm Crew Chief.")
+        self.assertEqual(provider.chat.call_count, 2)
+        second_call_messages = provider.chat.call_args_list[1][0][0]
+        self.assertEqual(second_call_messages[-1]["role"], "user")
+        self.assertIn("plain-text tool/function-call JSON", second_call_messages[-1]["content"])
+
+    def test_answer_containing_json_example_is_not_treated_as_tool_call(self):
+        content = 'Use this JSON example:\n{"name": "shell", "parameters": {"command": "uptime"}}'
+        provider = _make_provider(ChatResult(content=content))
+        agent = Agent(provider=provider, tools=[ShellStubTool()])
+
+        output = agent.run("Show me the JSON shape for a shell request.")
+
+        self.assertEqual(output, content)
+        provider.chat.assert_called_once()
+
+    def test_raw_json_tool_example_requested_by_user_is_returned_verbatim(self):
+        content = '{"name": "shell", "parameters": {"command": "uptime"}}'
+        provider = _make_provider(ChatResult(content=content))
+        agent = Agent(provider=provider, tools=[ShellStubTool()])
+
+        output = agent.run("Give me a JSON example of a shell command request.")
+
+        self.assertEqual(output, content)
+        provider.chat.assert_called_once()
+
+    def test_meta_preface_plus_trailing_pseudo_tool_json_retries_to_plain_text(self):
+        provider = _make_provider(
+            ChatResult(
+                content=(
+                    "Since there's no explicit request for code change or modification, "
+                    "I will respond with a simple query to ensure clarity.\n\n"
+                    '{"name": "execute", "parameters": {"command": "How can I assist you today?"}}'
+                )
+            ),
+            ChatResult(content="How can I assist you today?"),
+        )
+        agent = Agent(provider=provider, tools=[EchoTool()])
+
+        output = agent.run("Review this assistant output.")
+
+        self.assertEqual(output, "How can I assist you today?")
+        self.assertEqual(provider.chat.call_count, 2)
+
+    def test_conversational_pseudo_tool_call_uses_fallback_after_retry(self):
+        provider = _make_provider(
+            ChatResult(content='{"name": "greeting", "parameters": {"message": "Hello! I"}}'),
+            ChatResult(content='{"name": "greeting", "parameters": {"message": "Hello again"}}'),
+        )
+        agent = Agent(provider=provider, tools=[EchoTool()])
+        output = agent.run("Hello! I")
+
+        self.assertIn("Crew Chief", output)
+        self.assertEqual(provider.chat.call_count, 2)
+
+    def test_greeting_prefixed_live_request_does_not_fall_back_to_greeting(self):
+        provider = _make_provider(
+            ChatResult(content='{"name": "shell", "parameters": {"command": "uptime"}}'),
+            ChatResult(content='{"name": "shell", "parameters": {"command": "uptime"}}'),
+        )
+        agent = Agent(provider=provider, tools=[ShellStubTool()])
+
+        output = agent.run("Hi, what's the uptime?")
+
+        self.assertEqual(
+            output,
+            "I couldn't verify the current system state because no command was executed. Please ask again or send the exact command you want run.",
+        )
+        self.assertEqual(provider.chat.call_count, 2)
 
 
 class TestAgentRunWithTools(unittest.TestCase):
@@ -171,7 +285,7 @@ class TestAgentMaxIterations(unittest.TestCase):
     def test_tool_params_not_sent_when_no_tools(self):
         provider = _make_provider(ChatResult(content="ok"))
         agent = Agent(provider=provider, tools=[])
-        agent.run("hi")
+        agent.run("Need a status summary.")
         _, kwargs = provider.chat.call_args
         self.assertIsNone(kwargs.get("tools"))
 
@@ -212,7 +326,7 @@ class TestConfidenceCheck(unittest.TestCase):
             ChatResult(content="not json at all"),
         ]
         agent = Agent(provider=provider, confidence_threshold=0.7)
-        output = agent.run("hi")
+        output = agent.run("Need a status summary.")
         self.assertEqual(output, "some response")
 
     def test_confidence_check_exception_assumes_confident(self):
@@ -223,14 +337,14 @@ class TestConfidenceCheck(unittest.TestCase):
             RuntimeError("network down"),
         ]
         agent = Agent(provider=provider, confidence_threshold=0.7)
-        output = agent.run("hi")
+        output = agent.run("Need a status summary.")
         self.assertEqual(output, "response")
 
     def test_zero_threshold_skips_check(self):
         """confidence_threshold=0.0 should make no extra chat() call."""
         provider = _make_provider(ChatResult(content="ok"))
         agent = Agent(provider=provider, confidence_threshold=0.0)
-        agent.run("hi")
+        agent.run("Need a status summary.")
         self.assertEqual(provider.chat.call_count, 1)
 
 

@@ -14,6 +14,10 @@ import urllib.request
 from typing import Any
 
 from crew_chief.providers.base import ChatResult, ProviderUnavailableError, ToolParam, ToolUse
+from crew_chief.providers.prompt_utils import (
+    looks_like_embedded_transcript,
+    wrap_literal_user_message,
+)
 
 _API_BASE = "https://api.anthropic.com"
 _API_VERSION = "2023-06-01"
@@ -66,7 +70,10 @@ def _to_anthropic_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any
 
         else:
             # Plain user or assistant text turn
-            native.append({"role": role, "content": msg.get("content", "")})
+            content = msg.get("content", "")
+            if role == "user" and looks_like_embedded_transcript(content):
+                content = wrap_literal_user_message(content)
+            native.append({"role": role, "content": content})
 
     return native
 
@@ -127,6 +134,8 @@ class AnthropicProvider:
     base_url:
         Override the API base URL (useful for testing or proxies).
     """
+
+    reports_tool_use = True
 
     def __init__(
         self,

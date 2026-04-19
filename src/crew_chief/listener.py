@@ -62,6 +62,17 @@ from crew_chief.tools import build_tools
 
 log = logging.getLogger(__name__)
 
+_SIGNAL_PROTOCOL_KEYS = frozenset({"cc-service", "cc-intent", "cc-target"})
+_SIGNAL_PROTOCOL_LINE_RE = re.compile(r"\s*(cc-[a-z0-9-]+)\s*:\s*(.+?)\s*$", re.IGNORECASE)
+_SIGNAL_SERVICE_KEY = "cc-service"
+_SIGNAL_INTENT_KEY = "cc-intent"
+_SIGNAL_TARGET_KEY = "cc-target"
+_SIGNAL_REQUEST_INTENT = "request"
+_SIGNAL_RESPONSE_INTENT = "response"
+_CREW_CHIEF_TARGET = "crew-chief"
+_CREW_CHIEF_TEXT_PREFIX = "[crew-chief]"
+_SIGNAL_REQUEST_PREFIX_RE = re.compile(r"^(?:@\s*)?(?:crew(?:[-\s]+)chief|chief)\b", re.IGNORECASE)
+
 
 def _signal_tmpdir() -> str:
     """Return a writable tmpdir for signal-cli's native library extraction.
@@ -226,6 +237,7 @@ def poll_signal(cfg: SignalConfig) -> list[IncomingMessage]:
         return []
     log.info("signal-cli rc=0 stdout=%r stderr=%r", result.stdout[:500], result.stderr[:200])
 
+    own_sender = (cfg.reply_to or account).strip()
     messages: list[IncomingMessage] = []
     for envelope in _parse_signal_json_lines(result.stdout):
         env = envelope.get("envelope", {})
@@ -246,10 +258,35 @@ def poll_signal(cfg: SignalConfig) -> list[IncomingMessage]:
         text = dm.get("message", "")
         if not text:
             continue
+        metadata, stripped_text = _split_signal_metadata_block(text)
+        intent = _signal_metadata_value(metadata, _SIGNAL_INTENT_KEY)
+        target = _signal_metadata_value(metadata, _SIGNAL_TARGET_KEY)
+        service_name = _signal_metadata_value(metadata, _SIGNAL_SERVICE_KEY)
+        if metadata and not _is_signal_request_metadata(metadata):
+            log.info(
+                "Signal: skipping message from %s with non-request metadata "
+                "(service=%s, intent=%r, target=%r).",
+                source,
+                service_name or "unknown",
+                intent or None,
+                target or None,
+            )
+            continue
+        explicit_request = _is_explicit_signal_request(stripped_text, metadata)
+        if own_sender and source == own_sender and not explicit_request:
+            log.warning(
+                "Signal: dropping same-sender message from %s without crew-chief request intent.",
+                source,
+            )
+            continue
+        if not stripped_text:
+            continue
         if source not in cfg.trusted_senders:
             log.debug("Signal: ignoring message from untrusted sender %s", source)
             continue
-        messages.append(IncomingMessage(channel="signal", sender=source, text=text, raw=envelope))
+        messages.append(
+            IncomingMessage(channel="signal", sender=source, text=stripped_text, raw=envelope)
+        )
     return messages
 
 
@@ -259,6 +296,10 @@ def reply_signal(cfg: SignalConfig, recipient: str, text: str) -> None:
     cmd = [
         sys.executable,
         str(send_script),
+        "--meta",
+        "cc-service: crew-chief",
+        "--meta",
+        f"cc-intent: {_SIGNAL_RESPONSE_INTENT}",
         "--config",
         cfg.config_path,
         recipient,
@@ -338,11 +379,6 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
             log.debug("Gmail: ignoring message from untrusted sender %s", sender)
             continue
 
-        # Loop guard 1: never process crew-chief's own outgoing replies.
-        if own_address and sender == own_address:
-            log.warning("Gmail: dropping self-sent message from %s — loop guard.", sender)
-            continue
-
         # Loop guard 2: honour standard email auto-reply headers.
         if _is_auto_reply(msg):
             log.warning(
@@ -363,12 +399,42 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
             )
             continue
 
-        body = msg.get("snippet", msg.get("body", ""))
+        body = _gmail_body_text(msg)
         if not body:
             continue
 
+        intent = _gmail_intent(msg)
+        service_name = _gmail_service_name(msg)
+        if service_name and intent != _CREW_CHIEF_REQUEST_INTENT:
+            log.info(
+                "Gmail: skipping email from %s for service=%s without request intent (intent=%r).",
+                sender,
+                service_name,
+                intent or None,
+            )
+            continue
+        if intent and intent != _CREW_CHIEF_REQUEST_INTENT:
+            log.info(
+                "Gmail: skipping email from %s with non-request intent %r (service=%s).",
+                sender,
+                intent,
+                service_name or "unknown",
+            )
+            continue
+
+        explicit_request = _is_explicit_crew_chief_request(msg, subject, body)
+
+        # Loop guard 1: same-address Gmail is ambiguous unless the message
+        # explicitly declares itself as a request to crew-chief.
+        if own_address and sender == own_address and not explicit_request:
+            log.warning(
+                "Gmail: dropping same-address message from %s without crew-chief request intent.",
+                sender,
+            )
+            continue
+
         # Loop guard 3: drop messages containing crew-chief's own reply marker.
-        if _REPLY_LOOP_MARKER in body:
+        if any(_REPLY_LOOP_MARKER in candidate for candidate in _gmail_body_candidates(msg)):
             log.warning(
                 "Gmail: dropping message from %s containing crew-chief marker — loop guard.",
                 sender,
@@ -397,6 +463,10 @@ def reply_gmail(cfg: GmailConfig, recipient: str, subject: str, body: str) -> No
     cmd = [
         sys.executable,
         str(send_script),
+        "--header",
+        "X-Portfolio-Service: crew-chief",
+        "--header",
+        f"X-Crew-Chief-Intent: {_CREW_CHIEF_RESPONSE_INTENT}",
         "--config",
         cfg.config_path,
         recipient,
@@ -420,6 +490,55 @@ def reply_gmail(cfg: GmailConfig, recipient: str, subject: str, body: str) -> No
 # Prefix that triggers direct-command mode without LLM involvement.
 DIRECT_PREFIX = "!"
 
+
+def _split_signal_metadata_block(text: str) -> tuple[dict[str, str], str]:
+    """Return a parsed leading Signal metadata block plus the stripped body."""
+    if not text:
+        return {}, text
+    lines = text.splitlines()
+    metadata: dict[str, str] = {}
+    for index, line in enumerate(lines):
+        if not line.strip():
+            if metadata:
+                body = "\n".join(lines[index + 1 :]).lstrip("\n")
+                return metadata, body
+            return {}, text
+        match = _SIGNAL_PROTOCOL_LINE_RE.fullmatch(line)
+        if not match:
+            return {}, text
+        key = match.group(1).lower()
+        if key not in _SIGNAL_PROTOCOL_KEYS:
+            return {}, text
+        metadata[key] = match.group(2).strip()
+    return {}, text
+
+
+def _signal_metadata_value(metadata: dict[str, str], key: str) -> str:
+    """Return a normalized Signal metadata value, if present."""
+    return metadata.get(key, "").strip().lower()
+
+
+def _is_signal_request_metadata(metadata: dict[str, str]) -> bool:
+    """Return ``True`` when Signal metadata explicitly targets crew-chief."""
+    intent = _signal_metadata_value(metadata, _SIGNAL_INTENT_KEY)
+    if intent != _SIGNAL_REQUEST_INTENT:
+        return False
+    target = _signal_metadata_value(metadata, _SIGNAL_TARGET_KEY)
+    return not target or target == _CREW_CHIEF_TARGET
+
+
+def _is_explicit_signal_request(text: str, metadata: dict[str, str]) -> bool:
+    """Return ``True`` when a Signal message unambiguously targets crew-chief."""
+    if _is_signal_request_metadata(metadata):
+        return True
+    stripped = text.lstrip().lower()
+    return (
+        stripped.startswith(DIRECT_PREFIX)
+        or stripped.startswith(_CREW_CHIEF_TEXT_PREFIX)
+        or bool(_SIGNAL_REQUEST_PREFIX_RE.match(text.lstrip()))
+    )
+
+
 # ---------------------------------------------------------------------------
 # Loop-prevention helpers
 # ---------------------------------------------------------------------------
@@ -429,15 +548,129 @@ DIRECT_PREFIX = "!"
 # dropped before any processing occurs.
 _REPLY_LOOP_MARKER = "<!-- crew-chief-id -->"
 
+_PORTFOLIO_SERVICE_HEADER = "x-portfolio-service"
+_CREW_CHIEF_INTENT_HEADER = "x-crew-chief-intent"
+_CREW_CHIEF_REQUEST_INTENT = "request"
+_CREW_CHIEF_RESPONSE_INTENT = "response"
+_CREW_CHIEF_SUBJECT_PREFIX = _CREW_CHIEF_TEXT_PREFIX
+
+# Subjects that identify user replies to portfolio service notifications.
+# These are treated as explicit requests so the same-sender loop guard passes them.
+_SERVICE_REPLY_SUBJECT_PREFIXES: tuple[str, ...] = ("re: [intake]",)
+
 # Header names whose *presence alone* (regardless of value) signals an
 # automated reply.  Checked case-insensitively.
 _AUTO_REPLY_HEADER_NAMES = frozenset({"x-auto-reply", "x-autoreply"})
 
 
 def _subject_is_excluded(subject: str, patterns: list[str]) -> bool:
-    """Return ``True`` if *subject* contains any pattern (case-insensitive substring)."""
+    """Return ``True`` if *subject* matches an exclusion pattern.
+
+    Plain strings use case-insensitive substring matching for backward
+    compatibility. Patterns with shell wildcards (``*`` or ``?``) match the
+    full subject while treating square brackets literally.
+    """
     lower = subject.lower()
-    return any(p.lower() in lower for p in patterns)
+    for pattern in patterns:
+        normalized = pattern.lower()
+        if "*" in normalized or "?" in normalized:
+            wildcard_pattern = re.escape(normalized)
+            wildcard_pattern = wildcard_pattern.replace(r"\*", ".*").replace(r"\?", ".")
+            if re.fullmatch(wildcard_pattern, lower):
+                return True
+            continue
+        if normalized in lower:
+            return True
+    return False
+
+
+def _gmail_headers(msg_raw: dict[str, Any]) -> dict[str, str]:
+    """Return normalized message headers keyed by lowercase header name."""
+    raw_headers = msg_raw.get("headers", {})
+    if not isinstance(raw_headers, dict):
+        return {}
+    headers: dict[str, str] = {}
+    for name, value in raw_headers.items():
+        key = str(name).lower().strip()
+        if not key:
+            continue
+        headers[key] = str(value).strip()
+    return headers
+
+
+def _gmail_intent(msg_raw: dict[str, Any]) -> str:
+    """Return the normalized crew-chief intent header, if present."""
+    return _gmail_headers(msg_raw).get(_CREW_CHIEF_INTENT_HEADER, "").strip().lower()
+
+
+def _gmail_service_name(msg_raw: dict[str, Any]) -> str:
+    """Return the normalized portfolio service header, if present."""
+    return _gmail_headers(msg_raw).get(_PORTFOLIO_SERVICE_HEADER, "").strip().lower()
+
+
+def _is_explicit_crew_chief_request(msg_raw: dict[str, Any], subject: str, body: str) -> bool:
+    """Return ``True`` when an email explicitly declares itself as a request."""
+    intent = _gmail_intent(msg_raw)
+    if intent:
+        return intent == _CREW_CHIEF_REQUEST_INTENT
+
+    subject_lower = subject.strip().lower()
+    body_lower = body.lstrip().lower()
+    if subject_lower.startswith(_CREW_CHIEF_SUBJECT_PREFIX) or body_lower.startswith(
+        _CREW_CHIEF_SUBJECT_PREFIX
+    ):
+        return True
+    # User replies to portfolio service notification emails (e.g. "Re: [intake] Receipt processed:")
+    # are treated as explicit correction requests even without a [crew-chief] prefix.
+    return any(subject_lower.startswith(prefix) for prefix in _SERVICE_REPLY_SUBJECT_PREFIXES)
+
+
+def _gmail_body_text(msg_raw: dict[str, Any]) -> str:
+    """Return the best available plain-text body from a normalized Gmail message."""
+    for key in ("text", "body", "snippet"):
+        value = msg_raw.get(key, "")
+        if isinstance(value, str) and value:
+            return value
+    return ""
+
+
+def _gmail_body_candidates(msg_raw: dict[str, Any]) -> list[str]:
+    """Return body-like fields worth scanning for loop markers."""
+    candidates: list[str] = []
+    for key in ("text", "body", "snippet", "html"):
+        value = msg_raw.get(key, "")
+        if isinstance(value, str) and value:
+            candidates.append(value)
+    return candidates
+
+
+def _gmail_message_fingerprint(msg: IncomingMessage) -> str:
+    """Return a stable identifier for a Gmail message across poll cycles."""
+    raw = msg.raw if isinstance(msg.raw, dict) else {}
+    message_id = str(raw.get("message_id") or "").strip()
+    if message_id:
+        return f"message_id:{message_id}"
+
+    mailbox = str(raw.get("mailbox") or "").strip()
+    uid = str(raw.get("uid") or "").strip()
+    if mailbox and uid:
+        return f"uid:{mailbox}:{uid}"
+
+    timestamp = str(raw.get("timestamp") or "").strip()
+    sender = msg.sender.strip().lower()
+    subject = msg.subject.strip().lower()
+    preview = msg.text.strip().lower()[:200]
+    return f"fallback:{sender}|{subject}|{timestamp}|{preview}"
+
+
+def _claim_gmail_message(msg: IncomingMessage, seen_fingerprints: set[str]) -> bool:
+    """Return ``True`` only the first time a Gmail message is observed."""
+    fingerprint = _gmail_message_fingerprint(msg)
+    if fingerprint in seen_fingerprints:
+        log.info("Gmail: skipping already-processed message %s from %s.", fingerprint, msg.sender)
+        return False
+    seen_fingerprints.add(fingerprint)
+    return True
 
 
 def _is_auto_reply(msg_raw: dict) -> bool:
@@ -694,6 +927,8 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
         cfg.agent.enabled,
     )
 
+    seen_gmail_fingerprints: set[str] = set()
+
     while True:
         cycle_start = time.monotonic()
         cycle_replies = 0
@@ -719,6 +954,8 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
                     max_replies,
                     msg.sender,
                 )
+                continue
+            if not _claim_gmail_message(msg, seen_gmail_fingerprints):
                 continue
             if _process_message(msg, cfg, llm_client, dispatcher, agent):
                 cycle_replies += 1

@@ -2,6 +2,8 @@
 
 Local LLM service for portfolio-wide trivial inference tasks.  Runs [Ollama](https://ollama.com) inside a [Podman](https://podman.io) container and exposes a zero-dependency Python client so any repo can call it without cloud API access.
 
+If you enable the listener workflows that poll or respond through personal Signal or Gmail channels, the explicit consent reference is [`../../doc-repos/my-consent/messaging-and-email.md`](../../doc-repos/my-consent/messaging-and-email.md).
+
 ## Prerequisites
 
 - [Podman](https://podman.io/getting-started/installation) ≥ 4.x

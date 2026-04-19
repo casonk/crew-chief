@@ -33,6 +33,10 @@ from pathlib import Path
 from typing import Any
 
 from crew_chief.providers.base import ChatResult, ProviderUnavailableError, ToolParam
+from crew_chief.providers.prompt_utils import (
+    looks_like_embedded_transcript,
+    wrap_literal_user_message,
+)
 
 log = logging.getLogger(__name__)
 
@@ -91,6 +95,8 @@ def _messages_to_prompt(
 
         else:
             content = msg.get("content", "")
+            if role == "user" and looks_like_embedded_transcript(content):
+                content = wrap_literal_user_message(content)
             # Single bare user message with no system — send raw
             if len(effective) == 1 and role == "user" and not system:
                 return content
@@ -128,6 +134,8 @@ class ClaudeCliProvider:
     cli_path:
         Override the ``claude`` binary path.  Defaults to PATH lookup.
     """
+
+    reports_tool_use = False
 
     def __init__(
         self,
@@ -280,6 +288,8 @@ class CodexCliProvider:
     cli_path:
         Override the ``codex`` binary path.
     """
+
+    reports_tool_use = False
 
     def __init__(
         self,

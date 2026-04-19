@@ -8,6 +8,11 @@ import urllib.error
 import urllib.request
 from typing import Any
 
+from crew_chief.prompt_utils import (
+    looks_like_embedded_transcript,
+    wrap_literal_user_message,
+)
+
 DEFAULT_BASE_URL: str = os.environ.get("CREW_CHIEF_URL", "http://localhost:11434")
 DEFAULT_MODEL: str = os.environ.get("CREW_CHIEF_MODEL", "llama3.2")
 DEFAULT_TIMEOUT: int = int(os.environ.get("CREW_CHIEF_TIMEOUT", "60"))
@@ -42,6 +47,8 @@ class CrewChiefClient:
 
     def generate(self, prompt: str) -> str:
         """Send a single prompt and return the generated response text."""
+        if looks_like_embedded_transcript(prompt):
+            prompt = wrap_literal_user_message(prompt)
         payload = {"model": self.model, "prompt": prompt, "stream": False}
         body = self._post("/api/generate", payload)
         return body.get("response", "")
@@ -52,7 +59,15 @@ class CrewChiefClient:
         Each message dict must have ``role`` (``"user"``, ``"assistant"``, or
         ``"system"``) and ``content`` keys.
         """
-        payload = {"model": self.model, "messages": messages, "stream": False}
+        native_messages: list[dict[str, str]] = []
+        for msg in messages:
+            role = msg.get("role", "")
+            content = msg.get("content", "")
+            if role == "user" and looks_like_embedded_transcript(content):
+                content = wrap_literal_user_message(content)
+            native_messages.append({"role": role, "content": content})
+
+        payload = {"model": self.model, "messages": native_messages, "stream": False}
         body = self._post("/api/chat", payload)
         return body.get("message", {}).get("content", "")
 
