@@ -1,0 +1,82 @@
+@startuml
+title crew-chief Tooling Integrations
+left to right direction
+skinparam shadowing false
+skinparam defaultFontName Monospace
+skinparam componentStyle rectangle
+skinparam linetype ortho
+rectangle ".github/workflows/ci.yml\n6 detected tools" as source_github_workflows_ci_yml #E0F2FE
+rectangle "Containerfile\n1 detected tool" as source_containerfile #E0F2FE
+rectangle "scripts/install_listener_systemd.sh\n5 detected tools" as source_scripts_install_listener_systemd_sh #E0F2FE
+rectangle "scripts/install_ollama_systemd.sh\n6 detected tools" as source_scripts_install_ollama_systemd_sh #E0F2FE
+rectangle "scripts/pull_model.sh\n0 detected tools" as source_scripts_pull_model_sh #E0F2FE
+rectangle "scripts/run_listener.sh\n0 detected tools" as source_scripts_run_listener_sh #E0F2FE
+rectangle "scripts/run_ollama.sh\n5 detected tools" as source_scripts_run_ollama_sh #E0F2FE
+rectangle "scripts/run_tachometer_profile.sh\n3 detected tools" as source_scripts_run_tachometer_profile_sh #E0F2FE
+rectangle "scripts/start.sh\n2 detected tools" as source_scripts_start_sh #E0F2FE
+rectangle "scripts/start_listener.sh\n2 detected tools" as source_scripts_start_listener_sh #E0F2FE
+rectangle "scripts/status.sh\n1 detected tool" as source_scripts_status_sh #E0F2FE
+rectangle "scripts/stop.sh\n1 detected tool" as source_scripts_stop_sh #E0F2FE
+rectangle "scripts/stop_listener.sh\n1 detected tool" as source_scripts_stop_listener_sh #E0F2FE
+cloud "GPU_DEVICES+=(--device" as tool_gpu_devices_device #FEF3C7
+cloud "GPU_LIB_MOUNTS+=(-v" as tool_gpu_lib_mounts_v #FEF3C7
+cloud "actions/checkout" as tool_actions_checkout #FEF3C7
+cloud "actions/setup-python" as tool_actions_setup_python #FEF3C7
+cloud "black" as tool_black #FEF3C7
+cloud "cat" as tool_cat #FEF3C7
+cloud "chmod" as tool_chmod #FEF3C7
+cloud "crew_chief" as tool_crew_chief #FEF3C7
+cloud "docker" as tool_docker #FEF3C7
+cloud "grep" as tool_grep #FEF3C7
+cloud "inspect" as tool_inspect #FEF3C7
+cloud "libnvidia-nvvm.so.4" as tool_libnvidia_nvvm_so_4 #FEF3C7
+cloud "loginctl" as tool_loginctl #FEF3C7
+cloud "mkdir" as tool_mkdir #FEF3C7
+cloud "nvidia-modeset" as tool_nvidia_modeset #FEF3C7
+cloud "pip" as tool_pip #FEF3C7
+cloud "podman" as tool_podman #FEF3C7
+cloud "pytest" as tool_pytest #FEF3C7
+cloud "rm" as tool_rm #FEF3C7
+cloud "ruff" as tool_ruff #FEF3C7
+cloud "run" as tool_run #FEF3C7
+cloud "summarize" as tool_summarize #FEF3C7
+cloud "systemctl" as tool_systemctl #FEF3C7
+cloud "tachometer" as tool_tachometer #FEF3C7
+source_github_workflows_ci_yml --> tool_actions_checkout
+source_github_workflows_ci_yml --> tool_actions_setup_python
+source_github_workflows_ci_yml --> tool_black
+source_github_workflows_ci_yml --> tool_pip
+source_github_workflows_ci_yml --> tool_pytest
+source_github_workflows_ci_yml --> tool_ruff
+source_containerfile --> tool_docker
+source_scripts_install_listener_systemd_sh --> tool_cat
+source_scripts_install_listener_systemd_sh --> tool_grep
+source_scripts_install_listener_systemd_sh --> tool_loginctl
+source_scripts_install_listener_systemd_sh --> tool_mkdir
+source_scripts_install_listener_systemd_sh --> tool_systemctl
+source_scripts_install_ollama_systemd_sh --> tool_cat
+source_scripts_install_ollama_systemd_sh --> tool_chmod
+source_scripts_install_ollama_systemd_sh --> tool_grep
+source_scripts_install_ollama_systemd_sh --> tool_loginctl
+source_scripts_install_ollama_systemd_sh --> tool_mkdir
+source_scripts_install_ollama_systemd_sh --> tool_systemctl
+source_scripts_run_ollama_sh --> tool_gpu_devices_device
+source_scripts_run_ollama_sh --> tool_gpu_lib_mounts_v
+source_scripts_run_ollama_sh --> tool_libnvidia_nvvm_so_4
+source_scripts_run_ollama_sh --> tool_nvidia_modeset
+source_scripts_run_ollama_sh --> tool_podman
+source_scripts_run_tachometer_profile_sh --> tool_run
+source_scripts_run_tachometer_profile_sh --> tool_summarize
+source_scripts_run_tachometer_profile_sh --> tool_tachometer
+source_scripts_start_sh --> tool_inspect
+source_scripts_start_sh --> tool_podman
+source_scripts_start_listener_sh --> tool_crew_chief
+source_scripts_start_listener_sh --> tool_rm
+source_scripts_status_sh --> tool_podman
+source_scripts_stop_sh --> tool_podman
+source_scripts_stop_listener_sh --> tool_rm
+note as toolingGraphSummary
+Scanned 13 tooling entrypoints.
+Detected 24 third-party tools.
+end note
+@enduml
