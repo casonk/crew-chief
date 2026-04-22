@@ -1,0 +1,233 @@
+@startuml classes_crew-chief
+set namespaceSeparator none
+class "Agent" as crew_chief.agent.Agent {
+  confidence_threshold : float
+  last_used_model : str
+  max_iterations : int
+  provider : Any
+  system_prompt : str
+  tools : list
+  run(prompt: str) -> str
+}
+class "AgentCascade" as crew_chief.agent.AgentCascade {
+  agents : list[Agent]
+  last_used_model : str
+  run(prompt: str) -> str
+}
+class "AgentConfig" as crew_chief.config_loader.AgentConfig {
+  allowed_paths : list[str]
+  confidence_threshold : float
+  enabled : bool
+  fallback_chain : list[str]
+  max_iterations : int
+  provider : str
+  system_prompt : str
+  timeout_seconds : int
+  tools : list[str]
+}
+class "AnthropicProvider" as crew_chief.providers.anthropic.AnthropicProvider {
+  api_key : str
+  base_url : str
+  max_tokens : int
+  model : str
+  reports_tool_use : bool
+  timeout : int
+  chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
+  generate(prompt: str) -> str
+}
+class "ChatResult" as crew_chief.providers.base.ChatResult {
+  content : str
+  model : str
+  stop_reason : str
+  tool_uses : list[ToolUse]
+}
+class "ClaudeCliProvider" as crew_chief.providers.cli.ClaudeCliProvider {
+  allowed_tools : str
+  cli_path : str
+  model : str
+  reports_tool_use : bool
+  timeout : int
+  chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
+  generate(prompt: str) -> str
+  is_available() -> bool
+}
+class "CodexCliProvider" as crew_chief.providers.cli.CodexCliProvider {
+  cli_path : str
+  model : str
+  reports_tool_use : bool
+  sandbox : str
+  timeout : int
+  chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
+  generate(prompt: str) -> str
+  is_available() -> bool
+}
+class "<color:red>ConfigError</color>" as crew_chief.config_loader.ConfigError {
+}
+class "CrewChiefClient" as crew_chief.client.CrewChiefClient {
+  base_url : str
+  model : str
+  timeout : int
+  chat(messages: list[dict[str, str]]) -> str
+  generate(prompt: str) -> str
+  health() -> bool
+  list_models() -> list[str]
+}
+class "DispatchConfig" as crew_chief.config_loader.DispatchConfig {
+  allowed_commands : list[str]
+  output_max_bytes : int
+  timeout_seconds : int
+}
+class "DispatchResult" as crew_chief.dispatcher.DispatchResult {
+  allowed : bool
+  command : str
+  error : str
+  output : str
+  returncode : int | None
+  success : bool
+  truncated : bool
+  reply_text() -> str
+}
+class "Dispatcher" as crew_chief.dispatcher.Dispatcher {
+  allowed_commands : list[str]
+  max_output_bytes : int
+  timeout_seconds : int
+  is_allowed(command: str) -> bool
+  run(command: str) -> DispatchResult
+}
+class "FallbackProvider" as crew_chief.providers.FallbackProvider {
+  last_provider_name : str
+  last_reports_tool_use : NoneType, bool | None
+  providers : list[Any]
+  chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
+  generate(prompt: str) -> str
+}
+class "GmailConfig" as crew_chief.config_loader.GmailConfig {
+  config_path : str
+  enabled : bool
+  limit : int
+  reply_to : str
+  shock_relay_dir : str
+  since_days : int
+  subject_exclude_patterns : list[str]
+  trusted_senders : list[str]
+}
+class "IncomingMessage" as crew_chief.listener.IncomingMessage {
+  channel : str
+  raw : Optional[dict]
+  sender : str
+  subject : str
+  text : str
+}
+class "ListenerConfig" as crew_chief.config_loader.ListenerConfig {
+  agent
+  dispatch
+  gmail
+  llm
+  max_replies_per_cycle : int
+  poll_interval_seconds : int
+  signal
+}
+class "LlmConfig" as crew_chief.config_loader.LlmConfig {
+  anthropic_api_key_auto_pass_entry : str
+  api_key_env : str
+  auto_pass_env_file : str
+  base_url : str
+  claude_cli_allowed_tools : str
+  claude_cli_model : str
+  codex_cli_model : str
+  codex_cli_sandbox : str
+  fallback_chain : list[str]
+  max_tokens : int
+  model : str
+  natural_language : bool
+  openai_api_key_auto_pass_entry : str
+  openai_api_key_env : str
+  openai_model : str
+  provider : str
+  timeout_seconds : int
+}
+class "<color:red>LowConfidenceError</color>" as crew_chief.agent.LowConfidenceError {
+  confidence
+  content
+}
+class "OllamaProvider" as crew_chief.providers.ollama.OllamaProvider {
+  base_url : str
+  model : str
+  reports_tool_use : bool
+  timeout : int
+  chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
+  generate(prompt: str) -> str
+  health() -> bool
+  list_models() -> list[str]
+}
+class "OpenAIProvider" as crew_chief.providers.openai.OpenAIProvider {
+  api_key : str
+  base_url : str
+  max_tokens : int
+  model : str
+  reports_tool_use : bool
+  timeout : int
+  chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
+  generate(prompt: str) -> str
+}
+class "Provider" as crew_chief.providers.base.Provider {
+  chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
+  generate(prompt: str) -> str
+}
+class "<color:red>ProviderUnavailableError</color>" as crew_chief.providers.base.ProviderUnavailableError {
+}
+class "ReadFileTool" as crew_chief.tools.ReadFileTool {
+  allowed_paths : list
+  description : str
+  name : str
+  parameters : dict
+  execute(arguments: dict[str, Any]) -> str
+}
+class "ShellTool" as crew_chief.tools.ShellTool {
+  description : str
+  dispatcher : Any
+  name : str
+  parameters : dict
+  execute(arguments: dict[str, Any]) -> str
+}
+class "SignalConfig" as crew_chief.config_loader.SignalConfig {
+  config_path : str
+  enabled : bool
+  reply_to : str
+  shock_relay_dir : str
+  trusted_senders : list[str]
+}
+class "Tool" as crew_chief.tools.Tool {
+  description : str
+  name : str
+  parameters : dict[str, Any]
+  {abstract}execute(arguments: dict[str, Any]) -> str
+  to_param() -> ToolParam
+}
+class "ToolParam" as crew_chief.providers.base.ToolParam {
+  description : str
+  name : str
+  parameters : dict[str, Any]
+}
+class "ToolUse" as crew_chief.providers.base.ToolUse {
+  arguments : dict[str, Any]
+  id : str
+  name : str
+}
+class "WriteFileTool" as crew_chief.tools.WriteFileTool {
+  allowed_paths : list
+  description : str
+  name : str
+  parameters : dict
+  execute(arguments: dict[str, Any]) -> str
+}
+crew_chief.tools.ReadFileTool --|> crew_chief.tools.Tool
+crew_chief.tools.ShellTool --|> crew_chief.tools.Tool
+crew_chief.tools.WriteFileTool --|> crew_chief.tools.Tool
+crew_chief.config_loader.ListenerConfig --> crew_chief.config_loader.AgentConfig : agent
+crew_chief.config_loader.ListenerConfig --> crew_chief.config_loader.DispatchConfig : dispatch
+crew_chief.config_loader.ListenerConfig --> crew_chief.config_loader.GmailConfig : gmail
+crew_chief.config_loader.ListenerConfig --> crew_chief.config_loader.LlmConfig : llm
+crew_chief.config_loader.ListenerConfig --> crew_chief.config_loader.SignalConfig : signal
+crew_chief.agent.Agent --o crew_chief.agent.AgentCascade : agents
+@enduml
