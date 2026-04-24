@@ -326,6 +326,14 @@ def _extract_email_address(raw_from: str) -> str:
     return addr.lower().strip()
 
 
+def _excerpt(text: str, limit: int = 400) -> str:
+    """Return a compact one-line excerpt suitable for journal logging."""
+    compact = " ".join((text or "").split())
+    if len(compact) <= limit:
+        return compact
+    return f"{compact[: limit - 3]}..."
+
+
 def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
     """Fetch unseen Gmail messages and return those from trusted senders.
 
@@ -339,6 +347,7 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
         return []
 
     check_script = Path(cfg.shock_relay_dir) / "check_inbox.py"
+    timeout_seconds = 30
     cmd = [
         sys.executable,
         str(check_script),
@@ -351,17 +360,42 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
         str(cfg.since_days),
     ]
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_seconds)
     except FileNotFoundError:
         log.error("check_inbox.py not found at %s", check_script)
         return []
     except subprocess.TimeoutExpired:
-        log.error("Gmail check_inbox timed out.")
+        log.error(
+            "Gmail check_inbox timed out after %ss "
+            "(script=%s, config=%s, limit=%s, since_days=%s).",
+            timeout_seconds,
+            check_script,
+            cfg.config_path,
+            cfg.limit,
+            cfg.since_days,
+        )
         return []
 
     if result.returncode != 0:
-        log.error("check_inbox.py failed (rc=%d): %s", result.returncode, result.stderr.strip())
+        log.error(
+            "check_inbox.py failed (rc=%d, script=%s, config=%s, limit=%s, since_days=%s): "
+            "stderr=%s stdout=%s",
+            result.returncode,
+            check_script,
+            cfg.config_path,
+            cfg.limit,
+            cfg.since_days,
+            _excerpt(result.stderr),
+            _excerpt(result.stdout),
+        )
         return []
+    if result.stderr.strip():
+        log.info(
+            "check_inbox.py emitted stderr with rc=0 (script=%s, config=%s): %s",
+            check_script,
+            cfg.config_path,
+            _excerpt(result.stderr),
+        )
 
     try:
         payload = json.loads(result.stdout)
@@ -457,6 +491,7 @@ def reply_gmail(cfg: GmailConfig, recipient: str, subject: str, body: str) -> No
     """Send *body* to *recipient* via the shock-relay send_email.py script."""
     send_script = Path(cfg.shock_relay_dir) / "send_email.py"
     reply_subject = f"Re: {subject}" if subject else "crew-chief reply"
+    timeout_seconds = 30
     # Append the loop-prevention marker so any system that routes this reply
     # back to crew-chief's inbox will have it filtered out on ingest.
     stamped_body = f"{body}\n\n{_REPLY_LOOP_MARKER}"
@@ -474,11 +509,36 @@ def reply_gmail(cfg: GmailConfig, recipient: str, subject: str, body: str) -> No
         stamped_body,
     ]
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_seconds)
         if result.returncode != 0:
-            log.error("Gmail reply failed (rc=%d): %s", result.returncode, result.stderr.strip())
+            log.error(
+                "Gmail reply failed (rc=%d, recipient=%s, subject=%r, script=%s, config=%s): "
+                "stderr=%s stdout=%s",
+                result.returncode,
+                recipient,
+                reply_subject,
+                send_script,
+                cfg.config_path,
+                _excerpt(result.stderr),
+                _excerpt(result.stdout),
+            )
+        elif result.stderr.strip():
+            log.info(
+                "send_email.py emitted stderr with rc=0 (recipient=%s, subject=%r, script=%s): %s",
+                recipient,
+                reply_subject,
+                send_script,
+                _excerpt(result.stderr),
+            )
     except subprocess.TimeoutExpired:
-        log.error("Gmail reply timed out sending to %s", recipient)
+        log.error(
+            "Gmail reply timed out after %ss sending to %s (subject=%r, script=%s, config=%s).",
+            timeout_seconds,
+            recipient,
+            reply_subject,
+            send_script,
+            cfg.config_path,
+        )
     except FileNotFoundError:
         log.error("send_email.py not found at %s", send_script)
 
