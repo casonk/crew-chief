@@ -7,9 +7,26 @@ name = "crew-chief"
 version = "0.1.0"
 description = "Local Ollama LLM service and Python client for portfolio-wide trivial inference tasks."
 readme = "README.md"
-license = { file = "LICENSE" }
+license = { text = "MIT" }
 requires-python = ">=3.10"
+authors = [
+  { name = "Cason Konzer", email = "casonk@umich.edu" },
+]
+keywords = ["ollama", "llm", "inference", "local-ai", "podman"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Utilities",
+  "License :: OSI Approved :: MIT License",
+]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/casonk/crew-chief"
+Repository = "https://github.com/casonk/crew-chief"
+Changelog = "https://github.com/casonk/crew-chief/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 # Required on Python 3.10 for TOML parsing in the listener feature.
