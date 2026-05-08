@@ -556,6 +556,25 @@ class TestPollGmail(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertIn("target", result[0].text)
 
+    def test_allows_same_address_auto_pass_reply_subject(self):
+        """Replies to auto-pass notification emails pass the same-sender guard."""
+        payload = json.dumps(
+            {
+                "messages": [
+                    {
+                        "from": "me@example.com",
+                        "subject": "Re: [auto-pass] Password retrieved for magneto@transmission",
+                        "snippet": "start sending me a daily summary instead",
+                    }
+                ]
+            }
+        )
+        recorder = ProcessRecorder(responses=[build_completed_process(stdout=payload)])
+        with SubprocessPatch(recorder, target=_GMAIL_TARGET):
+            result = poll_gmail(self._cfg(["me@example.com"]))
+        self.assertEqual(len(result), 1)
+        self.assertIn("daily summary", result[0].text)
+
     def test_drops_non_request_intent_header(self):
         payload = json.dumps(
             {

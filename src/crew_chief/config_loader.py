@@ -180,6 +180,15 @@ class GmailConfig:
     # automated notification pipelines that share the same inbox address
     # (e.g. "[intake]" for receipt-processing notifications).
     subject_exclude_patterns: list[str] = field(default_factory=list)
+    # Subject prefixes that identify user replies to portfolio service
+    # notification emails.  Messages whose subject starts with one of these
+    # prefixes (case-insensitive) are treated as explicit crew-chief requests
+    # so the same-sender loop guard passes them through.
+    # Add a new entry whenever a service starts sending notification emails
+    # that users may reply to (e.g. "re: [auto-pass]", "re: [intake]").
+    service_reply_subject_prefixes: list[str] = field(
+        default_factory=lambda: ["re: [intake]", "re: [auto-pass]"]
+    )
 
 
 @dataclass
@@ -370,6 +379,10 @@ def load(path: str | Path) -> ListenerConfig:
     if "subject_exclude_patterns" in gm:
         cfg.gmail.subject_exclude_patterns = _str_list(
             gm["subject_exclude_patterns"], "gmail.subject_exclude_patterns"
+        )
+    if "service_reply_subject_prefixes" in gm:
+        cfg.gmail.service_reply_subject_prefixes = _str_list(
+            gm["service_reply_subject_prefixes"], "gmail.service_reply_subject_prefixes"
         )
 
     dis = raw.get("dispatch", {})

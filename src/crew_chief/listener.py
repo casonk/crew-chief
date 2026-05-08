@@ -456,7 +456,10 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
             )
             continue
 
-        explicit_request = _is_explicit_crew_chief_request(msg, subject, body)
+        service_reply_prefixes = tuple(cfg.service_reply_subject_prefixes)
+        explicit_request = _is_explicit_crew_chief_request(
+            msg, subject, body, service_reply_prefixes
+        )
 
         # Loop guard 1: same-address Gmail is ambiguous unless the message
         # explicitly declares itself as a request to crew-chief.
@@ -615,8 +618,9 @@ _CREW_CHIEF_RESPONSE_INTENT = "response"
 _CREW_CHIEF_SUBJECT_PREFIX = _CREW_CHIEF_TEXT_PREFIX
 
 # Subjects that identify user replies to portfolio service notifications.
-# These are treated as explicit requests so the same-sender loop guard passes them.
-_SERVICE_REPLY_SUBJECT_PREFIXES: tuple[str, ...] = ("re: [intake]",)
+# These are the built-in defaults; the full list is configurable via
+# GmailConfig.service_reply_subject_prefixes in listener.toml.
+_DEFAULT_SERVICE_REPLY_SUBJECT_PREFIXES: tuple[str, ...] = ("re: [intake]", "re: [auto-pass]")
 
 # Header names whose *presence alone* (regardless of value) signals an
 # automated reply.  Checked case-insensitively.
@@ -668,7 +672,12 @@ def _gmail_service_name(msg_raw: dict[str, Any]) -> str:
     return _gmail_headers(msg_raw).get(_PORTFOLIO_SERVICE_HEADER, "").strip().lower()
 
 
-def _is_explicit_crew_chief_request(msg_raw: dict[str, Any], subject: str, body: str) -> bool:
+def _is_explicit_crew_chief_request(
+    msg_raw: dict[str, Any],
+    subject: str,
+    body: str,
+    service_reply_prefixes: tuple[str, ...] = _DEFAULT_SERVICE_REPLY_SUBJECT_PREFIXES,
+) -> bool:
     """Return ``True`` when an email explicitly declares itself as a request."""
     intent = _gmail_intent(msg_raw)
     if intent:
@@ -682,7 +691,7 @@ def _is_explicit_crew_chief_request(msg_raw: dict[str, Any], subject: str, body:
         return True
     # User replies to portfolio service notification emails (e.g. "Re: [intake] Receipt processed:")
     # are treated as explicit correction requests even without a [crew-chief] prefix.
-    return any(subject_lower.startswith(prefix) for prefix in _SERVICE_REPLY_SUBJECT_PREFIXES)
+    return any(subject_lower.startswith(prefix) for prefix in service_reply_prefixes)
 
 
 def _gmail_body_text(msg_raw: dict[str, Any]) -> str:
