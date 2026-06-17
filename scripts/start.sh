@@ -32,7 +32,7 @@ else
     echo "Creating container $CONTAINER_NAME ..."
     podman run -d \
         --name "$CONTAINER_NAME" \
-        -p "${PORT}:11434" \
+        -p "127.0.0.1:${PORT}:11434" \
         -v "${MODELS_VOLUME}:/root/.ollama" \
         "$IMAGE_NAME"
 fi

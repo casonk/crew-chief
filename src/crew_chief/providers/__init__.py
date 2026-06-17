@@ -157,6 +157,14 @@ def _resolve_api_key(env_var: str, auto_pass_entry: str, auto_pass_env_file: str
 def _build_single_provider(name: str, cfg: Any) -> Any:
     """Build one provider from its name and a LlmConfig-like *cfg* object."""
     if name == "ollama":
+        chain = getattr(cfg, "ollama_model_chain", [])
+        if chain:
+            providers = [
+                OllamaProvider(base_url=cfg.base_url, model=m, timeout=cfg.timeout_seconds)
+                for m in chain
+            ]
+            log.info("Ollama model chain: %s", chain)
+            return FallbackProvider(providers)
         return OllamaProvider(
             base_url=cfg.base_url,
             model=cfg.model,
