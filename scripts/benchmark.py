@@ -31,7 +31,6 @@ import subprocess
 import sys
 import time
 from dataclasses import asdict, dataclass
-from typing import Optional
 
 BASE_URL = "http://localhost:11434"
 
@@ -62,8 +61,8 @@ class BenchmarkResult:
     tokens_per_sec: float
     total_tokens: int
     total_time_ms: float
-    vram_delta_mb: int   # -1 when nvidia-smi unavailable
-    error: Optional[str] = None
+    vram_delta_mb: int  # -1 when nvidia-smi unavailable
+    error: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -138,6 +137,14 @@ def _measure_ttft(model: str, prompt: str, timeout: int = 180) -> float:
 # ---------------------------------------------------------------------------
 # Core benchmark
 # ---------------------------------------------------------------------------
+
+
+def _warmup(model: str) -> None:
+    """Send one short request to ensure the model is loaded before timing begins."""
+    import contextlib
+
+    with contextlib.suppress(Exception):
+        _post_json("/api/generate", {"model": model, "prompt": "hi", "stream": False}, timeout=120)
 
 
 def run_benchmark(
@@ -248,6 +255,8 @@ def _fmt_table(results: list[BenchmarkResult]) -> str:
 
 
 def main() -> None:
+    global BASE_URL
+
     parser = argparse.ArgumentParser(
         description="Benchmark Ollama models: TTFT, tokens/sec, VRAM delta.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -282,9 +291,14 @@ def main() -> None:
         default=BASE_URL,
         help=f"Ollama API base URL (default: {BASE_URL}).",
     )
+    parser.add_argument(
+        "--no-warmup",
+        action="store_true",
+        default=False,
+        help="Skip the warm-up request per model (first TTFT will include model load time).",
+    )
     args = parser.parse_args()
 
-    global BASE_URL
     BASE_URL = args.base_url.rstrip("/")
 
     models = args.models or _list_local_models()
@@ -302,6 +316,10 @@ def main() -> None:
 
     results: list[BenchmarkResult] = []
     for model in models:
+        if not args.no_warmup:
+            print(f"  {model}  [warmup] ...", end=" ", flush=True)
+            _warmup(model)
+            print("done")
         for prompt_name in args.prompts:
             prompt = PROMPTS[prompt_name]
             print(f"  {model}  [{prompt_name}] ...", end=" ", flush=True)
