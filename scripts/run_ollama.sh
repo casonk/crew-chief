@@ -87,7 +87,7 @@ fi
 # fails even though the nodes are present.
 exec podman run --rm --replace \
     --name "$CONTAINER_NAME" \
-    -p "${PORT}:11434" \
+    -p "127.0.0.1:${PORT}:11434" \
     -v "${MODELS_VOLUME}:/root/.ollama" \
     --security-opt label=disable \
     --security-opt seccomp=unconfined \

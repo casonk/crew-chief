@@ -53,6 +53,12 @@ class LlmConfig:
         default_factory=lambda: ["ollama", "claude-cli", "codex-cli", "anthropic", "openai"]
     )
 
+    # Intra-Ollama escalation chain. When non-empty, the "ollama" step in the
+    # fallback chain becomes its own FallbackProvider that tries each model in
+    # order before leaving Ollama entirely. Takes priority over `model`.
+    # Example: ["llama3.2", "qwen3:14b", "qwen3:32b"]
+    ollama_model_chain: list[str] = field(default_factory=list)
+
     # ------------------------------------------------------------------ #
     # Anthropic API settings                                               #
     # ------------------------------------------------------------------ #
@@ -298,6 +304,8 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.llm.provider = _str(llm["provider"], "llm.provider")
     if "fallback_chain" in llm:
         cfg.llm.fallback_chain = _str_list(llm["fallback_chain"], "llm.fallback_chain")
+    if "ollama_model_chain" in llm:
+        cfg.llm.ollama_model_chain = _str_list(llm["ollama_model_chain"], "llm.ollama_model_chain")
     if "api_key_env" in llm:
         cfg.llm.api_key_env = _str(llm["api_key_env"], "llm.api_key_env")
     if "anthropic_api_key_auto_pass_entry" in llm:
