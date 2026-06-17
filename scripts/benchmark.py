@@ -146,12 +146,14 @@ def _measure_ttft(model: str, prompt: str, timeout: int = 180) -> float:
 # ---------------------------------------------------------------------------
 
 
-def _warmup(model: str) -> None:
+def _warmup(model: str, timeout: int = 600) -> None:
     """Send one short request to ensure the model is loaded before timing begins."""
     import contextlib
 
     with contextlib.suppress(Exception):
-        _post_json("/api/generate", {"model": model, "prompt": "hi", "stream": False}, timeout=120)
+        _post_json(
+            "/api/generate", {"model": model, "prompt": "hi", "stream": False}, timeout=timeout
+        )
 
 
 def run_benchmark(
@@ -159,6 +161,7 @@ def run_benchmark(
     prompt_name: str,
     prompt: str,
     runs: int = 1,
+    timeout: int = 600,
 ) -> BenchmarkResult:
     ttft_samples: list[float] = []
     tps_samples: list[float] = []
@@ -169,7 +172,7 @@ def run_benchmark(
     for _ in range(runs):
         # --- TTFT via streaming ---
         try:
-            ttft = _measure_ttft(model, prompt)
+            ttft = _measure_ttft(model, prompt, timeout=timeout)
         except Exception as exc:
             return BenchmarkResult(
                 model=model,
@@ -190,6 +193,7 @@ def run_benchmark(
             resp = _post_json(
                 "/api/generate",
                 {"model": model, "prompt": prompt, "stream": False},
+                timeout=timeout,
             )
         except Exception as exc:
             return BenchmarkResult(
@@ -304,6 +308,12 @@ def main() -> None:
         default=False,
         help="Skip the warm-up request per model (first TTFT will include model load time).",
     )
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=600,
+        help="Per-request timeout in seconds (default: 600). Increase for large thinking models.",
+    )
     args = parser.parse_args()
 
     BASE_URL = args.base_url.rstrip("/")
@@ -325,12 +335,12 @@ def main() -> None:
     for model in models:
         if not args.no_warmup:
             print(f"  {model}  [warmup] ...", end=" ", flush=True)
-            _warmup(model)
+            _warmup(model, timeout=args.timeout)
             print("done")
         for prompt_name in args.prompts:
             prompt = PROMPTS[prompt_name]
             print(f"  {model}  [{prompt_name}] ...", end=" ", flush=True)
-            result = run_benchmark(model, prompt_name, prompt, runs=args.runs)
+            result = run_benchmark(model, prompt_name, prompt, runs=args.runs, timeout=args.timeout)
             results.append(result)
             if result.error:
                 print(f"ERROR: {result.error}")
