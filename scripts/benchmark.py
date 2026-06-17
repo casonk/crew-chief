@@ -70,6 +70,13 @@ class BenchmarkResult:
 # ---------------------------------------------------------------------------
 
 
+def _get_json(path: str, timeout: int = 30) -> dict:
+    import urllib.request
+
+    with urllib.request.urlopen(f"{BASE_URL}{path}", timeout=timeout) as resp:
+        return json.loads(resp.read())
+
+
 def _post_json(path: str, payload: dict, timeout: int = 180) -> dict:
     import urllib.request
 
@@ -85,7 +92,7 @@ def _post_json(path: str, payload: dict, timeout: int = 180) -> dict:
 
 def _list_local_models() -> list[str]:
     try:
-        resp = _post_json("/api/tags", {})
+        resp = _get_json("/api/tags")
         return [m["name"] for m in resp.get("models", [])]
     except Exception as exc:
         print(f"Could not list local models: {exc}", file=sys.stderr)
