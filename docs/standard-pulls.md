@@ -58,7 +58,13 @@ curl -s -X POST http://localhost:11434/api/pull \
 ### High tier
 
 ```bash
-# High tier flagship — 20 GB, best quality for pure-text tasks in 24 GB
+# High tier — 18 GB, 128K context, QAT quality; Google architecture diversity;
+# strong for summarise/document/translate; slots between qwen3:14b-q8_0 and qwen3:32b
+curl -s -X POST http://localhost:11434/api/pull \
+     -H "Content-Type: application/json" \
+     -d '{"name": "gemma3:27b-it-qat", "stream": false}'
+
+# High tier flagship — 20 GB, best quality for pure-text tasks in 24 GB, 40K context
 curl -s -X POST http://localhost:11434/api/pull \
      -H "Content-Type: application/json" \
      -d '{"name": "qwen3:32b", "stream": false}'
@@ -131,6 +137,7 @@ pull "llama3.2:latest"
 pull "llama3.2:3b-instruct-q8_0"
 pull "qwen3:14b"
 pull "qwen3:14b-q8_0"
+pull "gemma3:27b-it-qat"
 pull "qwen3:32b"
 pull "qwen3.5:27b"
 pull "qwen2.5-coder:7b"
