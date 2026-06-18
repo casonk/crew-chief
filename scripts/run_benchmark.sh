@@ -34,5 +34,8 @@ fi
 echo "[run_benchmark] Benchmark complete — generating HTML report"
 python3 "${REPO_ROOT}/scripts/report.py" "${JSON_OUT}" --out "${HTML_OUT}"
 
+ln -sf "$(basename "${HTML_OUT}")" "${RESULTS_DIR}/latest.html"
+
 echo "[run_benchmark] Done — ${JSON_OUT}"
 echo "[run_benchmark] Done — ${HTML_OUT}"
+echo "[run_benchmark] Symlink updated — ${RESULTS_DIR}/latest.html"

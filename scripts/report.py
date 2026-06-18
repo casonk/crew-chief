@@ -151,9 +151,9 @@ def _ttft_class(ms: float) -> str:
 
 def _fmt_ttft(ms: float) -> str:
     if ms >= 60_000:
-        return f"{ms/60_000:.1f} min"
+        return f"{ms / 60_000:.1f} min"
     if ms >= 1_000:
-        return f"{ms/1_000:.1f} s"
+        return f"{ms / 1_000:.1f} s"
     return f"{ms:.0f} ms"
 
 
@@ -374,9 +374,7 @@ def build_report(runs: dict[str, list[dict]], out: pathlib.Path) -> None:
         chart_html.append(_bar_chart(models, pt, prompt))
         chart_html.append(f"<h3>TTFT — {prompt} (log scale)</h3>")
         chart_html.append(_ttft_bar_chart(models, pt, prompt))
-    sections.append(
-        '<div class="section"><h2>Charts</h2>' + "\n".join(chart_html) + "</div>"
-    )
+    sections.append('<div class="section"><h2>Charts</h2>' + "\n".join(chart_html) + "</div>")
 
     # ── Trend (if multiple runs)
     trend = _trend_section(runs, models)

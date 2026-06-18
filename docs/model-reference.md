@@ -10,6 +10,7 @@ on the crew-chief RTX 3090 deployment (24 GB VRAM).
 | Format | Bits/weight | Perplexity loss vs F16 | Typical use |
 |---|---|---|---|
 | **Q4_K_M** | 4-bit grouped + mixed precision | ~0.8–1.5 % | Portfolio default. Best balance of quality, VRAM, and speed. Ships as the Ollama default. |
+| **QAT** | 4-bit, quantization-aware trained | ~0.3–0.5 % | Model trained with its own quantization applied; better quality than post-training Q4_K_M for the same VRAM. Only available for select models (e.g. Gemma3). |
 | **Q8_0** | 8-bit uniform | ~0.05 % | Near-fp16 quality; 2× VRAM of Q4_K_M. Use when a model fits and quality matters more than VRAM headroom. |
 | **F16** | 16-bit half precision | 0 % (reference) | Full quality; 4× VRAM of Q4_K_M. Only feasible for ≤8B models on 24 GB. |
 | Q4_0 | 4-bit, no channel scale | ~2–4 % | Older format, lower quality. Avoid for new pulls; exists only in legacy checkpoints. |
@@ -48,12 +49,24 @@ Current models on the `crew-chief-models` volume. Updated manually after each pu
 | Aya Expanse | `aya-expanse:8b` | ~5 GB | Q4_K_M | Specialist | Multilingual / translation; used by intake |
 | Qwen3 14B | `qwen3:14b` | ~9 GB | Q4_K_M | Mid+ | Strong reasoning and instruction-following |
 | Qwen3 14B | `qwen3:14b-q8_0` | ~16 GB | Q8_0 | Mid++ | Near-fp16 quality mid-tier |
+| Gemma3 27B | `gemma3:27b-it-qat` | ~18 GB | QAT | High | Google flagship; 128K context; strong summarise/document/translate; architectural diversity from Qwen |
 | Qwen3 32B | `qwen3:32b` | ~20 GB | Q4_K_M | High | Best single-model quality in 24 GB |
 | Qwen3.5 27B | `qwen3.5:27b` | ~17 GB | Q4_K_M | High+ | Multimodal (text + image), 256K context |
 
 ---
 
 ## Model Families
+
+### Gemma3 (2025 — Google flagship)
+
+- Sizes: 270m, 1b, 4b, 12b, 27b
+- Context: 128K tokens (all sizes)
+- Inputs: text + image
+- QAT variants available for 1b/4b/12b/27b — prefer `*-it-qat` over `*-it-q4_K_M` at the same VRAM cost for better quality
+- `gemma3:27b-it-qat` (18 GB) fits comfortably on 24 GB; Q8 (30 GB) does not
+- Strong for summarisation, document analysis, and multilingual tasks; provides architectural diversity from the Qwen family
+
+---
 
 ### Qwen3.5 (2026 — recommended flagship)
 
@@ -77,20 +90,32 @@ Current models on the `crew-chief-models` volume. Updated manually after each pu
 
 ---
 
-## Escalation Chain
+## Task Chains
 
-The intra-Ollama escalation in `config/listener/config.toml`:
+Per-task Ollama model chains are configured under `[llm.task_chains]` in
+`config/listener/config.toml` (gitignored). Three models per task before any
+external API is reached. A fourth slot is reserved for future expansion.
 
-```toml
-ollama_model_chain = ["llama3.2", "qwen3:14b", "qwen3:32b"]
-```
-
-Interpretation: try the fast tier first; escalate to mid and then high if the smaller model fails. This keeps latency low for simple tasks while making large models available for hard ones.
-
-Suggested update once qwen3.5:27b is pulled and benchmarked:
+`FallbackProvider` tries each model in order and advances on error — including
+context-length overflow, so the document chain naturally escalates by context window.
 
 ```toml
-ollama_model_chain = ["llama3.2:3b-instruct-q8_0", "qwen3:14b-q8_0", "qwen3.5:27b"]
+[llm.task_chains]
+# Code specialist → near-fp16 reasoning → highest quality
+code      = ["qwen2.5-coder:7b",  "qwen3:14b-q8_0",  "qwen3:32b"]
+
+# Fast near-fp16 → Google diversity → Qwen ceiling
+reasoning = ["qwen3:14b-q8_0",    "gemma3:27b",       "qwen3:32b"]
+summarise = ["qwen3:14b-q8_0",    "gemma3:27b",       "qwen3:32b"]
+
+# Multilingual specialist → near-fp16 → Google multilingual
+translate = ["aya-expanse:8b",    "qwen3:14b-q8_0",   "gemma3:27b"]
+
+# Context-window escalation: 40K → 128K → 256K
+document  = ["qwen3:32b",         "gemma3:27b",        "qwen3.5:27b"]
+
+# Ultra-fast dispatch → balanced → quality ceiling
+default   = ["llama3.2:latest",   "qwen3:14b",         "qwen3:32b"]
 ```
 
 ---
@@ -102,9 +127,13 @@ ollama_model_chain = ["llama3.2:3b-instruct-q8_0", "qwen3:14b-q8_0", "qwen3.5:27
 | Simple dispatch / health check | `llama3.2:latest` (fast, 2 GB) |
 | General Q&A, moderate reasoning | `qwen3:14b` (9 GB) |
 | High-quality reasoning, no image | `qwen3:14b-q8_0` (16 GB) or `qwen3:32b` (20 GB) |
-| Document analysis, image input, long context | `qwen3.5:27b` (17 GB, 256K ctx) |
+| Document analysis, short–medium (≤40K tokens) | `qwen3:32b` (20 GB) |
+| Document analysis, long (40K–128K tokens) | `gemma3:27b-it-qat` (18 GB, 128K ctx) |
+| Document analysis, very long (128K–256K tokens) | `qwen3.5:27b` (17 GB, 256K ctx) |
+| Document with images | `qwen3.5:27b` (multimodal) |
 | Code generation | `qwen2.5-coder:7b` (4 GB) |
 | Multilingual / translation | `aya-expanse:8b` (5 GB) |
+| High-quality summarisation | `gemma3:27b-it-qat` (18 GB) |
 | Maximum quality within 24 GB | `qwen3:32b` (20 GB) |
 
 ---
