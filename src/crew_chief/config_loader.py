@@ -59,6 +59,18 @@ class LlmConfig:
     # Example: ["llama3.2", "qwen3:14b", "qwen3:32b"]
     ollama_model_chain: list[str] = field(default_factory=list)
 
+    # Per-task Ollama model chains. Keys are task names (e.g. "code",
+    # "reasoning", "translate"); values are ordered model lists identical in
+    # semantics to ollama_model_chain. When a caller supplies a matching task
+    # name, that chain is used in preference to ollama_model_chain.
+    # Defined under [llm.task_chains] in config.toml.
+    # Example:
+    #   [llm.task_chains]
+    #   code      = ["qwen2.5-coder:7b", "qwen3:14b", "qwen3:32b"]
+    #   reasoning = ["qwen3:14b", "qwen3:14b-q8_0", "qwen3:32b"]
+    #   default   = ["llama3.2:latest", "qwen3:14b", "qwen3:32b"]
+    task_chains: dict[str, list[str]] = field(default_factory=dict)
+
     # ------------------------------------------------------------------ #
     # Anthropic API settings                                               #
     # ------------------------------------------------------------------ #
@@ -306,6 +318,12 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.llm.fallback_chain = _str_list(llm["fallback_chain"], "llm.fallback_chain")
     if "ollama_model_chain" in llm:
         cfg.llm.ollama_model_chain = _str_list(llm["ollama_model_chain"], "llm.ollama_model_chain")
+    if "task_chains" in llm:
+        raw_tc = llm["task_chains"]
+        if not isinstance(raw_tc, dict):
+            raise ConfigError("Config key 'llm.task_chains' must be a TOML table.")
+        for task_name, model_list in raw_tc.items():
+            cfg.llm.task_chains[task_name] = _str_list(model_list, f"llm.task_chains.{task_name}")
     if "api_key_env" in llm:
         cfg.llm.api_key_env = _str(llm["api_key_env"], "llm.api_key_env")
     if "anthropic_api_key_auto_pass_entry" in llm:

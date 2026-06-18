@@ -9,3 +9,8 @@
 path = "util-repos/shock-relay"
 integration = "subprocess calls to services/signal-cli/send_message.py, services/signal-cli/receive_messages.py (indirectly via signal-cli), services/gmail-imap/check_inbox.py, services/gmail-imap/send_email.py"
 notes = "Required for the crew-chief listen command.  Paths configured in config/listener/config.toml."
+
+[[downstream]]
+path = "util-repos/intake"
+integration = "imports CrewChiefClient from crew-chief to translate non-English receipt OCR through the local Ollama service"
+notes = "Used for persisted translated_text on non-English receipts; defaults to aya-expanse:8b."
