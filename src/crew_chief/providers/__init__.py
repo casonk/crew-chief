@@ -154,16 +154,26 @@ def _resolve_api_key(env_var: str, auto_pass_entry: str, auto_pass_env_file: str
     return ""
 
 
-def _build_single_provider(name: str, cfg: Any) -> Any:
-    """Build one provider from its name and a LlmConfig-like *cfg* object."""
+def _build_single_provider(name: str, cfg: Any, task: str = "") -> Any:
+    """Build one provider from its name and a LlmConfig-like *cfg* object.
+
+    *task* is an optional hint (e.g. ``"code"``, ``"reasoning"``) that selects
+    a task-specific model chain from ``cfg.task_chains`` when one is defined.
+    Falls back to ``cfg.ollama_model_chain``, then ``cfg.model``.
+    """
     if name == "ollama":
-        chain = getattr(cfg, "ollama_model_chain", [])
+        task_chains: dict[str, list[str]] = getattr(cfg, "task_chains", {})
+        chain = (
+            task_chains.get(task)
+            or task_chains.get("default")
+            or getattr(cfg, "ollama_model_chain", [])
+        )
         if chain:
             providers = [
                 OllamaProvider(base_url=cfg.base_url, model=m, timeout=cfg.timeout_seconds)
                 for m in chain
             ]
-            log.info("Ollama model chain: %s", chain)
+            log.info("Ollama model chain (task=%r): %s", task or "default", chain)
             return FallbackProvider(providers)
         return OllamaProvider(
             base_url=cfg.base_url,
@@ -218,22 +228,25 @@ def _build_single_provider(name: str, cfg: Any) -> Any:
     )
 
 
-def build_provider(name: str, cfg: Any) -> Any:
+def build_provider(name: str, cfg: Any, task: str = "") -> Any:
     """Public alias for building a single named provider from *cfg*.
 
-    Convenience wrapper around :func:`_build_single_provider` for callers that
-    need to construct individual providers (e.g. to build per-provider agent
-    instances for a confidence-based cascade).
+    *task* is forwarded to :func:`_build_single_provider` so callers can
+    select a task-specific Ollama model chain when one is configured.
     """
-    return _build_single_provider(name, cfg)
+    return _build_single_provider(name, cfg, task=task)
 
 
-def get_provider(cfg: Any) -> Any:
+def get_provider(cfg: Any, task: str = "") -> Any:
     """Instantiate the correct provider (or fallback chain) from *cfg*.
 
     *cfg* is expected to have the attributes of
     :class:`~crew_chief.config_loader.LlmConfig`.  Duck-typed to avoid
     circular imports.
+
+    *task* is an optional hint (e.g. ``"code"``, ``"reasoning"``,
+    ``"translate"``) that selects a task-specific Ollama model chain when
+    ``cfg.task_chains`` is populated.  Ignored for non-Ollama providers.
 
     Supported ``cfg.provider`` values
     -----------------------------------
@@ -253,11 +266,12 @@ def get_provider(cfg: Any) -> Any:
 
     if provider_name == "fallback":
         chain = getattr(cfg, "fallback_chain", ["ollama", "claude-cli", "anthropic"])
-        providers = [_build_single_provider(n, cfg) for n in chain]
+        providers = [_build_single_provider(n, cfg, task=task) for n in chain]
         log.info(
-            "FallbackProvider chain: %s",
+            "FallbackProvider chain (task=%r): %s",
+            task or "default",
             [type(p).__name__ for p in providers],
         )
         return FallbackProvider(providers)
 
-    return _build_single_provider(provider_name, cfg)
+    return _build_single_provider(provider_name, cfg, task=task)
