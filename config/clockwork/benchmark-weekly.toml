@@ -23,3 +23,22 @@ randomized_delay_sec = "600"
 expression = "0 4 * * 0"
 command    = "cd $HOME/git/util-repos/crew-chief && /usr/bin/bash scripts/run_benchmark.sh >> $HOME/.local/share/crew-chief-benchmark/cron.log 2>&1"
 comments   = ["Auto-generated from systemd timer: Sun *-*-* 04:00:00"]
+
+# --- macOS ----------------------------------------------------------------
+# Applied only when rendering for launchd-user; the systemd and cron
+# renderings above are untouched.
+[jobs.launchd]
+# launchd has no ordering dependencies.
+after = []
+# /usr/bin/bash does not exist on macOS at all -- the system shell is /bin/bash.
+# The repositories also live under ~/dev on the macOS workstation rather than
+# ~/git, so the working directory and REPO_ROOT have to move with it.
+exec_start = "/bin/bash %h/dev/util-repos/crew-chief/scripts/run_benchmark.sh"
+working_directory = "%h/dev/util-repos/crew-chief"
+
+[jobs.launchd.environment]
+REPO_ROOT = "%h/dev/util-repos/crew-chief"
+
+[jobs.launchd.timer]
+# launchd cannot express jitter.
+randomized_delay_sec = ""
