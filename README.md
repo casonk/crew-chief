@@ -25,11 +25,16 @@ bash scripts/status.sh
 
 ## Python client
 
-Install in any portfolio repo:
+Install into the consuming repo's virtualenv:
 
 ```bash
+. .venv/bin/activate          # the venv of the repo that will use the client
 pip install -e ./util-repos/crew-chief
 ```
+
+The virtualenv is not optional on current Debian, Ubuntu, Arch and openSUSE:
+since [PEP 668](https://peps.python.org/pep-0668/) those distros refuse a
+`pip install` into the system Python with `externally-managed-environment`.
 
 Then use it:
 
@@ -95,9 +100,30 @@ bash scripts/pull_model.sh mistral   # pull a different model
 ## Running tests
 
 ```bash
-pip install -e .
-pytest -q
+./bootstrap.sh
+.venv/bin/pytest -q
 ```
+
+`bootstrap.sh` creates `.venv`, installs the package in editable mode, and
+verifies the `crew-chief` command runs. Pass `--listener` to include the
+listener extra, or `--venv PATH` to build the environment elsewhere.
+
+<details>
+<summary>Why not <code>pip install -e .</code> directly?</summary>
+
+Since [PEP 668](https://peps.python.org/pep-0668/), Debian, Ubuntu, Arch and
+openSUSE mark the system Python as externally managed, and pip refuses to
+install into it:
+
+```
+error: externally-managed-environment
+```
+
+Fedora still allows it, which is why the old instruction worked on some
+machines and not others. Installing into a virtualenv is correct on all of
+them, and on macOS and Windows too.
+
+</details>
 
 Tests are fully offline — no Ollama service required.
 

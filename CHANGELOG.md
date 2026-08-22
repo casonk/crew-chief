@@ -7,6 +7,18 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- `bootstrap.sh` — creates a virtualenv, installs the package in editable mode,
+  and verifies the `crew-chief` command runs. Supports `--no-dev`, `--listener`
+  and `--venv PATH`.
+
+### Fixed
+
+- The README documented a bare `pip install -e .`, which PEP 668 causes current
+  Debian, Ubuntu, Arch and openSUSE to refuse outright. Both the test setup and
+  the client-install instructions now go through a virtualenv.
+
 ## [0.1.0] — 2026-04-04
 
 ### Added
