@@ -35,6 +35,16 @@ class "AnthropicProvider" as crew_chief.providers.anthropic.AnthropicProvider {
   chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
   generate(prompt: str) -> str
 }
+class "BenchmarkResult" as benchmark.BenchmarkResult {
+  error : str | None
+  model : str
+  prompt_name : str
+  tokens_per_sec : float
+  total_time_ms : float
+  total_tokens : int
+  ttft_ms : float
+  vram_delta_mb : int
+}
 class "ChatResult" as crew_chief.providers.base.ChatResult {
   content : str
   model : str
@@ -141,10 +151,12 @@ class "LlmConfig" as crew_chief.config_loader.LlmConfig {
   max_tokens : int
   model : str
   natural_language : bool
+  ollama_model_chain : list[str]
   openai_api_key_auto_pass_entry : str
   openai_api_key_env : str
   openai_model : str
   provider : str
+  task_chains : dict[str, list[str]]
   timeout_seconds : int
 }
 class "<color:red>LowConfidenceError</color>" as crew_chief.agent.LowConfidenceError {

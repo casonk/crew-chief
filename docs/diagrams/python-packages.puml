@@ -2,6 +2,7 @@
 set namespaceSeparator none
 top to bottom direction
 skinparam componentStyle rectangle
+rectangle "benchmark\n1 python file" as benchmark
 rectangle "crew_chief\n1 child pkg, 10 modules\n18 python files\nexamples: __main__, agent, cli" as crew_chief
 rectangle "crew_chief.__main__\n1 python file" as crew_chief.__main__
 rectangle "crew_chief.agent\n1 python file" as crew_chief.agent
@@ -20,6 +21,7 @@ rectangle "crew_chief.providers.ollama\n1 python file" as crew_chief.providers.o
 rectangle "crew_chief.providers.openai\n1 python file" as crew_chief.providers.openai
 rectangle "crew_chief.providers.prompt_utils\n1 python file" as crew_chief.providers.prompt_utils
 rectangle "crew_chief.tools\n1 python file" as crew_chief.tools
+rectangle "report\n1 python file" as report
 crew_chief --> crew_chief.agent
 crew_chief --> crew_chief.client
 crew_chief --> crew_chief.providers
