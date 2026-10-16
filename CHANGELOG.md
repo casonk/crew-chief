@@ -9,6 +9,8 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `cwd` option for `ClaudeCliProvider` and `CodexCliProvider`, so callers can run
+  the CLI agent in an empty directory instead of their own working tree.
 - `bootstrap.sh` — creates a virtualenv, installs the package in editable mode,
   and verifies the `crew-chief` command runs. Supports `--no-dev`, `--listener`
   and `--venv PATH`.

@@ -452,6 +452,15 @@ class TestClaudeCliProvider(unittest.TestCase):
         self.assertEqual(result.tool_uses, [])
         self.assertEqual(result.stop_reason, "end_turn")
 
+    def test_runs_in_the_given_directory(self):
+        from crew_chief.providers.cli import ClaudeCliProvider
+
+        payload = json.dumps({"is_error": False, "result": "ok", "stop_reason": "end_turn"})
+        with patch("subprocess.run", return_value=self._mock_run(payload)) as run:
+            ClaudeCliProvider(cwd="/tmp/empty").chat([{"role": "user", "content": "hi"}])
+        self.assertEqual(run.call_args.kwargs["cwd"], "/tmp/empty")
+        self.assertIn("--tools", run.call_args.args[0])
+
     def test_generate_delegates_to_chat(self):
         from crew_chief.providers.cli import ClaudeCliProvider
 
@@ -578,6 +587,25 @@ class TestCodexCliProvider(unittest.TestCase):
             result = CodexCliProvider().chat([{"role": "user", "content": "2+2?"}])
 
         self.assertEqual(result.content, "The answer is 4.")
+
+    def test_runs_in_the_given_directory_and_sandbox(self):
+        from pathlib import Path
+
+        from crew_chief.providers.cli import CodexCliProvider
+
+        seen = {}
+
+        def fake_run(cmd, **kwargs):
+            seen["cwd"], seen["cmd"] = kwargs.get("cwd"), cmd
+            Path(cmd[cmd.index("-o") + 1]).write_text("ok")
+            return self._mock_run("")
+
+        with patch("subprocess.run", side_effect=fake_run):
+            CodexCliProvider(sandbox="read-only", cwd="/tmp/empty").chat(
+                [{"role": "user", "content": "hi"}]
+            )
+        self.assertEqual(seen["cwd"], "/tmp/empty")
+        self.assertEqual(seen["cmd"][seen["cmd"].index("--sandbox") + 1], "read-only")
 
     def test_usage_limit_raises_unavailable(self):
         from crew_chief.providers.base import ProviderUnavailableError
