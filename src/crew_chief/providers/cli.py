@@ -133,6 +133,8 @@ class ClaudeCliProvider:
         internally; this is a hard wall-clock limit.
     cli_path:
         Override the ``claude`` binary path.  Defaults to PATH lookup.
+    cwd:
+        Working directory for the CLI process.  Defaults to the caller's.
     """
 
     reports_tool_use = False
@@ -143,11 +145,13 @@ class ClaudeCliProvider:
         allowed_tools: str = "",
         timeout: int = 120,
         cli_path: str = "claude",
+        cwd: str | None = None,
     ) -> None:
         self.model = model
         self.allowed_tools = allowed_tools
         self.timeout = timeout
         self.cli_path = cli_path
+        self.cwd = cwd
 
     # ------------------------------------------------------------------
     # Provider protocol
@@ -195,6 +199,7 @@ class ClaudeCliProvider:
                 capture_output=True,
                 text=True,
                 timeout=self.timeout,
+                cwd=self.cwd,
             )
         except FileNotFoundError as exc:
             raise ProviderUnavailableError(
@@ -287,6 +292,10 @@ class CodexCliProvider:
         Hard wall-clock limit in seconds.
     cli_path:
         Override the ``codex`` binary path.
+    cwd:
+        Working directory for the agent.  Codex can read (and, under
+        ``workspace-write``, change) files there, so callers passing private
+        context should use ``sandbox="read-only"`` and an empty directory.
     """
 
     reports_tool_use = False
@@ -297,11 +306,13 @@ class CodexCliProvider:
         sandbox: str = "workspace-write",
         timeout: int = 300,
         cli_path: str = "codex",
+        cwd: str | None = None,
     ) -> None:
         self.model = model
         self.sandbox = sandbox
         self.timeout = timeout
         self.cli_path = cli_path
+        self.cwd = cwd
 
     # ------------------------------------------------------------------
     # Provider protocol
@@ -361,6 +372,7 @@ class CodexCliProvider:
                 capture_output=True,
                 text=True,
                 timeout=self.timeout,
+                cwd=self.cwd,
             )
         except FileNotFoundError as exc:
             raise ProviderUnavailableError(
