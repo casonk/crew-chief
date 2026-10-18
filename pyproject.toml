@@ -36,7 +36,7 @@ dev = [
     "pytest",
     "ruff",
     "black",
-    "dyno_lab @ git+https://github.com/casonk/dyno-lab.git",
+    "dyno-lab>=0.3.0",
 ]
 
 [project.scripts]
