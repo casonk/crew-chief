@@ -54,6 +54,7 @@ class "ChatResult" as crew_chief.providers.base.ChatResult {
 class "ClaudeCliProvider" as crew_chief.providers.cli.ClaudeCliProvider {
   allowed_tools : str
   cli_path : str
+  cwd : str | None
   model : str
   reports_tool_use : bool
   timeout : int
@@ -63,6 +64,7 @@ class "ClaudeCliProvider" as crew_chief.providers.cli.ClaudeCliProvider {
 }
 class "CodexCliProvider" as crew_chief.providers.cli.CodexCliProvider {
   cli_path : str
+  cwd : str | None
   model : str
   reports_tool_use : bool
   sandbox : str
