@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import html
 import json
+import os
 import pathlib
 import re
 import statistics
@@ -20,6 +21,7 @@ import sys
 import tempfile
 import time
 import urllib.request
+import uuid
 from datetime import datetime, timezone
 
 
@@ -228,7 +230,12 @@ body{font:16px system-ui;max-width:1200px;margin:2rem auto;padding:0 1rem;color:
 table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border:1px solid #cad2dc;padding:.55rem;text-align:left}
 th{background:#e8eef5}.passed{background:#e4f6e9}.failed{background:#fff0e8}.error{background:#ffe5e5}
 code{background:#edf2f7;padding:.1rem .3rem}small{color:#526171}
-</style><h1>Test-based model benchmark</h1>
+nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.3rem}
+nav a{padding:.45rem .8rem;border:1px solid #cad2dc;border-radius:6px;color:#004085;text-decoration:none}
+nav a[aria-current="page"]{background:#004085;color:white;border-color:#004085}
+</style><nav aria-label="Benchmark reports"><a href="latest.html">Inference speed</a>
+<a href="test-bench-latest.html" aria-current="page">Test outcomes</a></nav>
+<h1>Test-based model benchmark</h1>
 <p>Each attempt used a fresh checkout with a known failing test. A pass requires
 the original test command to pass after an allowed code edit.</p>
 <p><small>Commit: <code>"""
@@ -311,6 +318,15 @@ def main() -> int:
     out.write_text(json.dumps(report, indent=2) + "\n")
     page = out.with_suffix(".html")
     page.write_text(render_html(report))
+    for artifact in (out, page):
+        latest = artifact.with_name(f"test-bench-latest{artifact.suffix}")
+        if artifact == latest:
+            continue
+        if latest.exists() and not latest.is_symlink():
+            raise FileExistsError(f"Refusing to replace non-symlink report: {latest}")
+        pending = latest.with_name(f".{latest.name}.{uuid.uuid4().hex}")
+        pending.symlink_to(artifact.name)
+        os.replace(pending, latest)
     print(f"Results: {out}\nUI: {page}")
     return 0 if all(item["status"] == "passed" for item in report["results"]) else 1
 

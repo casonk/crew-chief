@@ -177,10 +177,14 @@ python3 scripts/test_benchmark.py \
 ```
 
 The command writes ignored, local `results/test-bench-*.json` and `.html` files.
-Open the HTML file in a browser for the **UI**: it shows pass/fail, test counts,
+It also updates `results/test-bench-latest.html` and `.json` symlinks. The HTML
+report is linked from the existing benchmark page when `results/` is served as
+a static site. Open the HTML file in a browser for the **UI**: it shows pass/fail, test counts,
 agent time, and total time for each trial. The JSON also records the base commit,
 task patch hash, model digests, Ollama version, and GPU. These local results can
-contain model replies and should not be committed or shared without review.
+contain model replies. Since the benchmark site serves `results/`, use `--out`
+with a directory outside `results/` for reports that should stay off that site;
+review any result before sharing it beyond the site's existing access controls.
 The command exits nonzero if any trial fails; failure is a benchmark outcome.
 
 To benchmark another repository, create a task JSON and a unified diff patch

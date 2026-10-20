@@ -12,6 +12,12 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
+- **Static benchmark links need a stable target and generator support.** The
+  benchmark site serves `results/` with `latest.html` as its index. When adding
+  another report type, link it from both report generators and update a stable
+  `*-latest.html` symlink after each run. Reports in `results/` are available to
+  everyone with site access, so write sensitive trials elsewhere with `--out`.
+
 - **Test-outcome benchmarks need a failing baseline in a disposable checkout.**
   Keep the task patch and test command fixed across models. Verify that the
   seeded failure is a completed test failure before starting an agent; score

@@ -78,6 +78,10 @@ body {
   padding: 2rem 1rem;
 }
 .page { max-width: 1200px; margin: 0 auto; }
+.report-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.3rem; }
+.report-nav a { padding: 0.45rem 0.8rem; border: 1px solid #ced4da;
+  border-radius: 6px; color: #004085; text-decoration: none; background: white; }
+.report-nav a[aria-current="page"] { background: #004085; color: white; border-color: #004085; }
 h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
 h2 { font-size: 1.15rem; margin: 2rem 0 0.75rem; color: #343a40; border-bottom: 2px solid #dee2e6; padding-bottom: 0.3rem; }
 h3 { font-size: 0.95rem; margin: 1.25rem 0 0.4rem; color: #495057; }
@@ -391,6 +395,10 @@ def build_report(runs: dict[str, list[dict]], out: pathlib.Path) -> None:
 </head>
 <body>
 <div class="page">
+<nav class="report-nav" aria-label="Benchmark reports">
+  <a href="latest.html" aria-current="page">Inference speed</a>
+  <a href="test-bench-latest.html">Test outcomes</a>
+</nav>
 <h1>crew-chief Model Benchmark</h1>
 <p class="meta">
   <span class="badge badge-date">{date_str}</span>
