@@ -12,6 +12,13 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
+- **Check authenticated HTML delivery after updating reports served by Caddy.**
+  The benchmark site needs `httpd_sys_content_t` on report files. Copying HTML
+  from `/tmp` with `cp -a` kept `user_tmp_t`, causing direct report URLs to
+  return 403 and the symlink index to fall back to directory browsing. Generate
+  in `results/` or run `restorecon` after staging, then verify the root and
+  latest report return HTTP 200 with `Content-Type: text/html`.
+
 - **Static benchmark links need a stable target and generator support.** The
   benchmark site serves `results/` with `latest.html` as its index. When adding
   another report type, link it from both report generators and update a stable
