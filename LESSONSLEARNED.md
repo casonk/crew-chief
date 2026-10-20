@@ -12,6 +12,13 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
+- **Test-outcome benchmarks need a failing baseline in a disposable checkout.**
+  Keep the task patch and test command fixed across models. Verify that the
+  seeded failure is a completed test failure before starting an agent; score
+  the final suite and allowed file changes, not the model's written claim.
+  For this repo's local benchmark, expose only read, exact replacement, and
+  fixed test tools to the model, and keep JSON/HTML reports gitignored.
+
 - **CUDA GPU passthrough in rootless Podman requires six categories of host resources**: (1) device nodes (`/dev/nvidia0`, `/dev/nvidiactl`, `/dev/nvidia-uvm`, `/dev/nvidia-uvm-tools`, `/dev/nvidia-modeset`, `/dev/nvidia-caps/*`), (2) `--security-opt label=disable` for SELinux Enforcing hosts, (3) `--security-opt seccomp=unconfined` so CUDA ioctl syscalls are not blocked, (4) the driver API lib (`libcuda.so.1`), (5) the management lib (`libnvidia-ml.so.1`), and (6) the three CUDA runtime JIT/compiler libs that `libcuda.so.1` dlopen()s: `libnvidia-ptxjitcompiler.so.1`, `libnvidia-nvvm.so.4`, and `libnvidia-gpucomp.so.<version>`. Without categories 3 or 6 the GPU is detected and VRAM allocation succeeds but the first compute kernel crashes with "CUDA error: unknown error / exit status 2". Always resolve symlinks to the real versioned files before mounting (use `readlink -f`) to avoid dangling soname links inside the container.
 - **`libnvidia-gpucomp.so` has a version-specific soname** (e.g. `libnvidia-gpucomp.so.580.142`) with no `.so.1` alias, so it must be mounted under its full versioned basename; use a glob over the host lib dir to stay driver-version-agnostic.
 

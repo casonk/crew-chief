@@ -157,6 +157,39 @@ them, and on macOS and Windows too.
 
 Tests are fully offline — no Ollama service required.
 
+## Test-based local model benchmark
+
+`scripts/test_benchmark.py` measures whether a local coding model can repair a
+known regression and pass a repository's existing tests. Each attempt clones
+the selected repository at one commit, applies a task patch that must make the
+suite fail, and runs a restricted crew-chief agent with only read, exact text
+replacement, and fixed test tools. It then reruns the same suite. A pass requires
+an actual code change, a green suite, and no edits outside the task's allowlist.
+
+Try the included task against this repository's full pytest suite:
+
+```bash
+python3 scripts/test_benchmark.py \
+  --repo . \
+  --task benchmarks/tasks/client-url-trim.json \
+  --models llama3.2:3b-instruct-q8_0 qwen3:14b-q8_0 \
+  --runs 3 --agent-timeout 180
+```
+
+The command writes ignored, local `results/test-bench-*.json` and `.html` files.
+Open the HTML file in a browser for the **UI**: it shows pass/fail, test counts,
+agent time, and total time for each trial. The JSON also records the base commit,
+task patch hash, model digests, Ollama version, and GPU. These local results can
+contain model replies and should not be committed or shared without review.
+The command exits nonzero if any trial fails; failure is a benchmark outcome.
+
+To benchmark another repository, create a task JSON and a unified diff patch
+like the example under `benchmarks/tasks/`. Use that repository's real test
+command and identify only the source paths the agent may edit. The baseline
+suite must fail after the patch; a passing or timed-out baseline is invalid.
+Run several trials before comparing stochastic models. The existing
+`scripts/benchmark.py` continues to measure inference speed separately.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
