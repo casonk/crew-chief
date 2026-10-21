@@ -9,6 +9,9 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `scripts/llamacpp_bench.sh` — runs llama.cpp's `llama-bench` (official CUDA
+  image, rootless Podman) on the GGUF blobs already pulled into Ollama, and
+  saves Markdown and JSONL results. Roadmap phase 3, step 1.
 - `crew-chief code` (beta) — launches Claude Code against a local Ollama or
   llama-server endpoint, checks the model supports tool calling, and records
   each session in `~/.local/state/crew-chief/code-sessions.jsonl` for
