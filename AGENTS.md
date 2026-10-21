@@ -43,7 +43,8 @@ crew-chief/
 │   ├── start.sh                           # Build image (if absent) + start container
 │   ├── stop.sh                            # Stop running container
 │   ├── status.sh                          # Container state + service health check
-│   └── pull_model.sh                      # Pull a model into the running service
+│   ├── pull_model.sh                      # Pull a model into the running service
+│   └── llamacpp_bench.sh                  # llama-bench on Ollama's GGUF blobs (roadmap phase 3)
 ├── config/
 │   ├── ollama/config.env.example          # Ollama env vars template (do not commit config.env)
 │   ├── continue/config.yaml.example       # Continue CLI config template for local models
