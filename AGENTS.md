@@ -22,6 +22,7 @@ crew-chief/
 │   ├── client.py                          # CrewChiefClient — legacy Ollama HTTP client
 │   ├── cli.py                             # CLI: generate / health / models / listen / agent / code
 │   ├── code_launcher.py                   # `crew-chief code`: Claude Code on a local backend
+│   ├── serving_policy.py                  # Per-model backend policy: load, review, drift
 │   ├── agent.py                           # Agent — multi-step plan→act→observe loop
 │   ├── tools.py                           # Tool base class + ShellTool / ReadFileTool / WriteFileTool
 │   ├── providers/
@@ -44,9 +45,11 @@ crew-chief/
 │   ├── stop.sh                            # Stop running container
 │   ├── status.sh                          # Container state + service health check
 │   ├── pull_model.sh                      # Pull a model into the running service
-│   └── llamacpp_bench.sh                  # llama-bench on Ollama's GGUF blobs (roadmap phase 3)
+│   ├── llamacpp_bench.sh                  # llama-bench on Ollama's GGUF blobs (roadmap phase 3)
+│   └── llamacpp_serving_measure.sh        # GPU memory + generation rate of one serving config
 ├── config/
 │   ├── ollama/config.env.example          # Ollama env vars template (do not commit config.env)
+│   ├── serving-policy.toml                # Governed per-model backend/settings, with evidence
 │   ├── continue/config.yaml.example       # Continue CLI config template for local models
 │   ├── listener/config.toml               # Listener + agent + dispatch config
 │   └── downstream-repos.toml             # Tracked inventory of downstream consumers
@@ -54,6 +57,7 @@ crew-chief/
     ├── contributor-architecture-blueprint.md
     ├── continue-cli.md                    # Running the Continue CLI (`cn`) on local models
     ├── local-inference-roadmap.md         # Phased plan: frontends, backends, hardware
+    ├── serving-policy.md                  # How backend decisions are made and changed
     └── diagrams/
         ├── repo-architecture.puml
         └── repo-architecture.drawio

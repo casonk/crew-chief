@@ -136,17 +136,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     code_p.add_argument(
         "--backend",
-        default="ollama",
+        default=None,
         choices=BACKENDS,
-        help="Inference server type; llamacpp skips the Ollama model check (default: ollama).",
+        help="Override the serving policy's backend for this model (default: from the policy).",
     )
     code_p.add_argument(
         "--context",
         type=int,
-        default=DEFAULT_CONTEXT,
+        default=None,
         help=(
-            "Context window the server gives the model, in tokens "
-            f"(env: CREW_CHIEF_CODE_CONTEXT, default: {DEFAULT_CONTEXT})."
+            "Override the context window, in tokens (default: from the serving policy, "
+            f"else CREW_CHIEF_CODE_CONTEXT or {DEFAULT_CONTEXT})."
         ),
     )
     code_p.add_argument(
@@ -160,6 +160,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="Launch without checking the server or model first.",
     )
     code_p.add_argument("claude_args", nargs=argparse.REMAINDER, help=argparse.SUPPRESS)
+
+    policy_p = sub.add_parser(
+        "policy",
+        help="Show or check the serving policy (config/serving-policy.toml).",
+    )
+    policy_sub = policy_p.add_subparsers(dest="policy_command", required=True)
+    check_p = policy_sub.add_parser("check", help="Validate the policy and its evidence.")
+    check_p.add_argument(
+        "--live",
+        action="store_true",
+        help="Also compare against the models pulled in Ollama (drift).",
+    )
+    show_p = policy_sub.add_parser("show", help="Print the policy, or one model's entry.")
+    show_p.add_argument("model", nargs="?")
 
     return p
 
@@ -198,7 +212,12 @@ def main(argv: list[str] | None = None) -> None:
         run(cfg, once=args.once)
 
     elif args.command in ("code", "c"):
-        from crew_chief.code_launcher import LaunchError, launch, ollama_tool_models
+        from crew_chief.code_launcher import (
+            LaunchError,
+            launch,
+            ollama_tool_models,
+            resolve_serving,
+        )
 
         try:
             if args.list:
@@ -208,17 +227,56 @@ def main(argv: list[str] | None = None) -> None:
             passthrough = args.claude_args
             if passthrough[:1] == ["--"]:
                 passthrough = passthrough[1:]
-            launch(
+            backend, base_url, context, notes = resolve_serving(
+                args.code_model,
                 backend=args.backend,
-                base_url=args.url,
-                model=args.code_model,
+                url=None if args.url == DEFAULT_BASE_URL else args.url,
                 context=args.context,
+            )
+            for note in notes:
+                print(f"crew-chief: {note}", file=sys.stderr)
+            launch(
+                backend=backend,
+                base_url=base_url,
+                model=args.code_model,
+                context=context,
                 passthrough=passthrough,
                 skip_check=args.skip_check,
             )
         except LaunchError as exc:
             print(f"Error: {exc}", file=sys.stderr)
             sys.exit(2)
+
+    elif args.command == "policy":
+        from crew_chief.serving_policy import (
+            PolicyError,
+            describe,
+            load_policy,
+            pulled_models,
+            review,
+        )
+
+        try:
+            policy = load_policy()
+            if args.policy_command == "show":
+                entries = [policy.get(args.model)] if args.model else list(policy.models.values())
+                if entries == [None]:
+                    print(f"{args.model}: not in the serving policy", file=sys.stderr)
+                    sys.exit(1)
+                for entry in entries:
+                    print(describe(entry))
+                return
+            pulled = pulled_models(policy.url_for("ollama")) if args.live else None
+            errors, warnings = review(policy, pulled=pulled)
+        except PolicyError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(2)
+        for line in warnings:
+            print(f"warning: {line}")
+        for line in errors:
+            print(f"error: {line}")
+        print(f"serving policy: {len(errors)} error(s), {len(warnings)} warning(s)")
+        sys.exit(1 if errors else 0)
 
     elif args.command in ("agent", "a"):
         logging.basicConfig(

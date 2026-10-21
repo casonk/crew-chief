@@ -1,0 +1,89 @@
+# Serving policy: which backend serves each local model, and how.
+#
+# Governance (see docs/serving-policy.md):
+# - Every model pulled into Ollama has an entry; `crew-chief policy check --live`
+#   reports any that do not, and the portfolio audit runs it.
+# - `default` and `beta` entries cite benchmark evidence under results/ and a
+#   reviewed date. Change an entry only in a pull request that adds or cites
+#   fresh evidence.
+# - `crew-chief code -m <model>` serves the model as recorded here.
+#
+# status:  default    — reviewed, preferred configuration
+#          beta       — reviewed, being trialled; may change
+#          unreviewed — pulled, served on Ollama defaults, no evidence yet
+#          retired    — do not serve; remove the pull
+# gpu_mib: GPU memory the configuration needs on this host (measured, not estimated).
+
+[backends]
+ollama = "http://localhost:11434"
+llamacpp = "http://localhost:8081"
+
+[models."qwen3:32b"]
+status = "beta"
+backend = "llamacpp"
+context = 32768
+kv_cache = "q8_0"
+flash_attention = true
+gpu_mib = 23740
+evidence = [
+  "results/llamacpp-bench-20261021-124232.md",
+  "results/serving-measure-20261021.md",
+  "results/bench-idle-20261021.json",
+]
+reviewed = "2026-10-21"
+note = "29.7 tok/s fully on GPU vs 7.1 on Ollama defaults (17% on CPU); needs the GPU to itself"
+
+[models."qwen3:14b"]
+status = "default"
+backend = "ollama"
+context = 32768
+kv_cache = "f16"
+flash_attention = true
+gpu_mib = 14024
+evidence = [
+  "results/llamacpp-bench-20261021-124008.md",
+  "results/serving-measure-20261021.md",
+  "results/bench-idle-20261021.json",
+]
+reviewed = "2026-10-21"
+note = "Ollama and llama.cpp equal (63-64 tok/s); stay on Ollama"
+
+[models."llama3.1:8b"]
+status = "default"
+backend = "ollama"
+evidence = [
+  "results/llamacpp-bench-20261021-124008.md",
+  "results/bench-idle-20261021.json",
+]
+reviewed = "2026-10-21"
+note = "Ollama measured faster on short replies (142-188 vs 125 tok/s); not yet like-for-like"
+
+[models."qwen3:14b-q8_0"]
+status = "unreviewed"
+
+[models."qwen3.5:27b"]
+status = "unreviewed"
+
+[models."gemma3:27b-it-qat"]
+status = "unreviewed"
+
+[models."llama3.2:latest"]
+status = "unreviewed"
+
+[models."llama3.2:3b-instruct-q8_0"]
+status = "unreviewed"
+
+[models."aya-expanse:8b"]
+status = "unreviewed"
+
+[models."qwen2.5-coder:7b"]
+status = "unreviewed"
+
+[models."mistral:latest"]
+status = "unreviewed"
+
+[models."codellama:latest"]
+status = "unreviewed"
+
+[models."deepseek-coder:6.7b"]
+status = "unreviewed"

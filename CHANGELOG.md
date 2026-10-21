@@ -9,6 +9,12 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Serving policy (`config/serving-policy.toml`, `docs/serving-policy.md`): a
+  reviewed, evidence-backed backend and configuration per model.
+  `crew-chief policy show|check [--live]` validates it and reports drift;
+  `crew-chief code` now takes backend, URL, and context from it and refuses
+  retired models. `scripts/llamacpp_serving_measure.sh` records a serving
+  configuration's GPU memory and generation rate as evidence.
 - `scripts/llamacpp_bench.sh` — runs llama.cpp's `llama-bench` (official CUDA
   image, rootless Podman) on the GGUF blobs already pulled into Ollama, and
   saves Markdown and JSONL results. Roadmap phase 3, step 1.
