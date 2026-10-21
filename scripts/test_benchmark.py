@@ -101,6 +101,49 @@ def load_task(path: pathlib.Path) -> dict:
     return task
 
 
+def load_suite(
+    path: pathlib.Path, portfolio_root: pathlib.Path
+) -> list[tuple[str, pathlib.Path, dict]]:
+    """Load reviewed cases from multiple portfolio checkouts."""
+    suite = json.loads(path.read_text())
+    if (
+        not isinstance(suite, dict)
+        or not isinstance(suite.get("cases"), list)
+        or not suite["cases"]
+    ):
+        raise ValueError("suite needs a nonempty cases list")
+    cases = []
+    for case in suite["cases"]:
+        if not isinstance(case, dict) or set(case) != {"repo", "task"}:
+            raise ValueError("each suite case needs repo and task")
+        repo_name = case["repo"]
+        if (
+            not isinstance(repo_name, str)
+            or not repo_name
+            or pathlib.PurePosixPath(repo_name).is_absolute()
+            or ".." in pathlib.PurePosixPath(repo_name).parts
+        ):
+            raise ValueError("suite repo must be relative to portfolio root")
+        repo = (portfolio_root / repo_name).resolve()
+        if not repo.is_relative_to(portfolio_root) or not (repo / ".git").exists():
+            raise ValueError(f"suite repo is not a checkout: {repo_name}")
+        task_name = case["task"]
+        if (
+            not isinstance(task_name, str)
+            or not task_name
+            or pathlib.PurePosixPath(task_name).is_absolute()
+            or ".." in pathlib.PurePosixPath(task_name).parts
+        ):
+            raise ValueError("suite task must be relative to benchmark repository")
+        task_path = (path.parent / task_name).resolve()
+        if not task_path.is_relative_to(path.parent.resolve()):
+            raise ValueError("suite task escapes suite directory")
+        cases.append((repo_name, repo, load_task(task_path)))
+    if len({task["name"] for _, _, task in cases}) != len(cases):
+        raise ValueError("suite task names must be unique")
+    return cases
+
+
 def prepare_evolution(
     repo: pathlib.Path, task: dict, patch_dir: pathlib.Path, test_timeout: int
 ) -> dict:
@@ -340,12 +383,16 @@ def render_html(report: dict) -> str:
         passes = [item for item in trials if item["status"] == "passed"]
         timeouts = sum(item["status"] == "timeout" for item in trials)
         errors = sum(item["status"] == "error" for item in trials)
+        profile = report.get("model_profiles", {}).get(model, {})
         median_time = (
             f"{statistics.median(item['agent_seconds'] for item in passes):.1f}" if passes else "—"
         )
         summary_rows.append(
             "<tr>"
-            f"<td>{html.escape(model)}</td><td>{len(passes)}/{len(trials)}</td>"
+            f"<td>{html.escape(model)}</td><td>{html.escape(profile.get('family', '—'))}</td>"
+            f"<td>{html.escape(profile.get('parameter_size', '—'))}</td>"
+            f"<td>{html.escape(profile.get('quantization', '—'))}</td>"
+            f"<td>{len(passes)}/{len(trials)}</td>"
             f"<td>{timeouts}</td><td>{errors}</td><td>{median_time}</td></tr>"
         )
     rows = []
@@ -353,6 +400,7 @@ def render_html(report: dict) -> str:
         values = [
             item["model"],
             str(item["trial"]),
+            item.get("repo", "—"),
             item["task"],
             item["status"],
             item.get("failure_kind", "—"),
@@ -368,6 +416,7 @@ def render_html(report: dict) -> str:
     history_rows = []
     for case in report.get("case_reviews", []):
         values = [
+            case.get("repo", "—"),
             case["name"],
             case["before_commit"][:12],
             str(case["old_suite"]["counts"]),
@@ -385,7 +434,7 @@ def render_html(report: dict) -> str:
         history_html = (
             "<h2>Historical case review</h2><p>Only the selected later tests were applied "
             "to the old checkout. The reference source change was withheld from agents.</p>"
-            "<table><thead><tr><th>Case</th><th>Before</th><th>Old suite</th>"
+            "<table><thead><tr><th>Repository</th><th>Case</th><th>Before</th><th>Old suite</th>"
             "<th>New tests on old source</th><th>After</th><th>Reference suite</th>"
             "<th>Selected test files</th><th>Reference source files</th></tr></thead><tbody>"
             + "\n".join(history_rows)
@@ -413,11 +462,12 @@ the fixed test command to pass after an allowed code edit.</p>
         + (" · Updated: " + html.escape(report["updated_at"]) if report.get("updated_at") else "")
         + """</small></p>"""
         + history_html
-        + """<h2>Model summary</h2><table><thead><tr><th>Model</th><th>Passed trials</th>
+        + """<h2>Model summary</h2><table><thead><tr><th>Model</th><th>Family</th>
+<th>Parameters</th><th>Quantization</th><th>Passed trials</th>
 <th>Timeouts</th><th>Agent errors</th><th>Median agent seconds on passes</th></tr></thead><tbody>"""
         + "\n".join(summary_rows)
         + """</tbody></table><h2>Trial details</h2>
-<table><thead><tr><th>Model</th><th>Trial</th><th>Task</th><th>Outcome</th><th>Failure kind</th>
+<table><thead><tr><th>Model</th><th>Trial</th><th>Repository</th><th>Task</th><th>Outcome</th><th>Failure kind</th>
 <th>Baseline</th><th>Final tests</th><th>Tool calls</th><th>Agent seconds</th>
 <th>Total seconds</th><th>Note</th></tr></thead>
 <tbody>"""
@@ -428,8 +478,10 @@ the fixed test command to pass after an allowed code edit.</p>
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--repo", type=pathlib.Path, required=True)
-    parser.add_argument("--task", type=pathlib.Path, action="append", required=True)
+    parser.add_argument("--repo", type=pathlib.Path)
+    parser.add_argument("--task", type=pathlib.Path, action="append")
+    parser.add_argument("--suite", type=pathlib.Path)
+    parser.add_argument("--portfolio-root", type=pathlib.Path)
     parser.add_argument("--models", nargs="+", required=True)
     parser.add_argument("--runs", type=int, default=1)
     parser.add_argument("--agent-timeout", type=int, default=300)
@@ -439,9 +491,16 @@ def main() -> int:
     args = parser.parse_args()
     if args.agent_timeout < 1 or args.test_timeout < 1 or args.runs < 1:
         parser.error("timeouts and runs must be positive")
-    repo = args.repo.resolve()
-    tasks = [load_task(path.resolve()) for path in args.task]
-    if len({task["name"] for task in tasks}) != len(tasks):
+    if args.suite:
+        if args.repo or args.task or not args.portfolio_root:
+            parser.error("--suite requires --portfolio-root and excludes --repo/--task")
+        cases = load_suite(args.suite.resolve(), args.portfolio_root.resolve())
+    else:
+        if not args.repo or not args.task or args.portfolio_root:
+            parser.error("--repo and --task are required without --suite")
+        repo = args.repo.resolve()
+        cases = [(repo.name, repo, load_task(path.resolve())) for path in args.task]
+    if len({task["name"] for _, _, task in cases}) != len(cases):
         parser.error("task names must be unique in one report")
     report = {
         "schema_version": 2,
@@ -471,19 +530,30 @@ def main() -> int:
         report["model_digests"] = {
             item["name"]: item.get("digest", "") for item in tags if item.get("name") in args.models
         }
+        report["model_profiles"] = {
+            item["name"]: {
+                "family": item.get("details", {}).get("family", "unknown"),
+                "parameter_size": item.get("details", {}).get("parameter_size", "unknown"),
+                "quantization": item.get("details", {}).get("quantization_level", "unknown"),
+                "weight_bytes": item.get("size", 0),
+            }
+            for item in tags
+            if item.get("name") in args.models
+        }
     except OSError:
         report["ollama_version"] = "unavailable"
     with tempfile.TemporaryDirectory(prefix="crew-chief-benchmark-patches-") as temporary:
-        for task in tasks:
+        for repo_name, repo, task in cases:
             if "evolution" in task:
                 print(f"Reviewing historical case: {task['name']} ...", flush=True)
-                report["case_reviews"].append(
-                    prepare_evolution(repo, task, pathlib.Path(temporary), args.test_timeout)
-                )
+                review = prepare_evolution(repo, task, pathlib.Path(temporary), args.test_timeout)
+                review["repo"] = repo_name
+                report["case_reviews"].append(review)
             else:
                 task["base_commit"] = git(repo, "rev-parse", "HEAD")
             report["tasks"].append(
                 {
+                    "repo": repo_name,
                     "name": task["name"],
                     "mode": "evolution" if "evolution" in task else "seeded_regression",
                     "base_commit": task["base_commit"],
@@ -493,7 +563,7 @@ def main() -> int:
                     ).hexdigest(),
                 }
             )
-        for task in tasks:
+        for repo_name, repo, task in cases:
             for model in args.models:
                 for trial in range(1, args.runs + 1):
                     print(f"{model} trial {trial}: {task['name']} ...", flush=True)
@@ -507,6 +577,7 @@ def main() -> int:
                         args.url,
                     )
                     result["trial"] = trial
+                    result["repo"] = repo_name
                     report["results"].append(result)
                     print(
                         f"  {result['status']}: {result.get('error', result.get('final_counts', {}))}"

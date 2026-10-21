@@ -181,7 +181,7 @@ It also updates `results/test-bench-latest.html` and `.json` symlinks. The HTML
 report is linked from the existing benchmark page when `results/` is served as
 a static site. Open the HTML file in a browser for the **UI**: it shows pass/fail, test counts,
 agent time, and total time for each trial. The JSON also records the base commit,
-task patch hash, model digests, Ollama version, and GPU. These local results can
+task patch hash, model digests and architecture metadata, Ollama version, and GPU. These local results can
 contain model replies. Since the benchmark site serves `results/`, use `--out`
 with a directory outside `results/` for reports that should stay off that site;
 review any result before sharing it beyond the site's existing access controls.
@@ -214,6 +214,25 @@ from completed trials that leave tests failing, and records tool-call attempts.
 These are case-specific results, not a claim that a model can migrate every
 older repository. Use several reviewed cases and trials before drawing a
 broader conclusion.
+
+For a cross-repository sweep, use the reviewed public suite from the portfolio
+root. Each case resolves its checkout relative to `--portfolio-root`; task paths
+resolve relative to the suite file. The resulting HTML identifies the repository
+for each historical review and trial:
+
+```bash
+python3 scripts/test_benchmark.py \
+  --suite benchmarks/public-history-suite.json \
+  --portfolio-root ../.. \
+  --models llama3.2:latest mistral:latest aya-expanse:8b qwen3:14b \
+  --runs 1 --agent-timeout 120
+```
+
+The tracked suite contains only repositories verified public in the portfolio
+visibility registry. Keep private cases in an ignored local suite and send their
+reports only to an appropriately private location. Before a full agent sweep,
+probe each model's Ollama tool-call behavior: a model that the server rejects
+for tool calling cannot complete this benchmark regardless of coding ability.
 
 To benchmark another repository, create a task JSON and a unified diff patch
 like the example under `benchmarks/tasks/`. Use that repository's real test

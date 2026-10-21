@@ -179,3 +179,31 @@ def test_historical_replay_withholds_reference_fix_and_rejects_test_edits(tmp_pa
     outcome = benchmark.benchmark_one(repo, before, task, "fake", 10, 15, "http://localhost")
     assert outcome["status"] == "failed"
     assert outcome["unexpected_paths"] == ["tests/test_value.py"]
+
+
+def test_suite_resolves_cases_and_rejects_path_escape(tmp_path, broken_task):
+    repo, task = broken_task
+    portfolio = tmp_path / "portfolio"
+    portfolio.mkdir()
+    checkout = portfolio / "utility"
+    repo.rename(checkout)
+    task_manifest = tmp_path / "task.json"
+    task_manifest.write_text(
+        json.dumps(
+            {
+                "name": task["name"],
+                "prompt": "Restore the value.",
+                "setup_patch": task["patch_path"].name,
+                "test_command": task["test_command"],
+                "editable_paths": task["editable_paths"],
+            }
+        )
+    )
+    suite = tmp_path / "suite.json"
+    suite.write_text(json.dumps({"cases": [{"repo": "utility", "task": "task.json"}]}))
+    cases = benchmark.load_suite(suite, portfolio)
+    assert [(name, path) for name, path, _ in cases] == [("utility", checkout)]
+
+    suite.write_text(json.dumps({"cases": [{"repo": "../outside", "task": "task.json"}]}))
+    with pytest.raises(ValueError, match="relative to portfolio root"):
+        benchmark.load_suite(suite, portfolio)

@@ -35,12 +35,13 @@ Ollama REST API → model weights (crew-chief-models volume)
 ```
 
 The test benchmark uses a separate local path: `scripts/test_benchmark.py`
-clones a target repository into a temporary checkout, applies a reviewed
-regression patch, verifies that the existing tests fail, and calls
+loads individual tasks or a cross-repository suite, clones each target
+repository into a temporary checkout, applies a reviewed regression patch or
+later tests, verifies that the resulting tests fail, and calls
 `scripts/test_benchmark_agent.py`. That agent uses Ollama through the crew-chief
 provider with restricted file and test tools. The runner reruns the suite and
-writes ignored JSON and HTML results. No benchmark edit reaches the source
-checkout.
+writes ignored JSON and HTML results with repository and model provenance. No
+benchmark edit reaches a source checkout.
 
 ## Key files
 
