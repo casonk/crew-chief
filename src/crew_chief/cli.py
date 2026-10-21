@@ -8,6 +8,7 @@ import os
 import sys
 
 from crew_chief.client import DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_TIMEOUT, CrewChiefClient
+from crew_chief.code_launcher import BACKENDS, DEFAULT_CODE_MODEL, DEFAULT_CONTEXT
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -116,6 +117,50 @@ def build_parser() -> argparse.ArgumentParser:
         help="Logging verbosity (default: WARNING).",
     )
 
+    code_p = sub.add_parser(
+        "code",
+        aliases=["c"],
+        help="Open Claude Code on a local model (beta).",
+        description=(
+            "Launch Claude Code against a local Anthropic-compatible server "
+            "(Ollama or llama-server). Arguments after -- go to claude, "
+            "e.g. crew-chief code -- --resume <session-id>."
+        ),
+    )
+    code_p.add_argument(
+        "-m",
+        "--model",
+        dest="code_model",
+        default=DEFAULT_CODE_MODEL,
+        help=f"Tool-capable model to use (env: CREW_CHIEF_CODE_MODEL, default: {DEFAULT_CODE_MODEL}).",
+    )
+    code_p.add_argument(
+        "--backend",
+        default="ollama",
+        choices=BACKENDS,
+        help="Inference server type; llamacpp skips the Ollama model check (default: ollama).",
+    )
+    code_p.add_argument(
+        "--context",
+        type=int,
+        default=DEFAULT_CONTEXT,
+        help=(
+            "Context window the server gives the model, in tokens "
+            f"(env: CREW_CHIEF_CODE_CONTEXT, default: {DEFAULT_CONTEXT})."
+        ),
+    )
+    code_p.add_argument(
+        "--list",
+        action="store_true",
+        help="List tool-capable models on the Ollama server and exit.",
+    )
+    code_p.add_argument(
+        "--skip-check",
+        action="store_true",
+        help="Launch without checking the server or model first.",
+    )
+    code_p.add_argument("claude_args", nargs=argparse.REMAINDER, help=argparse.SUPPRESS)
+
     return p
 
 
@@ -151,6 +196,29 @@ def main(argv: list[str] | None = None) -> None:
             sys.exit(2)
 
         run(cfg, once=args.once)
+
+    elif args.command in ("code", "c"):
+        from crew_chief.code_launcher import LaunchError, launch, ollama_tool_models
+
+        try:
+            if args.list:
+                for name in ollama_tool_models(args.url.rstrip("/")):
+                    print(name)
+                return
+            passthrough = args.claude_args
+            if passthrough[:1] == ["--"]:
+                passthrough = passthrough[1:]
+            launch(
+                backend=args.backend,
+                base_url=args.url,
+                model=args.code_model,
+                context=args.context,
+                passthrough=passthrough,
+                skip_check=args.skip_check,
+            )
+        except LaunchError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(2)
 
     elif args.command in ("agent", "a"):
         logging.basicConfig(
