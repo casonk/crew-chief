@@ -1,0 +1,362 @@
+{
+  "name": "message-routing",
+  "description": "Route an incoming chat/email message the way the crew-chief listener must: intent, urgency, and the risk of any action it asks for. All messages are synthetic.",
+  "questions": {
+    "intent": {
+      "type": "choice",
+      "instructions": "What kind of message is this?",
+      "criteria": {
+        "command": "Asks the assistant to run, check, change or fix something on the server or its services",
+        "question": "Asks for information or an explanation; no action on any system",
+        "conversation": "Greeting, thanks, acknowledgement or small talk",
+        "notification": "Automated message not addressed to the assistant: receipts, shipping, alerts, newsletters, reminders"
+      }
+    },
+    "urgent": {
+      "type": "noul",
+      "instructions": "This message needs someone's attention within the hour",
+      "criteria": {
+        "true": "Something is broken, failing, unsafe or blocking right now",
+        "false": "It can wait"
+      }
+    },
+    "risk": {
+      "type": "score",
+      "instructions": "How risky is the action this message asks for?",
+      "criteria": [
+        "No action, or read-only (look, list, show, explain)",
+        "Changes state but is reversible (restart, stop, reconfigure)",
+        "Destructive or irreversible (delete, wipe, drop, force-push)"
+      ]
+    }
+  },
+  "baseline": {
+    "intent": {
+      "default": "conversation",
+      "rules": [
+        {
+          "if_any": [
+            "order #",
+            "receipt",
+            "alert:",
+            "newsletter",
+            "reminder:",
+            "statement is ready",
+            "password was changed",
+            "ci failed"
+          ],
+          "then": "notification"
+        },
+        {
+          "if_any": [
+            "restart",
+            "delete",
+            "wipe",
+            "stop",
+            "show me",
+            "uptime",
+            "disk",
+            "fix",
+            "shut down",
+            "drop",
+            "force push",
+            "check"
+          ],
+          "then": "command"
+        },
+        {
+          "if_any": [
+            "what",
+            "how",
+            "is it",
+            "explain",
+            "?"
+          ],
+          "then": "question"
+        }
+      ]
+    },
+    "urgent": {
+      "default": false,
+      "rules": [
+        {
+          "if_any": [
+            "asap",
+            "right now",
+            "now",
+            "immediately",
+            "failed",
+            "down",
+            "alert"
+          ],
+          "then": true
+        }
+      ]
+    },
+    "risk": {
+      "default": "0",
+      "rules": [
+        {
+          "if_any": [
+            "delete",
+            "wipe",
+            "drop",
+            "force push"
+          ],
+          "then": "2"
+        },
+        {
+          "if_any": [
+            "restart",
+            "stop",
+            "shut down",
+            "fix"
+          ],
+          "then": "1"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "how much disk space is left on the media drive?",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "restart the media server, streams keep buffering",
+      "expected": {
+        "intent": "command",
+        "urgent": true,
+        "risk": "1"
+      }
+    },
+    {
+      "state": "delete every file in the downloads folder older than a year",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "2"
+      }
+    },
+    {
+      "state": "what's the uptime on the box?",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "the backup job failed again and the disk is at 98%, can you check now",
+      "expected": {
+        "intent": "command",
+        "urgent": true,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "wipe the old test database and recreate it",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "2"
+      }
+    },
+    {
+      "state": "stop the upscaler for tonight",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "1"
+      }
+    },
+    {
+      "state": "force push my branch over main, I know what I'm doing",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "2"
+      }
+    },
+    {
+      "state": "show me the last 20 lines of the web server log",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "the house VPN is down and I'm locked out of everything, fix it asap",
+      "expected": {
+        "intent": "command",
+        "urgent": true,
+        "risk": "1"
+      }
+    },
+    {
+      "state": "what's the difference between RAID 1 and RAID 5?",
+      "expected": {
+        "intent": "question",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "how many tokens per second should a 14B model get on a 3090?",
+      "expected": {
+        "intent": "question",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "is it safe to update the GPU driver while containers are running?",
+      "expected": {
+        "intent": "question",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "what year did the first Raspberry Pi come out?",
+      "expected": {
+        "intent": "question",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "explain what a KV cache is in two sentences",
+      "expected": {
+        "intent": "question",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "hey, good morning!",
+      "expected": {
+        "intent": "conversation",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "thanks, that fixed it",
+      "expected": {
+        "intent": "conversation",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "lol nice",
+      "expected": {
+        "intent": "conversation",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "I'm heading out for the weekend, talk later",
+      "expected": {
+        "intent": "conversation",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "ok sounds good",
+      "expected": {
+        "intent": "conversation",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "Your order #48213 has shipped and will arrive Thursday.",
+      "expected": {
+        "intent": "notification",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "[receipt] Grocery store purchase total $54.18",
+      "expected": {
+        "intent": "notification",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "ALERT: CPU temperature 96C on host desk for 5 minutes",
+      "expected": {
+        "intent": "notification",
+        "urgent": true,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "Weekly newsletter: 10 tips for better sleep",
+      "expected": {
+        "intent": "notification",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "Your password was changed. If this wasn't you, secure your account immediately.",
+      "expected": {
+        "intent": "notification",
+        "urgent": true,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "CI failed on main: 3 tests failing in test_listener.py",
+      "expected": {
+        "intent": "notification",
+        "urgent": true,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "Reminder: dentist appointment next Tuesday at 3pm",
+      "expected": {
+        "intent": "notification",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "Your monthly statement is ready to view",
+      "expected": {
+        "intent": "notification",
+        "urgent": false,
+        "risk": "0"
+      }
+    },
+    {
+      "state": "can you shut down the server right now, I smell something burning",
+      "expected": {
+        "intent": "command",
+        "urgent": true,
+        "risk": "1"
+      }
+    },
+    {
+      "state": "drop all tables in the analytics database",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "2"
+      }
+    }
+  ]
+}

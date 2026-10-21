@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
 import sys
@@ -175,6 +176,24 @@ def build_parser() -> argparse.ArgumentParser:
     show_p = policy_sub.add_parser("show", help="Print the policy, or one model's entry.")
     show_p.add_argument("model", nargs="?")
 
+    task_p = sub.add_parser(
+        "taskbench",
+        help="Score models on a task-based decision benchmark (choice/score/noul).",
+        description=(
+            "Run a task file against one or more runners: rules, ollama:<model>, "
+            "llamacpp:<model> (server at CREW_CHIEF_LLAMACPP_URL), jev (TYPESAFE_API_KEY). "
+            "Results go to results/taskbench-<task>-<timestamp>.{md,json}."
+        ),
+    )
+    task_p.add_argument("task", help="Task file, e.g. benchmarks/tasks/message-routing.json.")
+    task_p.add_argument(
+        "--runner",
+        action="append",
+        required=True,
+        help="Runner spec; repeat for several (e.g. --runner rules --runner ollama:qwen3:14b).",
+    )
+    task_p.add_argument("--out", default="results", help="Output directory (default: results).")
+
     return p
 
 
@@ -246,6 +265,32 @@ def main(argv: list[str] | None = None) -> None:
         except LaunchError as exc:
             print(f"Error: {exc}", file=sys.stderr)
             sys.exit(2)
+
+    elif args.command == "taskbench":
+        import time as _time
+        from pathlib import Path
+
+        from crew_chief import taskbench as tb
+
+        try:
+            task = tb.load_task(Path(args.task))
+            runners = [tb.make_runner(spec, task) for spec in args.runner]
+        except tb.TaskError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(2)
+        results = []
+        for runner in runners:
+            print(f"running {runner.name} on {len(task.items)} items ...", file=sys.stderr)
+            results.append(tb.run(task, runner))
+        stamp = _time.strftime("%Y%m%d-%H%M%S")
+        out = Path(args.out)
+        out.mkdir(parents=True, exist_ok=True)
+        base = out / f"taskbench-{tb.slug(task.name)}-{stamp}"
+        markdown = tb.render_markdown(results, task, stamp)
+        base.with_suffix(".md").write_text(markdown, encoding="utf-8")
+        base.with_suffix(".json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
+        print(markdown)
+        print(f"Saved: {base}.md and .json", file=sys.stderr)
 
     elif args.command == "policy":
         from crew_chief.serving_policy import (

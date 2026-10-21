@@ -54,6 +54,29 @@ Mark items `[x]` when complete and move them to Done.
   (`qwen3.5:27b`, `qwen3:14b-q8_0`, `qwen2.5-coder:7b`) and retire what is not
   used, so every served model has evidence.
 
+- [ ] [manual:2026-10-21] **Grow the task suites, with held-out splits.** Add
+  synthetic suites for mail triage, receipt categorization, and schema
+  extraction; split each into dev and held-out items, and write baseline rules
+  against dev only (the message-routing rules were fitted to all 30 items).
+
+- [ ] [manual:2026-10-21] **Per-task routing in the serving policy.** Add
+  `[tasks."<name>"]` entries (model, backend, runner mode, evidence from
+  `taskbench`) and have the listener's task chains read them.
+
+- [ ] [manual:2026-10-21] **Jev reference run.** With TypeSafe early access, run
+  `taskbench --runner jev` on the synthetic suites only and record it as the
+  decision-model reference; key held as a secret, metered.
+
+- [ ] [manual:2026-10-21] **Fine-tune a local decision model.** LoRA-tune a small
+  instruct model (or train an encoder classifier) to answer with the option
+  token under log-loss, export GGUF, serve with llama.cpp, and compare with
+  base models, rules, and Jev on held-out data.
+
+- [ ] [manual:2026-10-21] **Ollama per-request overhead on small decisions.**
+  Each schema-constrained call costs ~1.1 s regardless of model size, mostly
+  outside model compute. Measure schema-grammar setup and load bookkeeping,
+  and decide whether decision tasks should always route to llama.cpp.
+
 - [ ] [manual:2026-10-21] **Roadmap phase 4: 2 x RTX 3090 NVLink plan.** Before
   purchase, benchmark 70B-class 4-bit models on rented dual-GPU capacity;
   after install, compare vLLM/ExLlama tensor parallelism with llama.cpp

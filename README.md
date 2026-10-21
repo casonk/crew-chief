@@ -83,6 +83,9 @@ crew-chief code -m qwen3:32b      # start a session
 crew-chief code -- --resume <id>  # reopen one
 ```
 
+Decision workloads (routing, categorization, schema filling) are scored with
+`crew-chief taskbench`; see [docs/task-benchmarks.md](docs/task-benchmarks.md).
+
 Which backend serves each model, and with what settings, comes from the
 governed serving policy (`config/serving-policy.toml`, see
 [docs/serving-policy.md](docs/serving-policy.md)); `crew-chief policy check

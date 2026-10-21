@@ -9,6 +9,11 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `crew-chief taskbench` — task-based decision benchmarks in the Jev question
+  format (choice, score, yes/no) with runners for keyword rules, Ollama
+  (JSON-schema output), llama.cpp (single-token answers with probabilities),
+  and TypeSafe's hosted Jev. Scores accuracy, invalid answers, latency, and
+  Brier calibration. First suite: `benchmarks/tasks/message-routing.json`.
 - Serving policy (`config/serving-policy.toml`, `docs/serving-policy.md`): a
   reviewed, evidence-backed backend and configuration per model.
   `crew-chief policy show|check [--live]` validates it and reports drift;
