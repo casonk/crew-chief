@@ -27,6 +27,27 @@ Mark items `[x]` when complete and move them to Done.
   `~/.continue/.env` (mode 600), check it with a free `GET /v1/models`, then
   revoke the old key. See `docs/continue-cli.md`.
 
+- [ ] [manual:2026-10-21] **Roadmap phase 2: OpenCode frontend.** Add
+  `crew-chief code --frontend opencode` against Ollama's OpenAI-compatible
+  endpoint and a session-control scanner for OpenCode's session store. See
+  `docs/local-inference-roadmap.md`.
+
+- [ ] [manual:2026-10-21] **Roadmap phase 2: Codex `--oss` and OpenRouter.**
+  Pull `gpt-oss:20b` and re-test `codex --oss` (a `qwen3:14b` trial made no
+  edits). Add OpenRouter as an opt-in metered provider with the key held as a
+  secret, for comparing local models with larger open-weight siblings.
+
+- [ ] [manual:2026-10-21] **Roadmap phase 3: llama.cpp and ExLlamaV3 backends.**
+  Run `llama-server` (+ `llama-swap`) and TabbyAPI as Podman containers beside
+  Ollama, add them to the benchmark, and record tokens/s, TTFT, prefill and
+  VRAM per model. Explore prompt-cache reuse, parallel slots, KV-cache
+  quantization and speculative decoding. Ship as beta even if gains are small.
+
+- [ ] [manual:2026-10-21] **Roadmap phase 4: 2 x RTX 3090 NVLink plan.** Before
+  purchase, benchmark 70B-class 4-bit models on rented dual-GPU capacity;
+  after install, compare vLLM/ExLlama tensor parallelism with llama.cpp
+  splitting and measure the NVLink benefit.
+
 - [ ] **vLLM inference backend** `[manual:2026-06-17]` — evaluate replacing Ollama with vLLM for higher throughput via paged attention and continuous batching. RTX 3090 24GB is capable. Worth testing on qwen3:14b and qwen3:32b. Primary benefit is concurrent request handling; for serialized personal-assistant use Ollama is sufficient. Benchmark: tokens/sec and TTFT vs Ollama at Q4_K_M. Reference: vllm-project/vllm, `vllm serve <model> --quantization awq`.
 
 ## In Progress

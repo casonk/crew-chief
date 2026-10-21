@@ -9,6 +9,10 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `crew-chief code` (beta) — launches Claude Code against a local Ollama or
+  llama-server endpoint, checks the model supports tool calling, and records
+  each session in `~/.local/state/crew-chief/code-sessions.jsonl` for
+  session-control. Roadmap in `docs/local-inference-roadmap.md`.
 - `cwd` option for `ClaudeCliProvider` and `CodexCliProvider`, so callers can run
   the CLI agent in an empty directory instead of their own working tree.
 - `bootstrap.sh` — creates a virtualenv, installs the package in editable mode,

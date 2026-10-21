@@ -20,7 +20,8 @@ crew-chief/
 │   ├── __init__.py                        # Public re-exports, __version__
 │   ├── __main__.py                        # python -m crew_chief entry point
 │   ├── client.py                          # CrewChiefClient — legacy Ollama HTTP client
-│   ├── cli.py                             # CLI: generate / health / models / listen / agent
+│   ├── cli.py                             # CLI: generate / health / models / listen / agent / code
+│   ├── code_launcher.py                   # `crew-chief code`: Claude Code on a local backend
 │   ├── agent.py                           # Agent — multi-step plan→act→observe loop
 │   ├── tools.py                           # Tool base class + ShellTool / ReadFileTool / WriteFileTool
 │   ├── providers/
@@ -51,6 +52,7 @@ crew-chief/
 └── docs/
     ├── contributor-architecture-blueprint.md
     ├── continue-cli.md                    # Running the Continue CLI (`cn`) on local models
+    ├── local-inference-roadmap.md         # Phased plan: frontends, backends, hardware
     └── diagrams/
         ├── repo-architecture.puml
         └── repo-architecture.drawio

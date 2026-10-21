@@ -72,6 +72,20 @@ crew-chief models
 crew-chief --model mistral generate "Translate 'hello' to Spanish."
 ```
 
+## Coding agent on local models (beta)
+
+`crew-chief code` opens Claude Code on a local model served by Ollama or
+llama.cpp, with the session recorded for session-control:
+
+```bash
+crew-chief code --list            # tool-capable models
+crew-chief code -m qwen3:32b      # start a session
+crew-chief code -- --resume <id>  # reopen one
+```
+
+See [docs/local-inference-roadmap.md](docs/local-inference-roadmap.md) for
+options and the phased plan for further frontends, backends, and hardware.
+
 ## Configuration
 
 All settings are controlled through environment variables:
@@ -85,6 +99,8 @@ All settings are controlled through environment variables:
 | `CREW_CHIEF_CONTAINER` | `crew-chief` | Podman container name |
 | `CREW_CHIEF_IMAGE` | `crew-chief:latest` | Podman image name |
 | `CREW_CHIEF_MODELS_VOLUME` | `crew-chief-models` | Volume for persisted model weights |
+| `CREW_CHIEF_CODE_MODEL` | `qwen3:14b` | Default model for `crew-chief code` |
+| `CREW_CHIEF_CODE_CONTEXT` | `32768` | Context window `crew-chief code` reports to Claude Code |
 
 Copy `config/ollama/config.env.example` to `config/ollama/config.env` and adjust as needed.
 
