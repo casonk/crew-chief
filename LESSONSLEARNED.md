@@ -20,6 +20,14 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
   Report tool-use failures, agent errors, and timeouts separately from a
   completed code edit that leaves tests failing.
 
+- **Probe each installed model tag for structured tool calls before a coding
+  sweep.** Use the same Ollama provider and a tiny tool schema, then check the
+  returned tool name and argument shape. Installed tags can return HTTP 400
+  for tool calling or a call with unusable arguments even when text inference
+  works. Record that capability separately from repair outcomes. For the
+  historical suite, prefer cases where later tests fail by assertion on old
+  source; import or collection errors are less precise behavioral evidence.
+
 - **Check authenticated HTML delivery after updating reports served by Caddy.**
   The benchmark site needs `httpd_sys_content_t` on report files. Copying HTML
   from `/tmp` with `cp -a` kept `user_tmp_t`, causing direct report URLs to
