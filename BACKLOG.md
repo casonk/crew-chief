@@ -19,6 +19,14 @@ Mark items `[x]` when complete and move them to Done.
   this done when an old hash returns 404 here. Never push an old clone's
   history back.
 
+- [ ] [manual:2026-10-21] **Rotate the OpenAI API key used by the Continue CLI.**
+  The previous key sat in plain text in `~/.continue/config.yaml` and was
+  exposed in an agent session transcript. The config now references
+  `${{ secrets.OPENAI_API_KEY }}`, so rotation touches one file: create a new
+  key in the OpenAI dashboard, replace the `OPENAI_API_KEY=` line in
+  `~/.continue/.env` (mode 600), check it with a free `GET /v1/models`, then
+  revoke the old key. See `docs/continue-cli.md`.
+
 - [ ] **vLLM inference backend** `[manual:2026-06-17]` — evaluate replacing Ollama with vLLM for higher throughput via paged attention and continuous batching. RTX 3090 24GB is capable. Worth testing on qwen3:14b and qwen3:32b. Primary benefit is concurrent request handling; for serialized personal-assistant use Ollama is sufficient. Benchmark: tokens/sec and TTFT vs Ollama at Q4_K_M. Reference: vllm-project/vllm, `vllm serve <model> --quantization awq`.
 
 ## In Progress
