@@ -1,7 +1,8 @@
 # Continue CLI (`cn`) on crew-chief
 
 How to run the [Continue](https://docs.continue.dev/) CLI as a local coding
-agent against the crew-chief Ollama service, with no cloud API keys.
+agent against the crew-chief Ollama service, and how to add metered cloud
+models without putting API keys in the config.
 
 ## Setup
 
@@ -50,17 +51,34 @@ curl -s localhost:11434/api/show -d '{"model":"qwen3:14b"}' \
   | python3 -c "import json,sys; print(json.load(sys.stdin)['capabilities'])"
 ```
 
-## No API keys in the Continue config
+## Cloud models and API keys
 
-The portfolio does not use cloud API keys for Continue. Keep
-`~/.continue/config.yaml` limited to `provider: ollama` entries.
+Prefer local models and subscription CLIs (Claude Code, Codex) for routine
+work; API-key models are metered and cost more per token. They remain useful
+occasionally, so the config can list them, but never with a literal key.
 
-- Never paste an `apiKey:` value into the config. Continue writes the file
-  in plain text, and editor local history (for example
-  `~/.config/VSCodium/User/History/`) keeps copies of every saved version.
-- If a cloud provider is ever needed, reference a Continue secret
-  (`apiKey: ${{ secrets.OPENAI_API_KEY }}`) instead of a literal key.
-- If a key does end up in the file, revoke it at the provider first, then
+- Reference a secret instead of pasting the key:
+
+  ```yaml
+  - name: GPT-5 Mini
+    provider: openai
+    model: gpt-5-mini
+    apiKey: ${{ secrets.OPENAI_API_KEY }}
+  ```
+
+- `cn` resolves `secrets.NAME` from the process environment first, then
+  `~/.continue/.env`, then `<cwd>/.continue/.env` and `<cwd>/.env`. Keep the
+  key in `~/.continue/.env` with mode `600`:
+
+  ```bash
+  install -m 600 /dev/null ~/.continue/.env   # once
+  # then add a line: OPENAI_API_KEY=<key>
+  ```
+
+- Why not in `config.yaml`: the file is plain text, often opened in an
+  editor, and editor local history (for example
+  `~/.config/VSCodium/User/History/`) keeps a copy of every saved version.
+- If a key does end up in the config, revoke it at the provider first, then
   remove it from the config and from any editor history snapshots.
 
 ## Troubleshooting

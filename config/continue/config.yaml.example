@@ -2,8 +2,9 @@
 #
 # Install:  install -m 600 config/continue/config.yaml.example ~/.continue/config.yaml
 #
-# Local models only — no API keys. Every entry must name a model that is
-# already pulled into the crew-chief volume (`crew-chief models`).
+# Local models only. Every entry must name a model that is already pulled
+# into the crew-chief volume (`crew-chief models`). For metered cloud models,
+# use `apiKey: ${{ secrets.OPENAI_API_KEY }}`, never a literal key.
 # See docs/continue-cli.md.
 name: Local Config
 version: 1.0.0

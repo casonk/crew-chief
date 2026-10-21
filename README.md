@@ -91,7 +91,7 @@ Copy `config/ollama/config.env.example` to `config/ollama/config.env` and adjust
 ## Continue CLI (`cn`)
 
 To use the local models as a coding agent through the Continue CLI, see
-[docs/continue-cli.md](docs/continue-cli.md). The keyless config template is
+[docs/continue-cli.md](docs/continue-cli.md). The config template is
 `config/continue/config.yaml.example`.
 
 ## Container management
