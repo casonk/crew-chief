@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+# Benchmark Ollama-pulled models with llama.cpp's own llama-bench.
+#
+# Runs the official llama.cpp CUDA image under rootless Podman, reading the
+# GGUF blobs straight from the crew-chief-models volume (no re-download).
+#
+# Usage:
+#   bash scripts/llamacpp_bench.sh qwen3:14b llama3.1:8b
+#   bash scripts/llamacpp_bench.sh qwen3:32b -- -p 4096 -n 256 -ctk q8_0 -ctv q8_0
+#
+# Arguments before -- are Ollama model names; anything after -- is passed to
+# llama-bench and replaces the default test set. Results are printed and saved
+# to results/llamacpp-bench-<timestamp>.{md,jsonl}.
+#
+# For clean numbers, nothing else should be on the GPU: unload Ollama models
+# (podman exec crew-chief ollama stop <model>) and pause the listener
+# (systemctl --user stop crew-chief-listener) first.
+#
+# Environment:
+#   LLAMACPP_IMAGE        default: ghcr.io/ggml-org/llama.cpp:full-cuda
+#   CREW_CHIEF_MODELS_VOLUME  default: crew-chief-models
+#   HOST_NVIDIA_LIB       default: /usr/lib64
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(dirname "$SCRIPT_DIR")"
+IMAGE="${LLAMACPP_IMAGE:-ghcr.io/ggml-org/llama.cpp:full-cuda}"
+MODELS_VOLUME="${CREW_CHIEF_MODELS_VOLUME:-crew-chief-models}"
+HOST_NVIDIA_LIB="${HOST_NVIDIA_LIB:-/usr/lib64}"
+CONTAINER_NVIDIA_LIB="/usr/local/nvidia/lib64"
+
+# Default sweep: short and long prompt processing, generation, flash attention off/on.
+DEFAULT_BENCH_ARGS=(-ngl 99 -p 512,4096 -n 128 -fa 0,1 -r 3)
+
+models=()
+bench_args=()
+while [[ $# -gt 0 ]]; do
+    if [[ "$1" == "--" ]]; then
+        shift
+        bench_args=("$@")
+        break
+    fi
+    models+=("$1")
+    shift
+done
+if [[ ${#models[@]} -eq 0 ]]; then
+    echo "Usage: $0 <ollama-model> [...] [-- <llama-bench args>]" >&2
+    exit 2
+fi
+if [[ ${#bench_args[@]} -eq 0 ]]; then
+    bench_args=("${DEFAULT_BENCH_ARGS[@]}")
+fi
+
+volume_dir="$(podman volume inspect "$MODELS_VOLUME" --format '{{.Mountpoint}}')/models"
+
+# Ollama stores each model as a manifest whose "model" layer is a GGUF blob.
+blob_for() {
+    local name="$1" repo tag manifest
+    repo="${name%%:*}"
+    tag="latest"
+    [[ "$name" == *:* ]] && tag="${name#*:}"
+    [[ "$repo" == */* ]] || repo="library/$repo"
+    manifest="$volume_dir/manifests/registry.ollama.ai/$repo/$tag"
+    if [[ ! -f "$manifest" ]]; then
+        echo "Model not pulled in Ollama: $name" >&2
+        return 1
+    fi
+    python3 - "$manifest" <<'EOF'
+import json, sys
+layers = json.load(open(sys.argv[1]))["layers"]
+digest = next(l["digest"] for l in layers if l["mediaType"].endswith(".model"))
+print(digest.replace(":", "-"))
+EOF
+}
+
+# Same GPU wiring as scripts/run_ollama.sh: device nodes plus host driver libs.
+gpu_args=(--security-opt label=disable --security-opt seccomp=unconfined)
+for dev in /dev/nvidia0 /dev/nvidiactl /dev/nvidia-uvm /dev/nvidia-uvm-tools \
+    /dev/nvidia-modeset /dev/nvidia-caps/*; do
+    [[ -e "$dev" ]] && gpu_args+=(--device "$dev")
+done
+for lib in libcuda.so.1 libnvidia-ml.so.1 libnvidia-ptxjitcompiler.so.1 libnvidia-nvvm.so.4; do
+    if [[ -e "$HOST_NVIDIA_LIB/$lib" ]]; then
+        gpu_args+=(-v "$(readlink -f "$HOST_NVIDIA_LIB/$lib"):$CONTAINER_NVIDIA_LIB/$lib:ro")
+    fi
+done
+for lib in "$HOST_NVIDIA_LIB"/libnvidia-gpucomp.so.*; do
+    if [[ -f "$lib" && ! -L "$lib" ]]; then
+        gpu_args+=(-v "$lib:$CONTAINER_NVIDIA_LIB/$(basename "$lib"):ro")
+        break
+    fi
+done
+
+# Other GPU work skews results and can leave too little VRAM to load a model.
+busy="$(nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader 2>/dev/null || true)"
+if [[ -n "$busy" ]]; then
+    echo "Warning: other processes are using the GPU; results will be noisy:" >&2
+    echo "$busy" | sed 's/^/  /' >&2
+fi
+
+failures=()
+stamp="$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$REPO_DIR/results"
+md_out="$REPO_DIR/results/llamacpp-bench-$stamp.md"
+json_out="$REPO_DIR/results/llamacpp-bench-$stamp.jsonl"
+{
+    echo "# llama-bench $stamp"
+    echo
+    echo "- image: \`$IMAGE\`"
+    echo "- GPU: $(nvidia-smi --query-gpu=name,driver_version --format=csv,noheader 2>/dev/null || echo unknown)"
+    echo "- args: \`${bench_args[*]}\`"
+} >"$md_out"
+
+for model in "${models[@]}"; do
+    blob="$(blob_for "$model")"
+    echo
+    echo "== $model ($blob)"
+    run=(podman run --rm "${gpu_args[@]}"
+        -e "LD_LIBRARY_PATH=$CONTAINER_NVIDIA_LIB:/usr/local/cuda/lib64"
+        -v "$volume_dir/blobs:/models:ro"
+        --entrypoint /app/llama-bench "$IMAGE"
+        -m "/models/$blob" "${bench_args[@]}")
+    printf '\n## %s\n\n' "$model" >>"$md_out"
+    # Markdown table on stdout; the same rows as JSON lines on stderr (-oe),
+    # mixed with load logs that are filtered out below.
+    err_log="$(mktemp)"
+    if ! "${run[@]}" -o md -oe jsonl 2>"$err_log" | tee -a "$md_out"; then
+        echo "llama-bench failed for $model:" >&2
+        grep -iE "error|fail|out of memory" "$err_log" | tail -5 >&2
+        printf '\nFAILED: %s\n' "$(grep -iE "error" "$err_log" | tail -1)" >>"$md_out"
+        failures+=("$model")
+    fi
+    python3 - "$model" "$err_log" >>"$json_out" <<'EOF'
+import json, sys
+model, path = sys.argv[1], sys.argv[2]
+for line in open(path):
+    if line.startswith("{"):
+        row = json.loads(line)
+        row["ollama_model"] = model
+        print(json.dumps(row))
+EOF
+    rm -f "$err_log"
+done
+
+echo
+echo "Saved: $md_out"
+echo "       $json_out"
+if [[ ${#failures[@]} -gt 0 ]]; then
+    echo "Failed: ${failures[*]}" >&2
+    exit 1
+fi
