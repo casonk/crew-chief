@@ -84,7 +84,51 @@ def check_model(backend: str, base_url: str, model: str, timeout: int = 10) -> N
     try:
         _get_json(f"{base_url}/health", timeout)
     except (urllib.error.URLError, OSError) as exc:
-        raise LaunchError(f"llama-server is not reachable at {base_url} ({exc}).") from exc
+        raise LaunchError(
+            f"llama-server is not reachable at {base_url} ({exc}). Start it with the "
+            "configuration in `crew-chief policy show <model>` (see "
+            "docs/local-inference-roadmap.md), or pass --backend ollama."
+        ) from exc
+
+
+def resolve_serving(
+    model: str,
+    backend: str | None = None,
+    url: str | None = None,
+    context: int | None = None,
+    policy_loader=None,
+) -> tuple[str, str, int, list[str]]:
+    """Backend, base URL, and context for ``model``, from the serving policy.
+
+    Explicit arguments override the policy. A model the policy retires is
+    refused; one it does not list is served on Ollama defaults with a note.
+    An unreadable policy never blocks a launch.
+    """
+    from crew_chief.serving_policy import PolicyError, load_policy
+
+    notes: list[str] = []
+    entry = None
+    policy = None
+    try:
+        policy = (policy_loader or load_policy)()
+        entry = policy.get(model)
+    except PolicyError as exc:
+        notes.append(f"serving policy unavailable ({exc}); using defaults")
+    if entry is None and policy is not None:
+        notes.append(f"{model} is not in the serving policy; serving on Ollama defaults")
+    if entry is not None and entry.status == "retired":
+        raise LaunchError(f"{model} is retired in the serving policy")
+    if entry is not None and entry.status == "unreviewed":
+        notes.append(f"{model} is unreviewed in the serving policy (no benchmark evidence)")
+
+    chosen = backend or (entry.backend if entry else "ollama")
+    if entry is not None and backend and backend != entry.backend:
+        notes.append(f"overriding the policy's backend ({entry.backend}) with {backend}")
+    if url is None:
+        defaults = {"ollama": "http://localhost:11434", "llamacpp": "http://localhost:8081"}
+        url = policy.url_for(chosen) if policy is not None else defaults[chosen]
+    ctx = context or (entry.context if entry and entry.context else None) or DEFAULT_CONTEXT
+    return chosen, url, ctx, notes
 
 
 def build_env(base_url: str, model: str, context: int, base: dict[str, str]) -> dict[str, str]:
