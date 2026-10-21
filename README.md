@@ -83,6 +83,11 @@ crew-chief code -m qwen3:32b      # start a session
 crew-chief code -- --resume <id>  # reopen one
 ```
 
+Which backend serves each model, and with what settings, comes from the
+governed serving policy (`config/serving-policy.toml`, see
+[docs/serving-policy.md](docs/serving-policy.md)); `crew-chief policy check
+--live` reports drift.
+
 See [docs/local-inference-roadmap.md](docs/local-inference-roadmap.md) for
 options and the phased plan for further frontends, backends, and hardware.
 
