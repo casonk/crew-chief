@@ -88,6 +88,12 @@ All settings are controlled through environment variables:
 
 Copy `config/ollama/config.env.example` to `config/ollama/config.env` and adjust as needed.
 
+## Continue CLI (`cn`)
+
+To use the local models as a coding agent through the Continue CLI, see
+[docs/continue-cli.md](docs/continue-cli.md). The keyless config template is
+`config/continue/config.yaml.example`.
+
 ## Container management
 
 ```bash

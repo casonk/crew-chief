@@ -14,6 +14,8 @@ uses [Semantic Versioning](https://semver.org/).
 - `bootstrap.sh` — creates a virtualenv, installs the package in editable mode,
   and verifies the `crew-chief` command runs. Supports `--no-dev`, `--listener`
   and `--venv PATH`.
+- `docs/continue-cli.md` and `config/continue/config.yaml.example` — keyless
+  setup for running the Continue CLI (`cn`) against the local models.
 
 ### Fixed
 
