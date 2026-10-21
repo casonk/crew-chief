@@ -187,6 +187,34 @@ with a directory outside `results/` for reports that should stay off that site;
 review any result before sharing it beyond the site's existing access controls.
 The command exits nonzero if any trial fails; failure is a benchmark outcome.
 
+### Replay repository evolution
+
+Historical cases evaluate whether a model can bring an older checkout into
+compliance with tests added later. Each case names a `before` commit, an `after`
+commit, the changed test files, and the source paths the agent may edit. The
+runner checks that the old suite passes, the selected new tests fail on old
+source, and the same suite passes at the after commit. It then gives the agent
+only the old source and selected new tests in a disposable checkout; the
+reference source fix is withheld. Changes to tests or other paths cannot pass.
+
+Run the two reviewed crew-chief cases together:
+
+```bash
+python3 scripts/test_benchmark.py \
+  --repo . \
+  --task benchmarks/tasks/history-cli-cwd.json \
+  --task benchmarks/tasks/history-service-reply.json \
+  --models llama3.2:3b-instruct-q8_0 qwen3:14b-q8_0 \
+  --runs 3 --agent-timeout 180
+```
+
+The HTML report compares old-suite, new-test-on-old-source, reference, and
+agent outcomes for each case. It separates agent timeouts and process errors
+from completed trials that leave tests failing, and records tool-call attempts.
+These are case-specific results, not a claim that a model can migrate every
+older repository. Use several reviewed cases and trials before drawing a
+broader conclusion.
+
 To benchmark another repository, create a task JSON and a unified diff patch
 like the example under `benchmarks/tasks/`. Use that repository's real test
 command and identify only the source paths the agent may edit. The baseline

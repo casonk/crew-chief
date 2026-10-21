@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import pathlib
 import subprocess
 import sys
@@ -26,10 +27,12 @@ class ReadRepoFile(Tool):
         "required": ["path"],
     }
 
-    def __init__(self, root: pathlib.Path):
+    def __init__(self, root: pathlib.Path, calls: dict[str, int]):
         self.root = root
+        self.calls = calls
 
     def execute(self, arguments: dict) -> str:
+        self.calls[self.name] += 1
         path = pathlib.Path(str(arguments.get("path", "")))
         if path.is_absolute() or ".." in path.parts:
             return "Access denied: use a relative path within the checkout."
@@ -57,11 +60,13 @@ class ReplaceText(Tool):
         "required": ["path", "old", "new"],
     }
 
-    def __init__(self, root: pathlib.Path, allowed: list[str]):
+    def __init__(self, root: pathlib.Path, allowed: list[str], calls: dict[str, int]):
         self.root = root
         self.allowed = set(allowed)
+        self.calls = calls
 
     def execute(self, arguments: dict) -> str:
+        self.calls[self.name] += 1
         path = str(arguments.get("path", ""))
         if path not in self.allowed:
             return "Access denied: path is not editable."
@@ -86,12 +91,14 @@ class RunTests(Tool):
     description = "Run the fixed repository test command and return its exit code and brief output."
     parameters = {"type": "object", "properties": {}, "required": []}
 
-    def __init__(self, root: pathlib.Path, command: list[str], timeout: int):
+    def __init__(self, root: pathlib.Path, command: list[str], timeout: int, calls: dict[str, int]):
         self.root = root
         self.command = command
         self.timeout = timeout
+        self.calls = calls
 
     def execute(self, arguments: dict) -> str:  # noqa: ARG002
+        self.calls[self.name] += 1
         try:
             result = subprocess.run(
                 self.command,
@@ -113,20 +120,20 @@ def main() -> int:
     parser.add_argument("--model", required=True)
     parser.add_argument("--url", default="http://127.0.0.1:11434")
     parser.add_argument("--test-timeout", type=int, required=True)
+    parser.add_argument("--provider-timeout", type=int, default=90)
     parser.add_argument("--max-iterations", type=int, default=12)
     parser.add_argument("--editable-path", action="append", required=True)
     parser.add_argument("--test-command-json", required=True)
     args = parser.parse_args()
-    import json
-
     root = args.work.resolve()
+    calls = {"read_file": 0, "replace_text": 0, "run_tests": 0}
     tools = [
-        ReadRepoFile(root),
-        ReplaceText(root, args.editable_path),
-        RunTests(root, json.loads(args.test_command_json), args.test_timeout),
+        ReadRepoFile(root, calls),
+        ReplaceText(root, args.editable_path, calls),
+        RunTests(root, json.loads(args.test_command_json), args.test_timeout, calls),
     ]
     agent = Agent(
-        provider=OllamaProvider(base_url=args.url, model=args.model, timeout=90),
+        provider=OllamaProvider(base_url=args.url, model=args.model, timeout=args.provider_timeout),
         tools=tools,
         max_iterations=args.max_iterations,
         system_prompt=(
@@ -135,7 +142,10 @@ def main() -> int:
             "until the tests pass. You have no shell tool. Keep changes minimal."
         ),
     )
-    print(agent.run(sys.stdin.read()))
+    try:
+        print(agent.run(sys.stdin.read()))
+    finally:
+        print("BENCHMARK_TOOL_CALLS=" + json.dumps(calls), flush=True)
     return 0
 
 

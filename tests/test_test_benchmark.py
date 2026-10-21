@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import pathlib
 import subprocess
 
@@ -30,6 +31,7 @@ def broken_task(tmp_path):
     source = repo / "src" / "value.py"
     source.parent.mkdir()
     source.write_text("VALUE = 1\n")
+    (repo / ".gitignore").write_text("__pycache__/\n.pytest_cache/\n")
     git(repo, "add", ".")
     git(
         repo,
@@ -88,3 +90,92 @@ def test_benchmark_requires_real_repair_and_rejects_other_edits(broken_task, mon
     outcome = benchmark.benchmark_one(repo, base, task, "fake", 10, 10, "http://localhost")
     assert outcome["status"] == "failed"
     assert outcome["unexpected_paths"] == ["tests.py"]
+
+
+def test_historical_replay_withholds_reference_fix_and_rejects_test_edits(tmp_path, monkeypatch):
+    repo = tmp_path / "history"
+    repo.mkdir()
+    git(repo, "init", "-q")
+    source = repo / "src" / "value.py"
+    source.parent.mkdir()
+    source.write_text("VALUE = 1\n")
+    (repo / ".gitignore").write_text("__pycache__/\n.pytest_cache/\n")
+    tests = repo / "tests" / "test_value.py"
+    tests.parent.mkdir()
+    tests.write_text(
+        "from pathlib import Path\n\n"
+        "def test_positive():\n"
+        "    assert 'VALUE = 1' in Path('src/value.py').read_text() or "
+        "'VALUE = 2' in Path('src/value.py').read_text()\n"
+    )
+    git(repo, "add", ".")
+    git(
+        repo,
+        "-c",
+        "user.name=Test",
+        "-c",
+        "user.email=test@example.invalid",
+        "commit",
+        "-qm",
+        "before",
+    )
+    before = git(repo, "rev-parse", "HEAD")
+    with tests.open("a") as stream:
+        stream.write(
+            "\ndef test_new_rule():\n    assert 'VALUE = 2' in Path('src/value.py').read_text()\n"
+        )
+    source.write_text("VALUE = 2\n")
+    git(repo, "add", ".")
+    git(
+        repo,
+        "-c",
+        "user.name=Test",
+        "-c",
+        "user.email=test@example.invalid",
+        "commit",
+        "-qm",
+        "after",
+    )
+    after = git(repo, "rev-parse", "HEAD")
+    manifest = tmp_path / "task.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "name": "historical rule",
+                "prompt": "Comply with the new rule.",
+                "evolution": {
+                    "before": before,
+                    "after": after,
+                    "test_paths": ["tests/test_value.py"],
+                },
+                "test_command": ["pytest", "-q"],
+                "editable_paths": ["src/value.py"],
+            }
+        )
+    )
+    task = benchmark.load_task(manifest)
+    review = benchmark.prepare_evolution(repo, task, tmp_path, 15)
+    assert review["old_suite"]["counts"] == {"passed": 1}
+    assert review["new_tests_on_old_source"]["counts"] == {"failed": 1, "passed": 1}
+    assert review["reference_suite"]["counts"] == {"passed": 2}
+
+    original_run = benchmark.run
+    action = {"edit_test": False}
+
+    def fake_run(command, cwd, timeout, prompt=None):
+        if "test_benchmark_agent.py" in " ".join(command):
+            if action["edit_test"]:
+                (cwd / "tests/test_value.py").write_text("def test_tampered():\n    assert True\n")
+            else:
+                (cwd / "src/value.py").write_text("VALUE = 2\n")
+            return 0, 0.1, "done"
+        return original_run(command, cwd, timeout, prompt)
+
+    monkeypatch.setattr(benchmark, "run", fake_run)
+    outcome = benchmark.benchmark_one(repo, before, task, "fake", 10, 15, "http://localhost")
+    assert outcome["status"] == "passed"
+    assert outcome["changed_paths"] == ["src/value.py"]
+    action["edit_test"] = True
+    outcome = benchmark.benchmark_one(repo, before, task, "fake", 10, 15, "http://localhost")
+    assert outcome["status"] == "failed"
+    assert outcome["unexpected_paths"] == ["tests/test_value.py"]

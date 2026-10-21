@@ -12,6 +12,14 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
+- **Historical test replay needs three independent checks.** Run the old suite
+  on the before commit (green), apply only selected tests from the after commit
+  to old source (red), and run the same suite at the after commit (green).
+  Withhold the reference source fix from the agent, stage injected tests before
+  scoring edits, and reject any agent change to tests or unapproved paths.
+  Report tool-use failures, agent errors, and timeouts separately from a
+  completed code edit that leaves tests failing.
+
 - **Check authenticated HTML delivery after updating reports served by Caddy.**
   The benchmark site needs `httpd_sys_content_t` on report files. Copying HTML
   from `/tmp` with `cp -a` kept `user_tmp_t`, causing direct report URLs to

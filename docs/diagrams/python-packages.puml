@@ -22,6 +22,8 @@ rectangle "crew_chief.providers.openai\n1 python file" as crew_chief.providers.o
 rectangle "crew_chief.providers.prompt_utils\n1 python file" as crew_chief.providers.prompt_utils
 rectangle "crew_chief.tools\n1 python file" as crew_chief.tools
 rectangle "report\n1 python file" as report
+rectangle "test_benchmark\n1 python file" as test_benchmark
+rectangle "test_benchmark_agent\n1 python file" as test_benchmark_agent
 crew_chief --> crew_chief.agent
 crew_chief --> crew_chief.client
 crew_chief --> crew_chief.providers
@@ -63,4 +65,7 @@ crew_chief.providers.openai --> crew_chief.providers.prompt_utils
 crew_chief.providers.prompt_utils --> crew_chief.prompt_utils
 crew_chief.tools --> crew_chief.dispatcher
 crew_chief.tools --> crew_chief.providers.base
+test_benchmark_agent --> crew_chief.agent
+test_benchmark_agent --> crew_chief.providers.ollama
+test_benchmark_agent --> crew_chief.tools
 @enduml
