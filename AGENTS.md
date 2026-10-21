@@ -45,10 +45,12 @@ crew-chief/
 │   └── pull_model.sh                      # Pull a model into the running service
 ├── config/
 │   ├── ollama/config.env.example          # Ollama env vars template (do not commit config.env)
+│   ├── continue/config.yaml.example       # Continue CLI config template for local models
 │   ├── listener/config.toml               # Listener + agent + dispatch config
 │   └── downstream-repos.toml             # Tracked inventory of downstream consumers
 └── docs/
     ├── contributor-architecture-blueprint.md
+    ├── continue-cli.md                    # Running the Continue CLI (`cn`) on local models
     └── diagrams/
         ├── repo-architecture.puml
         └── repo-architecture.drawio

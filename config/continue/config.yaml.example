@@ -1,0 +1,46 @@
+# Continue CLI (`cn`) / IDE extension config for the local crew-chief Ollama service.
+#
+# Install:  install -m 600 config/continue/config.yaml.example ~/.continue/config.yaml
+#
+# Local models only. Every entry must name a model that is already pulled
+# into the crew-chief volume (`crew-chief models`). For metered cloud models,
+# use `apiKey: ${{ secrets.OPENAI_API_KEY }}`, never a literal key.
+# See docs/continue-cli.md.
+name: Local Config
+version: 1.0.0
+schema: v1
+defaultModel: qwen3:14b (crew-chief)
+models:
+  # ── Tool-capable (usable as an agent) ─────────────────────────────────────
+  - name: qwen3:14b (crew-chief)
+    provider: ollama
+    model: qwen3:14b
+    apiBase: http://localhost:11434
+
+  - name: qwen3:32b (crew-chief)
+    provider: ollama
+    model: qwen3:32b
+    apiBase: http://localhost:11434
+
+  - name: qwen3.5:27b (crew-chief)
+    provider: ollama
+    model: qwen3.5:27b
+    apiBase: http://localhost:11434
+
+  - name: llama3.1:8b (crew-chief)
+    provider: ollama
+    model: llama3.1:8b
+    apiBase: http://localhost:11434
+
+  - name: qwen2.5-coder:7b (crew-chief)
+    provider: ollama
+    model: qwen2.5-coder:7b
+    apiBase: http://localhost:11434
+
+  # ── Chat-only (no tool support) ───────────────────────────────────────────
+  - name: gemma3:27b-it-qat (crew-chief)
+    provider: ollama
+    model: gemma3:27b-it-qat
+    apiBase: http://localhost:11434
+    roles:
+      - chat
