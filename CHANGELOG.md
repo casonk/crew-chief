@@ -9,11 +9,15 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `taskbench` runner `systemone:<model>` for local decision models on Ollama's
+  `/v1/systemone` endpoint (Clef, Nimble, Tev1). Serving-policy entries and
+  evidence for clef-flash, nimble, and tev1. Decision tasks move to
+  `benchmarks/decisions/`, leaving `benchmarks/tasks/` to the test benchmark.
 - `crew-chief taskbench` — task-based decision benchmarks in the Jev question
   format (choice, score, yes/no) with runners for keyword rules, Ollama
   (JSON-schema output), llama.cpp (single-token answers with probabilities),
   and TypeSafe's hosted Jev. Scores accuracy, invalid answers, latency, and
-  Brier calibration. First suite: `benchmarks/tasks/message-routing.json`.
+  Brier calibration. First suite: `benchmarks/decisions/message-routing.json`.
 - Serving policy (`config/serving-policy.toml`, `docs/serving-policy.md`): a
   reviewed, evidence-backed backend and configuration per model.
   `crew-chief policy show|check [--live]` validates it and reports drift;
@@ -36,7 +40,16 @@ uses [Semantic Versioning](https://semver.org/).
   running the Continue CLI (`cn`) against the local models, with cloud API keys
   kept out of the config via `${{ secrets.* }}`.
 
+### Changed
+
+- The Ollama image is rebuilt on Ollama 0.40.8 (from 0.20.2), which adds the
+  decision-model endpoint and cut per-call overhead on small decisions from
+  ~1.1 s to ~0.4 s.
+
 ### Fixed
+
+- `crew-chief policy check --live` treated `nimble` and `nimble:latest` as
+  different models; untagged names now mean `:latest`, as in Ollama.
 
 - The README documented a bare `pip install -e .`, which PEP 668 causes current
   Debian, Ubuntu, Arch and openSUSE to refuse outright. Both the test setup and

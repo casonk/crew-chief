@@ -93,6 +93,15 @@ class ReviewTests(unittest.TestCase):
         self.assertIn("old: retired but still pulled", warnings)
 
 
+class CanonicalNameTests(unittest.TestCase):
+    def test_untagged_names_mean_latest(self):
+        policy = ServingPolicy(models={"nimble": ModelPolicy("nimble", status="unreviewed")})
+        errors, warnings = review(policy, pulled=["nimble:latest"], today=TODAY)
+        self.assertEqual((errors, warnings), ([], []))
+        self.assertIs(policy.get("nimble:latest"), policy.models["nimble"])
+        self.assertIsNone(policy.get("nimble:9b"))
+
+
 class ResolveTests(unittest.TestCase):
     POLICY = ServingPolicy(
         models={
