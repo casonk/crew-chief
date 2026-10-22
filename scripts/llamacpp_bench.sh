@@ -7,8 +7,11 @@
 # Usage:
 #   bash scripts/llamacpp_bench.sh qwen3:14b llama3.1:8b
 #   bash scripts/llamacpp_bench.sh qwen3:32b -- -p 4096 -n 256 -ctk q8_0 -ctv q8_0
+#   bash scripts/llamacpp_bench.sh ~/models/Qwen3.5-27B-Q4_K_M.gguf
 #
-# Arguments before -- are Ollama model names; anything after -- is passed to
+# Arguments before -- are Ollama model names or paths to .gguf files (for
+# llama.cpp-native downloads, e.g. when llama.cpp cannot read Ollama's copy of
+# a model); results label a file by its name only. Anything after -- is passed to
 # llama-bench and replaces the default test set. Results are printed and saved
 # to results/llamacpp-bench-<timestamp>.{md,jsonl}.
 #
@@ -117,26 +120,39 @@ json_out="$REPO_DIR/results/llamacpp-bench-$stamp.jsonl"
 } >"$md_out"
 
 for model in "${models[@]}"; do
-    blob="$(blob_for "$model")"
+    if [[ "$model" == *.gguf ]]; then
+        if [[ ! -f "$model" ]]; then
+            echo "GGUF file not found: $model" >&2
+            failures+=("$model")
+            continue
+        fi
+        host_file="$(readlink -f "$model")"
+        blob="$(basename "$model")"
+        label="$blob"
+    else
+        blob="$(blob_for "$model")"
+        # readlink: a model rotated to slower storage is a link in the volume.
+        host_file="$(readlink -f "$volume_dir/blobs/$blob")"
+        label="$model"
+    fi
     echo
-    echo "== $model ($blob)"
+    echo "== $label ($blob)"
     run=(podman run --rm "${gpu_args[@]}"
         -e "LD_LIBRARY_PATH=$CONTAINER_NVIDIA_LIB:/usr/local/cuda/lib64"
-        # readlink: a model rotated to slower storage is a link in the volume.
-        -v "$(readlink -f "$volume_dir/blobs/$blob"):/models/$blob:ro"
+        -v "$host_file:/models/$blob:ro"
         --entrypoint /app/llama-bench "$IMAGE"
         -m "/models/$blob" "${bench_args[@]}")
-    printf '\n## %s\n\n' "$model" >>"$md_out"
+    printf '\n## %s\n\n' "$label" >>"$md_out"
     # Markdown table on stdout; the same rows as JSON lines on stderr (-oe),
     # mixed with load logs that are filtered out below.
     err_log="$(mktemp)"
     if ! "${run[@]}" -o md -oe jsonl 2>"$err_log" | tee -a "$md_out"; then
-        echo "llama-bench failed for $model:" >&2
+        echo "llama-bench failed for $label:" >&2
         grep -iE "error|fail|out of memory" "$err_log" | tail -5 >&2
         printf '\nFAILED: %s\n' "$(grep -iE "error" "$err_log" | tail -1)" >>"$md_out"
-        failures+=("$model")
+        failures+=("$label")
     fi
-    python3 - "$model" "$err_log" >>"$json_out" <<'EOF'
+    python3 - "$label" "$err_log" >>"$json_out" <<'EOF'
 import json, sys
 model, path = sys.argv[1], sys.argv[2]
 for line in open(path):
