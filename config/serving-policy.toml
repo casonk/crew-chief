@@ -11,12 +11,27 @@
 # status:  default    — reviewed, preferred configuration
 #          beta       — reviewed, being trialled; may change
 #          unreviewed — pulled, served on Ollama defaults, no evidence yet
-#          retired    — do not serve; remove the pull
+#          retired    — do not serve; rotates off hot storage (see [rotation])
 # gpu_mib: GPU memory the configuration needs on this host (measured, not estimated).
 
 [backends]
 ollama = "http://localhost:11434"
 llamacpp = "http://localhost:8081"
+
+# Storage rotation (`crew-chief storage`). Retired models leave hot storage (the
+# Ollama volume on M.2) for warm (SATA SSD), then cold (hard disk), then are
+# deleted; each tier is benchmarked less often than the one above it. Tier
+# paths are host-specific and live in ~/.config/crew-chief/storage.toml.
+[rotation.hot]
+bench_every_days = 7
+
+[rotation.warm]
+bench_every_days = 30
+demote_after_days = 90
+
+[rotation.cold]
+bench_every_days = 90
+delete_after_days = 180
 
 [models."qwen3:32b"]
 status = "beta"
@@ -110,10 +125,16 @@ status = "unreviewed"
 status = "unreviewed"
 
 [models."mistral:latest"]
-status = "unreviewed"
+status = "retired"
+reviewed = "2026-10-22"
+note = "Superseded by llama3.1:8b and qwen3:14b; nothing in the portfolio uses it"
 
 [models."codellama:latest"]
-status = "unreviewed"
+status = "retired"
+reviewed = "2026-10-22"
+note = "Superseded code model; nothing in the portfolio uses it"
 
 [models."deepseek-coder:6.7b"]
-status = "unreviewed"
+status = "retired"
+reviewed = "2026-10-22"
+note = "Superseded code model; nothing in the portfolio uses it"

@@ -176,6 +176,31 @@ def build_parser() -> argparse.ArgumentParser:
     show_p = policy_sub.add_parser("show", help="Print the policy, or one model's entry.")
     show_p.add_argument("model", nargs="?")
 
+    storage_p = sub.add_parser(
+        "storage",
+        help="Rotate retired models down storage tiers (hot -> warm -> cold -> deleted).",
+        description=(
+            "Tier paths come from ~/.config/crew-chief/storage.toml; rotation rules from "
+            "[rotation] in the serving policy. See docs/serving-policy.md."
+        ),
+    )
+    storage_sub = storage_p.add_subparsers(dest="storage_command", required=True)
+    storage_sub.add_parser("status", help="Where each model is stored and when it is next benched.")
+    storage_sub.add_parser("plan", help="Show the moves and deletions the rotation calls for.")
+    apply_p = storage_sub.add_parser("apply", help="Carry out the planned moves.")
+    apply_p.add_argument(
+        "--delete",
+        action="store_true",
+        help="Also delete models that have reached the end of the bottom tier.",
+    )
+    restore_p = storage_sub.add_parser("restore", help="Bring a model back to hot storage.")
+    restore_p.add_argument("model")
+    bench_p = storage_sub.add_parser(
+        "bench-due",
+        help="Benchmark warm and cold models whose tier cadence has come round (llama.cpp).",
+    )
+    bench_p.add_argument("--dry-run", action="store_true", help="List them without running.")
+
     task_p = sub.add_parser(
         "taskbench",
         help="Score models on a task-based decision benchmark (choice/score/noul).",
@@ -324,6 +349,9 @@ def main(argv: list[str] | None = None) -> None:
         print(f"serving policy: {len(errors)} error(s), {len(warnings)} warning(s)")
         sys.exit(1 if errors else 0)
 
+    elif args.command == "storage":
+        _storage(args)
+
     elif args.command in ("agent", "a"):
         logging.basicConfig(
             level=getattr(logging, args.log_level),
@@ -406,6 +434,93 @@ def main(argv: list[str] | None = None) -> None:
             max_iterations=args.max_iterations,
         )
         print(agent.run(args.prompt))
+
+
+def _storage(args: argparse.Namespace) -> None:
+    import subprocess
+    from datetime import date
+
+    from crew_chief import model_storage as ms
+    from crew_chief.serving_policy import REPO_ROOT, PolicyError, load_policy
+
+    today = date.today()
+    try:
+        policy = load_policy()
+        tiers = ms.load_tiers()
+        state = ms.sync_state(ms.load_state(), ms.locate(tiers), today)
+    except (PolicyError, ms.StorageError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(2)
+    ollama_url = policy.url_for("ollama")
+
+    def unload(name: str) -> None:
+        ms.unload(ollama_url, name)
+
+    try:
+        if args.storage_command == "status":
+            for name, entry in sorted(state.items(), key=lambda kv: (kv[1]["tier"], kv[0])):
+                model = policy.get(name)
+                every = policy.rotation[entry["tier"]].bench_every_days
+                last = (
+                    "weekly timer" if entry["tier"] == "hot" else entry.get("last_benched", "never")
+                )
+                print(
+                    f"{entry['tier']:<5} {name:<28} {model.status if model else 'unlisted':<10} "
+                    f"since {entry.get('since', '?')}  bench every {every} d, last {last}"
+                )
+        elif args.storage_command in ("plan", "apply"):
+            actions, notes = ms.plan(policy, state, today)
+            for note in notes:
+                print(f"note: {note}")
+            if not actions:
+                print("storage: nothing to rotate")
+            for action in actions:
+                where = f"{action.source} -> {action.target}" if action.target else action.source
+                print(f"{action.kind} {action.model}: {where} ({action.reason})")
+                if args.storage_command == "plan":
+                    continue
+                if action.kind == "delete" and not args.delete:
+                    print("  skipped: pass --delete to delete")
+                    continue
+                freed = ms.execute(action, tiers, state, today, before_leaving_hot=unload)
+                ms.save_state(state)
+                print(f"  done; {freed / 2**30:.1f} GiB freed in {action.source}")
+        elif args.storage_command == "restore":
+            name = ms.canonical(args.model)
+            entry = state.get(name)
+            if entry is None:
+                print(f"Error: {name} is not in any tier", file=sys.stderr)
+                sys.exit(1)
+            if entry["tier"] == "hot":
+                print(f"{name} is already on hot storage")
+                return
+            action = ms.Action("move", name, entry["tier"], "hot", "restore")
+            ms.execute(action, tiers, state, today)
+            print(f"{name}: {action.source} -> hot")
+            model = policy.get(name)
+            if model and model.status == "retired":
+                print("note: still retired in the serving policy; change it in a pull request")
+        elif args.storage_command == "bench-due":
+            pending = ms.due(policy, state, today)
+            if not pending:
+                print("storage: no warm or cold model is due a benchmark")
+            for name, tier in pending:
+                print(f"bench {name} ({tier}, every {policy.rotation[tier].bench_every_days} d)")
+                if args.dry_run:
+                    continue
+                env = {**os.environ, "CREW_CHIEF_MODELS_DIR": str(tiers[tier])}
+                script = REPO_ROOT / "scripts" / "llamacpp_bench.sh"
+                quick = ["--", "-ngl", "99", "-p", "512", "-n", "128", "-fa", "1", "-r", "2"]
+                result = subprocess.run(["bash", str(script), name, *quick], env=env, check=False)
+                if result.returncode == 0:
+                    state[name]["last_benched"] = today.isoformat()
+                else:
+                    print(f"  benchmark failed for {name}; will retry next run", file=sys.stderr)
+        ms.save_state(state)
+    except ms.StorageError as exc:
+        ms.save_state(state)
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

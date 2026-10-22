@@ -19,6 +19,8 @@
 # Environment:
 #   LLAMACPP_IMAGE        default: ghcr.io/ggml-org/llama.cpp:full-cuda
 #   CREW_CHIEF_MODELS_VOLUME  default: crew-chief-models
+#   CREW_CHIEF_MODELS_DIR     an Ollama-layout models directory to read instead
+#                             of the volume (a warm or cold storage tier)
 #   HOST_NVIDIA_LIB       default: /usr/lib64
 
 set -euo pipefail
@@ -52,7 +54,9 @@ if [[ ${#bench_args[@]} -eq 0 ]]; then
     bench_args=("${DEFAULT_BENCH_ARGS[@]}")
 fi
 
-volume_dir="$(podman volume inspect "$MODELS_VOLUME" --format '{{.Mountpoint}}')/models"
+# A warm or cold storage tier uses the same layout as the volume, so its
+# models are benchmarked in place (see `crew-chief storage bench-due`).
+volume_dir="${CREW_CHIEF_MODELS_DIR:-$(podman volume inspect "$MODELS_VOLUME" --format '{{.Mountpoint}}')/models}"
 
 # Ollama stores each model as a manifest whose "model" layer is a GGUF blob.
 blob_for() {
