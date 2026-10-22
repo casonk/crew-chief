@@ -20,7 +20,10 @@ class ContentionTests(unittest.TestCase):
             log = pathlib.Path(tmp) / "lease.jsonl"
             records = [
                 {"t": 105.0, "busy": [{"name": "ffmpeg", "pid": 1, "sm": 0, "enc": 30, "dec": 9}]},
-                {"t": 400.0, "busy": [{"name": "/opt/x/upscale", "pid": 2, "sm": 50, "enc": 0, "dec": 0}]},
+                {
+                    "t": 400.0,
+                    "busy": [{"name": "/opt/x/upscale", "pid": 2, "sm": 50, "enc": 0, "dec": 0}],
+                },
                 {"summary": {"samples": 50, "contended": 2}},
             ]
             log.write_text("\n".join(json.dumps(r) for r in records) + "\n")

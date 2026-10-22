@@ -207,7 +207,9 @@ def server_logs() -> str:
     out = subprocess.run(["podman", "logs", CONTAINER], capture_output=True, text=True, check=False)
     lines = [ln for ln in (out.stdout + out.stderr).splitlines() if "error" in ln.lower()]
     # Prefer llama.cpp's own reason ("error loading model: ...") over the exit line.
-    reasons = [ln.split("error loading model:", 1)[1] for ln in lines if "error loading model:" in ln]
+    reasons = [
+        ln.split("error loading model:", 1)[1] for ln in lines if "error loading model:" in ln
+    ]
     if reasons:
         return "load failed: " + reasons[-1].strip()
     return lines[-1].strip() if lines else "server did not become ready"
