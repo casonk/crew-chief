@@ -47,3 +47,23 @@ one-word latency prompt is too short to rate.
 (13282 of 24576 MiB free), so this number is low. It is re-measured on the
 model's next warm-tier run. Benchmarking from the SATA SSD changes load time
 only; generation runs from GPU memory.
+
+## llama.cpp on native GGUF downloads (added the same day)
+
+llama.cpp cannot read Ollama's copies of the two 27B models, so the same
+quantizations were downloaded in llama.cpp's own format and checked against
+Hugging Face's SHA-256: `unsloth/Qwen3.5-27B-GGUF` (Q4_K_M) and
+`ggml-org/gemma-3-27b-it-qat-GGUF` (Q4_0, text weights only).
+Same quick llama-bench settings, exclusive GPU lease
+(`llamacpp-bench-20261022-094604.md`):
+
+| Model | llama.cpp gen (tok/s) | pp512 (tok/s) | Ollama gen (tok/s) |
+|---|---:|---:|---:|
+| Qwen3.5-27B Q4_K_M | 34.9 | 1291 | 34.9 (126-token reply); 31.7 (5942-token reply) |
+| gemma-3-27b-it-qat Q4_0 | 41.0 | 1383 | 36.2 (85-token reply) |
+
+- Qwen3.5 27B: a tie at short context. The lower Ollama figure comes from a
+  long reply, where the growing context slows generation on any engine.
+- Gemma 3 27B: llama.cpp about 13% faster. Worth a like-for-like serving
+  measurement (`llamacpp_serving_measure.sh`) before changing its backend,
+  since the native file leaves out the vision weights Ollama's includes.
