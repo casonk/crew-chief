@@ -20,10 +20,11 @@ crew-chief/
 │   ├── __init__.py                        # Public re-exports, __version__
 │   ├── __main__.py                        # python -m crew_chief entry point
 │   ├── client.py                          # CrewChiefClient — legacy Ollama HTTP client
-│   ├── cli.py                             # CLI: generate / health / models / listen / agent / code / policy / storage / taskbench
+│   ├── cli.py                             # CLI: generate / health / models / listen / agent / code / policy / storage / gguf / taskbench
 │   ├── code_launcher.py                   # `crew-chief code`: Claude Code on a local backend
 │   ├── serving_policy.py                  # Per-model backend policy: load, review, drift
 │   ├── model_storage.py                   # Storage tiers: rotate retired models hot→warm→cold
+│   ├── gguf_sources.py                    # llama.cpp-native GGUF copies: fetch + SHA-256 check
 │   ├── taskbench.py                       # Task-based decision benchmarks (choice/score/noul)
 │   ├── agent.py                           # Agent — multi-step plan→act→observe loop
 │   ├── tools.py                           # Tool base class + ShellTool / ReadFileTool / WriteFileTool
@@ -50,6 +51,7 @@ crew-chief/
 │   ├── pull_model.sh                      # Pull a model into the running service
 │   ├── llamacpp_bench.sh                  # llama-bench on Ollama's GGUF blobs (roadmap phase 3)
 │   ├── llamacpp_serving_measure.sh        # GPU memory + generation rate of one serving config
+│   ├── engine_matrix.py                   # Ollama vs llama.cpp vs native file, like for like
 │   ├── test_benchmark.py                  # Isolated test-outcome runner and HTML report
 │   └── test_benchmark_agent.py            # Restricted local coding agent for trials
 ├── benchmarks/tasks/                     # Reviewed failing-task patches and manifests
@@ -57,6 +59,7 @@ crew-chief/
 │   ├── ollama/config.env.example          # Ollama env vars template (do not commit config.env)
 │   ├── serving-policy.toml                # Governed per-model backend/settings, with evidence
 │   ├── storage.toml.example               # Tier paths for `crew-chief storage` (copy to ~/.config)
+│   ├── gguf-sources.toml                  # llama.cpp-native file per model, with SHA-256
 │   ├── continue/config.yaml.example       # Continue CLI config template for local models
 │   ├── listener/config.toml               # Listener + agent + dispatch config
 │   └── downstream-repos.toml             # Tracked inventory of downstream consumers
