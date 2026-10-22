@@ -176,6 +176,17 @@ python3 scripts/test_benchmark.py \
   --runs 3 --agent-timeout 180
 ```
 
+For timing comparisons on the shared GPU, start through
+`scripts/run_test_benchmark_lease.py` with the same benchmark arguments. It
+waits for the current ecu lease, yields registered GPU consumers, and
+checks that no compute process remains before starting. Until `ecu` is
+installed on a machine with the standard sibling checkout, the launcher runs
+ecu from `../ecu/src`; `CENTRAL_ECU_SOURCE` can point to a
+different source checkout. If an unregistered process such as a transcoder
+still holds the GPU, the launcher exits 75 without producing a trial. The
+ecu backlog tracks registration of that consumer and per-device
+placement; the current host has one GPU.
+
 The command writes ignored, local `results/test-bench-*.json` and `.html` files.
 It also updates `results/test-bench-latest.html` and `.json` symlinks. The HTML
 report is linked from the existing benchmark page when `results/` is served as
@@ -221,7 +232,7 @@ resolve relative to the suite file. The resulting HTML identifies the repository
 for each historical review and trial:
 
 ```bash
-python3 scripts/test_benchmark.py \
+python3 scripts/run_test_benchmark_lease.py \
   --suite benchmarks/public-history-suite.json \
   --portfolio-root ../.. \
   --models llama3.2:latest mistral:latest aya-expanse:8b qwen3:14b \
@@ -247,7 +258,7 @@ receives the historical source fix or trial results. It falls back to the
 specified coding model if its answer is invalid, uncertain, or unavailable.
 
 ```bash
-python3 scripts/test_benchmark.py \
+python3 scripts/run_test_benchmark_lease.py \
   --suite benchmarks/public-history-suite.json --portfolio-root ../.. \
   --models qwen3:14b qwen3.5:27b --router-model clef-flash:latest \
   --router-fallback qwen3.5:27b --router-only \

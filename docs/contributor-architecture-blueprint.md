@@ -42,6 +42,9 @@ later tests, verifies that the resulting tests fail, and calls
 provider with restricted file and test tools. The runner reruns the suite and
 writes ignored JSON and HTML results with repository and model provenance. No
 benchmark edit reaches a source checkout.
+Shared-GPU timing trials enter through `scripts/run_test_benchmark_lease.py`,
+which waits for a ecu lease and checks for unregistered compute
+processes after registered consumers yield.
 An optional local SystemOne decision call selects an eligible coding model from
 pre-run task data. Invalid or uncertain decisions use a configured fallback;
 the report keeps routing latency separate from agent and test time.
@@ -58,6 +61,7 @@ the report keeps routing latency separate from agent and test time.
 | `scripts/status.sh` | Container state + HTTP health probe |
 | `scripts/pull_model.sh` | Pull a model into the running service |
 | `scripts/test_benchmark.py` | Isolated test-outcome runner and local HTML report |
+| `scripts/run_test_benchmark_lease.py` | GPU lease and quiet-start launcher |
 | `src/crew_chief/model_router.py` | Bounded model choice and fallback for test trials |
 | `scripts/test_benchmark_agent.py` | Restricted local agent tool loop for benchmark attempts |
 | `config/ollama/config.env.example` | Template for Ollama environment overrides |

@@ -44,6 +44,7 @@ crew-chief/
 │   ├── test_agent.py                      # Offline unit tests for Agent loop
 │   ├── test_tools.py                      # Unit tests for ShellTool / ReadFileTool / WriteFileTool
 │   ├── test_test_benchmark.py             # Test-outcome benchmark isolation and scoring
+│   ├── test_test_benchmark_lease.py       # GPU lease launcher behavior
 │   └── test_model_router.py                # Routing fallback and pre-run data boundary
 ├── scripts/
 │   ├── start.sh                           # Build image (if absent) + start container
@@ -53,6 +54,7 @@ crew-chief/
 │   ├── llamacpp_bench.sh                  # llama-bench on Ollama's GGUF blobs (roadmap phase 3)
 │   ├── llamacpp_serving_measure.sh        # GPU memory + generation rate of one serving config
 │   ├── test_benchmark.py                  # Isolated test-outcome runner and HTML report
+│   ├── run_test_benchmark_lease.py        # ecu lease launcher for timing trials
 │   └── test_benchmark_agent.py            # Restricted local coding agent for trials
 ├── benchmarks/tasks/                     # Reviewed failing-task patches and manifests
 ├── config/
