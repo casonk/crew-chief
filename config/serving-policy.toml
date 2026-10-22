@@ -58,6 +58,33 @@ evidence = [
 reviewed = "2026-10-21"
 note = "Ollama measured faster on short replies (142-188 vs 125 tok/s); not yet like-for-like"
 
+# Decision models: served on Ollama's /v1/systemone endpoint (Ollama 0.35+).
+# They answer choice/score/yes-no questions; they are not chat or tool models.
+[models."clef-flash"]
+status = "beta"
+backend = "ollama"
+evidence = ["results/taskbench-message-routing-20261022-systemone.md"]
+reviewed = "2026-10-22"
+note = "Decision model; best on message-routing (0.97/1.00/0.93, Brier 0.062, 120 ms/item)"
+
+[models."nimble"]
+status = "beta"
+backend = "ollama"
+evidence = ["results/taskbench-message-routing-20261022-systemone.md"]
+reviewed = "2026-10-22"
+note = "Decision model; 0.90/1.00/0.93, Brier 0.090, 143 ms/item"
+
+[models."tev1"]
+status = "beta"
+backend = "ollama"
+evidence = ["results/taskbench-message-routing-20261022-systemone.md"]
+reviewed = "2026-10-22"
+note = "Decision model; smallest (4.3B), 106 ms/item, weaker on urgency (0.80)"
+
+[models."clef"]
+status = "unreviewed"
+note = "Decision model (vision); larger sibling of clef-flash, not yet benchmarked"
+
 [models."qwen3:14b-q8_0"]
 status = "unreviewed"
 

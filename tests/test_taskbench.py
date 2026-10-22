@@ -10,7 +10,9 @@ from unittest.mock import patch
 
 from crew_chief import taskbench as tb
 
-TASK_FILE = Path(__file__).resolve().parents[1] / "benchmarks" / "tasks" / "message-routing.json"
+TASK_FILE = (
+    Path(__file__).resolve().parents[1] / "benchmarks" / "decisions" / "message-routing.json"
+)
 
 MINI = {
     "name": "mini",
@@ -148,6 +150,17 @@ class RunnerTests(unittest.TestCase):
         answers = tb.parse_jev(self.task, body)
         self.assertEqual([answers[q].value for q in ("kind", "level", "flag")], ["b", "2", "true"])
         self.assertAlmostEqual(answers["flag"].probabilities["false"], 0.03)
+
+    def test_systemone_runner_posts_to_ollama_without_a_key(self):
+        runner = tb.make_runner("systemone:nimble", self.task)
+        self.assertEqual(runner.url, "http://localhost:11434/v1/systemone")
+        body = {"answers": {"flag": {"type": "noul", "noul": 0.2}}}
+        with patch.object(tb, "_post", return_value=body) as post:
+            answers = runner.answer(self.task, "x")
+        self.assertEqual(post.call_args.kwargs["headers"], {})
+        self.assertEqual(post.call_args.args[1]["model"], "nimble")
+        self.assertEqual(answers["flag"].value, "false")
+        self.assertIsNone(answers["kind"].value)
 
     def test_jev_needs_a_key(self):
         with self.assertRaises(tb.TaskError):

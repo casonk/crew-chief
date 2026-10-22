@@ -181,11 +181,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Score models on a task-based decision benchmark (choice/score/noul).",
         description=(
             "Run a task file against one or more runners: rules, ollama:<model>, "
-            "llamacpp:<model> (server at CREW_CHIEF_LLAMACPP_URL), jev (TYPESAFE_API_KEY). "
+            "llamacpp:<model> (server at CREW_CHIEF_LLAMACPP_URL), systemone:<model> (Ollama's "
+            "decision-model endpoint), jev (TYPESAFE_API_KEY). "
             "Results go to results/taskbench-<task>-<timestamp>.{md,json}."
         ),
     )
-    task_p.add_argument("task", help="Task file, e.g. benchmarks/tasks/message-routing.json.")
+    task_p.add_argument("task", help="Task file, e.g. benchmarks/decisions/message-routing.json.")
     task_p.add_argument(
         "--runner",
         action="append",

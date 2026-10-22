@@ -18,6 +18,8 @@ Runners:
 - ``ollama:<m>``  one call per item, output constrained to a JSON schema
 - ``llamacpp:<m>`` one call per question, output constrained to option
                   letters; option probabilities come from token log-probs
+- ``systemone:<m>`` a local decision model through Ollama's ``/v1/systemone``
+                  endpoint (Ollama 0.35+; Jev-compatible API), e.g. nimble
 - ``jev``         TypeSafe's hosted API (``TYPESAFE_API_KEY``); opt-in and
                   metered — only ever send synthetic task data
 
@@ -295,14 +297,16 @@ def letter_probabilities(logprobs: dict | None, letters: list[str]) -> dict[str,
     return {k: v / total for k, v in raw.items()} if total > 0 else {}
 
 
-class JevRunner:
-    """TypeSafe AI's hosted Jev decision model. Metered; synthetic data only."""
+class SystemOneRunner:
+    """A decision model behind the Jev-style ``/v1/systemone`` API.
 
-    def __init__(self, api_key: str, model: str = "jev-latest", url: str = JEV_URL) -> None:
-        if not api_key:
-            raise TaskError("the jev runner needs TYPESAFE_API_KEY")
+    Ollama (0.35+) serves local decision models such as Nimble, Tev1 and Clef
+    on this API; TypeSafe serves Jev. One call answers every question.
+    """
+
+    def __init__(self, model: str, url: str, api_key: str = "", label: str = "systemone") -> None:
         self.api_key, self.model, self.url = api_key, model, url
-        self.name = f"jev:{model}"
+        self.name = f"{label}:{model}"
 
     def request(self, task: Task, state: str) -> dict:
         questions = {}
@@ -314,12 +318,18 @@ class JevRunner:
         return {"state": state, "model": self.model, "questions": questions}
 
     def answer(self, task: Task, state: str) -> dict[str, Answer]:
-        body = _post(
-            self.url,
-            self.request(task, state),
-            headers={"Authorization": f"Bearer {self.api_key}"},
-        )
+        headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
+        body = _post(self.url, self.request(task, state), headers=headers)
         return parse_jev(task, body)
+
+
+class JevRunner(SystemOneRunner):
+    """TypeSafe AI's hosted Jev decision model. Metered; synthetic data only."""
+
+    def __init__(self, api_key: str, model: str = "jev-latest", url: str = JEV_URL) -> None:
+        if not api_key:
+            raise TaskError("the jev runner needs TYPESAFE_API_KEY")
+        super().__init__(model, url, api_key, label="jev")
 
 
 def parse_jev(task: Task, body: dict) -> dict[str, Answer]:
@@ -348,9 +358,15 @@ def make_runner(spec: str, task: Task):
     if kind == "llamacpp" and arg:
         url = os.environ.get("CREW_CHIEF_LLAMACPP_URL", "http://localhost:8081")
         return LlamaCppRunner(arg, url)
+    if kind == "systemone" and arg:
+        base = os.environ.get("CREW_CHIEF_URL", "http://localhost:11434").rstrip("/")
+        return SystemOneRunner(arg, f"{base}/v1/systemone")
     if kind == "jev":
         return JevRunner(os.environ.get("TYPESAFE_API_KEY", ""), arg or "jev-latest")
-    raise TaskError(f"unknown runner {spec!r}; use rules, ollama:<model>, llamacpp:<model>, jev")
+    raise TaskError(
+        f"unknown runner {spec!r}; use rules, ollama:<model>, llamacpp:<model>, "
+        "systemone:<model>, jev"
+    )
 
 
 # -- scoring -----------------------------------------------------------------
