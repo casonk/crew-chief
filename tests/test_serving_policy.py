@@ -7,7 +7,7 @@ from datetime import date
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from crew_chief.code_launcher import LaunchError, resolve_serving
+from crew_chief.code_launcher import resolve_serving
 from crew_chief.serving_policy import (
     DEFAULT_POLICY_PATH,
     REPO_ROOT,
@@ -95,6 +95,26 @@ class ReviewTests(unittest.TestCase):
         )
 
 
+class StubDriftTests(unittest.TestCase):
+    def test_stubs_of_retired_models_are_expected_and_unretired_ones_flagged(self):
+        policy = ServingPolicy(
+            models={
+                "old": ModelPolicy("old", status="retired"),
+                "back": ModelPolicy("back", status="unreviewed"),
+            }
+        )
+        _, warnings = review(
+            policy,
+            pulled=["old", "back"],
+            today=TODAY,
+            below_hot={"old:latest": "warm", "back:latest": "cold"},
+        )
+        self.assertFalse(any(w.startswith("old:") for w in warnings))
+        self.assertIn(
+            "back: unreviewed but stored in cold; run `crew-chief storage restore back`", warnings
+        )
+
+
 class CanonicalNameTests(unittest.TestCase):
     def test_untagged_names_mean_latest(self):
         policy = ServingPolicy(models={"nimble": ModelPolicy("nimble", status="unreviewed")})
@@ -134,9 +154,10 @@ class ResolveTests(unittest.TestCase):
         self.assertTrue(any("not in the serving policy" in n for n in self.resolve("other")[3]))
         self.assertTrue(any("unreviewed" in n for n in self.resolve("fresh")[3]))
 
-    def test_retired_model_is_refused(self):
-        with self.assertRaises(LaunchError):
-            self.resolve("gone")
+    def test_retired_model_is_served_with_a_note(self):
+        backend, _, _, notes = self.resolve("gone")
+        self.assertEqual(backend, "ollama")
+        self.assertTrue(any("retired" in n and "slower storage" in n for n in notes))
 
     def test_unreadable_policy_never_blocks(self):
         def broken():
