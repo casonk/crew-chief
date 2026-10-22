@@ -1,0 +1,9 @@
+# Storage tiers for `crew-chief storage`. Copy to ~/.config/crew-chief/storage.toml
+# and point each tier at a directory on that class of disk. Each directory gets
+# Ollama's models layout (manifests/ and blobs/) on the first move.
+#
+# hot defaults to the crew-chief-models Podman volume; set it only to override.
+
+[tiers]
+warm = "/path/to/sata-ssd/crew-chief-models"
+cold = "/path/to/hdd/crew-chief-models"
