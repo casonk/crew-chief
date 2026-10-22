@@ -112,13 +112,13 @@ note = "Speed only: 44-49 tok/s vs 63-64 for qwen3:14b; codegen thinking ran pas
 
 [models."qwen3.5:27b"]
 status = "unreviewed"
-evidence = ["results/speed-quick-20261022.md"]
-note = "Speed only: 31.7 tok/s fully on GPU (Ollama); long thinking (5942 tokens for a short function); llama.cpp cannot load Ollama's file"
+evidence = ["results/speed-quick-20261022.md", "results/llamacpp-bench-20261022-094604.md"]
+note = "Speed only: Ollama 34.9 tok/s short / 31.7 long reply, fully on GPU; llama.cpp 34.9 tok/s (native GGUF, Ollama's file does not load) - a tie; long thinking (5942 tokens for a short function)"
 
 [models."gemma3:27b-it-qat"]
 status = "unreviewed"
-evidence = ["results/speed-quick-20261022.md"]
-note = "Speed only: 36.2 tok/s fully on GPU (Ollama), no thinking; llama.cpp cannot load Ollama's file (vision weights inside)"
+evidence = ["results/speed-quick-20261022.md", "results/llamacpp-bench-20261022-094604.md"]
+note = "Speed only: Ollama 36.2 tok/s fully on GPU, no thinking; llama.cpp 41.0 tok/s (+13%) on the native GGUF (Ollama's file holds the vision weights and does not load)"
 
 [models."llama3.2:latest"]
 status = "unreviewed"
