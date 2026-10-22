@@ -97,15 +97,22 @@ def route_test_repair(
         result["probabilities"] = probabilities
         if answer.value not in candidates:
             result["fallback_reason"] = "invalid_choice"
-        elif not isinstance(probabilities, dict) or not isinstance(
-            probabilities.get(answer.value), (int, float)
-        ):
+        elif not isinstance(probabilities, dict):
             result["fallback_reason"] = "missing_confidence"
+        elif (
+            set(probabilities) != set(candidates)
+            or not all(
+                isinstance(value, (int, float)) and math.isfinite(value) and 0 <= value <= 1
+                for value in probabilities.values()
+            )
+            or not math.isclose(sum(probabilities.values()), 1, abs_tol=0.05)
+        ):
+            result["fallback_reason"] = "invalid_distribution"
+        elif answer.value != max(probabilities, key=probabilities.get):
+            result["fallback_reason"] = "inconsistent_choice"
         else:
             confidence = float(probabilities[answer.value])
-            if not math.isfinite(confidence) or not 0 <= confidence <= 1:
-                result["fallback_reason"] = "invalid_confidence"
-            elif confidence < min_confidence:
+            if confidence < min_confidence:
                 result["confidence"] = confidence
                 result["fallback_reason"] = "low_confidence"
             else:
