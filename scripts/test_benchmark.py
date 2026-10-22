@@ -251,6 +251,38 @@ def changed_paths(repo: pathlib.Path) -> list[str]:
     return sorted(set(tracked + untracked))
 
 
+def gpu_snapshot() -> dict:
+    """Capture enough local load context to qualify elapsed-time comparisons."""
+    try:
+        state = subprocess.run(
+            [
+                "nvidia-smi",
+                "--query-gpu=utilization.gpu,memory.used",
+                "--format=csv,noheader,nounits",
+            ],
+            text=True,
+            capture_output=True,
+            check=True,
+            timeout=5,
+        ).stdout.strip()
+        processes = subprocess.run(
+            ["nvidia-smi", "--query-compute-apps=process_name", "--format=csv,noheader"],
+            text=True,
+            capture_output=True,
+            check=True,
+            timeout=5,
+        ).stdout.splitlines()
+        utilization, memory = [int(value.strip()) for value in state.splitlines()[0].split(",")]
+        external = sum("ollama" not in name and "llama-server" not in name for name in processes)
+        return {
+            "utilization_percent": utilization,
+            "memory_mib": memory,
+            "external_compute_processes": external,
+        }
+    except (OSError, ValueError, IndexError, subprocess.SubprocessError):
+        return {"status": "unavailable"}
+
+
 def benchmark_one(
     repo: pathlib.Path,
     base_commit: str,
@@ -325,7 +357,9 @@ def benchmark_one(
         ]
         for path in task["editable_paths"]:
             agent_command.extend(("--editable-path", path))
+        record["gpu_before_agent"] = gpu_snapshot()
         agent_rc, agent_seconds, agent_output = run(agent_command, work, agent_timeout, prompt)
+        record["gpu_after_agent"] = gpu_snapshot()
         record.update(agent_exit=agent_rc, agent_seconds=round(agent_seconds, 2))
         metrics = re.search(r"BENCHMARK_TOOL_CALLS=(\{[^\n]*\})", agent_output)
         if metrics:

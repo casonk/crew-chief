@@ -255,7 +255,8 @@ python3 scripts/test_benchmark.py \
 ```
 
 The report records the selected model, confidence, fallback reason, routing
-time, and end-to-end time. Omit `--router-only` to run fixed-model trials in the
+time, end-to-end time, and GPU load snapshots around each agent run. Omit
+`--router-only` to run fixed-model trials in the
 same report. Compare routing against fixed-model outcomes on held-out cases;
 this path is an evaluation experiment, not an automatic production policy.
 
