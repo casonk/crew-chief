@@ -82,8 +82,11 @@ reviewed = "2026-10-22"
 note = "Decision model; smallest (4.3B), 106 ms/item, weaker on urgency (0.80)"
 
 [models."clef"]
-status = "unreviewed"
-note = "Decision model (vision); larger sibling of clef-flash, not yet benchmarked"
+status = "beta"
+backend = "ollama"
+evidence = ["results/taskbench-message-routing-20261022-clef.md"]
+reviewed = "2026-10-22"
+note = "Decision model (27B, vision); most accurate and calibrated (Brier 0.037) but 724 ms/item and ~23 GB GPU"
 
 [models."qwen3:14b-q8_0"]
 status = "unreviewed"
