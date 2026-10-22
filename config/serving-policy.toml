@@ -105,12 +105,18 @@ note = "Decision model (27B, vision); most accurate and calibrated (Brier 0.037)
 
 [models."qwen3:14b-q8_0"]
 status = "unreviewed"
+evidence = ["results/speed-quick-20261022.md"]
+note = "Speed only: 44-49 tok/s vs 63-64 for qwen3:14b; codegen thinking ran past 600 s"
 
 [models."qwen3.5:27b"]
 status = "unreviewed"
+evidence = ["results/speed-quick-20261022.md"]
+note = "Speed only: 31.7 tok/s fully on GPU (Ollama); long thinking (5942 tokens for a short function); llama.cpp cannot load Ollama's file"
 
 [models."gemma3:27b-it-qat"]
 status = "unreviewed"
+evidence = ["results/speed-quick-20261022.md"]
+note = "Speed only: 36.2 tok/s fully on GPU (Ollama), no thinking; llama.cpp cannot load Ollama's file (vision weights inside)"
 
 [models."llama3.2:latest"]
 status = "unreviewed"
