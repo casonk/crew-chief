@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import time
 
 from crew_chief.taskbench import Question, SystemOneRunner, Task
@@ -51,6 +52,22 @@ def route_test_repair(
         criteria,
     )
     decision_task = Task("test-repair-router", "Select a coding agent", {"model": question}, [])
+    test_signals = {}
+    if "evolution" in task:
+        patch = task["patch_path"].read_text(encoding="utf-8", errors="replace")
+        added = [
+            line[1:]
+            for line in patch.splitlines()
+            if line.startswith("+") and not line.startswith("+++")
+        ]
+        test_signals = {
+            "added_test_names": re.findall(r"^def (test_\w+)", "\n".join(added), re.MULTILINE)[:20],
+            "added_assertions": sum(bool(re.match(r"\s*assert\b", line)) for line in added),
+            "added_lines": len(added),
+            "old_source_failure_counts": task.get("history_review", {})
+            .get("new_tests_on_old_source", {})
+            .get("counts", {}),
+        }
     state = json.dumps(
         {
             "repository": repo,
@@ -59,6 +76,7 @@ def route_test_repair(
             "test_command": task["test_command"],
             "test_paths": task.get("evolution", {}).get("test_paths", []),
             "editable_paths": task["editable_paths"],
+            "test_signals": test_signals,
         },
         sort_keys=True,
     )

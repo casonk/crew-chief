@@ -4,7 +4,7 @@ from crew_chief import model_router
 from crew_chief.taskbench import Answer
 
 
-def test_route_uses_only_pre_run_data(monkeypatch):
+def test_route_uses_only_pre_run_data(monkeypatch, tmp_path):
     observed = {}
 
     def answer(self, decision_task, state):
@@ -13,11 +13,14 @@ def test_route_uses_only_pre_run_data(monkeypatch):
         return {"model": Answer("small", {"small": 0.8, "strong": 0.2})}
 
     monkeypatch.setattr(model_router.SystemOneRunner, "answer", answer)
+    patch = tmp_path / "new-tests.patch"
+    patch.write_text("+++ b/tests/test_value.py\n+def test_new_rule():\n+    assert value == 2\n")
     task = {
         "name": "repair",
         "prompt": "Make the new tests pass.",
         "test_command": ["pytest", "-q"],
         "editable_paths": ["src/value.py"],
+        "patch_path": patch,
         "evolution": {
             "before": "old",
             "after": "SECRET_REFERENCE_COMMIT",
@@ -37,6 +40,8 @@ def test_route_uses_only_pre_run_data(monkeypatch):
     assert result["fallback_reason"] is None
     assert result["confidence"] == 0.8
     assert "SECRET_REFERENCE" not in observed["state"]
+    assert '"added_test_names": ["test_new_rule"]' in observed["state"]
+    assert '"old_source_failure_counts": {}' in observed["state"]
     assert set(observed["criteria"]) == {"small", "strong"}
 
 
