@@ -338,7 +338,8 @@ def main(argv: list[str] | None = None) -> None:
                     print(describe(entry))
                 return
             pulled = pulled_models(policy.url_for("ollama")) if args.live else None
-            errors, warnings = review(policy, pulled=pulled)
+            below_hot = _below_hot() if args.live else None
+            errors, warnings = review(policy, pulled=pulled, below_hot=below_hot)
         except PolicyError as exc:
             print(f"Error: {exc}", file=sys.stderr)
             sys.exit(2)
@@ -436,6 +437,17 @@ def main(argv: list[str] | None = None) -> None:
         print(agent.run(args.prompt))
 
 
+def _below_hot() -> dict[str, str] | None:
+    """Models whose files live on warm or cold storage, or None when tiers are not set up."""
+    from crew_chief import model_storage as ms
+
+    try:
+        where = ms.locate(ms.load_tiers())
+    except ms.StorageError:
+        return None
+    return {name: tier for name, tier in where.items() if tier != "hot"}
+
+
 def _storage(args: argparse.Namespace) -> None:
     import subprocess
     from datetime import date
@@ -460,15 +472,18 @@ def _storage(args: argparse.Namespace) -> None:
         if args.storage_command == "status":
             for name, entry in sorted(state.items(), key=lambda kv: (kv[1]["tier"], kv[0])):
                 model = policy.get(name)
-                every = policy.rotation[entry["tier"]].bench_every_days
-                last = (
-                    "weekly timer" if entry["tier"] == "hot" else entry.get("last_benched", "never")
-                )
+                tier = entry["tier"]
+                every = policy.rotation[tier].bench_every_days
+                last = "weekly timer" if tier == "hot" else entry.get("last_benched", "never")
+                served = "" if tier == "hot" or ms.is_linked(name, tiers, tier) else "  NOT LINKED"
                 print(
-                    f"{entry['tier']:<5} {name:<28} {model.status if model else 'unlisted':<10} "
-                    f"since {entry.get('since', '?')}  bench every {every} d, last {last}"
+                    f"{tier:<5} {name:<28} {model.status if model else 'unlisted':<10} "
+                    f"since {entry.get('since', '?')}  bench every {every} d, last {last}{served}"
                 )
         elif args.storage_command in ("plan", "apply"):
+            if args.storage_command == "apply":
+                for line in ms.repair(tiers):
+                    print(f"repaired {line}")
             actions, notes = ms.plan(policy, state, today)
             for note in notes:
                 print(f"note: {note}")

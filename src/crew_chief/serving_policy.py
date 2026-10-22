@@ -180,10 +180,13 @@ def review(
     repo_root: Path = REPO_ROOT,
     pulled: list[str] | None = None,
     today: date | None = None,
+    below_hot: dict[str, str] | None = None,
 ) -> tuple[list[str], list[str]]:
     """Return (errors, warnings) for the policy, and for drift when ``pulled`` is given.
 
-    Errors break the governance contract; warnings need a reviewer's eye.
+    ``below_hot`` maps models whose files live on warm or cold storage (Ollama
+    lists them through stubs) to their tier. Errors break the governance
+    contract; warnings need a reviewer's eye.
     """
     errors: list[str] = []
     warnings: list[str] = []
@@ -223,9 +226,15 @@ def review(
             is_pulled = canonical(model.name) in have
             if model.status != "retired" and not is_pulled:
                 warnings.append(f"{model.name}: in the policy but not pulled")
-            if model.status == "retired" and is_pulled:
+            tier = (below_hot or {}).get(canonical(model.name))
+            if model.status == "retired" and is_pulled and tier is None:
                 warnings.append(
                     f"{model.name}: retired but still on hot storage; run `crew-chief storage apply`"
+                )
+            if model.status != "retired" and tier is not None:
+                warnings.append(
+                    f"{model.name}: {model.status} but stored in {tier}; "
+                    f"run `crew-chief storage restore {model.name}`"
                 )
     return errors, warnings
 

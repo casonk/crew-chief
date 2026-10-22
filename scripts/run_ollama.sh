@@ -79,6 +79,27 @@ else
     echo "No NVIDIA devices found — running on CPU."
 fi
 
+# Storage tiers from ~/.config/crew-chief/storage.toml are mounted read-only at
+# their host paths: models rotated off hot storage keep stubs in the volume
+# whose blobs link there, so Ollama still serves them (docs/serving-policy.md).
+TIER_MOUNTS=()
+STORAGE_CONFIG="${CREW_CHIEF_STORAGE_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/crew-chief/storage.toml}"
+if [[ -f "$STORAGE_CONFIG" ]]; then
+    while IFS= read -r tier_dir; do
+        [[ -n "$tier_dir" ]] || continue
+        mkdir -p "$tier_dir"
+        TIER_MOUNTS+=(-v "${tier_dir}:${tier_dir}:ro")
+    done < <(python3 -c '
+import sys, tomllib
+from pathlib import Path
+tiers = tomllib.loads(Path(sys.argv[1]).read_text()).get("tiers", {})
+for name in ("warm", "cold"):
+    if name in tiers:
+        print(Path(tiers[name]).expanduser())
+' "$STORAGE_CONFIG")
+    echo "Storage tier mounts: ${TIER_MOUNTS[*]:-none}"
+fi
+
 # Run in the foreground (no -d); systemd owns the process lifetime.
 # --replace stops any existing container of the same name before starting.
 # --security-opt label=disable is required on SELinux Enforcing hosts to allow
@@ -93,4 +114,5 @@ exec podman run --rm --replace \
     --security-opt seccomp=unconfined \
     "${GPU_DEVICES[@]}" \
     "${GPU_LIB_MOUNTS[@]}" \
+    "${TIER_MOUNTS[@]}" \
     "$IMAGE_NAME"

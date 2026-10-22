@@ -11,7 +11,8 @@
 # status:  default    — reviewed, preferred configuration
 #          beta       — reviewed, being trialled; may change
 #          unreviewed — pulled, served on Ollama defaults, no evidence yet
-#          retired    — do not serve; rotates off hot storage (see [rotation])
+#          retired    — kept for occasional use; rotates down slower storage and
+#                       loads more slowly (see [rotation])
 # gpu_mib: GPU memory the configuration needs on this host (measured, not estimated).
 
 [backends]
@@ -20,8 +21,9 @@ llamacpp = "http://localhost:8081"
 
 # Storage rotation (`crew-chief storage`). Retired models leave hot storage (the
 # Ollama volume on M.2) for warm (SATA SSD), then cold (hard disk), then are
-# deleted; each tier is benchmarked less often than the one above it. Tier
-# paths are host-specific and live in ~/.config/crew-chief/storage.toml.
+# deleted; each tier is benchmarked less often than the one above it. Until
+# deleted they stay servable through stubs in the Ollama volume. Tier paths
+# are host-specific and live in ~/.config/crew-chief/storage.toml.
 [rotation.hot]
 bench_every_days = 7
 

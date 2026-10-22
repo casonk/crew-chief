@@ -18,7 +18,7 @@ per-model decision instead of a per-session guess.
 | `default` | Reviewed, preferred configuration | yes |
 | `beta` | Reviewed, being trialled; may change | yes |
 | `unreviewed` | Pulled; served on Ollama defaults | no |
-| `retired` | Do not serve; rotates off hot storage | no |
+| `retired` | Kept for occasional use; rotates down slower storage | no |
 
 `llamacpp` entries must also give `context` and `gpu_mib`, because the server
 is started with exactly that configuration.
@@ -43,7 +43,7 @@ fails otherwise.
 
 - `crew-chief code -m <model>` takes the backend, server URL, and context from
   the entry. `--backend`, `--url`, and `--context` override it with a note; a
-  `retired` model is refused.
+  `retired` model is served with a note that its first load is slower.
 - `crew-chief policy show [model]` prints entries; `crew-chief policy check
   [--live]` validates them and, with `--live`, reports drift against the models
   Ollama has pulled.
@@ -57,7 +57,8 @@ Evidence reviewed more than 120 days ago is reported as stale.
 
 Retiring a model does not delete it straight away. It moves down cheaper
 storage, is benchmarked less often at each step, and is deleted only at the
-bottom. A large catalogue then costs little: the strongest models stay on fast
+bottom. Until then it stays usable from Ollama, `cn` and `crew-chief code`;
+only its first load is slower. A large catalogue then costs little: the strongest models stay on fast
 storage and are measured weekly, the weakest drift down and are measured rarely.
 
 | Tier | Storage | Benchmarked | Stays |
@@ -78,6 +79,18 @@ crew-chief storage restore <m>   # bring a model back to hot storage
 crew-chief storage bench-due     # llama.cpp benchmark of warm/cold models due one
 ```
 
+- A model below hot keeps a stub in the Ollama volume: a copy of its manifest
+  and links to its blobs in the tier. `scripts/run_ollama.sh` mounts the tiers
+  read-only at the same paths, so Ollama lists and loads it from there. Ollama
+  0.40 rejects a linked manifest, which is why the manifest is a copy. Blobs a
+  model still on hot storage shares stay real files.
+- Load times (generation is unaffected once loaded): roughly 4 GB in 8 s from
+  the SATA SSD and 20 s from the hard disk; 20 GB in 40 s and 2 minutes.
+- `storage apply` first repairs: it gives every model below hot a stub and
+  finishes any interrupted move. `storage status` marks a model without a
+  stub as NOT LINKED.
+- `policy check --live` treats stubs of retired models as expected, and warns
+  when a model that is no longer retired still lives below hot.
 - Every tier uses Ollama's own directory layout, so warm and cold models are
   benchmarked in place by `scripts/llamacpp_bench.sh` (`CREW_CHIEF_MODELS_DIR`)
   without being copied back.

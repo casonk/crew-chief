@@ -117,7 +117,10 @@ def resolve_serving(
     if entry is None and policy is not None:
         notes.append(f"{model} is not in the serving policy; serving on Ollama defaults")
     if entry is not None and entry.status == "retired":
-        raise LaunchError(f"{model} is retired in the serving policy")
+        notes.append(
+            f"{model} is retired: kept on slower storage for occasional use; "
+            "the first load takes longer"
+        )
     if entry is not None and entry.status == "unreviewed":
         notes.append(f"{model} is unreviewed in the serving policy (no benchmark evidence)")
 
