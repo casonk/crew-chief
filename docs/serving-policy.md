@@ -27,6 +27,8 @@ is started with exactly that configuration.
 
 1. Measure on an idle GPU (stop other GPU services first):
    ```bash
+   ecu run --gpu exclusive --own-gpu-process llama-server --cpu-cores 2 \
+     --priority batch --max-wait 2h -- python3 scripts/engine_matrix.py <model>
    bash scripts/llamacpp_bench.sh <model>
    bash scripts/llamacpp_serving_measure.sh <model> <context> <kv-type>
    python3 scripts/benchmark.py <model> --json results/bench-idle-<date>.json
@@ -38,6 +40,31 @@ is started with exactly that configuration.
 
 Pulling a new model requires adding at least an `unreviewed` entry; the check
 fails otherwise.
+
+## Engine matrix
+
+Quick checks with different tools disagree: llama-bench measures an empty
+context, Ollama replies vary in length, and thinking models produce thousands
+of extra tokens. `scripts/engine_matrix.py` removes those differences. Each
+model runs three ways with identical settings:
+
+| Engine | File |
+|---|---|
+| Ollama | the blob Ollama pulled |
+| llama.cpp (`llama-server`) | the same blob |
+| llama.cpp (`llama-server`) | the llama.cpp-native file of the same weights and quantization |
+
+All three get the same raw-text prompt (no chat template, so thinking does not
+change the work), reply length, context, batch sizes (Ollama's 512/512) and
+flash-attention setting, one warm-up and three timed runs. Comparing rows 1
+and 2 isolates the engine; rows 2 and 3 isolate the file. Ollama 0.40 itself
+runs `llama-server` underneath, so a large gap points at settings or at the
+file, not the engine.
+
+The native files are listed in `config/gguf-sources.toml` with their SHA-256;
+`crew-chief gguf fetch` downloads and verifies them (`crew-chief gguf list`
+shows what is present). A model on warm or cold storage gets its native file
+in that tier's `gguf/` directory.
 
 ## Who reads it
 

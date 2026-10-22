@@ -1,0 +1,92 @@
+# llama.cpp-native GGUF files for the models pulled into Ollama.
+#
+# Each entry is the same model and quantization as the Ollama copy, published
+# in llama.cpp's own format. `crew-chief gguf fetch` downloads them and checks
+# the SHA-256; scripts/engine_matrix.py benchmarks Ollama, llama.cpp on
+# Ollama's file, and llama.cpp on this file, with identical settings.
+#
+# Why: llama.cpp cannot load some of Ollama's files (new architectures, vision
+# weights packed into the model file), and comparing both files separates an
+# engine difference from a file difference.
+#
+# Not listed: the decision models (clef, clef-flash, nimble, tev1). They are
+# Ollama-only, have no text-completion endpoint, and are measured with
+# `crew-chief taskbench` instead.
+
+[models."qwen3:14b"]
+repo = "Qwen/Qwen3-14B-GGUF"
+file = "Qwen3-14B-Q4_K_M.gguf"
+sha256 = "500a8806e85ee9c83f3ae08420295592451379b4f8cf2d0f41c15dffeb6b81f0"
+bytes = 9001752960
+
+[models."qwen3:14b-q8_0"]
+repo = "Qwen/Qwen3-14B-GGUF"
+file = "Qwen3-14B-Q8_0.gguf"
+sha256 = "a0dfe649137410b7d82f06a209240508e218f32f5b6fd81b69d6932160cfcd9d"
+bytes = 15698533728
+
+[models."qwen3:32b"]
+repo = "Qwen/Qwen3-32B-GGUF"
+file = "Qwen3-32B-Q4_K_M.gguf"
+sha256 = "efd971561896866f0e910cce52761ca77b1b138090c7f15fe284676d57d1f689"
+bytes = 19762149024
+
+[models."qwen3.5:27b"]
+repo = "unsloth/Qwen3.5-27B-GGUF"
+file = "Qwen3.5-27B-Q4_K_M.gguf"
+sha256 = "84b5f7f112156d63836a01a69dc3f11a6ba63b10a23b8ca7a7efaf52d5a2d806"
+bytes = 16740812704
+
+[models."gemma3:27b-it-qat"]
+repo = "ggml-org/gemma-3-27b-it-qat-GGUF"
+file = "gemma-3-27b-it-qat-Q4_0.gguf"
+sha256 = "548d816c3189dbcdaff663ea024fb67631e561945ffceb066093d3d522773010"
+bytes = 15908791488
+
+[models."llama3.1:8b"]
+repo = "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF"
+file = "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
+sha256 = "7b064f5842bf9532c91456deda288a1b672397a54fa729aa665952863033557c"
+bytes = 4920739232
+
+[models."llama3.2:latest"]
+repo = "bartowski/Llama-3.2-3B-Instruct-GGUF"
+file = "Llama-3.2-3B-Instruct-Q4_K_M.gguf"
+sha256 = "6c1a2b41161032677be168d354123594c0e6e67d2b9227c84f296ad037c728ff"
+bytes = 2019377696
+
+[models."llama3.2:3b-instruct-q8_0"]
+repo = "bartowski/Llama-3.2-3B-Instruct-GGUF"
+file = "Llama-3.2-3B-Instruct-Q8_0.gguf"
+sha256 = "b5607b5090a8280063fff2d706bb3408ca6542341b06aab39c3eca0a28575921"
+bytes = 3421899296
+
+[models."qwen2.5-coder:7b"]
+repo = "Qwen/Qwen2.5-Coder-7B-Instruct-GGUF"
+file = "qwen2.5-coder-7b-instruct-q4_k_m.gguf"
+sha256 = "509287f78cb4d4cf6b3843734733b914b2c158e43e22a7f4bf5e963800894d3c"
+bytes = 4683073536
+
+[models."aya-expanse:8b"]
+repo = "bartowski/aya-expanse-8b-GGUF"
+file = "aya-expanse-8b-Q4_K_M.gguf"
+sha256 = "9592bad943fe56cf93200286a0a4b00a158cd84a408f227b9978ec5879002fb8"
+bytes = 5056982720
+
+[models."mistral:latest"]
+repo = "bartowski/Mistral-7B-Instruct-v0.3-GGUF"
+file = "Mistral-7B-Instruct-v0.3-Q4_K_M.gguf"
+sha256 = "1270d22c0fbb3d092fb725d4d96c457b7b687a5f5a715abe1e818da303e562b6"
+bytes = 4372812000
+
+[models."codellama:latest"]
+repo = "TheBloke/CodeLlama-7B-Instruct-GGUF"
+file = "codellama-7b-instruct.Q4_0.gguf"
+sha256 = "a2f287bb96b96e3d87a96a818bd1721e57bfcae94dbcff671e77c3e601f967fe"
+bytes = 3825898176
+
+[models."deepseek-coder:6.7b"]
+repo = "TheBloke/deepseek-coder-6.7B-instruct-GGUF"
+file = "deepseek-coder-6.7b-instruct.Q4_0.gguf"
+sha256 = "0c7cf89d9b2dc8671bfade603181aaa18b3dfd93e1b6a2c569a9807c65d4d438"
+bytes = 3827818720

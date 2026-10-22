@@ -1,0 +1,508 @@
+{
+  "meta": {
+    "gpu": "NVIDIA GeForce RTX 3090, 580.178.04",
+    "ollama": "0.40.8",
+    "llamacpp": "0.7.0-dev (build 11783, commit 339f3242c)",
+    "contention_checked": true
+  },
+  "settings": {
+    "models": [
+      "llama3.2:latest",
+      "mistral:latest",
+      "qwen2.5-coder:7b",
+      "qwen3:14b",
+      "aya-expanse:8b",
+      "qwen3:14b-q8_0"
+    ],
+    "runs": 3,
+    "gen": 128,
+    "ctx": 8192,
+    "out": "results",
+    "batch": 512
+  },
+  "rows": [
+    {
+      "model": "llama3.2:latest",
+      "config": "ollama",
+      "file": "ollama",
+      "load_s": 5.4,
+      "gpu_mib": 3208,
+      "on_gpu_pct": 100,
+      "gen_tps": 223.6,
+      "prompt_tps": 8727.2,
+      "gen_tokens": 128,
+      "prompt_tokens": 440,
+      "windows": [
+        [
+          1792684264.2190313,
+          1792684265.015635
+        ],
+        [
+          1792684265.0156395,
+          1792684265.6861603
+        ],
+        [
+          1792684265.6861641,
+          1792684266.357222
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "llama3.2:latest",
+      "config": "llama.cpp",
+      "file": "ollama file",
+      "load_s": 3.5,
+      "gpu_mib": 3197,
+      "on_gpu_pct": 100,
+      "gen_tps": 182.9,
+      "prompt_tps": 7462.2,
+      "gen_tokens": 128,
+      "prompt_tokens": 440,
+      "windows": [
+        [
+          1792684278.1905692,
+          1792684279.0073967
+        ],
+        [
+          1792684279.007399,
+          1792684279.8348386
+        ],
+        [
+          1792684279.83484,
+          1792684280.6761863
+        ]
+      ],
+      "contended_runs": 3,
+      "contended_by": [
+        "ffmpeg"
+      ]
+    },
+    {
+      "model": "llama3.2:latest",
+      "config": "llama.cpp",
+      "file": "native",
+      "load_s": 4.9,
+      "gpu_mib": 3197,
+      "on_gpu_pct": 100,
+      "gen_tps": 183.0,
+      "prompt_tps": 7291.2,
+      "gen_tokens": 128,
+      "prompt_tokens": 440,
+      "windows": [
+        [
+          1792684290.4352682,
+          1792684291.260185
+        ],
+        [
+          1792684291.2601867,
+          1792684292.1033242
+        ],
+        [
+          1792684292.1033251,
+          1792684292.918124
+        ]
+      ],
+      "contended_runs": 3,
+      "contended_by": [
+        "ffmpeg"
+      ]
+    },
+    {
+      "model": "mistral:latest",
+      "config": "ollama",
+      "file": "ollama",
+      "load_s": 14.2,
+      "gpu_mib": 5559,
+      "on_gpu_pct": 100,
+      "gen_tps": 108.7,
+      "prompt_tps": 3622.6,
+      "gen_tokens": 128,
+      "prompt_tokens": 470,
+      "windows": [
+        [
+          1792684312.6130161,
+          1792684314.141004
+        ],
+        [
+          1792684314.1410081,
+          1792684315.5427022
+        ],
+        [
+          1792684315.5427074,
+          1792684316.9646175
+        ]
+      ],
+      "contended_runs": 3,
+      "contended_by": [
+        "ffmpeg"
+      ]
+    },
+    {
+      "model": "mistral:latest",
+      "config": "llama.cpp",
+      "file": "ollama file",
+      "load_s": 3.9,
+      "gpu_mib": 5547,
+      "on_gpu_pct": 100,
+      "gen_tps": 126.9,
+      "prompt_tps": 4179.0,
+      "gen_tokens": 128,
+      "prompt_tokens": 470,
+      "windows": [
+        [
+          1792684327.5749886,
+          1792684328.7405047
+        ],
+        [
+          1792684328.740506,
+          1792684329.909381
+        ],
+        [
+          1792684329.9093819,
+          1792684331.085603
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "mistral:latest",
+      "config": "llama.cpp",
+      "file": "native",
+      "load_s": 12.9,
+      "gpu_mib": 5547,
+      "on_gpu_pct": 100,
+      "gen_tps": 126.6,
+      "prompt_tps": 4151.1,
+      "gen_tokens": 128,
+      "prompt_tokens": 470,
+      "windows": [
+        [
+          1792684350.501647,
+          1792684351.668761
+        ],
+        [
+          1792684351.6687624,
+          1792684352.8419447
+        ],
+        [
+          1792684352.841946,
+          1792684354.0230892
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "qwen2.5-coder:7b",
+      "config": "ollama",
+      "file": "ollama",
+      "load_s": 7.5,
+      "gpu_mib": 5077,
+      "on_gpu_pct": 100,
+      "gen_tps": 125.4,
+      "prompt_tps": 4475.8,
+      "gen_tokens": 128,
+      "prompt_tokens": 439,
+      "windows": [
+        [
+          1792684368.4685466,
+          1792684369.699293
+        ],
+        [
+          1792684369.6992953,
+          1792684370.8473547
+        ],
+        [
+          1792684370.8473575,
+          1792684371.994784
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "qwen2.5-coder:7b",
+      "config": "llama.cpp",
+      "file": "ollama file",
+      "load_s": 3.4,
+      "gpu_mib": 5065,
+      "on_gpu_pct": 100,
+      "gen_tps": 124.2,
+      "prompt_tps": 4441.2,
+      "gen_tokens": 128,
+      "prompt_tokens": 439,
+      "windows": [
+        [
+          1792684381.9335735,
+          1792684383.0797732
+        ],
+        [
+          1792684383.079774,
+          1792684384.2287667
+        ],
+        [
+          1792684384.2287676,
+          1792684385.3980157
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "qwen2.5-coder:7b",
+      "config": "llama.cpp",
+      "file": "native",
+      "load_s": 5.5,
+      "gpu_mib": 5065,
+      "on_gpu_pct": 100,
+      "gen_tps": 123.4,
+      "prompt_tps": 4451.8,
+      "gen_tokens": 128,
+      "prompt_tokens": 439,
+      "windows": [
+        [
+          1792684395.8764305,
+          1792684397.0296566
+        ],
+        [
+          1792684397.0296574,
+          1792684398.1843617
+        ],
+        [
+          1792684398.1843624,
+          1792684399.338964
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "qwen3:14b",
+      "config": "ollama",
+      "file": "ollama",
+      "load_s": 11.3,
+      "gpu_mib": 10181,
+      "on_gpu_pct": 100,
+      "gen_tps": 61.1,
+      "prompt_tps": 2400.2,
+      "gen_tokens": 128,
+      "prompt_tokens": 439,
+      "windows": [
+        [
+          1792684416.6224415,
+          1792684419.0223768
+        ],
+        [
+          1792684419.0223815,
+          1792684421.3864706
+        ],
+        [
+          1792684421.3864737,
+          1792684423.733629
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "qwen3:14b",
+      "config": "llama.cpp",
+      "file": "ollama file",
+      "load_s": 4.9,
+      "gpu_mib": 10157,
+      "on_gpu_pct": 100,
+      "gen_tps": 62.8,
+      "prompt_tps": 2416.1,
+      "gen_tokens": 128,
+      "prompt_tokens": 439,
+      "windows": [
+        [
+          1792684436.6605268,
+          1792684438.9335406
+        ],
+        [
+          1792684438.9335415,
+          1792684441.2048972
+        ],
+        [
+          1792684441.204898,
+          1792684443.4824948
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "qwen3:14b",
+      "config": "llama.cpp",
+      "file": "native",
+      "load_s": 11.5,
+      "gpu_mib": 9895,
+      "on_gpu_pct": 100,
+      "gen_tps": 57.6,
+      "prompt_tps": 2128.8,
+      "gen_tokens": 128,
+      "prompt_tokens": 439,
+      "windows": [
+        [
+          1792684461.3920097,
+          1792684463.877101
+        ],
+        [
+          1792684463.8771026,
+          1792684466.4359953
+        ],
+        [
+          1792684466.4359965,
+          1792684468.9510894
+        ]
+      ],
+      "contended_runs": 3,
+      "contended_by": [
+        "ffmpeg"
+      ]
+    },
+    {
+      "model": "aya-expanse:8b",
+      "config": "ollama",
+      "file": "ollama",
+      "load_s": 9.7,
+      "gpu_mib": 6273,
+      "on_gpu_pct": 100,
+      "gen_tps": 103.9,
+      "prompt_tps": 3976.4,
+      "gen_tokens": 128,
+      "prompt_tokens": 433,
+      "windows": [
+        [
+          1792684484.2568781,
+          1792684485.7612774
+        ],
+        [
+          1792684485.7612813,
+          1792684487.1616397
+        ],
+        [
+          1792684487.1616433,
+          1792684488.5580947
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "aya-expanse:8b",
+      "config": "llama.cpp",
+      "file": "ollama file",
+      "load_s": 4.9,
+      "gpu_mib": 6263,
+      "on_gpu_pct": 100,
+      "gen_tps": 106.9,
+      "prompt_tps": 4023.4,
+      "gen_tokens": 128,
+      "prompt_tokens": 433,
+      "windows": [
+        [
+          1792684499.3643446,
+          1792684500.7082307
+        ],
+        [
+          1792684500.7082317,
+          1792684502.0574656
+        ],
+        [
+          1792684502.0574663,
+          1792684503.4078996
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "aya-expanse:8b",
+      "config": "llama.cpp",
+      "file": "native",
+      "load_s": 8.9,
+      "gpu_mib": 6263,
+      "on_gpu_pct": 100,
+      "gen_tps": 106.7,
+      "prompt_tps": 4042.0,
+      "gen_tokens": 128,
+      "prompt_tokens": 433,
+      "windows": [
+        [
+          1792684517.817229,
+          1792684519.162103
+        ],
+        [
+          1792684519.162104,
+          1792684520.5131302
+        ],
+        [
+          1792684520.513131,
+          1792684521.8647873
+        ]
+      ],
+      "contended_runs": 0
+    },
+    {
+      "model": "qwen3:14b-q8_0",
+      "config": "ollama",
+      "file": "ollama",
+      "load_s": 22.3,
+      "gpu_mib": 261,
+      "error": "",
+      "contended_runs": 0
+    },
+    {
+      "model": "qwen3:14b-q8_0",
+      "config": "llama.cpp",
+      "file": "ollama file",
+      "load_s": 9.3,
+      "gpu_mib": 16099,
+      "on_gpu_pct": 100,
+      "gen_tps": 45.9,
+      "prompt_tps": 2529.3,
+      "gen_tokens": 128,
+      "prompt_tokens": 439,
+      "windows": [
+        [
+          1792684574.7160025,
+          1792684577.7054722
+        ],
+        [
+          1792684577.7054732,
+          1792684580.7169602
+        ],
+        [
+          1792684580.716961,
+          1792684583.73015
+        ]
+      ],
+      "contended_runs": 1,
+      "contended_by": [
+        "ffmpeg"
+      ]
+    },
+    {
+      "model": "qwen3:14b-q8_0",
+      "config": "llama.cpp",
+      "file": "native",
+      "load_s": 21.9,
+      "gpu_mib": 15911,
+      "on_gpu_pct": 100,
+      "gen_tps": 43.8,
+      "prompt_tps": 2491.8,
+      "gen_tokens": 128,
+      "prompt_tokens": 439,
+      "windows": [
+        [
+          1792684614.2512896,
+          1792684617.3168063
+        ],
+        [
+          1792684617.3168075,
+          1792684620.462695
+        ],
+        [
+          1792684620.4626966,
+          1792684623.6183834
+        ]
+      ],
+      "contended_runs": 0
+    }
+  ]
+}
