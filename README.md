@@ -157,6 +157,90 @@ them, and on macOS and Windows too.
 
 Tests are fully offline — no Ollama service required.
 
+## Test-based local model benchmark
+
+`scripts/test_benchmark.py` measures whether a local coding model can repair a
+known regression and pass a repository's existing tests. Each attempt clones
+the selected repository at one commit, applies a task patch that must make the
+suite fail, and runs a restricted crew-chief agent with only read, exact text
+replacement, and fixed test tools. It then reruns the same suite. A pass requires
+an actual code change, a green suite, and no edits outside the task's allowlist.
+
+Try the included task against this repository's full pytest suite:
+
+```bash
+python3 scripts/test_benchmark.py \
+  --repo . \
+  --task benchmarks/tasks/client-url-trim.json \
+  --models llama3.2:3b-instruct-q8_0 qwen3:14b-q8_0 \
+  --runs 3 --agent-timeout 180
+```
+
+The command writes ignored, local `results/test-bench-*.json` and `.html` files.
+It also updates `results/test-bench-latest.html` and `.json` symlinks. The HTML
+report is linked from the existing benchmark page when `results/` is served as
+a static site. Open the HTML file in a browser for the **UI**: it shows pass/fail, test counts,
+agent time, and total time for each trial. The JSON also records the base commit,
+task patch hash, model digests and architecture metadata, Ollama version, and GPU. These local results can
+contain model replies. Since the benchmark site serves `results/`, use `--out`
+with a directory outside `results/` for reports that should stay off that site;
+review any result before sharing it beyond the site's existing access controls.
+The command exits nonzero if any trial fails; failure is a benchmark outcome.
+
+### Replay repository evolution
+
+Historical cases evaluate whether a model can bring an older checkout into
+compliance with tests added later. Each case names a `before` commit, an `after`
+commit, the changed test files, and the source paths the agent may edit. The
+runner checks that the old suite passes, the selected new tests fail on old
+source, and the same suite passes at the after commit. It then gives the agent
+only the old source and selected new tests in a disposable checkout; the
+reference source fix is withheld. Changes to tests or other paths cannot pass.
+
+Run the two reviewed crew-chief cases together:
+
+```bash
+python3 scripts/test_benchmark.py \
+  --repo . \
+  --task benchmarks/tasks/history-cli-cwd.json \
+  --task benchmarks/tasks/history-service-reply.json \
+  --models llama3.2:3b-instruct-q8_0 qwen3:14b-q8_0 \
+  --runs 3 --agent-timeout 180
+```
+
+The HTML report compares old-suite, new-test-on-old-source, reference, and
+agent outcomes for each case. It separates agent timeouts and process errors
+from completed trials that leave tests failing, and records tool-call attempts.
+These are case-specific results, not a claim that a model can migrate every
+older repository. Use several reviewed cases and trials before drawing a
+broader conclusion.
+
+For a cross-repository sweep, use the reviewed public suite from the portfolio
+root. Each case resolves its checkout relative to `--portfolio-root`; task paths
+resolve relative to the suite file. The resulting HTML identifies the repository
+for each historical review and trial:
+
+```bash
+python3 scripts/test_benchmark.py \
+  --suite benchmarks/public-history-suite.json \
+  --portfolio-root ../.. \
+  --models llama3.2:latest mistral:latest aya-expanse:8b qwen3:14b \
+  --runs 1 --agent-timeout 120
+```
+
+The tracked suite contains only repositories verified public in the portfolio
+visibility registry. Keep private cases in an ignored local suite and send their
+reports only to an appropriately private location. Before a full agent sweep,
+probe each model's Ollama tool-call behavior: a model that the server rejects
+for tool calling cannot complete this benchmark regardless of coding ability.
+
+To benchmark another repository, create a task JSON and a unified diff patch
+like the example under `benchmarks/tasks/`. Use that repository's real test
+command and identify only the source paths the agent may edit. The baseline
+suite must fail after the patch; a passing or timed-out baseline is invalid.
+Run several trials before comparing stochastic models. The existing
+`scripts/benchmark.py` continues to measure inference speed separately.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).

@@ -40,14 +40,18 @@ crew-chief/
 │   ├── test_listener.py                   # Offline unit tests for listener
 │   ├── test_providers.py                  # Offline unit tests for OllamaProvider / AnthropicProvider
 │   ├── test_agent.py                      # Offline unit tests for Agent loop
-│   └── test_tools.py                      # Unit tests for ShellTool / ReadFileTool / WriteFileTool
+│   ├── test_tools.py                      # Unit tests for ShellTool / ReadFileTool / WriteFileTool
+│   └── test_test_benchmark.py             # Test-outcome benchmark isolation and scoring
 ├── scripts/
 │   ├── start.sh                           # Build image (if absent) + start container
 │   ├── stop.sh                            # Stop running container
 │   ├── status.sh                          # Container state + service health check
 │   ├── pull_model.sh                      # Pull a model into the running service
 │   ├── llamacpp_bench.sh                  # llama-bench on Ollama's GGUF blobs (roadmap phase 3)
-│   └── llamacpp_serving_measure.sh        # GPU memory + generation rate of one serving config
+│   ├── llamacpp_serving_measure.sh        # GPU memory + generation rate of one serving config
+│   ├── test_benchmark.py                  # Isolated test-outcome runner and HTML report
+│   └── test_benchmark_agent.py            # Restricted local coding agent for trials
+├── benchmarks/tasks/                     # Reviewed failing-task patches and manifests
 ├── config/
 │   ├── ollama/config.env.example          # Ollama env vars template (do not commit config.env)
 │   ├── serving-policy.toml                # Governed per-model backend/settings, with evidence

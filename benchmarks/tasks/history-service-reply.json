@@ -1,0 +1,11 @@
+{
+  "name": "Service notification replies pass the loop guard",
+  "prompt": "New listener tests were added to an older crew-chief checkout. Update the implementation so an explicit user reply to a service notification passes the same-address loop guard while automated messages remain blocked. Make the full test suite pass. You may edit only src/crew_chief/listener.py and src/crew_chief/config_loader.py.",
+  "evolution": {
+    "before": "da1a65520c119543f91325b84669d3d0fffd992d",
+    "after": "a3335e89f295d738656be9d8528aa738e55c8035",
+    "test_paths": ["tests/test_listener.py"]
+  },
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/crew_chief/listener.py", "src/crew_chief/config_loader.py"]
+}

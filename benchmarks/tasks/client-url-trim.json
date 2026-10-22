@@ -1,0 +1,7 @@
+{
+  "name": "Restore URL normalization in the Ollama client",
+  "setup_patch": "client-url-trim.patch",
+  "prompt": "The CrewChiefClient tests fail after a small regression in URL normalization. Repair the implementation so the full existing test suite passes. You may edit only src/crew_chief/client.py.",
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/crew_chief/client.py"]
+}

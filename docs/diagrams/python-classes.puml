@@ -198,6 +198,33 @@ class "ReadFileTool" as crew_chief.tools.ReadFileTool {
   parameters : dict
   execute(arguments: dict[str, Any]) -> str
 }
+class "ReadRepoFile" as test_benchmark_agent.ReadRepoFile {
+  calls : dict[str, int]
+  description : str
+  name : str
+  parameters : dict
+  root : Path
+  execute(arguments: dict) -> str
+}
+class "ReplaceText" as test_benchmark_agent.ReplaceText {
+  allowed : set
+  calls : dict[str, int]
+  description : str
+  name : str
+  parameters : dict
+  root : Path
+  execute(arguments: dict) -> str
+}
+class "RunTests" as test_benchmark_agent.RunTests {
+  calls : dict[str, int]
+  command : list[str]
+  description : str
+  name : str
+  parameters : dict
+  root : Path
+  timeout : int
+  execute(arguments: dict) -> str
+}
 class "ShellTool" as crew_chief.tools.ShellTool {
   description : str
   dispatcher : Any
@@ -239,6 +266,9 @@ class "WriteFileTool" as crew_chief.tools.WriteFileTool {
 crew_chief.tools.ReadFileTool --|> crew_chief.tools.Tool
 crew_chief.tools.ShellTool --|> crew_chief.tools.Tool
 crew_chief.tools.WriteFileTool --|> crew_chief.tools.Tool
+test_benchmark_agent.ReadRepoFile --|> crew_chief.tools.Tool
+test_benchmark_agent.ReplaceText --|> crew_chief.tools.Tool
+test_benchmark_agent.RunTests --|> crew_chief.tools.Tool
 crew_chief.config_loader.ListenerConfig --> crew_chief.config_loader.AgentConfig : agent
 crew_chief.config_loader.ListenerConfig --> crew_chief.config_loader.DispatchConfig : dispatch
 crew_chief.config_loader.ListenerConfig --> crew_chief.config_loader.GmailConfig : gmail

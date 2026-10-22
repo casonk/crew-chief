@@ -1,0 +1,11 @@
+{
+  "name": "Archility filters non-command shell tokens",
+  "prompt": "A newer test was added to an older archility checkout. Make shell tool extraction report only executable command heads, ignoring helper functions, array assignments, file names, redirections, and loop syntax. Run the full suite. You may edit only src/archility/render.py.",
+  "evolution": {
+    "before": "2a61764c23ec683b0f09b1446feead4270521f87",
+    "after": "c4073897a595cb80280c4b6e2dfc76851e6751b7",
+    "test_paths": ["tests/test_render.py"]
+  },
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/archility/render.py"]
+}
