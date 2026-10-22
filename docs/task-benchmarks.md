@@ -17,13 +17,13 @@ file can run unchanged against local models and against Jev:
 | `score` | one level, 0..n-1 | ordered list, low → high (2–10 levels) |
 | `noul` | yes/no (probability of yes) | optional `{"true": ..., "false": ...}` |
 
-A task file (`benchmarks/tasks/*.json`) holds `questions`, `items` (each a
+A task file (`benchmarks/decisions/*.json`) holds `questions`, `items` (each a
 `state` and the `expected` answers), and an optional keyword `baseline`. Task
 data is synthetic: never put real messages, receipts, or personal data in a
 task file.
 
 ```bash
-crew-chief taskbench benchmarks/tasks/message-routing.json \
+crew-chief taskbench benchmarks/decisions/message-routing.json \
   --runner rules --runner ollama:qwen3:14b --runner llamacpp:qwen3:32b
 ```
 
@@ -34,6 +34,7 @@ crew-chief taskbench benchmarks/tasks/message-routing.json \
 | `rules` | keyword rules from the task file | no |
 | `ollama:<model>` | one call per item, reply constrained to a JSON schema | no |
 | `llamacpp:<model>` | one call per question, reply constrained to one option letter | yes, from token log-probs |
+| `systemone:<model>` | local decision model via Ollama's `/v1/systemone` (Nimble, Tev1, Clef) | yes, from the model |
 | `jev[:<model>]` | TypeSafe's hosted API (`TYPESAFE_API_KEY`) | yes, calibrated by the vendor |
 
 Metrics: accuracy and invalid answers per question, median and p90 latency per
@@ -55,7 +56,22 @@ point**, not a backend:
 - Use it to answer "how good can a decision model be on this task?" and to
   calibrate what local options must reach.
 
-The `llamacpp` runner is the local analogue: a fixed label set, one
+### Local decision models (Ollama 0.35+)
+
+Ollama 0.35 added a `/v1/systemone` endpoint modelled on Jev's API, and
+decision models that run on it locally: **Clef Flash** and **Clef**
+(Cloudflare; Clef also judges images), **Nimble** (Bespoke Labs) and **Tev1**
+(Together AI). Ollama reports them with a `decision` capability; they answer
+typed questions and are not chat or tool-calling models. The `systemone:<model>`
+runner scores them with the same task files.
+
+On message-routing (`results/taskbench-message-routing-20261022-systemone.md`)
+Clef Flash answered all three questions in one 120 ms call at 0.97/1.00/0.93
+accuracy and the best calibration measured (Brier 0.062), ahead of qwen3:14b
+as a chat model (421 ms, no probabilities). This is the local decision-model
+path; Jev remains an external reference.
+
+The `llamacpp` runner is the earlier local analogue: a fixed label set, one
 constrained token, and a probability per option. First results
 (`results/taskbench-message-routing-20261021.md`) show the trade-off: ~65 ms
 per question with probabilities, but lower accuracy than a free reply from the

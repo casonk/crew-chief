@@ -152,7 +152,10 @@ failure to track in the coding benchmark.
 Many workloads are bounded decisions, not generation. `crew-chief taskbench`
 scores models on task suites in the Jev question format (choice, score,
 yes/no), with runners for rules, Ollama, llama.cpp (constrained single-token
-answers with probabilities), and TypeSafe's hosted Jev as a reference. Next:
+answers with probabilities), local decision models on Ollama's
+`/v1/systemone` (Clef, Nimble, Tev1), and TypeSafe's hosted Jev as a
+reference. First pick: Clef Flash (120 ms per decision set, best calibration).
+Next:
 held-out task data, a locally fine-tuned decision model, and per-task
 routing in the serving policy. See [task-benchmarks.md](task-benchmarks.md).
 

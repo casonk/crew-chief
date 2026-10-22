@@ -40,6 +40,11 @@ KV_TYPES = ("f16", "q8_0", "q4_0")
 EVIDENCE_MAX_AGE_DAYS = 120
 
 
+def canonical(name: str) -> str:
+    """Ollama's full model name: an untagged name means ``:latest``."""
+    return name if ":" in name.rsplit("/", 1)[-1] else f"{name}:latest"
+
+
 class PolicyError(ValueError):
     """The policy file is missing, unreadable, or structurally invalid."""
 
@@ -64,7 +69,11 @@ class ServingPolicy:
     backend_urls: dict[str, str] = field(default_factory=dict)
 
     def get(self, model: str) -> ModelPolicy | None:
-        return self.models.get(model)
+        wanted = canonical(model)
+        for name, entry in self.models.items():
+            if canonical(name) == wanted:
+                return entry
+        return None
 
     def url_for(self, backend: str) -> str:
         defaults = {"ollama": "http://localhost:11434", "llamacpp": "http://localhost:8081"}
@@ -160,13 +169,16 @@ def review(
                     warnings.append(f"{label}: reviewed {age} days ago; re-benchmark")
 
     if pulled is not None:
-        listed = set(policy.models)
-        for name in sorted(set(pulled) - listed):
-            errors.append(f"{name}: pulled in Ollama but missing from the serving policy")
+        have = {canonical(name) for name in pulled}
+        listed = {canonical(name) for name in policy.models}
+        for name in sorted(set(pulled)):
+            if canonical(name) not in listed:
+                errors.append(f"{name}: pulled in Ollama but missing from the serving policy")
         for model in policy.models.values():
-            if model.status != "retired" and model.name not in pulled:
+            is_pulled = canonical(model.name) in have
+            if model.status != "retired" and not is_pulled:
                 warnings.append(f"{model.name}: in the policy but not pulled")
-            if model.status == "retired" and model.name in pulled:
+            if model.status == "retired" and is_pulled:
                 warnings.append(f"{model.name}: retired but still pulled")
     return errors, warnings
 
