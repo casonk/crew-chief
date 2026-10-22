@@ -201,6 +201,15 @@ def build_parser() -> argparse.ArgumentParser:
     )
     bench_p.add_argument("--dry-run", action="store_true", help="List them without running.")
 
+    gguf_p = sub.add_parser(
+        "gguf",
+        help="llama.cpp-native GGUF copies of the Ollama models (config/gguf-sources.toml).",
+    )
+    gguf_sub = gguf_p.add_subparsers(dest="gguf_command", required=True)
+    gguf_sub.add_parser("list", help="Each model's source and whether it is downloaded.")
+    fetch_p = gguf_sub.add_parser("fetch", help="Download and verify missing files.")
+    fetch_p.add_argument("models", nargs="*", help="Only these models (default: all).")
+
     task_p = sub.add_parser(
         "taskbench",
         help="Score models on a task-based decision benchmark (choice/score/noul).",
@@ -353,6 +362,9 @@ def main(argv: list[str] | None = None) -> None:
     elif args.command == "storage":
         _storage(args)
 
+    elif args.command == "gguf":
+        _gguf(args)
+
     elif args.command in ("agent", "a"):
         logging.basicConfig(
             level=getattr(logging, args.log_level),
@@ -435,6 +447,45 @@ def main(argv: list[str] | None = None) -> None:
             max_iterations=args.max_iterations,
         )
         print(agent.run(args.prompt))
+
+
+def _gguf(args: argparse.Namespace) -> None:
+    from crew_chief import gguf_sources as gs
+    from crew_chief import model_storage as ms
+
+    try:
+        sources = gs.load_sources()
+    except gs.SourceError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(2)
+    try:
+        tiers = ms.load_tiers()
+        where = ms.locate(tiers)
+    except ms.StorageError:
+        tiers, where = None, {}
+    wanted = [ms.canonical(m) for m in getattr(args, "models", [])] or sorted(sources)
+    unknown = [m for m in wanted if m not in sources]
+    if unknown:
+        print(f"Error: not in gguf-sources.toml: {', '.join(unknown)}", file=sys.stderr)
+        sys.exit(2)
+    failed = False
+    for name in wanted:
+        source = sources[name]
+        path = gs.find(source, tiers)
+        if args.gguf_command == "list":
+            state = str(path) if path else "not downloaded"
+            print(f"{name:28} {source.repo}/{source.file}  {state}")
+            continue
+        if path:
+            continue
+        tier = where.get(name, "hot")
+        try:
+            path = gs.fetch(source, gs.gguf_dir(tier, tiers))
+            print(f"{name}: verified, {path}")
+        except (gs.SourceError, OSError) as exc:
+            print(f"{name}: {exc}", file=sys.stderr)
+            failed = True
+    sys.exit(1 if failed else 0)
 
 
 def _below_hot() -> dict[str, str] | None:
