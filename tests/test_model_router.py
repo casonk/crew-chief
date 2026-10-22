@@ -68,9 +68,13 @@ def test_route_falls_back_on_uncertain_invalid_and_unavailable(monkeypatch):
             url="http://localhost:11434",
         )
 
-    assert answer("small", {"small": 0.51})["fallback_reason"] == "low_confidence"
+    assert answer("small", {"small": 0.51, "strong": 0.49})["fallback_reason"] == "low_confidence"
     assert answer("other", {"other": 1.0})["fallback_reason"] == "invalid_choice"
     assert answer("small", None)["fallback_reason"] == "missing_confidence"
+    assert answer("small", {"small": 0.8})["fallback_reason"] == "invalid_distribution"
+    assert (
+        answer("small", {"small": 0.2, "strong": 0.8})["fallback_reason"] == "inconsistent_choice"
+    )
     monkeypatch.setattr(
         model_router.SystemOneRunner,
         "answer",
