@@ -42,6 +42,9 @@ later tests, verifies that the resulting tests fail, and calls
 provider with restricted file and test tools. The runner reruns the suite and
 writes ignored JSON and HTML results with repository and model provenance. No
 benchmark edit reaches a source checkout.
+An optional local SystemOne decision call selects an eligible coding model from
+pre-run task data. Invalid or uncertain decisions use a configured fallback;
+the report keeps routing latency separate from agent and test time.
 
 ## Key files
 
@@ -55,6 +58,7 @@ benchmark edit reaches a source checkout.
 | `scripts/status.sh` | Container state + HTTP health probe |
 | `scripts/pull_model.sh` | Pull a model into the running service |
 | `scripts/test_benchmark.py` | Isolated test-outcome runner and local HTML report |
+| `src/crew_chief/model_router.py` | Bounded model choice and fallback for test trials |
 | `scripts/test_benchmark_agent.py` | Restricted local agent tool loop for benchmark attempts |
 | `config/ollama/config.env.example` | Template for Ollama environment overrides |
 | `config/downstream-repos.toml` | Tracked inventory of repos consuming this service |

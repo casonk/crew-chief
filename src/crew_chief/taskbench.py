@@ -304,8 +304,16 @@ class SystemOneRunner:
     on this API; TypeSafe serves Jev. One call answers every question.
     """
 
-    def __init__(self, model: str, url: str, api_key: str = "", label: str = "systemone") -> None:
+    def __init__(
+        self,
+        model: str,
+        url: str,
+        api_key: str = "",
+        label: str = "systemone",
+        timeout: int = 300,
+    ) -> None:
         self.api_key, self.model, self.url = api_key, model, url
+        self.timeout = timeout
         self.name = f"{label}:{model}"
 
     def request(self, task: Task, state: str) -> dict:
@@ -319,7 +327,7 @@ class SystemOneRunner:
 
     def answer(self, task: Task, state: str) -> dict[str, Answer]:
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
-        body = _post(self.url, self.request(task, state), headers=headers)
+        body = _post(self.url, self.request(task, state), headers=headers, timeout=self.timeout)
         return parse_jev(task, body)
 
 
