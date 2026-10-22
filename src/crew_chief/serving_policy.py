@@ -38,6 +38,9 @@ STATUSES = ("default", "beta", "unreviewed", "retired")
 KV_TYPES = ("f16", "q8_0", "q4_0")
 # Evidence older than this is reported as stale by `policy check`.
 EVIDENCE_MAX_AGE_DAYS = 120
+# Storage tiers, fastest first: hot is the Ollama volume (M.2), warm a SATA SSD,
+# cold a hard disk. Retired models move down them and are benchmarked less often.
+TIERS = ("hot", "warm", "cold")
 
 
 def canonical(name: str) -> str:
@@ -64,9 +67,26 @@ class ModelPolicy:
 
 
 @dataclass(frozen=True)
+class TierRule:
+    """How often a tier's models are benchmarked, and how long they stay in it."""
+
+    bench_every_days: int
+    demote_after_days: int | None = None  # then move to the next tier down
+    delete_after_days: int | None = None  # bottom tier only: then delete
+
+
+DEFAULT_ROTATION = {
+    "hot": TierRule(bench_every_days=7),
+    "warm": TierRule(bench_every_days=30, demote_after_days=90),
+    "cold": TierRule(bench_every_days=90, delete_after_days=180),
+}
+
+
+@dataclass(frozen=True)
 class ServingPolicy:
     models: dict[str, ModelPolicy]
     backend_urls: dict[str, str] = field(default_factory=dict)
+    rotation: dict[str, TierRule] = field(default_factory=lambda: dict(DEFAULT_ROTATION))
 
     def get(self, model: str) -> ModelPolicy | None:
         wanted = canonical(model)
@@ -116,6 +136,31 @@ def _entry(name: str, table: dict) -> ModelPolicy:
     )
 
 
+def _rotation(document: dict) -> dict[str, TierRule]:
+    table = document.get("rotation", {})
+    unknown = sorted(set(table) - set(TIERS))
+    if unknown:
+        raise PolicyError(f"[rotation]: unknown tier(s): {', '.join(unknown)}")
+    rules = dict(DEFAULT_ROTATION)
+    known = set(TierRule.__dataclass_fields__)
+    for tier, values in table.items():
+        where = f"[rotation.{tier}]"
+        extra = sorted(set(values) - known)
+        if extra:
+            raise PolicyError(f"{where}: unknown key(s): {', '.join(extra)}")
+        for key, value in values.items():
+            if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+                raise PolicyError(f"{where}: {key} must be a positive whole number of days")
+        merged = {**DEFAULT_ROTATION[tier].__dict__, **values}
+        rules[tier] = TierRule(**merged)
+    if rules["cold"].demote_after_days is not None:
+        raise PolicyError("[rotation.cold]: the bottom tier has delete_after_days, not demote")
+    for tier in TIERS[:-1]:
+        if rules[tier].delete_after_days is not None:
+            raise PolicyError(f"[rotation.{tier}]: only the bottom tier deletes")
+    return rules
+
+
 def load_policy(path: Path = DEFAULT_POLICY_PATH) -> ServingPolicy:
     if tomllib is None:
         raise PolicyError("reading the serving policy needs Python 3.11+ or `pip install tomli`")
@@ -127,7 +172,7 @@ def load_policy(path: Path = DEFAULT_POLICY_PATH) -> ServingPolicy:
         raise PolicyError(f"{path}: {exc}") from exc
     models = {name: _entry(name, table) for name, table in document.get("models", {}).items()}
     urls = {k: str(v) for k, v in document.get("backends", {}).items() if k in BACKENDS}
-    return ServingPolicy(models=models, backend_urls=urls)
+    return ServingPolicy(models=models, backend_urls=urls, rotation=_rotation(document))
 
 
 def review(
@@ -179,7 +224,9 @@ def review(
             if model.status != "retired" and not is_pulled:
                 warnings.append(f"{model.name}: in the policy but not pulled")
             if model.status == "retired" and is_pulled:
-                warnings.append(f"{model.name}: retired but still pulled")
+                warnings.append(
+                    f"{model.name}: retired but still on hot storage; run `crew-chief storage apply`"
+                )
     return errors, warnings
 
 

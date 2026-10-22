@@ -20,9 +20,10 @@ crew-chief/
 │   ├── __init__.py                        # Public re-exports, __version__
 │   ├── __main__.py                        # python -m crew_chief entry point
 │   ├── client.py                          # CrewChiefClient — legacy Ollama HTTP client
-│   ├── cli.py                             # CLI: generate / health / models / listen / agent / code
+│   ├── cli.py                             # CLI: generate / health / models / listen / agent / code / policy / storage / taskbench
 │   ├── code_launcher.py                   # `crew-chief code`: Claude Code on a local backend
 │   ├── serving_policy.py                  # Per-model backend policy: load, review, drift
+│   ├── model_storage.py                   # Storage tiers: rotate retired models hot→warm→cold
 │   ├── taskbench.py                       # Task-based decision benchmarks (choice/score/noul)
 │   ├── agent.py                           # Agent — multi-step plan→act→observe loop
 │   ├── tools.py                           # Tool base class + ShellTool / ReadFileTool / WriteFileTool
@@ -55,6 +56,7 @@ crew-chief/
 ├── config/
 │   ├── ollama/config.env.example          # Ollama env vars template (do not commit config.env)
 │   ├── serving-policy.toml                # Governed per-model backend/settings, with evidence
+│   ├── storage.toml.example               # Tier paths for `crew-chief storage` (copy to ~/.config)
 │   ├── continue/config.yaml.example       # Continue CLI config template for local models
 │   ├── listener/config.toml               # Listener + agent + dispatch config
 │   └── downstream-repos.toml             # Tracked inventory of downstream consumers

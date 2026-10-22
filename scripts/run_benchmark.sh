@@ -36,6 +36,14 @@ python3 "${REPO_ROOT}/scripts/report.py" "${JSON_OUT}" --out "${HTML_OUT}"
 
 ln -sf "$(basename "${HTML_OUT}")" "${RESULTS_DIR}/latest.html"
 
+# Retired models on warm and cold storage are benchmarked less often, on their
+# tier's cadence. Skipped quietly until storage tiers are configured.
+if [[ -f "${CREW_CHIEF_STORAGE_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/crew-chief/storage.toml}" ]]; then
+    echo "[run_benchmark] Benchmarking warm/cold models that are due"
+    PYTHONPATH="${REPO_ROOT}/src" python3 -m crew_chief storage bench-due ||
+        echo "[run_benchmark] warning: storage bench-due failed"
+fi
+
 echo "[run_benchmark] Done — ${JSON_OUT}"
 echo "[run_benchmark] Done — ${HTML_OUT}"
 echo "[run_benchmark] Symlink updated — ${RESULTS_DIR}/latest.html"

@@ -90,7 +90,9 @@ class ReviewTests(unittest.TestCase):
         errors, warnings = review(policy, pulled=["listed", "old", "new"], today=TODAY)
         self.assertEqual(errors, ["new: pulled in Ollama but missing from the serving policy"])
         self.assertIn("not-pulled: in the policy but not pulled", warnings)
-        self.assertIn("old: retired but still pulled", warnings)
+        self.assertIn(
+            "old: retired but still on hot storage; run `crew-chief storage apply`", warnings
+        )
 
 
 class CanonicalNameTests(unittest.TestCase):
