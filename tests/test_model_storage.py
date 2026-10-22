@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import unittest
 from datetime import date
 from pathlib import Path
@@ -48,51 +49,107 @@ class LayoutTests(unittest.TestCase):
     def setUp(self):
         self._tmp = TemporaryDirectory()
         root = Path(self._tmp.name)
-        self.hot, self.warm = root / "hot", root / "warm"
+        self.tiers = {t: root / t for t in ("hot", "warm", "cold")}
+        self.hot, self.warm, self.cold = (self.tiers[t] for t in ("hot", "warm", "cold"))
         _add_model(self.hot, "old:latest", {"c1": b"cfg", "w1": b"weights-old", "lic": b"license"})
         _add_model(self.hot, "keep:7b", {"c2": b"cfg2", "w2": b"weights-keep", "lic": b"license"})
 
     def tearDown(self):
         self._tmp.cleanup()
 
+    def blob(self, tier: Path, digest: str) -> Path:
+        return tier / "blobs" / f"sha256-{digest}"
+
     def test_list_models_names_library_models_like_ollama(self):
         self.assertEqual(ms.list_models(self.hot), ["keep:7b", "old:latest"])
         self.assertEqual(ms.list_models(self.warm), [])
 
-    def test_transfer_moves_own_blobs_and_copies_shared_ones(self):
-        freed = ms.transfer("old", self.hot, self.warm)
-        self.assertEqual(ms.list_models(self.hot), ["keep:7b"])
-        self.assertEqual(ms.list_models(self.warm), ["old:latest"])
-        self.assertFalse((self.hot / "blobs" / "sha256-w1").exists())
-        # The shared license blob stays for keep:7b and is copied to warm.
-        self.assertTrue((self.hot / "blobs" / "sha256-lic").exists())
-        self.assertEqual((self.warm / "blobs" / "sha256-lic").read_bytes(), b"license")
-        self.assertEqual((self.warm / "blobs" / "sha256-w1").read_bytes(), b"weights-old")
-        self.assertEqual(freed, len(b"cfg") + len(b"weights-old"))
-        self.assertFalse((self.hot / "manifests" / ms.REGISTRY / "library" / "old").exists())
-
-    def test_transfer_back_restores_the_model(self):
-        ms.transfer("old:latest", self.hot, self.warm)
-        ms.transfer("old:latest", self.warm, self.hot)
+    def test_moving_down_leaves_a_linked_stub_in_hot(self):
+        freed = ms.transfer("old", self.tiers, "hot", "warm")
+        # Ollama still lists it, and its own weights are now links into warm.
         self.assertEqual(ms.list_models(self.hot), ["keep:7b", "old:latest"])
+        self.assertEqual(ms.list_models(self.warm), ["old:latest"])
+        for digest in ("c1", "w1"):
+            hot_blob = self.blob(self.hot, digest)
+            self.assertTrue(hot_blob.is_symlink())
+            self.assertEqual(Path(os.readlink(hot_blob)), self.blob(self.warm, digest))
+        self.assertEqual(self.blob(self.hot, "w1").read_bytes(), b"weights-old")
+        # The license blob keep:7b uses stays a real file in hot.
+        self.assertFalse(self.blob(self.hot, "lic").is_symlink())
+        self.assertEqual(self.blob(self.warm, "lic").read_bytes(), b"license")
+        self.assertEqual(freed, len(b"cfg") + len(b"weights-old"))
+        self.assertTrue(ms.is_linked("old:latest", self.tiers, "warm"))
+        self.assertEqual(ms.resident(self.tiers), {"keep:7b"})
+
+    def test_moving_further_down_repoints_the_stub(self):
+        ms.transfer("old:latest", self.tiers, "hot", "warm")
+        freed = ms.transfer("old:latest", self.tiers, "warm", "cold")
         self.assertEqual(ms.list_models(self.warm), [])
         self.assertEqual(list((self.warm / "blobs").iterdir()), [])
+        self.assertEqual(Path(os.readlink(self.blob(self.hot, "w1"))), self.blob(self.cold, "w1"))
+        self.assertEqual(self.blob(self.hot, "w1").read_bytes(), b"weights-old")
+        self.assertEqual(freed, len(b"cfg") + len(b"weights-old") + len(b"license"))
+        self.assertEqual(ms.locate(self.tiers)["old:latest"], "cold")
+
+    def test_restoring_replaces_links_with_real_files(self):
+        ms.transfer("old:latest", self.tiers, "hot", "warm")
+        ms.transfer("old:latest", self.tiers, "warm", "hot")
+        self.assertEqual(ms.list_models(self.warm), [])
+        self.assertEqual(list((self.warm / "blobs").iterdir()), [])
+        for digest in ("c1", "w1", "lic"):
+            self.assertFalse(self.blob(self.hot, digest).is_symlink())
+        self.assertEqual(self.blob(self.hot, "w1").read_bytes(), b"weights-old")
+        self.assertEqual(ms.locate(self.tiers)["old:latest"], "hot")
 
     def test_transfer_of_missing_model_fails_without_changes(self):
         with self.assertRaises(ms.StorageError):
-            ms.transfer("ghost:1b", self.hot, self.warm)
+            ms.transfer("ghost:1b", self.tiers, "hot", "warm")
         self.assertFalse(self.warm.exists())
 
-    def test_delete_keeps_blobs_other_models_use(self):
-        ms.delete("old:latest", self.hot)
+    def test_delete_from_the_bottom_removes_the_stub_and_keeps_shared_blobs(self):
+        ms.transfer("old:latest", self.tiers, "hot", "cold")
+        ms.delete("old:latest", self.tiers, "cold")
         self.assertEqual(ms.list_models(self.hot), ["keep:7b"])
-        self.assertTrue((self.hot / "blobs" / "sha256-lic").exists())
-        self.assertFalse((self.hot / "blobs" / "sha256-w1").exists())
+        self.assertEqual(ms.list_models(self.cold), [])
+        self.assertFalse(
+            self.blob(self.hot, "w1").is_symlink() or self.blob(self.hot, "w1").exists()
+        )
+        self.assertEqual(self.blob(self.hot, "lic").read_bytes(), b"license")
+        self.assertEqual(list((self.cold / "blobs").iterdir()), [])
 
-    def test_locate_prefers_the_fastest_tier(self):
-        _add_model(self.warm, "old:latest", {"c1": b"cfg", "w1": b"weights-old"})
-        tiers = {"hot": self.hot, "warm": self.warm, "cold": Path(self._tmp.name) / "cold"}
-        self.assertEqual(ms.locate(tiers), {"keep:7b": "hot", "old:latest": "hot"})
+    def test_delete_of_a_hot_model_keeps_blobs_other_models_use(self):
+        ms.delete("old:latest", self.tiers, "hot")
+        self.assertEqual(ms.list_models(self.hot), ["keep:7b"])
+        self.assertTrue(self.blob(self.hot, "lic").exists())
+        self.assertFalse(self.blob(self.hot, "w1").exists())
+
+    def test_a_blob_linked_by_another_stub_survives_its_tier_cleanup(self):
+        # Two retired models share a weights blob; the first moves on to cold
+        # while the second still links to warm's copy.
+        _add_model(self.hot, "twin:latest", {"c3": b"cfg3", "w1": b"weights-old"})
+        ms.transfer("old:latest", self.tiers, "hot", "warm")
+        ms.transfer("twin:latest", self.tiers, "hot", "warm")
+        ms.transfer("old:latest", self.tiers, "warm", "cold")
+        self.assertEqual(self.blob(self.hot, "c3").read_bytes(), b"cfg3")
+        self.assertTrue(self.blob(self.warm, "w1").exists())
+
+    def test_repair_links_models_moved_without_stubs_and_finishes_moves(self):
+        # Moved before stubs existed: in warm, gone from hot.
+        _add_model(self.warm, "legacy:latest", {"c9": b"cfg9", "w9": b"weights-9"})
+        # Interrupted warm -> cold move: whole in both tiers.
+        ms.transfer("old:latest", self.tiers, "hot", "warm")
+        _add_model(self.cold, "old:latest", {"c1": b"cfg", "w1": b"weights-old", "lic": b"license"})
+        done = ms.repair(self.tiers)
+        self.assertIn("legacy:latest: linked into Ollama from warm", done)
+        self.assertIn("old:latest: removed leftover copy in warm", done)
+        self.assertTrue(ms.is_linked("legacy:latest", self.tiers, "warm"))
+        self.assertTrue(ms.is_linked("old:latest", self.tiers, "cold"))
+        self.assertNotIn("old:latest", ms.list_models(self.warm))
+        self.assertEqual(ms.repair(self.tiers), [])
+
+    def test_locate_reports_where_the_files_live(self):
+        ms.transfer("old:latest", self.tiers, "hot", "warm")
+        self.assertEqual(ms.locate(self.tiers), {"keep:7b": "hot", "old:latest": "warm"})
 
 
 class ConfigTests(unittest.TestCase):

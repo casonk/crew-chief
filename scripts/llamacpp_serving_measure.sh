@@ -60,7 +60,7 @@ trap 'podman stop -t 5 "$NAME" >/dev/null 2>&1' EXIT
 baseline="$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1)"
 podman run -d --name "$NAME" --rm "${gpu_args[@]}" \
     -e LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64 \
-    -v "$models_dir/blobs:/models:ro" -p "127.0.0.1:$PORT:8080" \
+    -v "$(readlink -f "$models_dir/blobs/$blob"):/models/$blob:ro" -p "127.0.0.1:$PORT:8080" \
     --entrypoint /app/llama-server "$IMAGE" \
     -m "/models/$blob" --alias "$model" --jinja -ngl 99 -c "$ctx" -fa on \
     -ctk "$kv" -ctv "$kv" --host 0.0.0.0 --port 8080 >/dev/null

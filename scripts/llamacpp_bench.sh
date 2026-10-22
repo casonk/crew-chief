@@ -122,7 +122,8 @@ for model in "${models[@]}"; do
     echo "== $model ($blob)"
     run=(podman run --rm "${gpu_args[@]}"
         -e "LD_LIBRARY_PATH=$CONTAINER_NVIDIA_LIB:/usr/local/cuda/lib64"
-        -v "$volume_dir/blobs:/models:ro"
+        # readlink: a model rotated to slower storage is a link in the volume.
+        -v "$(readlink -f "$volume_dir/blobs/$blob"):/models/$blob:ro"
         --entrypoint /app/llama-bench "$IMAGE"
         -m "/models/$blob" "${bench_args[@]}")
     printf '\n## %s\n\n' "$model" >>"$md_out"
