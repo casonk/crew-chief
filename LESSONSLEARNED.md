@@ -12,6 +12,42 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
+- **Historical test replay needs three independent checks.** Run the old suite
+  on the before commit (green), apply only selected tests from the after commit
+  to old source (red), and run the same suite at the after commit (green).
+  Withhold the reference source fix from the agent, stage injected tests before
+  scoring edits, and reject any agent change to tests or unapproved paths.
+  Report tool-use failures, agent errors, and timeouts separately from a
+  completed code edit that leaves tests failing.
+
+- **Probe each installed model tag for structured tool calls before a coding
+  sweep.** Use the same Ollama provider and a tiny tool schema, then check the
+  returned tool name and argument shape. Installed tags can return HTTP 400
+  for tool calling or a call with unusable arguments even when text inference
+  works. Record that capability separately from repair outcomes. For the
+  historical suite, prefer cases where later tests fail by assertion on old
+  source; import or collection errors are less precise behavioral evidence.
+
+- **Check authenticated HTML delivery after updating reports served by Caddy.**
+  The benchmark site needs `httpd_sys_content_t` on report files. Copying HTML
+  from `/tmp` with `cp -a` kept `user_tmp_t`, causing direct report URLs to
+  return 403 and the symlink index to fall back to directory browsing. Generate
+  in `results/` or run `restorecon` after staging, then verify the root and
+  latest report return HTTP 200 with `Content-Type: text/html`.
+
+- **Static benchmark links need a stable target and generator support.** The
+  benchmark site serves `results/` with `latest.html` as its index. When adding
+  another report type, link it from both report generators and update a stable
+  `*-latest.html` symlink after each run. Reports in `results/` are available to
+  everyone with site access, so write sensitive trials elsewhere with `--out`.
+
+- **Test-outcome benchmarks need a failing baseline in a disposable checkout.**
+  Keep the task patch and test command fixed across models. Verify that the
+  seeded failure is a completed test failure before starting an agent; score
+  the final suite and allowed file changes, not the model's written claim.
+  For this repo's local benchmark, expose only read, exact replacement, and
+  fixed test tools to the model, and keep JSON/HTML reports gitignored.
+
 - **CUDA GPU passthrough in rootless Podman requires six categories of host resources**: (1) device nodes (`/dev/nvidia0`, `/dev/nvidiactl`, `/dev/nvidia-uvm`, `/dev/nvidia-uvm-tools`, `/dev/nvidia-modeset`, `/dev/nvidia-caps/*`), (2) `--security-opt label=disable` for SELinux Enforcing hosts, (3) `--security-opt seccomp=unconfined` so CUDA ioctl syscalls are not blocked, (4) the driver API lib (`libcuda.so.1`), (5) the management lib (`libnvidia-ml.so.1`), and (6) the three CUDA runtime JIT/compiler libs that `libcuda.so.1` dlopen()s: `libnvidia-ptxjitcompiler.so.1`, `libnvidia-nvvm.so.4`, and `libnvidia-gpucomp.so.<version>`. Without categories 3 or 6 the GPU is detected and VRAM allocation succeeds but the first compute kernel crashes with "CUDA error: unknown error / exit status 2". Always resolve symlinks to the real versioned files before mounting (use `readlink -f`) to avoid dangling soname links inside the container.
 - **`libnvidia-gpucomp.so` has a version-specific soname** (e.g. `libnvidia-gpucomp.so.580.142`) with no `.so.1` alias, so it must be mounted under its full versioned basename; use a glob over the host lib dir to stay driver-version-agnostic.
 

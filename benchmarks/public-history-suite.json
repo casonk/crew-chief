@@ -1,0 +1,8 @@
+{
+  "cases": [
+    {"repo": "util-repos/crew-chief", "task": "tasks/history-cli-cwd.json"},
+    {"repo": "util-repos/crew-chief", "task": "tasks/history-service-reply.json"},
+    {"repo": "util-repos/archility", "task": "tasks/history-archility-shell-tools.json"},
+    {"repo": "util-repos/archility", "task": "tasks/history-archility-scaffold-newline.json"}
+  ]
+}

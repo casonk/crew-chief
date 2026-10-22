@@ -1,0 +1,11 @@
+diff --git a/src/crew_chief/client.py b/src/crew_chief/client.py
+--- a/src/crew_chief/client.py
++++ b/src/crew_chief/client.py
+@@ -37,6 +37,6 @@
+         model: str = DEFAULT_MODEL,
+         timeout: int = DEFAULT_TIMEOUT,
+     ) -> None:
+-        self.base_url = base_url.rstrip("/")
++        self.base_url = base_url.rstrip("x")
+         self.model = model
+         self.timeout = timeout

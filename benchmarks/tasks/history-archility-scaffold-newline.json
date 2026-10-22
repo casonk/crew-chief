@@ -1,0 +1,11 @@
+{
+  "name": "Archility scaffolds files with trailing newlines",
+  "prompt": "A newer test was added to an older archility checkout. Update scaffold generation so generated text files end with a newline, while preserving their content. Run the full suite. You may edit only src/archility/generate.py.",
+  "evolution": {
+    "before": "41b61cc9c9b447b2af06da4d13f71e769d1da4fe",
+    "after": "1e7fd0b3ec44b2e17dcdc709e0023966e4f2243e",
+    "test_paths": ["tests/test_generate.py"]
+  },
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/archility/generate.py"]
+}

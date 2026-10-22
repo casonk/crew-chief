@@ -1,0 +1,11 @@
+{
+  "name": "CLI providers accept a checkout working directory",
+  "prompt": "New provider tests were added to an older crew-chief checkout. Update the CLI provider implementation to accept a caller-supplied working directory, pass it to subprocess execution, and keep the existing sandbox behavior. Make the full test suite pass. You may edit only src/crew_chief/providers/cli.py.",
+  "evolution": {
+    "before": "080774008694fd281a80e5e07479d9ce7b85374a",
+    "after": "71f4753edaf39a20582dea9349d4529bbb77bee6",
+    "test_paths": ["tests/test_providers.py"]
+  },
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/crew_chief/providers/cli.py"]
+}
