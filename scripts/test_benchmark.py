@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import html
 import json
+import math
 import os
 import pathlib
 import re
@@ -23,6 +24,9 @@ import time
 import urllib.request
 import uuid
 from datetime import datetime, timezone
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
+from crew_chief.model_router import route_test_repair
 
 
 def run(command: list[str], cwd: pathlib.Path, timeout: int, prompt: str | None = None):
@@ -377,13 +381,14 @@ def benchmark_one(
 def render_html(report: dict) -> str:
     by_model: dict[str, list[dict]] = {}
     for item in report["results"]:
-        by_model.setdefault(item["model"], []).append(item)
+        label = ("routed: " if item.get("routing") else "fixed: ") + item["model"]
+        by_model.setdefault(label, []).append(item)
     summary_rows = []
     for model, trials in by_model.items():
         passes = [item for item in trials if item["status"] == "passed"]
         timeouts = sum(item["status"] == "timeout" for item in trials)
         errors = sum(item["status"] == "error" for item in trials)
-        profile = report.get("model_profiles", {}).get(model, {})
+        profile = report.get("model_profiles", {}).get(trials[0]["model"], {})
         median_time = (
             f"{statistics.median(item['agent_seconds'] for item in passes):.1f}" if passes else "—"
         )
@@ -399,6 +404,9 @@ def render_html(report: dict) -> str:
     for item in report["results"]:
         values = [
             item["model"],
+            item.get("routing", {}).get("router_model", "fixed"),
+            str(item.get("routing", {}).get("router_seconds", "—")),
+            item.get("routing", {}).get("fallback_reason") or "—",
             str(item["trial"]),
             item.get("repo", "—"),
             item["task"],
@@ -409,6 +417,7 @@ def render_html(report: dict) -> str:
             str(item.get("tool_calls", {})),
             str(item.get("agent_seconds", "—")),
             str(item.get("total_seconds", "—")),
+            str(item.get("end_to_end_seconds", "—")),
             item.get("error", "") or item.get("agent_note", ""),
         ]
         cells = "".join(f"<td>{html.escape(value)}</td>" for value in values)
@@ -467,9 +476,9 @@ the fixed test command to pass after an allowed code edit.</p>
 <th>Timeouts</th><th>Agent errors</th><th>Median agent seconds on passes</th></tr></thead><tbody>"""
         + "\n".join(summary_rows)
         + """</tbody></table><h2>Trial details</h2>
-<table><thead><tr><th>Model</th><th>Trial</th><th>Repository</th><th>Task</th><th>Outcome</th><th>Failure kind</th>
+<table><thead><tr><th>Model</th><th>Router</th><th>Route seconds</th><th>Fallback</th><th>Trial</th><th>Repository</th><th>Task</th><th>Outcome</th><th>Failure kind</th>
 <th>Baseline</th><th>Final tests</th><th>Tool calls</th><th>Agent seconds</th>
-<th>Total seconds</th><th>Note</th></tr></thead>
+<th>Trial seconds</th><th>Route + trial seconds</th><th>Note</th></tr></thead>
 <tbody>"""
         + "\n".join(rows)
         + "</tbody></table></html>"
@@ -485,12 +494,35 @@ def main() -> int:
     parser.add_argument("--models", nargs="+", required=True)
     parser.add_argument("--runs", type=int, default=1)
     parser.add_argument("--agent-timeout", type=int, default=300)
+    parser.add_argument("--router-model", help="local SystemOne model for experimental selection")
+    parser.add_argument("--router-fallback", help="eligible coding model used on uncertain routes")
+    parser.add_argument("--router-min-confidence", type=float, default=0.55)
+    parser.add_argument("--router-timeout", type=int, default=30)
+    parser.add_argument("--router-only", action="store_true", help="skip fixed-model trials")
+    parser.add_argument(
+        "--no-latest", action="store_true", help="keep existing latest report links"
+    )
     parser.add_argument("--test-timeout", type=int, default=180)
     parser.add_argument("--url", default="http://127.0.0.1:11434")
     parser.add_argument("--out", type=pathlib.Path)
     args = parser.parse_args()
     if args.agent_timeout < 1 or args.test_timeout < 1 or args.runs < 1:
         parser.error("timeouts and runs must be positive")
+    if args.router_only and not args.router_model:
+        parser.error("--router-only requires --router-model")
+    if args.router_model and (
+        len(set(args.models)) < 2
+        or len(set(args.models)) != len(args.models)
+        or not args.router_fallback
+        or args.router_fallback not in args.models
+    ):
+        parser.error("routing requires two distinct --models and an eligible --router-fallback")
+    if args.router_model and (
+        not math.isfinite(args.router_min_confidence)
+        or not 0 <= args.router_min_confidence <= 1
+        or args.router_timeout < 1
+    ):
+        parser.error("router confidence must be 0..1 and timeout must be positive")
     if args.suite:
         if args.repo or args.task or not args.portfolio_root:
             parser.error("--suite requires --portfolio-root and excludes --repo/--task")
@@ -503,10 +535,21 @@ def main() -> int:
     if len({task["name"] for _, _, task in cases}) != len(cases):
         parser.error("task names must be unique in one report")
     report = {
-        "schema_version": 2,
+        "schema_version": 3,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "agent_timeout_seconds": args.agent_timeout,
         "test_timeout_seconds": args.test_timeout,
+        "router": (
+            {
+                "model": args.router_model,
+                "fallback": args.router_fallback,
+                "min_confidence": args.router_min_confidence,
+                "timeout_seconds": args.router_timeout,
+                "routing_only": args.router_only,
+            }
+            if args.router_model
+            else None
+        ),
         "tasks": [],
         "case_reviews": [],
         "results": [],
@@ -564,7 +607,7 @@ def main() -> int:
                 }
             )
         for repo_name, repo, task in cases:
-            for model in args.models:
+            for model in [] if args.router_only else args.models:
                 for trial in range(1, args.runs + 1):
                     print(f"{model} trial {trial}: {task['name']} ...", flush=True)
                     result = benchmark_one(
@@ -582,6 +625,40 @@ def main() -> int:
                     print(
                         f"  {result['status']}: {result.get('error', result.get('final_counts', {}))}"
                     )
+            if args.router_model:
+                for trial in range(1, args.runs + 1):
+                    routing = route_test_repair(
+                        task=task,
+                        repo=repo_name,
+                        candidates=args.models,
+                        fallback=args.router_fallback,
+                        router_model=args.router_model,
+                        url=args.url,
+                        min_confidence=args.router_min_confidence,
+                        timeout=args.router_timeout,
+                        profiles=report.get("model_profiles"),
+                    )
+                    model = routing["selected_model"]
+                    print(f"routed to {model} trial {trial}: {task['name']} ...", flush=True)
+                    result = benchmark_one(
+                        repo,
+                        task["base_commit"],
+                        task,
+                        model,
+                        args.agent_timeout,
+                        args.test_timeout,
+                        args.url,
+                    )
+                    result["trial"] = trial
+                    result["repo"] = repo_name
+                    result["routing"] = routing
+                    result["end_to_end_seconds"] = round(
+                        routing["router_seconds"] + result.get("total_seconds", 0), 2
+                    )
+                    report["results"].append(result)
+                    print(
+                        f"  {result['status']}: {result.get('error', result.get('final_counts', {}))}"
+                    )
     out = args.out or pathlib.Path("results") / (
         "test-bench-" + datetime.now().strftime("%Y%m%d-%H%M%S") + ".json"
     )
@@ -589,7 +666,7 @@ def main() -> int:
     out.write_text(json.dumps(report, indent=2) + "\n")
     page = out.with_suffix(".html")
     page.write_text(render_html(report))
-    for artifact in (out, page):
+    for artifact in () if args.no_latest else (out, page):
         latest = artifact.with_name(f"test-bench-latest{artifact.suffix}")
         if artifact == latest:
             continue

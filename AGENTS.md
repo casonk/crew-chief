@@ -25,6 +25,7 @@ crew-chief/
 │   ├── serving_policy.py                  # Per-model backend policy: load, review, drift
 │   ├── model_storage.py                   # Storage tiers: rotate retired models hot→warm→cold
 │   ├── taskbench.py                       # Task-based decision benchmarks (choice/score/noul)
+│   ├── model_router.py                    # Bounded model selection for test-repair trials
 │   ├── agent.py                           # Agent — multi-step plan→act→observe loop
 │   ├── tools.py                           # Tool base class + ShellTool / ReadFileTool / WriteFileTool
 │   ├── providers/
@@ -42,7 +43,8 @@ crew-chief/
 │   ├── test_providers.py                  # Offline unit tests for OllamaProvider / AnthropicProvider
 │   ├── test_agent.py                      # Offline unit tests for Agent loop
 │   ├── test_tools.py                      # Unit tests for ShellTool / ReadFileTool / WriteFileTool
-│   └── test_test_benchmark.py             # Test-outcome benchmark isolation and scoring
+│   ├── test_test_benchmark.py             # Test-outcome benchmark isolation and scoring
+│   └── test_model_router.py                # Routing fallback and pre-run data boundary
 ├── scripts/
 │   ├── start.sh                           # Build image (if absent) + start container
 │   ├── stop.sh                            # Stop running container
