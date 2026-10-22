@@ -147,6 +147,15 @@ tokens), generating at ~55 tok/s. The model fixed the seeded bug but pasted
 the `Read` tool's line-number prefixes into the file, a model-quality
 failure to track in the coding benchmark.
 
+## Decision models (beta, alongside phase 3)
+
+Many workloads are bounded decisions, not generation. `crew-chief taskbench`
+scores models on task suites in the Jev question format (choice, score,
+yes/no), with runners for rules, Ollama, llama.cpp (constrained single-token
+answers with probabilities), and TypeSafe's hosted Jev as a reference. Next:
+held-out task data, a locally fine-tuned decision model, and per-task
+routing in the serving policy. See [task-benchmarks.md](task-benchmarks.md).
+
 ## Phase 4 — 2 × RTX 3090 with NVLink
 
 Target hardware for the current server. 48 GB across two cards opens up

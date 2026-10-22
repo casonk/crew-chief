@@ -23,6 +23,7 @@ crew-chief/
 │   ├── cli.py                             # CLI: generate / health / models / listen / agent / code
 │   ├── code_launcher.py                   # `crew-chief code`: Claude Code on a local backend
 │   ├── serving_policy.py                  # Per-model backend policy: load, review, drift
+│   ├── taskbench.py                       # Task-based decision benchmarks (choice/score/noul)
 │   ├── agent.py                           # Agent — multi-step plan→act→observe loop
 │   ├── tools.py                           # Tool base class + ShellTool / ReadFileTool / WriteFileTool
 │   ├── providers/
@@ -58,6 +59,7 @@ crew-chief/
     ├── continue-cli.md                    # Running the Continue CLI (`cn`) on local models
     ├── local-inference-roadmap.md         # Phased plan: frontends, backends, hardware
     ├── serving-policy.md                  # How backend decisions are made and changed
+    ├── task-benchmarks.md                 # Decision benchmarks, Jev, local fine-tuning path
     └── diagrams/
         ├── repo-architecture.puml
         └── repo-architecture.drawio
