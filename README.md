@@ -265,7 +265,8 @@ comparison. Run timing trials when the GPU is otherwise idle.
 
 An experimental local SystemOne model can choose among eligible coding models
 before each test repair. The router sees the task instructions, test command,
-selected test paths, editable paths, and candidate model profiles. It never
+selected test paths, added test names and assertion counts, old-source failure
+counts, editable paths, and candidate model profiles. It never
 receives the historical source fix or trial results. It falls back to the
 specified coding model if its answer is invalid, uncertain, or unavailable.
 
