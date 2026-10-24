@@ -126,6 +126,15 @@ systemctl --user enable --now ecu-gate.service   # from ecu
 
 An interactive caller that must not wait can send `X-ECU-Priority: interactive`.
 
+To roll back, stop the gate first so 11434 is free, then return the server to
+it (callers keep the same URL; full procedure in ecu's README):
+
+```bash
+systemctl --user disable --now ecu-gate.service
+scripts/install_ollama_systemd.sh --port 11434
+systemctl --user restart crew-chief-ollama.service
+```
+
 ## Continue CLI (`cn`)
 
 To use the local models as a coding agent through the Continue CLI, see
