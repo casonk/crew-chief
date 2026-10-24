@@ -28,7 +28,7 @@ clockwork and enable + start it by default.
 Options:
   --render-only         Write the unit file only; skip daemon-reload/enable/start.
   --port PORT           Host port for the container (default 11434). Use 11435
-                        behind the central-ecu LLM gate, which then serves 11434.
+                        behind an LLM admission gate, which then serves 11434.
   --unit-dir DIR        Override the target unit directory.
   --clockwork-repo PATH Override the sibling clockwork repo path fallback.
   --help                Show this help text.
