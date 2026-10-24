@@ -103,7 +103,7 @@ All settings are controlled through environment variables:
 | `CREW_CHIEF_URL` | `http://localhost:11434` | Ollama service base URL |
 | `CREW_CHIEF_MODEL` | `llama3.2` | Model to use for requests |
 | `CREW_CHIEF_TIMEOUT` | `60` | HTTP timeout in seconds |
-| `CREW_CHIEF_PORT` | `11434` | Host port for the container |
+| `CREW_CHIEF_PORT` | `11434` | Host port for the container (`11435` behind the ecu gate) |
 | `CREW_CHIEF_CONTAINER` | `crew-chief` | Podman container name |
 | `CREW_CHIEF_IMAGE` | `crew-chief:latest` | Podman image name |
 | `CREW_CHIEF_MODELS_VOLUME` | `crew-chief-models` | Volume for persisted model weights |
@@ -111,6 +111,29 @@ All settings are controlled through environment variables:
 | `CREW_CHIEF_CODE_CONTEXT` | `32768` | Context window `crew-chief code` reports to Claude Code |
 
 Copy `config/ollama/config.env.example` to `config/ollama/config.env` and adjust as needed.
+
+### Behind the ecu LLM gate
+
+On a machine where ecu arbitrates the GPU, run the container on
+`11435` and let `ecu gate` serve `11434`. Clients keep using
+`http://localhost:11434`; requests that run a model wait while live GPU work
+(a stream) is busy, and unloads, listings and pulls pass at once:
+
+```bash
+scripts/install_ollama_systemd.sh --port 11435
+systemctl --user enable --now ecu-gate.service   # from ecu
+```
+
+An interactive caller that must not wait can send `X-ECU-Priority: interactive`.
+
+To roll back, stop the gate first so 11434 is free, then return the server to
+it (callers keep the same URL; full procedure in ecu's README):
+
+```bash
+systemctl --user disable --now ecu-gate.service
+scripts/install_ollama_systemd.sh --port 11434
+systemctl --user restart crew-chief-ollama.service
+```
 
 ## Continue CLI (`cn`)
 

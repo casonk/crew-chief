@@ -16,6 +16,7 @@ UNIT_TARGET_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
 CLOCKWORK_REPO_DEFAULT="${REPO_ROOT}/../clockwork"
 CLOCKWORK_REPO="${CLOCKWORK_REPO:-${CLOCKWORK_REPO_DEFAULT}}"
 RENDER_ONLY=0
+PORT=11434
 
 usage() {
   cat <<EOF
@@ -26,6 +27,8 @@ clockwork and enable + start it by default.
 
 Options:
   --render-only         Write the unit file only; skip daemon-reload/enable/start.
+  --port PORT           Host port for the container (default 11434). Use 11435
+                        behind the ecu LLM gate, which then serves 11434.
   --unit-dir DIR        Override the target unit directory.
   --clockwork-repo PATH Override the sibling clockwork repo path fallback.
   --help                Show this help text.
@@ -51,6 +54,10 @@ while [[ $# -gt 0 ]]; do
       UNIT_TARGET_DIR="$2"
       shift 2
       ;;
+    --port)
+      PORT="$2"
+      shift 2
+      ;;
     --clockwork-repo)
       CLOCKWORK_REPO="$2"
       shift 2
@@ -65,6 +72,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+[[ "${PORT}" =~ ^[0-9]+$ ]] && (( PORT > 0 && PORT < 65536 )) || fail "invalid --port: ${PORT}"
 command -v python3 >/dev/null 2>&1 || fail "python3 not found"
 command -v podman  >/dev/null 2>&1 || fail "podman not found"
 [[ -f "${TEMPLATE_PATH}" ]] || fail "missing template: ${TEMPLATE_PATH}"
@@ -87,6 +95,7 @@ trap 'rm -f "${TMP_MANIFEST}"' EXIT
 
 sed \
   -e "s|__REPO_ROOT__|$(escape_sed_replacement "${REPO_ROOT}")|g" \
+  -e "s|__PORT__|${PORT}|g" \
   "${TEMPLATE_PATH}" > "${TMP_MANIFEST}"
 
 "${CLOCKWORK_CMD[@]}" install \
