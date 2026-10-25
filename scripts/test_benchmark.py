@@ -434,7 +434,8 @@ def render_html(report: dict) -> str:
         history_html = (
             "<h2>Historical case review</h2><p>Only the selected later tests were applied "
             "to the old checkout. The reference source change was withheld from agents.</p>"
-            "<table><thead><tr><th>Repository</th><th>Case</th><th>Before</th><th>Old suite</th>"
+            "<table><thead><tr><th>Repository</th>"
+            "<th>Case</th><th>Before</th><th>Old suite</th>"
             "<th>New tests on old source</th><th>After</th><th>Reference suite</th>"
             "<th>Selected test files</th><th>Reference source files</th></tr></thead><tbody>"
             + "\n".join(history_rows)
@@ -444,7 +445,10 @@ def render_html(report: dict) -> str:
         """<!doctype html><html lang="en"><meta charset="utf-8">
 <title>Test-based model benchmark</title><style>
 body{font:16px system-ui;max-width:1200px;margin:2rem auto;padding:0 1rem;color:#202b38}
+.trial-scroll{max-width:100%;overflow-x:auto;margin:1rem 0}
 table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border:1px solid #cad2dc;padding:.55rem;text-align:left}
+.trial-table{width:100%;min-width:1100px;table-layout:fixed}
+.trial-table th,.trial-table td{overflow-wrap:anywhere;vertical-align:top}
 th{background:#e8eef5}.passed{background:#e4f6e9}.failed{background:#fff0e8}.error{background:#ffe5e5}.timeout{background:#fff3cd}
 code{background:#edf2f7;padding:.1rem .3rem}small{color:#526171}
 nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.3rem}
@@ -467,12 +471,16 @@ the fixed test command to pass after an allowed code edit.</p>
 <th>Timeouts</th><th>Agent errors</th><th>Median agent seconds on passes</th></tr></thead><tbody>"""
         + "\n".join(summary_rows)
         + """</tbody></table><h2>Trial details</h2>
-<table><thead><tr><th>Model</th><th>Trial</th><th>Repository</th><th>Task</th><th>Outcome</th><th>Failure kind</th>
+<div class='trial-scroll'><table class='trial-table'><colgroup>
+<col style='width:8%'><col style='width:4%'><col style='width:9%'><col style='width:12%'>
+<col style='width:6%'><col style='width:8%'><col style='width:7%'><col style='width:7%'>
+<col style='width:7%'><col style='width:5%'><col style='width:5%'><col style='width:22%'>
+</colgroup><thead><tr><th>Model</th><th>Trial</th><th>Repository</th><th>Task</th><th>Outcome</th><th>Failure kind</th>
 <th>Baseline</th><th>Final tests</th><th>Tool calls</th><th>Agent seconds</th>
 <th>Total seconds</th><th>Note</th></tr></thead>
 <tbody>"""
         + "\n".join(rows)
-        + "</tbody></table></html>"
+        + "</tbody></table></div></html>"
     )
 
 

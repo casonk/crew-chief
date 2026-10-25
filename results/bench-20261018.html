@@ -31,6 +31,8 @@ p.meta { color: #6c757d; font-size: 0.85rem; margin-bottom: 1.2rem; }
 
 /* ── Tables ── */
 table { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin-bottom: 1rem; }
+.table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-scroll table { min-width: 560px; }
 th, td { padding: 0.4rem 0.6rem; border: 1px solid #dee2e6; text-align: right; }
 th { background: #e9ecef; font-weight: 600; }
 td.model-name { text-align: left; font-family: monospace; white-space: nowrap; }
@@ -53,7 +55,7 @@ td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
 .bar-row { display: flex; align-items: center; margin: 3px 0; gap: 8px; }
 .bar-model { width: 220px; font-family: monospace; font-size: 0.78rem;
              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bar-track { flex: 1; background: #e9ecef; border-radius: 3px; height: 18px; position: relative; }
+.bar-track { flex: 1; min-width: 0; background: #e9ecef; border-radius: 3px; height: 18px; position: relative; }
 .bar-fill  { height: 100%; border-radius: 3px; min-width: 2px;
              display: flex; align-items: center; padding-left: 5px; }
 .bar-fill span { color: white; font-size: 0.72rem; white-space: nowrap; }
@@ -67,6 +69,18 @@ td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
 /* ── Section spacing ── */
 .section { background: white; border: 1px solid #dee2e6; border-radius: 8px;
            padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+
+@media (max-width: 640px) {
+  body { padding: 1rem 0.75rem; }
+  h1 { font-size: 1.35rem; }
+  .section { min-width: 0; padding: 1rem 0.75rem; }
+  .bar-row { gap: 6px; min-width: 0; }
+  .bar-model { width: min(38vw, 140px); flex: 0 0 min(38vw, 140px); font-size: 0.68rem; }
+  .bar-val { width: 52px; flex: 0 0 52px; font-size: 0.68rem; }
+  .bar-fill span { font-size: 0.62rem; }
+  .trend-grid { grid-template-columns: minmax(0, 1fr); }
+  .trend-card { min-width: 0; padding: 0.75rem; }
+}
 </style>
 </head>
 <body>
@@ -83,7 +97,7 @@ td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
   <span class="badge badge-date">13 models &middot; 4 prompts</span>
   <span class="badge badge-warn">thinking models: TTFT includes internal reasoning tokens</span>
 </p>
-<div class="section"><h2>Throughput — tokens / second</h2><p>Higher is faster. Colour bands: <span class="badge tps-vhigh">≥200</span> <span class="badge tps-high">≥100</span> <span class="badge tps-mid">≥30</span> <span class="badge tps-low">&lt;30</span></p><table>
+<div class="section"><h2>Throughput — tokens / second</h2><p>Higher is faster. Colour bands: <span class="badge tps-vhigh">≥200</span> <span class="badge tps-high">≥100</span> <span class="badge tps-mid">≥30</span> <span class="badge tps-low">&lt;30</span></p><div class="table-scroll"><table>
 <thead><tr>
 <th>Model</th><th>Tier</th>
 <th>latency</th>
@@ -195,7 +209,7 @@ td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
 <td class="tps-low">6.4</td>
 <td class="tps-low">6.9</td>
 </tr>
-</tbody></table></div><div class="section"><h2>Time to First Token (TTFT)</h2><p>For thinking models this includes internal reasoning before the first visible token. Colour bands: <span class="badge ttft-fast">&lt;500 ms</span> <span class="badge ttft-ok">&lt;10 s</span> <span class="badge ttft-slow">≥10 s</span></p><table>
+</tbody></table></div></div><div class="section"><h2>Time to First Token (TTFT)</h2><p>For thinking models this includes internal reasoning before the first visible token. Colour bands: <span class="badge ttft-fast">&lt;500 ms</span> <span class="badge ttft-ok">&lt;10 s</span> <span class="badge ttft-slow">≥10 s</span></p><div class="table-scroll"><table>
 <thead><tr>
 <th>Model</th><th>Tier</th>
 <th>latency</th>
@@ -307,7 +321,7 @@ td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
 <td class="ttft-slow">4.4 min</td>
 <td class="ttft-slow">1.1 min</td>
 </tr>
-</tbody></table></div><div class="section"><h2>Charts</h2><h3>Throughput — latency</h3>
+</tbody></table></div></div><div class="section"><h2>Charts</h2><h3>Throughput — latency</h3>
 <div class="chart">
 <div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#2980b9"><span>358 tok/s</span></div></div><div class="bar-val">358.0</div></div>
 <div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:74%;background:#2980b9"><span>268 tok/s</span></div></div><div class="bar-val">267.7</div></div>

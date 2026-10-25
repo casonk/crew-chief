@@ -96,6 +96,8 @@ p.meta { color: #6c757d; font-size: 0.85rem; margin-bottom: 1.2rem; }
 
 /* ── Tables ── */
 table { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin-bottom: 1rem; }
+.table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-scroll table { min-width: 560px; }
 th, td { padding: 0.4rem 0.6rem; border: 1px solid #dee2e6; text-align: right; }
 th { background: #e9ecef; font-weight: 600; }
 td.model-name { text-align: left; font-family: monospace; white-space: nowrap; }
@@ -118,7 +120,7 @@ td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
 .bar-row { display: flex; align-items: center; margin: 3px 0; gap: 8px; }
 .bar-model { width: 220px; font-family: monospace; font-size: 0.78rem;
              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bar-track { flex: 1; background: #e9ecef; border-radius: 3px; height: 18px; position: relative; }
+.bar-track { flex: 1; min-width: 0; background: #e9ecef; border-radius: 3px; height: 18px; position: relative; }
 .bar-fill  { height: 100%; border-radius: 3px; min-width: 2px;
              display: flex; align-items: center; padding-left: 5px; }
 .bar-fill span { color: white; font-size: 0.72rem; white-space: nowrap; }
@@ -132,6 +134,18 @@ td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
 /* ── Section spacing ── */
 .section { background: white; border: 1px solid #dee2e6; border-radius: 8px;
            padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+
+@media (max-width: 640px) {
+  body { padding: 1rem 0.75rem; }
+  h1 { font-size: 1.35rem; }
+  .section { min-width: 0; padding: 1rem 0.75rem; }
+  .bar-row { gap: 6px; min-width: 0; }
+  .bar-model { width: min(38vw, 140px); flex: 0 0 min(38vw, 140px); font-size: 0.68rem; }
+  .bar-val { width: 52px; flex: 0 0 52px; font-size: 0.68rem; }
+  .bar-fill span { font-size: 0.62rem; }
+  .trend-grid { grid-template-columns: minmax(0, 1fr); }
+  .trend-card { min-width: 0; padding: 0.75rem; }
+}
 """
 
 
@@ -171,7 +185,7 @@ def _bar_color(model: str) -> str:
 
 
 def _throughput_table(models: list[str], pt: dict[str, dict[str, dict]], prompts: list[str]) -> str:
-    rows = ["<table>", "<thead><tr>"]
+    rows = ['<div class="table-scroll"><table>', "<thead><tr>"]
     rows.append("<th>Model</th><th>Tier</th>")
     for p in prompts:
         rows.append(f"<th>{p}</th>")
@@ -191,12 +205,12 @@ def _throughput_table(models: list[str], pt: dict[str, dict[str, dict]], prompts
                 tps = r["tokens_per_sec"]
                 rows.append(f'<td class="{_tps_class(tps)}">{tps:.1f}</td>')
         rows.append("</tr>")
-    rows.append("</tbody></table>")
+    rows.append("</tbody></table></div>")
     return "\n".join(rows)
 
 
 def _ttft_table(models: list[str], pt: dict[str, dict[str, dict]], prompts: list[str]) -> str:
-    rows = ["<table>", "<thead><tr>"]
+    rows = ['<div class="table-scroll"><table>', "<thead><tr>"]
     rows.append("<th>Model</th><th>Tier</th>")
     for p in prompts:
         rows.append(f"<th>{p}</th>")
@@ -216,7 +230,7 @@ def _ttft_table(models: list[str], pt: dict[str, dict[str, dict]], prompts: list
                 ms = r["ttft_ms"]
                 rows.append(f'<td class="{_ttft_class(ms)}">{_fmt_ttft(ms)}</td>')
         rows.append("</tr>")
-    rows.append("</tbody></table>")
+    rows.append("</tbody></table></div>")
     return "\n".join(rows)
 
 
