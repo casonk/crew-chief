@@ -1,17 +1,20 @@
-@startuml packages_crew-chief
+@startuml packages_checkout
 set namespaceSeparator none
 top to bottom direction
 skinparam componentStyle rectangle
 rectangle "benchmark\n1 python file" as benchmark
-rectangle "crew_chief\n1 child pkg, 10 modules\n18 python files\nexamples: __main__, agent, cli" as crew_chief
+rectangle "crew_chief\n1 child pkg, 15 modules\n23 python files\nexamples: __main__, agent, cli" as crew_chief
 rectangle "crew_chief.__main__\n1 python file" as crew_chief.__main__
 rectangle "crew_chief.agent\n1 python file" as crew_chief.agent
 rectangle "crew_chief.cli\n1 python file" as crew_chief.cli
 rectangle "crew_chief.client\n1 python file" as crew_chief.client
+rectangle "crew_chief.code_launcher\n1 python file" as crew_chief.code_launcher
 rectangle "crew_chief.config_loader\n1 python file" as crew_chief.config_loader
 rectangle "crew_chief.dispatcher\n1 python file" as crew_chief.dispatcher
+rectangle "crew_chief.gguf_sources\n1 python file" as crew_chief.gguf_sources
 rectangle "crew_chief.listener\n1 python file" as crew_chief.listener
 rectangle "crew_chief.model_output_utils\n1 python file" as crew_chief.model_output_utils
+rectangle "crew_chief.model_storage\n1 python file" as crew_chief.model_storage
 rectangle "crew_chief.prompt_utils\n1 python file" as crew_chief.prompt_utils
 rectangle "crew_chief.providers\n0 child pkg, 6 modules\n7 python files\nexamples: anthropic, base, cli" as crew_chief.providers
 rectangle "crew_chief.providers.anthropic\n1 python file" as crew_chief.providers.anthropic
@@ -20,7 +23,10 @@ rectangle "crew_chief.providers.cli\n1 python file" as crew_chief.providers.cli
 rectangle "crew_chief.providers.ollama\n1 python file" as crew_chief.providers.ollama
 rectangle "crew_chief.providers.openai\n1 python file" as crew_chief.providers.openai
 rectangle "crew_chief.providers.prompt_utils\n1 python file" as crew_chief.providers.prompt_utils
+rectangle "crew_chief.serving_policy\n1 python file" as crew_chief.serving_policy
+rectangle "crew_chief.taskbench\n1 python file" as crew_chief.taskbench
 rectangle "crew_chief.tools\n1 python file" as crew_chief.tools
+rectangle "engine_matrix\n1 python file" as engine_matrix
 rectangle "report\n1 python file" as report
 rectangle "test_benchmark\n1 python file" as test_benchmark
 rectangle "test_benchmark_agent\n1 python file" as test_benchmark_agent
@@ -31,24 +37,33 @@ crew_chief --> crew_chief.tools
 crew_chief.__main__ --> crew_chief.cli
 crew_chief.agent --> crew_chief.model_output_utils
 crew_chief.agent --> crew_chief.providers.base
+crew_chief.cli --> crew_chief
 crew_chief.cli --> crew_chief.agent
 crew_chief.cli --> crew_chief.client
+crew_chief.cli --> crew_chief.code_launcher
 crew_chief.cli --> crew_chief.config_loader
 crew_chief.cli --> crew_chief.dispatcher
+crew_chief.cli --> crew_chief.gguf_sources
 crew_chief.cli --> crew_chief.listener
+crew_chief.cli --> crew_chief.model_storage
 crew_chief.cli --> crew_chief.providers
 crew_chief.cli --> crew_chief.providers.anthropic
 crew_chief.cli --> crew_chief.providers.cli
 crew_chief.cli --> crew_chief.providers.ollama
 crew_chief.cli --> crew_chief.providers.openai
+crew_chief.cli --> crew_chief.serving_policy
+crew_chief.cli --> crew_chief.taskbench
 crew_chief.cli --> crew_chief.tools
 crew_chief.client --> crew_chief.prompt_utils
+crew_chief.code_launcher --> crew_chief.serving_policy
+crew_chief.gguf_sources --> crew_chief.serving_policy
 crew_chief.listener --> crew_chief.agent
 crew_chief.listener --> crew_chief.client
 crew_chief.listener --> crew_chief.config_loader
 crew_chief.listener --> crew_chief.dispatcher
 crew_chief.listener --> crew_chief.providers
 crew_chief.listener --> crew_chief.tools
+crew_chief.model_storage --> crew_chief.serving_policy
 crew_chief.providers --> crew_chief.providers.anthropic
 crew_chief.providers --> crew_chief.providers.base
 crew_chief.providers --> crew_chief.providers.cli
@@ -65,6 +80,9 @@ crew_chief.providers.openai --> crew_chief.providers.prompt_utils
 crew_chief.providers.prompt_utils --> crew_chief.prompt_utils
 crew_chief.tools --> crew_chief.dispatcher
 crew_chief.tools --> crew_chief.providers.base
+engine_matrix --> crew_chief
+engine_matrix --> crew_chief.gguf_sources
+engine_matrix --> crew_chief.model_storage
 test_benchmark_agent --> crew_chief.agent
 test_benchmark_agent --> crew_chief.providers.ollama
 test_benchmark_agent --> crew_chief.tools

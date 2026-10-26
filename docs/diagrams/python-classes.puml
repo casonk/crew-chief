@@ -1,5 +1,12 @@
-@startuml classes_crew-chief
+@startuml classes_checkout
 set namespaceSeparator none
+class "Action" as crew_chief.model_storage.Action {
+  kind : str
+  model : str
+  reason : str
+  source : str
+  target : str | None
+}
 class "Agent" as crew_chief.agent.Agent {
   confidence_threshold : float
   last_used_model : str
@@ -24,6 +31,10 @@ class "AgentConfig" as crew_chief.config_loader.AgentConfig {
   system_prompt : str
   timeout_seconds : int
   tools : list[str]
+}
+class "Answer" as crew_chief.taskbench.Answer {
+  probabilities : dict[str, float] | None
+  value : str | None
 }
 class "AnthropicProvider" as crew_chief.providers.anthropic.AnthropicProvider {
   api_key : str
@@ -113,6 +124,14 @@ class "FallbackProvider" as crew_chief.providers.FallbackProvider {
   chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
   generate(prompt: str) -> str
 }
+class "GgufSource" as crew_chief.gguf_sources.GgufSource {
+  bytes : int
+  file : str
+  model : str
+  repo : str
+  sha256 : str
+  url : str
+}
 class "GmailConfig" as crew_chief.config_loader.GmailConfig {
   config_path : str
   enabled : bool
@@ -131,6 +150,10 @@ class "IncomingMessage" as crew_chief.listener.IncomingMessage {
   subject : str
   text : str
 }
+class "JevRunner" as crew_chief.taskbench.JevRunner {
+}
+class "<color:red>LaunchError</color>" as crew_chief.code_launcher.LaunchError {
+}
 class "ListenerConfig" as crew_chief.config_loader.ListenerConfig {
   agent
   dispatch
@@ -139,6 +162,13 @@ class "ListenerConfig" as crew_chief.config_loader.ListenerConfig {
   max_replies_per_cycle : int
   poll_interval_seconds : int
   signal
+}
+class "LlamaCppRunner" as crew_chief.taskbench.LlamaCppRunner {
+  model
+  name : str
+  url : str
+  answer(task: Task, state: str) -> dict[str, Answer]
+  letters(question: Question) -> list[str]
 }
 class "LlmConfig" as crew_chief.config_loader.LlmConfig {
   anthropic_api_key_auto_pass_entry : str
@@ -165,6 +195,18 @@ class "<color:red>LowConfidenceError</color>" as crew_chief.agent.LowConfidenceE
   confidence
   content
 }
+class "ModelPolicy" as crew_chief.serving_policy.ModelPolicy {
+  backend : str
+  context : int | None
+  evidence : tuple[str, ...]
+  flash_attention : bool
+  gpu_mib : int | None
+  kv_cache : str
+  name : str
+  note : str
+  reviewed : str
+  status : str
+}
 class "OllamaProvider" as crew_chief.providers.ollama.OllamaProvider {
   base_url : str
   model : str
@@ -174,6 +216,13 @@ class "OllamaProvider" as crew_chief.providers.ollama.OllamaProvider {
   generate(prompt: str) -> str
   health() -> bool
   list_models() -> list[str]
+}
+class "OllamaRunner" as crew_chief.taskbench.OllamaRunner {
+  model
+  name : str
+  url : str
+  answer(task: Task, state: str) -> dict[str, Answer]
+  schema(task: Task) -> dict
 }
 class "OpenAIProvider" as crew_chief.providers.openai.OpenAIProvider {
   api_key : str
@@ -185,11 +234,21 @@ class "OpenAIProvider" as crew_chief.providers.openai.OpenAIProvider {
   chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
   generate(prompt: str) -> str
 }
+class "<color:red>PolicyError</color>" as crew_chief.serving_policy.PolicyError {
+}
 class "Provider" as crew_chief.providers.base.Provider {
   chat(messages: list[dict[str, Any]], tools: list[ToolParam] | None, system: str | None) -> ChatResult
   generate(prompt: str) -> str
 }
 class "<color:red>ProviderUnavailableError</color>" as crew_chief.providers.base.ProviderUnavailableError {
+}
+class "Question" as crew_chief.taskbench.Question {
+  criteria : Optional[Any]
+  instructions : str
+  labels : list[str]
+  qid : str
+  type : str
+  describe() -> list[str]
 }
 class "ReadFileTool" as crew_chief.tools.ReadFileTool {
   allowed_paths : list
@@ -215,6 +274,11 @@ class "ReplaceText" as test_benchmark_agent.ReplaceText {
   root : Path
   execute(arguments: dict) -> str
 }
+class "RulesRunner" as crew_chief.taskbench.RulesRunner {
+  name : str
+  rules
+  answer(task: Task, state: str) -> dict[str, Answer]
+}
 class "RunTests" as test_benchmark_agent.RunTests {
   calls : dict[str, int]
   command : list[str]
@@ -224,6 +288,13 @@ class "RunTests" as test_benchmark_agent.RunTests {
   root : Path
   timeout : int
   execute(arguments: dict) -> str
+}
+class "ServingPolicy" as crew_chief.serving_policy.ServingPolicy {
+  backend_urls : dict[str, str]
+  models : dict[str, ModelPolicy]
+  rotation : dict[str, TierRule]
+  get(model: str) -> ModelPolicy | None
+  url_for(backend: str) -> str
 }
 class "ShellTool" as crew_chief.tools.ShellTool {
   description : str
@@ -238,6 +309,32 @@ class "SignalConfig" as crew_chief.config_loader.SignalConfig {
   reply_to : str
   shock_relay_dir : str
   trusted_senders : list[str]
+}
+class "<color:red>SourceError</color>" as crew_chief.gguf_sources.SourceError {
+}
+class "<color:red>StorageError</color>" as crew_chief.model_storage.StorageError {
+}
+class "SystemOneRunner" as crew_chief.taskbench.SystemOneRunner {
+  api_key : str
+  model
+  name : str
+  url
+  answer(task: Task, state: str) -> dict[str, Answer]
+  request(task: Task, state: str) -> dict
+}
+class "Task" as crew_chief.taskbench.Task {
+  baseline : dict[str, Any]
+  description : str
+  items : list[dict[str, Any]]
+  name : str
+  questions : dict[str, Question]
+}
+class "<color:red>TaskError</color>" as crew_chief.taskbench.TaskError {
+}
+class "TierRule" as crew_chief.serving_policy.TierRule {
+  bench_every_days : int
+  delete_after_days : int | None
+  demote_after_days : int | None
 }
 class "Tool" as crew_chief.tools.Tool {
   description : str
@@ -263,6 +360,7 @@ class "WriteFileTool" as crew_chief.tools.WriteFileTool {
   parameters : dict
   execute(arguments: dict[str, Any]) -> str
 }
+crew_chief.taskbench.JevRunner --|> crew_chief.taskbench.SystemOneRunner
 crew_chief.tools.ReadFileTool --|> crew_chief.tools.Tool
 crew_chief.tools.ShellTool --|> crew_chief.tools.Tool
 crew_chief.tools.WriteFileTool --|> crew_chief.tools.Tool
