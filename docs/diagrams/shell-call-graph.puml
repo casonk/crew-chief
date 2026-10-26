@@ -1,18 +1,20 @@
 @startuml
-title crew-chief Shell Script Flow
+title checkout Shell Script Flow
 left to right direction
 skinparam shadowing false
 skinparam defaultFontName Monospace
 skinparam componentStyle rectangle
 skinparam linetype ortho
 rectangle "bootstrap.sh\n0 local shell edges\n2 external tools" as shell_bootstrap_sh #DBEAFE
-rectangle "scripts/install_listener_systemd.sh\n0 local shell edges\n5 external tools" as shell_scripts_install_listener_systemd_sh #DBEAFE
-rectangle "scripts/install_ollama_systemd.sh\n0 local shell edges\n6 external tools" as shell_scripts_install_ollama_systemd_sh #DBEAFE
+rectangle "scripts/install_listener_systemd.sh\n0 local shell edges\n6 external tools" as shell_scripts_install_listener_systemd_sh #DBEAFE
+rectangle "scripts/install_ollama_systemd.sh\n0 local shell edges\n7 external tools" as shell_scripts_install_ollama_systemd_sh #DBEAFE
+rectangle "scripts/llamacpp_bench.sh\n0 local shell edges\n8 external tools" as shell_scripts_llamacpp_bench_sh #DBEAFE
+rectangle "scripts/llamacpp_serving_measure.sh\n0 local shell edges\n6 external tools" as shell_scripts_llamacpp_serving_measure_sh #DBEAFE
 rectangle "scripts/pull_model.sh\n0 local shell edges\n0 external tools" as shell_scripts_pull_model_sh #DBEAFE
-rectangle "scripts/run_benchmark.sh\n0 local shell edges\n4 external tools" as shell_scripts_run_benchmark_sh #DBEAFE
+rectangle "scripts/run_benchmark.sh\n0 local shell edges\n5 external tools" as shell_scripts_run_benchmark_sh #DBEAFE
 rectangle "scripts/run_listener.sh\n0 local shell edges\n0 external tools" as shell_scripts_run_listener_sh #DBEAFE
-rectangle "scripts/run_ollama.sh\n0 local shell edges\n1 external tool" as shell_scripts_run_ollama_sh #DBEAFE
-rectangle "scripts/run_tachometer_profile.sh\n0 local shell edges\n3 external tools" as shell_scripts_run_tachometer_profile_sh #DBEAFE
+rectangle "scripts/run_ollama.sh\n0 local shell edges\n5 external tools" as shell_scripts_run_ollama_sh #DBEAFE
+rectangle "scripts/run_tachometer_profile.sh\n0 local shell edges\n1 external tool" as shell_scripts_run_tachometer_profile_sh #DBEAFE
 rectangle "scripts/start.sh\n0 local shell edges\n2 external tools" as shell_scripts_start_sh #DBEAFE
 rectangle "scripts/start_listener.sh\n0 local shell edges\n2 external tools" as shell_scripts_start_listener_sh #DBEAFE
 rectangle "scripts/status.sh\n0 local shell edges\n1 external tool" as shell_scripts_status_sh #DBEAFE
@@ -21,8 +23,12 @@ rectangle "scripts/stop_listener.sh\n0 local shell edges\n1 external tool" as sh
 cloud "cat" as tool_cat #FEF3C7
 cloud "chmod" as tool_chmod #FEF3C7
 cloud "crew_chief" as tool_crew_chief #FEF3C7
+cloud "from" as tool_from #FEF3C7
 cloud "grep" as tool_grep #FEF3C7
+cloud "import" as tool_import #FEF3C7
 cloud "inspect" as tool_inspect #FEF3C7
+cloud "json,sys" as tool_json_sys #FEF3C7
+cloud "layers" as tool_layers #FEF3C7
 cloud "ln" as tool_ln #FEF3C7
 cloud "loginctl" as tool_loginctl #FEF3C7
 cloud "mkdir" as tool_mkdir #FEF3C7
@@ -31,29 +37,51 @@ cloud "python3" as tool_python3 #FEF3C7
 cloud "rm" as tool_rm #FEF3C7
 cloud "run" as tool_run #FEF3C7
 cloud "sed" as tool_sed #FEF3C7
-cloud "summarize" as tool_summarize #FEF3C7
+cloud "sleep" as tool_sleep #FEF3C7
 cloud "systemctl" as tool_systemctl #FEF3C7
 cloud "tachometer" as tool_tachometer #FEF3C7
+cloud "tail" as tool_tail #FEF3C7
+cloud "tee" as tool_tee #FEF3C7
+cloud "tiers" as tool_tiers #FEF3C7
 shell_bootstrap_sh --> tool_cat
 shell_bootstrap_sh --> tool_sed
 shell_scripts_install_listener_systemd_sh --> tool_cat
 shell_scripts_install_listener_systemd_sh --> tool_grep
 shell_scripts_install_listener_systemd_sh --> tool_loginctl
 shell_scripts_install_listener_systemd_sh --> tool_mkdir
+shell_scripts_install_listener_systemd_sh --> tool_sed
 shell_scripts_install_listener_systemd_sh --> tool_systemctl
 shell_scripts_install_ollama_systemd_sh --> tool_cat
 shell_scripts_install_ollama_systemd_sh --> tool_chmod
 shell_scripts_install_ollama_systemd_sh --> tool_grep
 shell_scripts_install_ollama_systemd_sh --> tool_loginctl
 shell_scripts_install_ollama_systemd_sh --> tool_mkdir
+shell_scripts_install_ollama_systemd_sh --> tool_sed
 shell_scripts_install_ollama_systemd_sh --> tool_systemctl
+shell_scripts_llamacpp_bench_sh --> tool_grep
+shell_scripts_llamacpp_bench_sh --> tool_mkdir
+shell_scripts_llamacpp_bench_sh --> tool_python3
+shell_scripts_llamacpp_bench_sh --> tool_rm
+shell_scripts_llamacpp_bench_sh --> tool_run
+shell_scripts_llamacpp_bench_sh --> tool_sed
+shell_scripts_llamacpp_bench_sh --> tool_tail
+shell_scripts_llamacpp_bench_sh --> tool_tee
+shell_scripts_llamacpp_serving_measure_sh --> tool_grep
+shell_scripts_llamacpp_serving_measure_sh --> tool_json_sys
+shell_scripts_llamacpp_serving_measure_sh --> tool_layers
+shell_scripts_llamacpp_serving_measure_sh --> tool_podman
+shell_scripts_llamacpp_serving_measure_sh --> tool_sleep
+shell_scripts_llamacpp_serving_measure_sh --> tool_tail
+shell_scripts_run_benchmark_sh --> tool_crew_chief
 shell_scripts_run_benchmark_sh --> tool_ln
 shell_scripts_run_benchmark_sh --> tool_mkdir
 shell_scripts_run_benchmark_sh --> tool_python3
 shell_scripts_run_benchmark_sh --> tool_tachometer
+shell_scripts_run_ollama_sh --> tool_from
+shell_scripts_run_ollama_sh --> tool_import
+shell_scripts_run_ollama_sh --> tool_mkdir
 shell_scripts_run_ollama_sh --> tool_podman
-shell_scripts_run_tachometer_profile_sh --> tool_run
-shell_scripts_run_tachometer_profile_sh --> tool_summarize
+shell_scripts_run_ollama_sh --> tool_tiers
 shell_scripts_run_tachometer_profile_sh --> tool_tachometer
 shell_scripts_start_listener_sh --> tool_crew_chief
 shell_scripts_start_listener_sh --> tool_rm
@@ -63,8 +91,8 @@ shell_scripts_status_sh --> tool_podman
 shell_scripts_stop_listener_sh --> tool_rm
 shell_scripts_stop_sh --> tool_podman
 note as shellGraphSummary
-Scanned 13 shell scripts.
+Scanned 15 shell scripts.
 Detected 0 local shell edges.
-Detected 16 external tools.
+Detected 23 external tools.
 end note
 @enduml
