@@ -1,4 +1,4 @@
-@startuml classes_checkout
+@startuml classes_crew-chief
 set namespaceSeparator none
 class "Action" as crew_chief.model_storage.Action {
   kind : str
@@ -318,6 +318,7 @@ class "SystemOneRunner" as crew_chief.taskbench.SystemOneRunner {
   api_key : str
   model
   name : str
+  timeout : int
   url
   answer(task: Task, state: str) -> dict[str, Answer]
   request(task: Task, state: str) -> dict

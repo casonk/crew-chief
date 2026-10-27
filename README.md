@@ -200,6 +200,17 @@ python3 scripts/test_benchmark.py \
   --runs 3 --agent-timeout 180
 ```
 
+For timing comparisons on the shared GPU, start through
+`scripts/run_test_benchmark_lease.py` with the same benchmark arguments. It
+waits for the current ecu lease, yields registered GPU consumers, and
+checks that no compute process remains before starting. Until `ecu` is
+installed on a machine with the standard sibling checkout, the launcher runs
+ecu from `../ecu/src`; `CENTRAL_ECU_SOURCE` can point to a
+different source checkout. If an unregistered process such as a transcoder
+still holds the GPU, the launcher exits 75 without producing a trial. The
+ecu backlog tracks registration of that consumer and per-device
+placement; the current host has one GPU.
+
 The command writes ignored, local `results/test-bench-*.json` and `.html` files.
 It also updates `results/test-bench-latest.html` and `.json` symlinks. The HTML
 report is linked from the existing benchmark page when `results/` is served as
@@ -245,7 +256,7 @@ resolve relative to the suite file. The resulting HTML identifies the repository
 for each historical review and trial:
 
 ```bash
-python3 scripts/test_benchmark.py \
+python3 scripts/run_test_benchmark_lease.py \
   --suite benchmarks/public-history-suite.json \
   --portfolio-root ../.. \
   --models llama3.2:latest mistral:latest aya-expanse:8b qwen3:14b \
@@ -257,6 +268,32 @@ visibility registry. Keep private cases in an ignored local suite and send their
 reports only to an appropriately private location. Before a full agent sweep,
 probe each model's Ollama tool-call behavior: a model that the server rejects
 for tool calling cannot complete this benchmark regardless of coding ability.
+
+For a capability check after a 120-second timeout, rerun the same reviewed cases
+at `--agent-timeout 300` and save to a separate `--out` path with `--no-latest`.
+The longer result is a different timing tier and should not replace the 120-second
+comparison. Run timing trials when the GPU is otherwise idle.
+
+An experimental local SystemOne model can choose among eligible coding models
+before each test repair. The router sees the task instructions, test command,
+selected test paths, added test names and assertion counts, old-source failure
+counts, editable paths, and candidate model profiles. It never
+receives the historical source fix or trial results. It falls back to the
+specified coding model if its answer is invalid, uncertain, or unavailable.
+
+```bash
+python3 scripts/run_test_benchmark_lease.py \
+  --suite benchmarks/public-history-suite.json --portfolio-root ../.. \
+  --models qwen3:14b qwen3.5:27b --router-model clef-flash:latest \
+  --router-fallback qwen3.5:27b --router-only \
+  --runs 1 --agent-timeout 300 --no-latest
+```
+
+The report records the selected model, confidence, fallback reason, routing
+time, end-to-end time, and GPU load snapshots around each agent run. Omit
+`--router-only` to run fixed-model trials in the
+same report. Compare routing against fixed-model outcomes on held-out cases;
+this path is an evaluation experiment, not an automatic production policy.
 
 To benchmark another repository, create a task JSON and a unified diff patch
 like the example under `benchmarks/tasks/`. Use that repository's real test
