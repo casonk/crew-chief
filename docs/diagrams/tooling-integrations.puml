@@ -1,5 +1,5 @@
 @startuml
-title checkout Tooling Integrations
+title crew-chief Tooling Integrations
 left to right direction
 skinparam shadowing false
 skinparam defaultFontName Monospace
