@@ -156,6 +156,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="List tool-capable models on the Ollama server and exit.",
     )
     code_p.add_argument(
+        "--no-lease",
+        action="store_true",
+        help=(
+            "Do not run the session under an ECU lease (also: CREW_CHIEF_NO_LEASE=1). "
+            "By default a model with a measured gpu_mib on the Ollama backend gets one."
+        ),
+    )
+    code_p.add_argument(
         "--skip-check",
         action="store_true",
         help="Launch without checking the server or model first.",
@@ -270,6 +278,7 @@ def main(argv: list[str] | None = None) -> None:
             LaunchError,
             launch,
             ollama_tool_models,
+            policy_gpu_mib,
             resolve_serving,
         )
 
@@ -296,6 +305,7 @@ def main(argv: list[str] | None = None) -> None:
                 context=context,
                 passthrough=passthrough,
                 skip_check=args.skip_check,
+                gpu_mib=None if args.no_lease else policy_gpu_mib(args.code_model),
             )
         except LaunchError as exc:
             print(f"Error: {exc}", file=sys.stderr)
