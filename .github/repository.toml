@@ -3,7 +3,7 @@
 
 [repository]
 # One line shown on GitHub. Keep it free of private repository names and local paths.
-description = "Crew chief utility repo"
+description = "Local model-serving and agent orchestration helpers for the portfolio: Ollama wrappers, model routing, and lightweight LLM task execution."
 
 [main_branch]
 # Direct commits and pushes to main are refused unless this is true.
