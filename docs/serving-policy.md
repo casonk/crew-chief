@@ -25,7 +25,10 @@ is started with exactly that configuration.
 
 ## Changing an entry
 
-1. Measure on an idle GPU (stop other GPU services first):
+1. Measure on an idle GPU (stop other GPU services first). `llamacpp_bench.sh`
+   takes the exclusive ECU lease itself when `ecu` is on PATH
+   (`CREW_CHIEF_NO_LEASE=1` skips that); the other scripts still need the explicit
+   `ecu run` shown:
    ```bash
    ecu run --gpu exclusive --own-gpu-process llama-server --cpu-cores 2 \
      --priority batch --max-wait 2h -- python3 scripts/engine_matrix.py <model>

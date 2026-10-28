@@ -13,13 +13,16 @@ from unittest.mock import patch
 from crew_chief import code_launcher
 from crew_chief.cli import build_parser
 from crew_chief.code_launcher import (
+    LEASE_ENV,
     LaunchError,
     build_argv,
     build_env,
     check_model,
     is_resume,
     launch,
+    lease_prefix,
     ollama_tool_models,
+    policy_gpu_mib,
     record_session,
 )
 
@@ -141,3 +144,89 @@ class TestCliParsing(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _ecu_on_path(name):
+    return "/usr/bin/ecu" if name == "ecu" else None
+
+
+class TestLease(unittest.TestCase):
+    def test_a_measured_ollama_model_is_leased_through_ecu_run(self):
+        prefix = lease_prefix("qwen3:14b", "ollama", 14024, which=_ecu_on_path, environ={})
+        self.assertEqual(prefix[:4], ["/usr/bin/ecu", "run", "--model", "qwen3:14b"])
+        self.assertIn("--policy", prefix)
+        self.assertEqual(prefix[prefix.index("--priority") + 1], "interactive")
+        self.assertEqual(prefix[-1], "--")
+
+    def test_there_is_no_lease_when_nothing_safe_can_be_asked_for(self):
+        cases = {
+            "unmeasured model": ("ollama", None, _ecu_on_path, {}),
+            "zero size": ("ollama", 0, _ecu_on_path, {}),
+            "llama.cpp holds its memory first": ("llamacpp", 23740, _ecu_on_path, {}),
+            "no ecu on PATH": ("ollama", 14024, lambda _name: None, {}),
+            "already inside a lease": ("ollama", 14024, _ecu_on_path, {LEASE_ENV: "1"}),
+            "opted out": ("ollama", 14024, _ecu_on_path, {"CREW_CHIEF_NO_LEASE": "1"}),
+        }
+        for label, (backend, size, which, environ) in cases.items():
+            with self.subTest(label):
+                self.assertIsNone(lease_prefix("m", backend, size, which=which, environ=environ))
+
+    def test_policy_gpu_mib_reads_the_measured_size_and_never_raises(self):
+        class Entry:
+            gpu_mib = 14024
+
+        class Policy:
+            def __init__(self, entry):
+                self.entry = entry
+
+            def get(self, _model):
+                return self.entry
+
+        self.assertEqual(policy_gpu_mib("m", lambda: Policy(Entry())), 14024)
+        self.assertIsNone(policy_gpu_mib("m", lambda: Policy(None)))
+
+        class Unmeasured:
+            gpu_mib = None
+
+        self.assertIsNone(policy_gpu_mib("m", lambda: Policy(Unmeasured())))
+
+        from crew_chief.serving_policy import PolicyError
+
+        def broken():
+            raise PolicyError("unreadable")
+
+        self.assertIsNone(policy_gpu_mib("m", broken))
+
+    def _launch(self, gpu_mib, environ=None):
+        env = {"CREW_CHIEF_NO_LEASE": "", **(environ or {})}
+        with TemporaryDirectory() as tmp, patch.dict(os.environ, {"XDG_STATE_HOME": tmp, **env}):
+            with (
+                patch.object(code_launcher.shutil, "which", return_value="/usr/bin/tool"),
+                patch.object(code_launcher, "check_model"),
+                patch.object(code_launcher.os, "execvpe") as execvpe,
+            ):
+                launch("ollama", "http://x/", "qwen3:14b", 32768, [], gpu_mib=gpu_mib)
+        return execvpe.call_args.args
+
+    def test_launch_runs_claude_inside_the_lease_and_marks_the_environment(self):
+        prog, argv, env = self._launch(14024)
+
+        self.assertEqual(prog, "/usr/bin/tool")  # the mocked `ecu` on PATH
+        self.assertEqual(argv[1:3], ["run", "--model"])
+        split = argv.index("--")
+        self.assertEqual(argv[split + 1], "claude")  # the session itself follows the prefix
+        self.assertEqual(env[LEASE_ENV], "1")
+
+    def test_launch_without_a_size_execs_claude_directly_as_before(self):
+        prog, argv, env = self._launch(None)
+        self.assertEqual(prog, "claude")
+        self.assertNotIn(LEASE_ENV, env)
+
+    def test_no_lease_env_opts_out_at_launch(self):
+        prog, _, _ = self._launch(14024, {"CREW_CHIEF_NO_LEASE": "1"})
+        self.assertEqual(prog, "claude")
+
+    def test_the_parser_accepts_no_lease(self):
+        args = build_parser().parse_args(["code", "--no-lease"])
+        self.assertTrue(args.no_lease)
+        self.assertFalse(build_parser().parse_args(["code"]).no_lease)
