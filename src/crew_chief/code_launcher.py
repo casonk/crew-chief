@@ -85,9 +85,8 @@ def check_model(backend: str, base_url: str, model: str, timeout: int = 10) -> N
         _get_json(f"{base_url}/health", timeout)
     except (urllib.error.URLError, OSError) as exc:
         raise LaunchError(
-            f"llama-server is not reachable at {base_url} ({exc}). Start it with the "
-            "configuration in `crew-chief policy show <model>` (see "
-            "docs/local-inference-roadmap.md), or pass --backend ollama."
+            f"llama-server is not reachable at {base_url} ({exc}). Start it with "
+            f"`crew-chief serve {model}`, or pass --backend ollama."
         ) from exc
 
 

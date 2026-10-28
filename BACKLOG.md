@@ -43,12 +43,6 @@ Mark items `[x]` when complete and move them to Done.
   VRAM per model. Explore prompt-cache reuse, parallel slots, KV-cache
   quantization and speculative decoding. Ship as beta even if gains are small.
 
-- [ ] [manual:2026-10-21] **`crew-chief serve <model>`.** Start the backend a
-  model's serving-policy entry names, with its exact settings (llama-server
-  container for `llamacpp` entries), under a GPU lease sized from
-  `gpu_mib`; stop it on exit. Then `crew-chief code -m qwen3:32b` works end to
-  end without hand-run podman commands.
-
 - [ ] [manual:2026-10-21] **Review the unreviewed models.** Ten pulled models
   are `unreviewed` in the serving policy. Benchmark the tool-capable ones
   (`qwen3.5:27b`, `qwen3:14b-q8_0`, `qwen2.5-coder:7b`) and retire what is not
