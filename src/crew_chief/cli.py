@@ -170,6 +170,26 @@ def build_parser() -> argparse.ArgumentParser:
     )
     code_p.add_argument("claude_args", nargs=argparse.REMAINDER, help=argparse.SUPPRESS)
 
+    serve_p = sub.add_parser(
+        "serve",
+        help="Start the backend a model's serving-policy entry names (beta).",
+        description=(
+            "Run llama-server in a Podman container with the policy entry's context, "
+            "KV-cache type and flash attention, under an ECU lease sized from its "
+            "measured gpu_mib. It runs in the foreground; stop it with Ctrl-C. Models "
+            "the policy serves on Ollama need nothing started."
+        ),
+    )
+    serve_p.add_argument("serve_model", metavar="MODEL", help="Model name, as in the policy.")
+    serve_p.add_argument(
+        "--dry-run", action="store_true", help="Print the command instead of running it."
+    )
+    serve_p.add_argument(
+        "--no-lease",
+        action="store_true",
+        help="Do not run under an ECU lease (also: CREW_CHIEF_NO_LEASE=1).",
+    )
+
     policy_p = sub.add_parser(
         "policy",
         help="Show or check the serving policy (config/serving-policy.toml).",
@@ -336,6 +356,28 @@ def main(argv: list[str] | None = None) -> None:
         base.with_suffix(".json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
         print(markdown)
         print(f"Saved: {base}.md and .json", file=sys.stderr)
+
+    elif args.command == "serve":
+        from crew_chief import serve as serving
+        from crew_chief.serving_policy import PolicyError, load_policy
+
+        try:
+            policy = load_policy()
+            entry = policy.get(args.serve_model)
+            command = serving.plan(args.serve_model, entry, policy.url_for("llamacpp"))
+        except (PolicyError, serving.ServeError) as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(2)
+        if command is None:
+            print(
+                f"{args.serve_model} is served by {entry.backend}, which loads it on demand; "
+                "nothing to start."
+            )
+            return
+        if args.dry_run:
+            print(" ".join(command))
+            return
+        serving.serve(command, args.serve_model, entry.gpu_mib, leased=not args.no_lease)
 
     elif args.command == "policy":
         from crew_chief.serving_policy import (

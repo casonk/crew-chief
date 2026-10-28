@@ -79,6 +79,7 @@ llama.cpp, with the session recorded for session-control:
 
 ```bash
 crew-chief code --list            # tool-capable models
+crew-chief serve qwen3:32b        # start its llama-server (foreground, leased); other terminal:
 crew-chief code -m qwen3:32b      # start a session
 crew-chief code -- --resume <id>  # reopen one
 ```

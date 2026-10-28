@@ -69,6 +69,18 @@ The native files are listed in `config/gguf-sources.toml` with their SHA-256;
 shows what is present). A model on warm or cold storage gets its native file
 in that tier's `gguf/` directory.
 
+## Serving a model
+
+`crew-chief serve <model>` starts the backend the entry names. For `llamacpp`
+entries it runs `llama-server` in Podman with the entry's context window, KV-cache
+type and flash attention, and stops it when interrupted. The container runs under
+an `ecu run` lease sized from `gpu_mib` plus 1024 MiB of headroom (loading
+allocates compute buffers beyond the loaded-model figure), or the whole GPU when
+that does not fit. A model that needs more than is free still fails to load when a
+registered live activity holds GPU memory; the server's out-of-memory message and
+the lease's note naming the holder say so. Ollama entries need nothing started.
+`--dry-run` prints the command and `--no-lease` skips the lease.
+
 ## Who reads it
 
 - `crew-chief code -m <model>` takes the backend, server URL, and context from
