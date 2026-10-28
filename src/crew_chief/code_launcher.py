@@ -186,6 +186,53 @@ def record_session(
         fh.write(json.dumps(entry) + "\n")
 
 
+LEASE_ENV = "CREW_CHIEF_IN_LEASE"
+
+
+def policy_gpu_mib(model: str, policy_loader=None) -> int | None:
+    """The GPU memory the serving policy has measured for ``model``, if any."""
+    from crew_chief.serving_policy import PolicyError, load_policy
+
+    try:
+        entry = (policy_loader or load_policy)().get(model)
+    except PolicyError:
+        return None
+    return entry.gpu_mib if entry is not None and entry.gpu_mib else None
+
+
+def lease_prefix(
+    model: str,
+    backend: str,
+    gpu_mib: int | None,
+    *,
+    which=None,
+    environ=None,
+) -> list[str] | None:
+    """The ``ecu run`` command that gives this session a sized lease, or None.
+
+    ECU makes room for the model, yields other GPU work, and restores it when the
+    session ends. A lease is skipped, never an error, when there is nothing safe to
+    ask for: no measured size (an unreviewed model), no ``ecu`` on PATH, the
+    llama.cpp backend (its server already holds its memory before the session
+    starts, so that lease comes with ``crew-chief serve``), or a session that is
+    already inside a lease.
+    """
+    env = os.environ if environ is None else environ
+    if env.get(LEASE_ENV) or env.get("CREW_CHIEF_NO_LEASE"):
+        return None
+    if backend != "ollama" or not gpu_mib:
+        return None
+    ecu = (which or shutil.which)("ecu")
+    if ecu is None:
+        return None
+    from crew_chief.serving_policy import DEFAULT_POLICY_PATH
+
+    return [
+        ecu, "run", "--model", model, "--policy", str(DEFAULT_POLICY_PATH),
+        "--priority", "interactive", "--",
+    ]  # fmt: skip
+
+
 def launch(
     backend: str,
     base_url: str,
@@ -193,8 +240,13 @@ def launch(
     context: int,
     passthrough: list[str],
     skip_check: bool = False,
+    gpu_mib: int | None = None,
 ) -> None:
-    """Validate, record the session, and replace this process with Claude Code."""
+    """Validate, record the session, and replace this process with Claude Code.
+
+    With a measured ``gpu_mib`` on the Ollama backend the session runs under an
+    ``ecu run`` lease; see ``lease_prefix``.
+    """
     if shutil.which("claude") is None:
         raise LaunchError("Claude Code ('claude') is not on PATH.")
     base_url = base_url.rstrip("/")
@@ -208,5 +260,15 @@ def launch(
 
     env = build_env(base_url, model, context, dict(os.environ))
     argv = build_argv(model, passthrough, session_id)
+    prefix = lease_prefix(model, backend, gpu_mib)
     sys.stdout.flush()
-    os.execvpe("claude", argv, env)
+    if prefix is not None:
+        env[LEASE_ENV] = "1"  # nested crew-chief calls must not lease again
+        print(
+            f"crew-chief: running under an ECU lease for {model} ({gpu_mib} MiB); "
+            "--no-lease skips it",
+            file=sys.stderr,
+        )
+        os.execvpe(prefix[0], [*prefix, *argv], env)
+    else:
+        os.execvpe("claude", argv, env)

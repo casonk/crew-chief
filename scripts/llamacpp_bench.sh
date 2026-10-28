@@ -15,9 +15,13 @@
 # llama-bench and replaces the default test set. Results are printed and saved
 # to results/llamacpp-bench-<timestamp>.{md,jsonl}.
 #
-# For clean numbers, nothing else should be on the GPU: unload Ollama models
-# (podman exec crew-chief ollama stop <model>) and pause the listener
-# (systemctl --user stop crew-chief-listener) first.
+# For clean numbers, nothing else should be on the GPU. When `ecu` is on PATH
+# the script re-runs itself under an exclusive ECU lease, which unloads Ollama
+# models, pauses the listener and other GPU consumers, waits (up to 2 hours) for
+# live GPU work to finish, and restores everything afterwards. Set
+# CREW_CHIEF_NO_LEASE=1 to skip that and manage the GPU by hand
+# (podman exec crew-chief ollama stop <model>; systemctl --user stop
+# crew-chief-listener).
 #
 # Environment:
 #   LLAMACPP_IMAGE        default: ghcr.io/ggml-org/llama.cpp:full-cuda
@@ -27,6 +31,13 @@
 #   HOST_NVIDIA_LIB       default: /usr/lib64
 
 set -euo pipefail
+
+if [[ -z "${CREW_CHIEF_IN_LEASE:-}" && -z "${CREW_CHIEF_NO_LEASE:-}" ]] \
+    && command -v ecu >/dev/null 2>&1; then
+  export CREW_CHIEF_IN_LEASE=1
+  exec ecu run --gpu exclusive --own-gpu-process llama-bench --own-gpu-process llama-server \
+    --cpu-cores 2 --priority batch --max-wait 2h -- bash "${BASH_SOURCE[0]}" "$@"
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
