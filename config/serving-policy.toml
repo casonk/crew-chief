@@ -106,31 +106,58 @@ reviewed = "2026-10-22"
 note = "Decision model (27B, vision); most accurate and calibrated (Brier 0.037) but 724 ms/item and ~23 GB GPU"
 
 [models."qwen3:14b-q8_0"]
-status = "unreviewed"
-evidence = ["results/speed-quick-20261022.md"]
-note = "Speed only: 44-49 tok/s vs 63-64 for qwen3:14b; codegen thinking ran past 600 s"
+status = "retired"
+reviewed = "2026-10-28"
+evidence = ["results/review-unreviewed-20261028.md"]
+note = "45-49 tok/s vs 63-64 for qwen3:14b at 1.4x the memory (19968 MiB); nothing in the portfolio uses it"
 
 [models."qwen3.5:27b"]
-status = "unreviewed"
-evidence = ["results/speed-quick-20261022.md", "results/llamacpp-bench-20261022-094604.md"]
-note = "Speed only: Ollama 34.9 tok/s short / 31.7 long reply, fully on GPU; llama.cpp 34.9 tok/s (native GGUF, Ollama's file does not load) - a tie; long thinking (5942 tokens for a short function)"
+status = "beta"
+backend = "ollama"
+context = 32768
+kv_cache = "f16"
+flash_attention = true
+gpu_mib = 18752
+evidence = ["results/bench-idle-20261028.json", "results/review-unreviewed-20261028.md", "results/llamacpp-bench-20261022-094604.md"]
+reviewed = "2026-10-28"
+note = "32-35 tok/s fully on GPU, tied with llama.cpp; thinks for thousands of tokens on small tasks (168 s codegen)"
 
 [models."gemma3:27b-it-qat"]
-status = "unreviewed"
-evidence = ["results/speed-quick-20261022.md", "results/llamacpp-bench-20261022-094604.md"]
-note = "Speed only: Ollama 36.2 tok/s fully on GPU, no thinking; llama.cpp 41.0 tok/s (+13%) on the native GGUF (Ollama's file holds the vision weights and does not load)"
+status = "beta"
+backend = "ollama"
+context = 32768
+kv_cache = "f16"
+flash_attention = true
+gpu_mib = 21062
+evidence = ["results/bench-idle-20261028.json", "results/review-unreviewed-20261028.md", "results/llamacpp-bench-20261022-094604.md"]
+reviewed = "2026-10-28"
+note = "37-52 tok/s, no thinking; llama.cpp is 13% faster but needs a separate GGUF without the vision weights"
 
 [models."llama3.2:latest"]
-status = "unreviewed"
+status = "retired"
+reviewed = "2026-10-28"
+note = "Not named anywhere in the portfolio"
 
 [models."llama3.2:3b-instruct-q8_0"]
-status = "unreviewed"
+status = "retired"
+reviewed = "2026-10-28"
+note = "Not named anywhere in the portfolio"
 
 [models."aya-expanse:8b"]
-status = "unreviewed"
+status = "retired"
+reviewed = "2026-10-28"
+note = "Not named anywhere in the portfolio"
 
 [models."qwen2.5-coder:7b"]
-status = "unreviewed"
+status = "default"
+backend = "ollama"
+context = 32768
+kv_cache = "f16"
+flash_attention = true
+gpu_mib = 6610
+evidence = ["results/bench-idle-20261028.json", "results/review-unreviewed-20261028.md"]
+reviewed = "2026-10-28"
+note = "121-174 tok/s; Clockwork's grocery matching uses it"
 
 [models."mistral:latest"]
 status = "retired"

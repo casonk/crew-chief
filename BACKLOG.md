@@ -43,11 +43,6 @@ Mark items `[x]` when complete and move them to Done.
   VRAM per model. Explore prompt-cache reuse, parallel slots, KV-cache
   quantization and speculative decoding. Ship as beta even if gains are small.
 
-- [ ] [manual:2026-10-21] **Review the unreviewed models.** Ten pulled models
-  are `unreviewed` in the serving policy. Benchmark the tool-capable ones
-  (`qwen3.5:27b`, `qwen3:14b-q8_0`, `qwen2.5-coder:7b`) and retire what is not
-  used, so every served model has evidence.
-
 - [ ] [manual:2026-10-21] **Grow the task suites, with held-out splits.** Add
   synthetic suites for mail triage, receipt categorization, and schema
   extraction; split each into dev and held-out items, and write baseline rules
