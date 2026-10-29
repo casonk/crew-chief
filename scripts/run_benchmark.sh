@@ -2,7 +2,21 @@
 # scripts/run_benchmark.sh — weekly benchmark wrapper called by the clockwork
 # systemd timer. Generates a dated JSON + HTML report, optionally wrapped in
 # a tachometer resource snapshot if tachometer is on PATH.
+#
+# Latency numbers are only meaningful on an idle GPU. When `ecu` is on PATH the
+# script re-runs itself under an exclusive ECU lease, which pauses the listener
+# and other GPU consumers and waits (up to 45 minutes, inside the unit's 2 hour
+# limit) for live GPU work to finish. The 2026-10-25 run had no lease, shared the
+# GPU with other jobs (first-token times of 5-7 minutes) and hit the unit's time
+# limit mid-run. Set CREW_CHIEF_NO_LEASE=1 to skip the lease.
 set -euo pipefail
+
+if [[ -z "${CREW_CHIEF_IN_LEASE:-}" && -z "${CREW_CHIEF_NO_LEASE:-}" ]] \
+    && command -v ecu >/dev/null 2>&1; then
+  export CREW_CHIEF_IN_LEASE=1
+  exec ecu run --gpu exclusive --own-gpu-process llama-server \
+    --cpu-cores 2 --priority batch --max-wait 45m -- bash "${BASH_SOURCE[0]}" "$@"
+fi
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DATE="$(date +%Y%m%d)"
