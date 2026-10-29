@@ -390,7 +390,9 @@ def main() -> int:
     except ms.StorageError:
         tiers = {"hot": ms.hot_dir()}
     hot = tiers["hot"]
-    models = [ms.canonical(m) for m in args.models] or sorted(sources)
+    models = [ms.canonical(m) for m in args.models] or sorted(
+        m for m, x in sources.items() if not x.draft
+    )
 
     meta = {
         "gpu": subprocess.run(

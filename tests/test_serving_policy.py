@@ -46,6 +46,9 @@ class LoadTests(unittest.TestCase):
             '[models."m"]\nkv_cache = "q2"\n',
             '[models."m"]\nbackend = "llamacpp"\nspeculative = "magic"\n',
             '[models."m"]\nbackend = "ollama"\nspeculative = "ngram-mod"\n',
+            '[models."m"]\nbackend = "ollama"\ndraft = "d"\n',
+            '[models."m"]\nbackend = "llamacpp"\ndraft = "d"\nspeculative = "ngram-mod"\n',
+            '[models."m"]\nbackend = "llamacpp"\ndraft = "d"\ndraft_tokens = "many"\n',
             '[models."m"]\ncontext = "big"\n',
             '[models."m"]\nspeed = 9\n',
             '[models."m"]\nevidence = "one.md"\n',
@@ -58,6 +61,10 @@ class LoadTests(unittest.TestCase):
             _write('[models."m"]\nbackend = "llamacpp"\nspeculative = "ngram-mod"\n')
         )
         self.assertEqual(policy.get("m").speculative, "ngram-mod")
+
+    def test_draft_defaults_to_eight_tokens(self):
+        policy = load_policy(_write('[models."m"]\nbackend = "llamacpp"\ndraft = "d"\n'))
+        self.assertEqual((policy.get("m").draft, policy.get("m").draft_tokens), ("d", 8))
 
     def test_missing_file(self):
         with self.assertRaises(PolicyError):

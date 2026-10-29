@@ -101,7 +101,12 @@ def server_port(base_url: str) -> int:
 
 
 def podman_argv(
-    model: str, entry: ModelPolicy, blob: Path, port: int, gpu: list[str] | None = None
+    model: str,
+    entry: ModelPolicy,
+    blob: Path,
+    port: int,
+    gpu: list[str] | None = None,
+    draft: Path | None = None,
 ) -> list[str]:
     """The ``podman run`` command that serves ``model`` as its entry says."""
     if not entry.context:
@@ -110,26 +115,37 @@ def podman_argv(
         "podman", "run", "--rm", "--name", CONTAINER_NAME,
         *(gpu if gpu is not None else gpu_args()),
         "-e", "LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64",
-        "-v", f"{blob}:/models/{blob.name}:ro",
+        "-v", f"{blob}:/models/{blob.name}:ro", *draft_mount(draft),
         "-p", f"127.0.0.1:{port}:{CONTAINER_PORT}",
         "--entrypoint", "/app/llama-server", IMAGE,
-        *server_flags(model, entry, blob.name), "--host", "0.0.0.0",
+        *server_flags(model, entry, blob.name, draft), "--host", "0.0.0.0",
         "--port", str(CONTAINER_PORT),
     ]  # fmt: skip
 
 
-def server_flags(model: str, entry: ModelPolicy, blob_name: str) -> list[str]:
+def draft_mount(draft: Path | None) -> list[str]:
+    return ["-v", f"{draft}:/models/{draft.name}:ro"] if draft else []
+
+
+def server_flags(
+    model: str, entry: ModelPolicy, blob_name: str, draft: Path | None = None
+) -> list[str]:
     """The llama-server flags a policy entry sets, without host and port."""
     flags = ["-fa", "on" if entry.flash_attention else "off"]
     if entry.speculative:
         flags += ["--spec-type", entry.speculative]
+    if draft:
+        flags += [
+            "-md", f"/models/{draft.name}", "-ngld", "99", "--spec-type", "draft-simple",
+            "--spec-draft-n-max", str(entry.draft_tokens), "--spec-draft-n-min", "1",
+        ]  # fmt: skip
     return [
         "-m", f"/models/{blob_name}", "--alias", model, "--jinja", "-ngl", "99",
         "-c", str(entry.context), *flags, "-ctk", entry.kv_cache, "-ctv", entry.kv_cache,
     ]  # fmt: skip
 
 
-def swap_config(models: list[tuple[str, ModelPolicy, Path]], ttl: int = 300) -> str:
+def swap_config(models: list[tuple[str, ModelPolicy, Path, Path | None]], ttl: int = 300) -> str:
     """A llama-swap config that serves each model with its policy settings.
 
     llama-swap starts one llama-server per request's model, stops the previous
@@ -137,26 +153,31 @@ def swap_config(models: list[tuple[str, ModelPolicy, Path]], ttl: int = 300) -> 
     which YAML accepts, so no YAML library is needed.
     """
     lines = ["healthCheckTimeout: 500", "models:"]
-    for model, entry, blob in models:
+    for model, entry, blob, draft in models:
         if not entry.context:
             raise ServeError(f"{model}: the policy entry has no context window")
         cmd = " ".join(
-            ["/app/llama-server", "--port", "${PORT}", *server_flags(model, entry, blob.name)]
+            [
+                "/app/llama-server",
+                "--port",
+                "${PORT}",
+                *server_flags(model, entry, blob.name, draft),
+            ]
         )
         lines += [f"  {json.dumps(model)}:", f"    ttl: {ttl}", f"    cmd: {json.dumps(cmd)}"]
     return "\n".join(lines) + "\n"
 
 
 def swap_argv(
-    models: list[tuple[str, ModelPolicy, Path]],
+    models: list[tuple[str, ModelPolicy, Path, Path | None]],
     config: Path,
     port: int,
     gpu: list[str] | None = None,
 ) -> list[str]:
     """The ``podman run`` command for llama-swap in front of ``models``."""
     mounts: list[str] = []
-    for _, _, blob in models:
-        mounts += ["-v", f"{blob}:/models/{blob.name}:ro"]
+    for _, _, blob, draft in models:
+        mounts += ["-v", f"{blob}:/models/{blob.name}:ro", *draft_mount(draft)]
     return [
         "podman", "run", "--rm", "--name", SWAP_CONTAINER_NAME,
         *(gpu if gpu is not None else gpu_args()),
@@ -225,13 +246,42 @@ def plan(model: str, entry: ModelPolicy | None, base_url: str, run: Callable = s
         raise ServeError(f"{model} is retired; restore it with `crew-chief storage restore`")
     if entry.backend != "llamacpp":
         return None
-    return podman_argv(model, entry, blob_for(model, models_dir(run)), server_port(base_url))
+    return podman_argv(
+        model, entry, blob_for(model, models_dir(run)), server_port(base_url),
+        draft=draft_for(entry),
+    )  # fmt: skip
+
+
+def draft_for(entry: ModelPolicy) -> Path | None:
+    """The downloaded draft model file an entry names, or None when it has none."""
+    if not entry.draft:
+        return None
+    from crew_chief import gguf_sources as gs
+    from crew_chief import model_storage as ms
+
+    try:
+        source = gs.load_sources().get(canonical(entry.draft))
+        if source is None:
+            raise ServeError(f"{entry.name}: draft {entry.draft} is not in gguf-sources.toml")
+        try:
+            tiers = ms.load_tiers()
+        except ms.StorageError:
+            tiers = None
+        path = gs.find(source, tiers)
+    except gs.SourceError as exc:
+        raise ServeError(str(exc)) from exc
+    if path is None:
+        raise ServeError(
+            f"{entry.name}: draft file for {entry.draft} is not downloaded; "
+            f"run `crew-chief gguf fetch {entry.draft}`"
+        )
+    return path
 
 
 def plan_swap(
     names: list[str], policy, run: Callable = subprocess.run
-) -> list[tuple[str, ModelPolicy, Path]]:
-    """Each model with its policy entry and weights file, ready for ``swap_config``."""
+) -> list[tuple[str, ModelPolicy, Path, Path | None]]:
+    """Each model with its policy entry, weights file and draft file, ready for ``swap_config``."""
     entries = []
     for name in names:
         entry = policy.get(name)
@@ -241,7 +291,7 @@ def plan_swap(
             raise ServeError(f"{name} is retired; restore it with `crew-chief storage restore`")
         entries.append((name, entry))
     root = models_dir(run)
-    return [(name, entry, blob_for(name, root)) for name, entry in entries]
+    return [(name, entry, blob_for(name, root), draft_for(entry)) for name, entry in entries]
 
 
 def serve(command: list[str], model: str, gpu_mib: int | None, leased: bool) -> None:

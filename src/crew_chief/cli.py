@@ -567,7 +567,7 @@ def _serve_swap(args: argparse.Namespace, serving) -> None:
     path.write_text(config, encoding="utf-8")
     command = serving.swap_argv(models, path, args.port)
     # The largest model sets the lease: llama-swap runs one at a time.
-    gpu_mib = max(entry.gpu_mib or 0 for _, entry, _ in models)
+    gpu_mib = max(entry.gpu_mib or 0 for _, entry, _, _ in models)
     print(f"crew-chief: llama-swap on 127.0.0.1:{args.port} for {len(models)} model(s)",
           file=sys.stderr)  # fmt: skip
     serving.serve(command, "llama-swap", gpu_mib, leased=not args.no_lease)

@@ -79,6 +79,22 @@ class CommandTests(unittest.TestCase):
         argv = serve.podman_argv("m", ngram, Path("/b/x"), 8081, gpu=[])
         self.assertEqual(argv[argv.index("--spec-type") + 1], "ngram-mod")
 
+    def test_draft_model_adds_mount_and_speculative_flags(self):
+        entry = ModelPolicy(
+            name="m", backend="llamacpp", context=4096, draft="qwen3:0.6b-q8_0", draft_tokens=6
+        )
+        argv = serve.podman_argv("m", entry, Path("/b/x"), 8081, gpu=[], draft=Path("/g/d.gguf"))
+        text = " ".join(argv)
+        self.assertIn("/g/d.gguf:/models/d.gguf:ro", text)
+        self.assertIn("-md /models/d.gguf -ngld 99 --spec-type draft-simple", text)
+        self.assertIn("--spec-draft-n-max 6 --spec-draft-n-min 1", text)
+
+    def test_missing_draft_file_names_the_fix(self):
+        entry = ModelPolicy(name="m", backend="llamacpp", context=4096, draft="nope")
+        with self.assertRaises(serve.ServeError):
+            serve.draft_for(entry)
+        self.assertIsNone(serve.draft_for(ModelPolicy(name="m")))
+
     def test_flash_attention_off_and_no_context(self):
         off = ModelPolicy(name="m", backend="llamacpp", context=4096, flash_attention=False)
         self.assertIn("off", serve.podman_argv("m", off, Path("/b/x"), 8081, gpu=[]))
@@ -138,8 +154,8 @@ class SwapTests(unittest.TestCase):
     def test_config_gives_each_model_its_policy_flags(self):
         small = ModelPolicy(name="small", backend="llamacpp", context=4096, speculative="ngram-mod")
         models = [
-            ("qwen3:32b", ENTRY, Path("/b/sha256-abc")),
-            ("small", small, Path("/b/sha256-d")),
+            ("qwen3:32b", ENTRY, Path("/b/sha256-abc"), None),
+            ("small", small, Path("/b/sha256-d"), None),
         ]
         config = serve.swap_config(models, ttl=60)
         self.assertIn('"qwen3:32b":', config)
@@ -153,13 +169,17 @@ class SwapTests(unittest.TestCase):
     def test_config_needs_a_context(self):
         bare = ModelPolicy(name="m", backend="llamacpp")
         with self.assertRaises(serve.ServeError):
-            serve.swap_config([("m", bare, Path("/b/x"))])
+            serve.swap_config([("m", bare, Path("/b/x"), None)])
 
     def test_argv_mounts_every_blob_and_the_config(self):
-        models = [("a", ENTRY, Path("/b/sha256-1")), ("b", ENTRY, Path("/b/sha256-2"))]
+        models = [
+            ("a", ENTRY, Path("/b/sha256-1"), None),
+            ("b", ENTRY, Path("/b/sha256-2"), Path("/g/d.gguf")),
+        ]
         text = " ".join(serve.swap_argv(models, Path("/t/c.yaml"), 8085, gpu=[]))
         self.assertIn("/b/sha256-1:/models/sha256-1:ro", text)
         self.assertIn("/b/sha256-2:/models/sha256-2:ro", text)
+        self.assertIn("/g/d.gguf:/models/d.gguf:ro", text)
         self.assertIn("/t/c.yaml:/config/config.yaml:ro", text)
         self.assertIn("127.0.0.1:8085:8080", text)
         self.assertIn("-config /config/config.yaml", text)

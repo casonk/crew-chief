@@ -26,6 +26,15 @@ faster on repetitive structured output and neutral on prose
 (`results/serving-features-20261029-080146.md`). Enable it only on an entry
 whose evidence covers that model.
 
+`llamacpp` entries may instead set `draft = "<name in gguf-sources.toml>"` (with
+`draft_tokens`, default 8) for draft-model speculative decoding. `crew-chief gguf
+fetch <draft>` downloads and verifies the file; `serve` mounts it and passes
+`-md`, `--spec-type draft-simple` and the draft length. `draft` and `speculative`
+are mutually exclusive. A draft was 2.4x faster on structured output for
+`qwen3:32b` at 8 draft tokens and costs about 1.5 GiB, so `qwen3:32b` at its
+current 32K context (23.7 GiB) has no room for one: a draft entry needs a
+shorter context, measured on an idle GPU before it is enabled.
+
 `llamacpp` entries must also give `context` and `gpu_mib`, because the server
 is started with exactly that configuration.
 

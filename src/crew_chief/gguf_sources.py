@@ -39,6 +39,7 @@ class GgufSource:
     file: str
     sha256: str
     bytes: int
+    draft: bool = False
 
     @property
     def url(self) -> str:
@@ -60,7 +61,12 @@ def load_sources(path: Path = DEFAULT_SOURCES_PATH) -> dict[str, GgufSource]:
         if "/" in table["file"] or len(table["sha256"]) != 64:
             raise SourceError(f'[models."{model}"]: file must be a bare name, sha256 64 hex digits')
         sources[canonical(model)] = GgufSource(
-            canonical(model), table["repo"], table["file"], table["sha256"].lower(), table["bytes"]
+            canonical(model),
+            table["repo"],
+            table["file"],
+            table["sha256"].lower(),
+            table["bytes"],
+            bool(table.get("draft", False)),
         )
     return sources
 
