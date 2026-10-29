@@ -81,6 +81,21 @@ registered live activity holds GPU memory; the server's out-of-memory message an
 the lease's note naming the holder say so. Ollama entries need nothing started.
 `--dry-run` prints the command and `--no-lease` skips the lease.
 
+## Per-task routing
+
+`[tasks."<name>"]` entries say which model answers a named task, from
+`crew-chief taskbench` evidence: `model`, `runner` (`chat`, or `systemone` for a
+decision model behind `/v1/systemone`), optional `fallback` models, `status`
+(`default`, `beta`, `unreviewed`), `evidence` and `reviewed`. `policy check`
+requires evidence and a date for `default` and `beta` tasks and errors on a model
+that is missing from the policy or retired. `crew-chief policy show --task [name]`
+prints them.
+
+A `chat` task gives the listener its Ollama model chain (the model, then the
+fallbacks). The listener's own `[llm.task_chains]` entry for the same task wins,
+then the policy, then `default` and `ollama_model_chain`. A `systemone` task is
+recorded, but the listener does not call decision models yet.
+
 ## Who reads it
 
 - `crew-chief code -m <model>` takes the backend, server URL, and context from
