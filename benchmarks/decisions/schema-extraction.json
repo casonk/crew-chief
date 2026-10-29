@@ -1,0 +1,308 @@
+{
+  "name": "schema-extraction",
+  "description": "Fill fixed fields from a short financial document: its kind, currency, and whether a due date is stated. All text is synthetic. Baseline rules were written against the dev split only.",
+  "questions": {
+    "kind": {
+      "type": "choice",
+      "instructions": "What kind of document is this?",
+      "criteria": {
+        "invoice": "A request for payment for goods or services, not yet paid",
+        "receipt": "Proof that a payment was already made",
+        "statement": "A periodic summary of account activity and balance",
+        "quote": "An estimate of a future price that is not yet a bill"
+      }
+    },
+    "currency": {
+      "type": "choice",
+      "instructions": "Which currency are the amounts in?",
+      "criteria": {
+        "usd": "US dollars",
+        "eur": "Euros",
+        "gbp": "British pounds",
+        "none": "No amount or currency is stated"
+      }
+    },
+    "due_date": {
+      "type": "noul",
+      "instructions": "The document states a date by which payment is due",
+      "criteria": {
+        "true": "A due date or payment deadline is written in the text",
+        "false": "No payment deadline appears"
+      }
+    }
+  },
+  "baseline": {
+    "kind": {
+      "default": "invoice",
+      "rules": [
+        {
+          "if_any": [
+            "receipt",
+            "paid",
+            "thank you for your payment",
+            "refund",
+            "received"
+          ],
+          "then": "receipt"
+        },
+        {
+          "if_any": [
+            "statement"
+          ],
+          "then": "statement"
+        },
+        {
+          "if_any": [
+            "quote",
+            "quotation",
+            "estimate"
+          ],
+          "then": "quote"
+        }
+      ]
+    },
+    "currency": {
+      "default": "none",
+      "rules": [
+        {
+          "if_any": [
+            "$",
+            "usd"
+          ],
+          "then": "usd"
+        },
+        {
+          "if_any": [
+            "€",
+            "eur"
+          ],
+          "then": "eur"
+        },
+        {
+          "if_any": [
+            "£"
+          ],
+          "then": "gbp"
+        }
+      ]
+    },
+    "due_date": {
+      "default": false,
+      "rules": [
+        {
+          "if_any": [
+            "due by",
+            "due 20",
+            "due on",
+            "within 14",
+            "by 2026",
+            "payment due"
+          ],
+          "then": true
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "INVOICE 3301. Amount due $480.00. Payment due by 2026-11-15. Thank you for your business.",
+      "expected": {
+        "kind": "invoice",
+        "currency": "usd",
+        "due_date": true
+      }
+    },
+    {
+      "state": "Receipt: payment of EUR 62.40 received on 2026-09-02. Paid in full. No balance remains.",
+      "expected": {
+        "kind": "receipt",
+        "currency": "eur",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Account statement for September. Opening balance £1,204.10, closing balance £1,388.55.",
+      "expected": {
+        "kind": "statement",
+        "currency": "gbp",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Quote 77: roof repair estimated at $3,900. This estimate is valid for 30 days.",
+      "expected": {
+        "kind": "quote",
+        "currency": "usd",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Invoice INV-12 for consulting, €1,500. Please pay within 14 days of 2026-10-01.",
+      "expected": {
+        "kind": "invoice",
+        "currency": "eur",
+        "due_date": true
+      }
+    },
+    {
+      "state": "Thank you for your payment of $19.99. Transaction complete. Keep this for your records.",
+      "expected": {
+        "kind": "receipt",
+        "currency": "usd",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Statement of account. Minimum payment $35.00 due 2026-10-25. New balance $412.88.",
+      "expected": {
+        "kind": "statement",
+        "currency": "usd",
+        "due_date": true
+      }
+    },
+    {
+      "state": "Estimate for kitchen refit: £8,250 including fitting. Not a bill.",
+      "expected": {
+        "kind": "quote",
+        "currency": "gbp",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Delivery note 5. Three boxes shipped to the warehouse. No charges listed.",
+      "expected": {
+        "kind": "receipt",
+        "currency": "none",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Invoice 9 for web hosting, £96.00, due on receipt, no later than 2026-12-01.",
+      "expected": {
+        "kind": "invoice",
+        "currency": "gbp",
+        "due_date": true
+      }
+    },
+    {
+      "state": "Paid. €12.00 received from the customer on 2026-08-30. Receipt number 551.",
+      "expected": {
+        "kind": "receipt",
+        "currency": "eur",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Monthly statement: 14 transactions, ending balance $2,310.00. No payment is required.",
+      "expected": {
+        "kind": "statement",
+        "currency": "usd",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Quotation for printing 500 flyers: €210. Prices valid until the end of the month.",
+      "expected": {
+        "kind": "quote",
+        "currency": "eur",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Bill for electricity usage. Please remit $73.10 by 2026-11-03 to avoid a late fee.",
+      "expected": {
+        "kind": "invoice",
+        "currency": "usd",
+        "due_date": true
+      }
+    },
+    {
+      "state": "Statement summary for the quarter. Balance carried forward. Amounts in pounds sterling are not shown.",
+      "expected": {
+        "kind": "statement",
+        "currency": "none",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Receipt for returned goods. Refund of $45.00 issued to the original card.",
+      "expected": {
+        "kind": "receipt",
+        "currency": "usd",
+        "due_date": false
+      }
+    },
+    {
+      "state": "Invoice 88 for design work, $1,200.00. Net 30: payment due 2026-11-30.",
+      "expected": {
+        "kind": "invoice",
+        "currency": "usd",
+        "due_date": true
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Proof of payment: £230.00 received on 2026-10-10 for order 4410. Paid in full.",
+      "expected": {
+        "kind": "receipt",
+        "currency": "gbp",
+        "due_date": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Account statement. Closing balance €5,640.20. Payment due 2026-11-02.",
+      "expected": {
+        "kind": "statement",
+        "currency": "eur",
+        "due_date": true
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Price estimate for a bathroom remodel: $6,400. This is a quote, not an invoice.",
+      "expected": {
+        "kind": "quote",
+        "currency": "usd",
+        "due_date": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Quote 12: translation services, £340, valid 14 days from issue.",
+      "expected": {
+        "kind": "quote",
+        "currency": "gbp",
+        "due_date": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Please pay the attached invoice of €75.50 by 2026-12-12.",
+      "expected": {
+        "kind": "invoice",
+        "currency": "eur",
+        "due_date": true
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Your donation has been received with thanks. No goods or services were provided in exchange.",
+      "expected": {
+        "kind": "receipt",
+        "currency": "none",
+        "due_date": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Statement of fees for the year. Balance $0.00. Nothing is owed.",
+      "expected": {
+        "kind": "statement",
+        "currency": "usd",
+        "due_date": false
+      },
+      "split": "heldout"
+    }
+  ]
+}

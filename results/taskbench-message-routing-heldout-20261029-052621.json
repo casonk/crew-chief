@@ -1,0 +1,1162 @@
+[
+  {
+    "runner": "rules",
+    "task": "message-routing",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "intent": {
+        "accuracy": 0.9,
+        "invalid": 0,
+        "n": 10,
+        "brier": null
+      },
+      "urgent": {
+        "accuracy": 0.9,
+        "invalid": 0,
+        "n": 10,
+        "brier": null
+      },
+      "risk": {
+        "accuracy": 0.9,
+        "invalid": 0,
+        "n": 10,
+        "brier": null
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "intent": {
+            "value": "question",
+            "expected": "question",
+            "p": null
+          },
+          "urgent": {
+            "value": "true",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "conversation",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "1",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": null
+          },
+          "urgent": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "2",
+            "expected": "2",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": null
+          },
+          "urgent": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          },
+          "risk": {
+            "value": "1",
+            "expected": "1",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "intent": {
+            "value": "question",
+            "expected": "question",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "intent": {
+            "value": "conversation",
+            "expected": "conversation",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "2",
+            "expected": "2",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "message-routing",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_median": 129.4,
+    "latency_ms_p90": 143.6,
+    "questions": {
+      "intent": {
+        "accuracy": 0.9,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.148
+      },
+      "urgent": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.021
+      },
+      "risk": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.073
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "question",
+            "p": {
+              "command": 0.8311117451356421,
+              "conversation": 0.002559439641267473,
+              "notification": 0.00868896704192087,
+              "question": 0.15763984818116947
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.15364160095998905,
+              "false": 0.846358399040011
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9668127692042496,
+              "1": 0.02862345155822511,
+              "2": 0.004563779237525435
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "intent": {
+            "value": "conversation",
+            "expected": "conversation",
+            "p": {
+              "command": 0.029437847303194535,
+              "conversation": 0.9329320793965711,
+              "notification": 0.0326463681522294,
+              "question": 0.0049837051480049206
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.02575128320545651,
+              "false": 0.9742487167945435
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.775200214571179,
+              "1": 0.2001250521460148,
+              "2": 0.024674733282806307
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": {
+              "command": 0.02032976266314652,
+              "conversation": 0.002143512771766813,
+              "notification": 0.9612459066006316,
+              "question": 0.016280817964455165
+            }
+          },
+          "urgent": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.8490067652076712,
+              "false": 0.15099323479232885
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.7128077895525949,
+              "1": 0.22453510177412567,
+              "2": 0.06265710867327925
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": {
+              "command": 0.8192230146643592,
+              "conversation": 0.03173715533490905,
+              "notification": 0.09782675397248151,
+              "question": 0.051213076028250086
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.14757533649448976,
+              "false": 0.8524246635055103
+            }
+          },
+          "risk": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.039082117740880655,
+              "1": 0.0833857768967339,
+              "2": 0.8775321053623855
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": {
+              "command": 0.9540477783630039,
+              "conversation": 0.004178176092513075,
+              "notification": 0.022226131274964537,
+              "question": 0.01954791426951856
+            }
+          },
+          "urgent": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.8677762674544016,
+              "false": 0.13222373254559838
+            }
+          },
+          "risk": {
+            "value": "1",
+            "expected": "1",
+            "p": {
+              "0": 0.04321026025869717,
+              "1": 0.9367759684811678,
+              "2": 0.020013771260135003
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": {
+              "command": 0.0018833325057157587,
+              "conversation": 0.004710002053112259,
+              "notification": 0.9902523732107574,
+              "question": 0.0031542922304144826
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.01249160089149903,
+              "false": 0.987508399108501
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9790707030808768,
+              "1": 0.015589651534999712,
+              "2": 0.005339645384123418
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "intent": {
+            "value": "question",
+            "expected": "question",
+            "p": {
+              "command": 0.010882190957937441,
+              "conversation": 0.005657350382460093,
+              "notification": 0.0069994561209030855,
+              "question": 0.9764610025386995
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.018102863413641014,
+              "false": 0.981897136586359
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9694669375603299,
+              "1": 0.022837721774959994,
+              "2": 0.007695340664710029
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "intent": {
+            "value": "conversation",
+            "expected": "conversation",
+            "p": {
+              "command": 0.010134400101745772,
+              "conversation": 0.9240526619485374,
+              "notification": 0.046623697438460586,
+              "question": 0.019189240511256322
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.016933753508058487,
+              "false": 0.9830662464919415
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9206733450597221,
+              "1": 0.042972597622657954,
+              "2": 0.03635405731761991
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": {
+              "command": 0.9042832685648441,
+              "conversation": 0.013343852568333215,
+              "notification": 0.04518913790470488,
+              "question": 0.03718374096211794
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.12045646724687155,
+              "false": 0.8795435327531285
+            }
+          },
+          "risk": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.009891659373119761,
+              "1": 0.029590396785204216,
+              "2": 0.9605179438416761
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": {
+              "command": 0.030088662099865715,
+              "conversation": 0.00450909383938524,
+              "notification": 0.9434119212561978,
+              "question": 0.021990322804551113
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.05356119487757662,
+              "false": 0.9464388051224234
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.49177108797802566,
+              "1": 0.44134104260044277,
+              "2": 0.0668878694215317
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "message-routing",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_median": 144.5,
+    "latency_ms_p90": 151.4,
+    "questions": {
+      "intent": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.011
+      },
+      "urgent": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.044
+      },
+      "risk": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.008
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "intent": {
+            "value": "question",
+            "expected": "question",
+            "p": {
+              "command": 0.05940273262039625,
+              "question": 0.9403423319002959,
+              "conversation": 0.00010503249020908645,
+              "notification": 0.00014990298909858517
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.10413429580236695,
+              "false": 0.895865704197633
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9877959995340351,
+              "1": 0.011968380219577095,
+              "2": 0.0002356202463877483
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "intent": {
+            "value": "conversation",
+            "expected": "conversation",
+            "p": {
+              "command": 0.0017214397586838715,
+              "question": 0.0010577422697920973,
+              "conversation": 0.9969996724672058,
+              "notification": 0.0002211455043184251
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.005480189286980794,
+              "false": 0.9945198107130192
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.8756657058938708,
+              "1": 0.008794308357154992,
+              "2": 0.11553998574897428
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": {
+              "command": 0.0032719963072796307,
+              "question": 0.02453470834038189,
+              "conversation": 7.936144375763216e-05,
+              "notification": 0.9721139339085807
+            }
+          },
+          "urgent": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9793117585727985,
+              "false": 0.020688241427201493
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9129364171859066,
+              "1": 0.08471280678612046,
+              "2": 0.0023507760279728412
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": {
+              "command": 0.8822117235651643,
+              "question": 0.005760332256285866,
+              "conversation": 0.11088712370188933,
+              "notification": 0.0011408204766605718
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.3512328278959527,
+              "false": 0.6487671721040473
+            }
+          },
+          "risk": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.005634601406348825,
+              "1": 0.0046194518438665965,
+              "2": 0.9897459467497844
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": {
+              "command": 0.820856422554212,
+              "question": 0.17867762390239642,
+              "conversation": 0.00022419134196187813,
+              "notification": 0.0002417622014296831
+            }
+          },
+          "urgent": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9454007725880982,
+              "false": 0.05459922741190182
+            }
+          },
+          "risk": {
+            "value": "1",
+            "expected": "1",
+            "p": {
+              "0": 0.014981290963297388,
+              "1": 0.984764409373036,
+              "2": 0.0002542996636665146
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": {
+              "command": 0.001225222737021373,
+              "question": 0.00040802040890557085,
+              "conversation": 0.0001265094127295524,
+              "notification": 0.9982402474413434
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0021881734383450715,
+              "false": 0.9978118265616549
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.997653143844656,
+              "1": 0.0016415742334978264,
+              "2": 0.0007052819218464405
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "intent": {
+            "value": "question",
+            "expected": "question",
+            "p": {
+              "command": 0.01224842906101446,
+              "question": 0.9874654351488309,
+              "conversation": 0.00013787296902125615,
+              "notification": 0.00014826282113341823
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.043679267576341566,
+              "false": 0.9563207324236584
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9091928940671011,
+              "1": 0.09019123055065037,
+              "2": 0.0006158753822485902
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "intent": {
+            "value": "conversation",
+            "expected": "conversation",
+            "p": {
+              "command": 0.00477392181828778,
+              "question": 0.0025300292522898583,
+              "conversation": 0.9923941536642303,
+              "notification": 0.0003018952651918756
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.012934297180471246,
+              "false": 0.9870657028195288
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9316841656780487,
+              "1": 0.004121894465791125,
+              "2": 0.06419393985616015
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": {
+              "command": 0.9389158993589234,
+              "question": 0.0012248100788049224,
+              "conversation": 0.059543403079785125,
+              "notification": 0.0003158874824865457
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.05749596609012251,
+              "false": 0.9425040339098775
+            }
+          },
+          "risk": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.0022104209491455766,
+              "1": 0.0009581584384181264,
+              "2": 0.9968314206124362
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": {
+              "command": 0.007771484572318464,
+              "question": 0.00595621771211525,
+              "conversation": 0.0007143300795977894,
+              "notification": 0.9855579676359686
+            }
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.2749334865740401,
+              "false": 0.72506651342596
+            }
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9442816004307423,
+              "1": 0.051881677178829924,
+              "2": 0.0038367223904279095
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "ollama:qwen3:14b",
+    "task": "message-routing",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_median": 417.6,
+    "latency_ms_p90": 451.3,
+    "questions": {
+      "intent": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": null
+      },
+      "urgent": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": null
+      },
+      "risk": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": null
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "intent": {
+            "value": "question",
+            "expected": "question",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "intent": {
+            "value": "conversation",
+            "expected": "conversation",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": null
+          },
+          "urgent": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "2",
+            "expected": "2",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": null
+          },
+          "urgent": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          },
+          "risk": {
+            "value": "1",
+            "expected": "1",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "intent": {
+            "value": "question",
+            "expected": "question",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "intent": {
+            "value": "conversation",
+            "expected": "conversation",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "answers": {
+          "intent": {
+            "value": "command",
+            "expected": "command",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "2",
+            "expected": "2",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "answers": {
+          "intent": {
+            "value": "notification",
+            "expected": "notification",
+            "p": null
+          },
+          "urgent": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          },
+          "risk": {
+            "value": "0",
+            "expected": "0",
+            "p": null
+          }
+        }
+      }
+    ]
+  }
+]
