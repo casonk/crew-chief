@@ -1,0 +1,970 @@
+[
+  {
+    "runner": "rules",
+    "task": "schema-extraction",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "kind": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": null
+      },
+      "currency": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": null
+      },
+      "due_date": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": null
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "kind": {
+            "value": "invoice",
+            "expected": "invoice",
+            "p": null
+          },
+          "currency": {
+            "value": "usd",
+            "expected": "usd",
+            "p": null
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "kind": {
+            "value": "receipt",
+            "expected": "receipt",
+            "p": null
+          },
+          "currency": {
+            "value": "gbp",
+            "expected": "gbp",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "kind": {
+            "value": "statement",
+            "expected": "statement",
+            "p": null
+          },
+          "currency": {
+            "value": "eur",
+            "expected": "eur",
+            "p": null
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "kind": {
+            "value": "quote",
+            "expected": "quote",
+            "p": null
+          },
+          "currency": {
+            "value": "usd",
+            "expected": "usd",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "kind": {
+            "value": "quote",
+            "expected": "quote",
+            "p": null
+          },
+          "currency": {
+            "value": "gbp",
+            "expected": "gbp",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "kind": {
+            "value": "invoice",
+            "expected": "invoice",
+            "p": null
+          },
+          "currency": {
+            "value": "eur",
+            "expected": "eur",
+            "p": null
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "kind": {
+            "value": "receipt",
+            "expected": "receipt",
+            "p": null
+          },
+          "currency": {
+            "value": "none",
+            "expected": "none",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "kind": {
+            "value": "statement",
+            "expected": "statement",
+            "p": null
+          },
+          "currency": {
+            "value": "usd",
+            "expected": "usd",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "schema-extraction",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_median": 119.0,
+    "latency_ms_p90": 10442.8,
+    "questions": {
+      "kind": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.012
+      },
+      "currency": {
+        "accuracy": 0.875,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.081
+      },
+      "due_date": {
+        "accuracy": 0.875,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.078
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "kind": {
+            "value": "invoice",
+            "expected": "invoice",
+            "p": {
+              "invoice": 0.9631679962522682,
+              "quote": 0.015165942952846389,
+              "receipt": 0.010584283748280285,
+              "statement": 0.011081777046605177
+            }
+          },
+          "currency": {
+            "value": "usd",
+            "expected": "usd",
+            "p": {
+              "eur": 0.026471444681600297,
+              "gbp": 0.02075628566795141,
+              "none": 0.09641768468525719,
+              "usd": 0.8563545849651912
+            }
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.970802943861538,
+              "false": 0.02919705613846202
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "kind": {
+            "value": "receipt",
+            "expected": "receipt",
+            "p": {
+              "invoice": 0.008299635953047522,
+              "quote": 0.005825922867306873,
+              "receipt": 0.9747184724304153,
+              "statement": 0.011155968749230085
+            }
+          },
+          "currency": {
+            "value": "gbp",
+            "expected": "gbp",
+            "p": {
+              "eur": 0.009905445373060205,
+              "gbp": 0.9725073653363604,
+              "none": 0.00995211237344039,
+              "usd": 0.0076350769171390715
+            }
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0750004139691766,
+              "false": 0.9249995860308234
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "kind": {
+            "value": "statement",
+            "expected": "statement",
+            "p": {
+              "invoice": 0.009482807852594243,
+              "quote": 0.005943676396403002,
+              "receipt": 0.00986936111852625,
+              "statement": 0.9747041546324765
+            }
+          },
+          "currency": {
+            "value": "eur",
+            "expected": "eur",
+            "p": {
+              "eur": 0.9481366691692117,
+              "gbp": 0.01465234842278007,
+              "none": 0.020388607641207788,
+              "usd": 0.016822374766800444
+            }
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.973819975816152,
+              "false": 0.026180024183848016
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "kind": {
+            "value": "quote",
+            "expected": "quote",
+            "p": {
+              "invoice": 0.011203889907477733,
+              "quote": 0.9745055228410924,
+              "receipt": 0.007529877487811913,
+              "statement": 0.006760709763618129
+            }
+          },
+          "currency": {
+            "value": "usd",
+            "expected": "usd",
+            "p": {
+              "eur": 0.028297346084536615,
+              "gbp": 0.02772107559731597,
+              "none": 0.05878872711002598,
+              "usd": 0.8851928512081214
+            }
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.01740099831302105,
+              "false": 0.982599001686979
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "kind": {
+            "value": "quote",
+            "expected": "quote",
+            "p": {
+              "invoice": 0.16256255292372923,
+              "quote": 0.7770025511762175,
+              "receipt": 0.030269427652002637,
+              "statement": 0.030165468248050754
+            }
+          },
+          "currency": {
+            "value": "gbp",
+            "expected": "gbp",
+            "p": {
+              "eur": 0.014690929616065641,
+              "gbp": 0.9709526475897325,
+              "none": 0.007894831338591778,
+              "usd": 0.006461591455609865
+            }
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "false",
+            "p": {
+              "true": 0.5491878560425366,
+              "false": 0.4508121439574634
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "kind": {
+            "value": "invoice",
+            "expected": "invoice",
+            "p": {
+              "invoice": 0.9650891037309369,
+              "quote": 0.012833347413613404,
+              "receipt": 0.01195209149596332,
+              "statement": 0.010125457359486292
+            }
+          },
+          "currency": {
+            "value": "eur",
+            "expected": "eur",
+            "p": {
+              "eur": 0.9495693063494024,
+              "gbp": 0.015462289826677307,
+              "none": 0.01962484760386,
+              "usd": 0.01534355622006033
+            }
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9768024759136924,
+              "false": 0.023197524086307597
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "kind": {
+            "value": "receipt",
+            "expected": "receipt",
+            "p": {
+              "invoice": 0.022010968591447515,
+              "quote": 0.012732521907715106,
+              "receipt": 0.9253153506173378,
+              "statement": 0.0399411588834996
+            }
+          },
+          "currency": {
+            "value": "none",
+            "expected": "none",
+            "p": {
+              "eur": 0.008936407024989781,
+              "gbp": 0.011884499919985064,
+              "none": 0.9700605762550023,
+              "usd": 0.009118516800022841
+            }
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.009274439757368254,
+              "false": 0.9907255602426317
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "kind": {
+            "value": "statement",
+            "expected": "statement",
+            "p": {
+              "invoice": 0.009141569511366805,
+              "quote": 0.018226415862669407,
+              "receipt": 0.020785385855046516,
+              "statement": 0.9518466287709173
+            }
+          },
+          "currency": {
+            "value": "none",
+            "expected": "usd",
+            "p": {
+              "eur": 0.06444429887098743,
+              "gbp": 0.06568956470124708,
+              "none": 0.47102886023140217,
+              "usd": 0.3988372761963633
+            }
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.02032652707902075,
+              "false": 0.9796734729209793
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "schema-extraction",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_median": 157.1,
+    "latency_ms_p90": 9609.3,
+    "questions": {
+      "kind": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.0
+      },
+      "currency": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.087
+      },
+      "due_date": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.0
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "kind": {
+            "value": "invoice",
+            "expected": "invoice",
+            "p": {
+              "invoice": 0.9959811998781888,
+              "receipt": 0.002507142286958395,
+              "statement": 0.00010829433862212047,
+              "quote": 0.0014033634962307246
+            }
+          },
+          "currency": {
+            "value": "usd",
+            "expected": "usd",
+            "p": {
+              "usd": 0.9891396442973819,
+              "eur": 0.005363829372875083,
+              "gbp": 0.0014791960898279022,
+              "none": 0.004017330239915227
+            }
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.997079835575107,
+              "false": 0.002920164424892957
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "kind": {
+            "value": "receipt",
+            "expected": "receipt",
+            "p": {
+              "invoice": 0.00098151116131774,
+              "receipt": 0.9866480770483186,
+              "statement": 0.012067136313406729,
+              "quote": 0.0003032754769567297
+            }
+          },
+          "currency": {
+            "value": "gbp",
+            "expected": "gbp",
+            "p": {
+              "usd": 0.0002547104091430701,
+              "eur": 0.0016856287903356348,
+              "gbp": 0.9979494850957972,
+              "none": 0.00011017570472411619
+            }
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.016415223120515094,
+              "false": 0.9835847768794849
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "kind": {
+            "value": "statement",
+            "expected": "statement",
+            "p": {
+              "invoice": 0.00014281855025793504,
+              "receipt": 0.007702896465977894,
+              "statement": 0.9919422488714819,
+              "quote": 0.00021203611228223145
+            }
+          },
+          "currency": {
+            "value": "eur",
+            "expected": "eur",
+            "p": {
+              "usd": 6.533770181700658e-05,
+              "eur": 0.9970158265570834,
+              "gbp": 0.0027436296119883303,
+              "none": 0.00017520612911104698
+            }
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9998116809603252,
+              "false": 0.00018831903967475583
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "kind": {
+            "value": "quote",
+            "expected": "quote",
+            "p": {
+              "invoice": 0.0013524510769305717,
+              "receipt": 7.661418686376435e-05,
+              "statement": 2.1226291689157572e-05,
+              "quote": 0.9985497084445165
+            }
+          },
+          "currency": {
+            "value": "usd",
+            "expected": "usd",
+            "p": {
+              "usd": 0.9668993597603048,
+              "eur": 0.0009464292813755759,
+              "gbp": 0.0007397622105048077,
+              "none": 0.03141444874781496
+            }
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0013322656070173242,
+              "false": 0.9986677343929827
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "kind": {
+            "value": "quote",
+            "expected": "quote",
+            "p": {
+              "invoice": 0.002224970040150278,
+              "receipt": 0.0005349898219532587,
+              "statement": 0.002234897134413714,
+              "quote": 0.9950051430034828
+            }
+          },
+          "currency": {
+            "value": "gbp",
+            "expected": "gbp",
+            "p": {
+              "usd": 0.00044745819228487126,
+              "eur": 0.0005541529651670254,
+              "gbp": 0.9967227990522309,
+              "none": 0.002275589790317231
+            }
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.015413722463983745,
+              "false": 0.9845862775360162
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "kind": {
+            "value": "invoice",
+            "expected": "invoice",
+            "p": {
+              "invoice": 0.9930890471219446,
+              "receipt": 0.0066012629939187,
+              "statement": 5.2434619658108055e-05,
+              "quote": 0.00025725526447860944
+            }
+          },
+          "currency": {
+            "value": "eur",
+            "expected": "eur",
+            "p": {
+              "usd": 0.0004592102879665482,
+              "eur": 0.9991005584073067,
+              "gbp": 0.00016974618246067856,
+              "none": 0.00027048512226593376
+            }
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9992718989485309,
+              "false": 0.0007281010514691433
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "kind": {
+            "value": "receipt",
+            "expected": "receipt",
+            "p": {
+              "invoice": 0.0026590943485168264,
+              "receipt": 0.9930489286328882,
+              "statement": 0.001964466489340875,
+              "quote": 0.002327510529254111
+            }
+          },
+          "currency": {
+            "value": "none",
+            "expected": "none",
+            "p": {
+              "usd": 0.17663317056210392,
+              "eur": 0.1478580935266933,
+              "gbp": 0.04642739265521241,
+              "none": 0.6290813432559903
+            }
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.011563827224662463,
+              "false": 0.9884361727753376
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "kind": {
+            "value": "statement",
+            "expected": "statement",
+            "p": {
+              "invoice": 0.03381598872687977,
+              "receipt": 0.006309045351969128,
+              "statement": 0.9560723611095663,
+              "quote": 0.003802604811584836
+            }
+          },
+          "currency": {
+            "value": "usd",
+            "expected": "usd",
+            "p": {
+              "usd": 0.430569449320104,
+              "eur": 0.022902846541352852,
+              "gbp": 0.15663738396112825,
+              "none": 0.38989032017741504
+            }
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.027172256494633944,
+              "false": 0.972827743505366
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "ollama:qwen3:14b",
+    "task": "schema-extraction",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_median": 436.0,
+    "latency_ms_p90": 9068.1,
+    "questions": {
+      "kind": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": null
+      },
+      "currency": {
+        "accuracy": 0.75,
+        "invalid": 0,
+        "n": 8,
+        "brier": null
+      },
+      "due_date": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": null
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "kind": {
+            "value": "invoice",
+            "expected": "invoice",
+            "p": null
+          },
+          "currency": {
+            "value": "none",
+            "expected": "usd",
+            "p": null
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "kind": {
+            "value": "receipt",
+            "expected": "receipt",
+            "p": null
+          },
+          "currency": {
+            "value": "gbp",
+            "expected": "gbp",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "kind": {
+            "value": "statement",
+            "expected": "statement",
+            "p": null
+          },
+          "currency": {
+            "value": "eur",
+            "expected": "eur",
+            "p": null
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "kind": {
+            "value": "quote",
+            "expected": "quote",
+            "p": null
+          },
+          "currency": {
+            "value": "usd",
+            "expected": "usd",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "kind": {
+            "value": "quote",
+            "expected": "quote",
+            "p": null
+          },
+          "currency": {
+            "value": "gbp",
+            "expected": "gbp",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "kind": {
+            "value": "invoice",
+            "expected": "invoice",
+            "p": null
+          },
+          "currency": {
+            "value": "eur",
+            "expected": "eur",
+            "p": null
+          },
+          "due_date": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "kind": {
+            "value": "receipt",
+            "expected": "receipt",
+            "p": null
+          },
+          "currency": {
+            "value": "none",
+            "expected": "none",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "kind": {
+            "value": "statement",
+            "expected": "statement",
+            "p": null
+          },
+          "currency": {
+            "value": "none",
+            "expected": "usd",
+            "p": null
+          },
+          "due_date": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,1378 @@
+[
+  {
+    "runner": "rules",
+    "task": "receipt-category",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 16,
+        "brier": null
+      },
+      "recurring": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 16,
+        "brier": null
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "groceries",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "category": {
+            "value": "dining",
+            "expected": "dining",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "category": {
+            "value": "entertainment",
+            "expected": "entertainment",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "category": {
+            "value": "dining",
+            "expected": "dining",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 10,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "groceries",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 11,
+        "answers": {
+          "category": {
+            "value": "entertainment",
+            "expected": "entertainment",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 12,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 13,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 14,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 15,
+        "answers": {
+          "category": {
+            "value": "dining",
+            "expected": "dining",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "receipt-category",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_median": 104.3,
+    "latency_ms_p90": 124.6,
+    "questions": {
+      "category": {
+        "accuracy": 0.938,
+        "invalid": 0,
+        "n": 16,
+        "brier": 0.045
+      },
+      "recurring": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 16,
+        "brier": 0.03
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "groceries",
+            "p": {
+              "dining": 0.01617191358433381,
+              "entertainment": 0.006316404044945206,
+              "groceries": 0.9556769045975538,
+              "health": 0.007903863932088697,
+              "transport": 0.006705322249268302,
+              "utilities": 0.007225591591810219
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.1459671463659656,
+              "false": 0.8540328536340344
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "category": {
+            "value": "dining",
+            "expected": "dining",
+            "p": {
+              "dining": 0.9662731048141053,
+              "entertainment": 0.006432321040746904,
+              "groceries": 0.01069241040430076,
+              "health": 0.006125711548801806,
+              "transport": 0.005449305351979942,
+              "utilities": 0.005027146840065378
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.041245206142425904,
+              "false": 0.9587547938575741
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": {
+              "dining": 0.0029322207250320363,
+              "entertainment": 0.009626795266058023,
+              "groceries": 0.0035458410397064804,
+              "health": 0.004456921911670105,
+              "transport": 0.9636376823578838,
+              "utilities": 0.0158005386996495
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.8460644160523629,
+              "false": 0.15393558394763707
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": {
+              "dining": 0.0038570421576156677,
+              "entertainment": 0.00427405155362413,
+              "groceries": 0.004872118644028294,
+              "health": 0.004493281991572497,
+              "transport": 0.005573704443097394,
+              "utilities": 0.9769298012100621
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.8809563672967872,
+              "false": 0.11904363270321283
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "category": {
+            "value": "entertainment",
+            "expected": "entertainment",
+            "p": {
+              "dining": 0.008286778050171924,
+              "entertainment": 0.9168903060797808,
+              "groceries": 0.005830251362625831,
+              "health": 0.008588364223416023,
+              "transport": 0.011653499048782968,
+              "utilities": 0.04875080123522229
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9623491872835451,
+              "false": 0.03765081271645487
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": {
+              "dining": 0.004039441913947711,
+              "entertainment": 0.004668376473603357,
+              "groceries": 0.01099720864588663,
+              "health": 0.9690587031572218,
+              "transport": 0.005213361829105315,
+              "utilities": 0.006022907980235356
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.1505941341386221,
+              "false": 0.8494058658613779
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": {
+              "dining": 0.0031494668821375766,
+              "entertainment": 0.003437202623917738,
+              "groceries": 0.007731821986559008,
+              "health": 0.003544727022267735,
+              "transport": 0.9751108919202925,
+              "utilities": 0.007025889564825452
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.12600130135127116,
+              "false": 0.8739986986487288
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "category": {
+            "value": "dining",
+            "expected": "dining",
+            "p": {
+              "dining": 0.948775366696327,
+              "entertainment": 0.01187458248253076,
+              "groceries": 0.017588995963105262,
+              "health": 0.008052153360015966,
+              "transport": 0.007194328260946649,
+              "utilities": 0.0065145732370746135
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.03913379837546738,
+              "false": 0.9608662016245326
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": {
+              "dining": 0.004156111626898169,
+              "entertainment": 0.012087957949172098,
+              "groceries": 0.00446388807504713,
+              "health": 0.004557020943963909,
+              "transport": 0.004617846722789495,
+              "utilities": 0.9701171746821293
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9199050434076836,
+              "false": 0.08009495659231636
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": {
+              "dining": 0.008375034841152741,
+              "entertainment": 0.06874206785125817,
+              "groceries": 0.008660823338853344,
+              "health": 0.8659078194606513,
+              "transport": 0.013188023625199712,
+              "utilities": 0.035126230882884746
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9191511944907929,
+              "false": 0.08084880550920714
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "groceries",
+            "p": {
+              "dining": 0.00829893415263477,
+              "entertainment": 0.005848740674230751,
+              "groceries": 0.9676921481694833,
+              "health": 0.0067070532424653275,
+              "transport": 0.005991655075284822,
+              "utilities": 0.005461468685900914
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.19636268332810838,
+              "false": 0.8036373166718916
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "answers": {
+          "category": {
+            "value": "entertainment",
+            "expected": "entertainment",
+            "p": {
+              "dining": 0.004896303666920238,
+              "entertainment": 0.9623090206619981,
+              "groceries": 0.0055086228637664676,
+              "health": 0.005324082261357761,
+              "transport": 0.005372734377147081,
+              "utilities": 0.016589236168810424
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.03989267722291098,
+              "false": 0.960107322777089
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": {
+              "dining": 0.003566646894988838,
+              "entertainment": 0.004838213925760427,
+              "groceries": 0.0033747311435962197,
+              "health": 0.004404960340266981,
+              "transport": 0.9754877315825705,
+              "utilities": 0.008327716112817034
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.04049245699487788,
+              "false": 0.9595075430051221
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": {
+              "dining": 0.005281011784340304,
+              "entertainment": 0.006756301486622095,
+              "groceries": 0.00568146551206109,
+              "health": 0.9685840964973222,
+              "transport": 0.006583074109446372,
+              "utilities": 0.007114050610208016
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.2741440935067277,
+              "false": 0.7258559064932724
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": {
+              "dining": 0.0028180238526105406,
+              "entertainment": 0.011781560855528018,
+              "groceries": 0.0028971465039603606,
+              "health": 0.004127085252881587,
+              "transport": 0.010723809190253702,
+              "utilities": 0.9676523743447657
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9267856367767742,
+              "false": 0.07321436322322583
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "dining",
+            "p": {
+              "dining": 0.41941164226536026,
+              "entertainment": 0.004988758887375756,
+              "groceries": 0.5681016152358771,
+              "health": 0.002833220777947532,
+              "transport": 0.0026091632140219996,
+              "utilities": 0.002055599619417366
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.027603111857678397,
+              "false": 0.9723968881423216
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "receipt-category",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_median": 138.9,
+    "latency_ms_p90": 146.4,
+    "questions": {
+      "category": {
+        "accuracy": 0.938,
+        "invalid": 0,
+        "n": 16,
+        "brier": 0.034
+      },
+      "recurring": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 16,
+        "brier": 0.007
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "groceries",
+            "p": {
+              "groceries": 0.9929208866042908,
+              "dining": 0.005582144561775213,
+              "transport": 0.00028488014009074445,
+              "utilities": 0.0003031451872320935,
+              "entertainment": 7.436547770338694e-05,
+              "health": 0.000834578028907945
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.10788623193806718,
+              "false": 0.8921137680619329
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "category": {
+            "value": "dining",
+            "expected": "dining",
+            "p": {
+              "groceries": 0.00589777493779506,
+              "dining": 0.9929548825332557,
+              "transport": 0.00013966723328533813,
+              "utilities": 0.0001249822876030193,
+              "entertainment": 3.471281573312003e-05,
+              "health": 0.0008479801923275484
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.03984038072736366,
+              "false": 0.9601596192726364
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": {
+              "groceries": 0.00010673487665670507,
+              "dining": 0.007907972837608532,
+              "transport": 0.9914668938298902,
+              "utilities": 0.00011667313765235277,
+              "entertainment": 9.131625038027882e-05,
+              "health": 0.0003104090678120778
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9950546780598333,
+              "false": 0.004945321940166725
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": {
+              "groceries": 0.00014604725086858974,
+              "dining": 0.006868605732970391,
+              "transport": 7.994711821015168e-05,
+              "utilities": 0.9927790357414227,
+              "entertainment": 2.6487803419231418e-05,
+              "health": 9.987635310880431e-05
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9946727770729715,
+              "false": 0.005327222927028474
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "category": {
+            "value": "entertainment",
+            "expected": "entertainment",
+            "p": {
+              "groceries": 0.00020997104394807376,
+              "dining": 0.006030033579922179,
+              "transport": 0.00017800783673473897,
+              "utilities": 0.005261324885116358,
+              "entertainment": 0.9876102313736399,
+              "health": 0.0007104312806388657
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9991496766291944,
+              "false": 0.0008503233708055946
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": {
+              "groceries": 0.005679942375553843,
+              "dining": 0.0010971197211989132,
+              "transport": 6.836919181039783e-05,
+              "utilities": 0.00012002669007883757,
+              "entertainment": 5.520435096979693e-05,
+              "health": 0.9929793376703883
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.07402479890968282,
+              "false": 0.9259752010903172
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": {
+              "groceries": 0.0025925098922099606,
+              "dining": 0.0003450004044734696,
+              "transport": 0.9967616759425134,
+              "utilities": 0.00010380329272803133,
+              "entertainment": 2.627157630828048e-05,
+              "health": 0.00017073889176692737
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.037744940284685474,
+              "false": 0.9622550597153146
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "category": {
+            "value": "dining",
+            "expected": "dining",
+            "p": {
+              "groceries": 0.005160339245319925,
+              "dining": 0.9936546813241132,
+              "transport": 0.00011063050665148478,
+              "utilities": 0.00014378635102182217,
+              "entertainment": 0.0001672157137934346,
+              "health": 0.0007633468591003569
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0329741921336852,
+              "false": 0.9670258078663148
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": {
+              "groceries": 9.982881048747473e-05,
+              "dining": 0.008042497190918202,
+              "transport": 7.300992430780017e-05,
+              "utilities": 0.9904647046989913,
+              "entertainment": 0.0010081420058086494,
+              "health": 0.0003118173694867896
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9969364608215697,
+              "false": 0.0030635391784302746
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": {
+              "groceries": 0.00010671328200079036,
+              "dining": 0.01041586993155237,
+              "transport": 4.3872880459130994e-05,
+              "utilities": 9.436095408899368e-05,
+              "entertainment": 0.00027875162284960673,
+              "health": 0.9890604313290492
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9963035171131014,
+              "false": 0.003696482886898611
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "groceries",
+            "p": {
+              "groceries": 0.9946182111491795,
+              "dining": 0.00398325410263052,
+              "transport": 0.00018087560822338118,
+              "utilities": 0.0002350616402096805,
+              "entertainment": 5.7968328286558824e-05,
+              "health": 0.0009246291714704228
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.1417474048134247,
+              "false": 0.8582525951865753
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "answers": {
+          "category": {
+            "value": "entertainment",
+            "expected": "entertainment",
+            "p": {
+              "groceries": 0.007856755348428146,
+              "dining": 0.002472864989011169,
+              "transport": 0.00013625515023095878,
+              "utilities": 0.00017208470009165327,
+              "entertainment": 0.9886367992463618,
+              "health": 0.0007252405658763478
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0795409324699064,
+              "false": 0.9204590675300937
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": {
+              "groceries": 0.0024427611845615023,
+              "dining": 0.0006346160437412853,
+              "transport": 0.9962070757436171,
+              "utilities": 0.00014062093624427985,
+              "entertainment": 4.2925917140555565e-05,
+              "health": 0.000532000174695103
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.03916734498699781,
+              "false": 0.9608326550130022
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": {
+              "groceries": 0.0013493974362620222,
+              "dining": 0.0005061278115403062,
+              "transport": 3.838704726157693e-05,
+              "utilities": 8.39873908295699e-05,
+              "entertainment": 3.8093584212150054e-05,
+              "health": 0.9979840067298943
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.049202925290884804,
+              "false": 0.9507970747091152
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": {
+              "groceries": 0.00014343808345679138,
+              "dining": 0.013230125285814067,
+              "transport": 0.00022372161387132445,
+              "utilities": 0.985314921091814,
+              "entertainment": 0.00036749154810365633,
+              "health": 0.0007203023769400871
+            }
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9976590023817521,
+              "false": 0.0023409976182479086
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "dining",
+            "p": {
+              "groceries": 0.5226887813927952,
+              "dining": 0.4760915001754285,
+              "transport": 0.0004044115120356978,
+              "utilities": 0.00046100929878971814,
+              "entertainment": 9.413395988051984e-05,
+              "health": 0.00026016366107031903
+            }
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.08256403765513767,
+              "false": 0.9174359623448624
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "ollama:qwen3:14b",
+    "task": "receipt-category",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_median": 338.4,
+    "latency_ms_p90": 363.6,
+    "questions": {
+      "category": {
+        "accuracy": 0.938,
+        "invalid": 0,
+        "n": 16,
+        "brier": null
+      },
+      "recurring": {
+        "accuracy": 0.938,
+        "invalid": 0,
+        "n": 16,
+        "brier": null
+      }
+    },
+    "rows": [
+      {
+        "item": 0,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "groceries",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "answers": {
+          "category": {
+            "value": "dining",
+            "expected": "dining",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "answers": {
+          "category": {
+            "value": "entertainment",
+            "expected": "entertainment",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "answers": {
+          "category": {
+            "value": "dining",
+            "expected": "dining",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 10,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "groceries",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 11,
+        "answers": {
+          "category": {
+            "value": "entertainment",
+            "expected": "entertainment",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 12,
+        "answers": {
+          "category": {
+            "value": "transport",
+            "expected": "transport",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 13,
+        "answers": {
+          "category": {
+            "value": "health",
+            "expected": "health",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 14,
+        "answers": {
+          "category": {
+            "value": "utilities",
+            "expected": "utilities",
+            "p": null
+          },
+          "recurring": {
+            "value": "true",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 15,
+        "answers": {
+          "category": {
+            "value": "groceries",
+            "expected": "dining",
+            "p": null
+          },
+          "recurring": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      }
+    ]
+  }
+]

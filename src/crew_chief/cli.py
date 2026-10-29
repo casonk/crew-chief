@@ -263,6 +263,15 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
         help="Runner spec; repeat for several (e.g. --runner rules --runner ollama:qwen3:14b).",
     )
+    task_p.add_argument(
+        "--split",
+        choices=("dev", "heldout", "all"),
+        default="dev",
+        help=(
+            "Items to score (default: dev). Fit rules and prompts on dev; score a fixed "
+            "configuration once on heldout."
+        ),
+    )
     task_p.add_argument("--out", default="results", help="Output directory (default: results).")
 
     return p
@@ -346,7 +355,7 @@ def main(argv: list[str] | None = None) -> None:
         from crew_chief import taskbench as tb
 
         try:
-            task = tb.load_task(Path(args.task))
+            task = tb.load_task(Path(args.task)).select(args.split)
             runners = [tb.make_runner(spec, task) for spec in args.runner]
         except tb.TaskError as exc:
             print(f"Error: {exc}", file=sys.stderr)
@@ -358,7 +367,8 @@ def main(argv: list[str] | None = None) -> None:
         stamp = _time.strftime("%Y%m%d-%H%M%S")
         out = Path(args.out)
         out.mkdir(parents=True, exist_ok=True)
-        base = out / f"taskbench-{tb.slug(task.name)}-{stamp}"
+        suffix = "" if args.split == "dev" else f"-{args.split}"
+        base = out / f"taskbench-{tb.slug(task.name)}{suffix}-{stamp}"
         markdown = tb.render_markdown(results, task, stamp)
         base.with_suffix(".md").write_text(markdown, encoding="utf-8")
         base.with_suffix(".json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")

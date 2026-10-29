@@ -357,6 +357,96 @@
         "urgent": false,
         "risk": "2"
       }
+    },
+    {
+      "state": "what is the load average on the media server right now?",
+      "expected": {
+        "intent": "question",
+        "urgent": false,
+        "risk": "0"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "thanks, that fixed it!",
+      "expected": {
+        "intent": "conversation",
+        "urgent": false,
+        "risk": "0"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "alert: backup job failed on the nas, exit code 2",
+      "expected": {
+        "intent": "notification",
+        "urgent": true,
+        "risk": "0"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "please wipe the scratch volume before the weekend",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "2"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "restart the download client, it has stopped responding",
+      "expected": {
+        "intent": "command",
+        "urgent": true,
+        "risk": "1"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "your order #5521 has shipped and will arrive Thursday",
+      "expected": {
+        "intent": "notification",
+        "urgent": false,
+        "risk": "0"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "could you explain how the nightly sync decides what to copy?",
+      "expected": {
+        "intent": "question",
+        "urgent": false,
+        "risk": "0"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "good morning, hope the migration went smoothly",
+      "expected": {
+        "intent": "conversation",
+        "urgent": false,
+        "risk": "0"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "drop the old reporting table, nobody uses it",
+      "expected": {
+        "intent": "command",
+        "urgent": false,
+        "risk": "2"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "reminder: certificate renewal is due in 3 days",
+      "expected": {
+        "intent": "notification",
+        "urgent": false,
+        "risk": "0"
+      },
+      "split": "heldout"
     }
   ]
 }

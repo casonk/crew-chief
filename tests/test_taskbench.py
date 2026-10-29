@@ -179,5 +179,57 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(result["errors"], 2)
 
 
+class SplitTests(unittest.TestCase):
+    def _task(self):
+        doc = json.loads(json.dumps(MINI))
+        doc["items"][1]["split"] = "heldout"
+        return tb.load_task(write_task(doc))
+
+    def test_select_keeps_one_split(self):
+        task = self._task()
+        self.assertEqual([i["state"] for i in task.select("dev").items], ["bee!"])
+        self.assertEqual([i["state"] for i in task.select("heldout").items], ["ant"])
+        self.assertEqual(len(task.select("all").items), 2)
+        self.assertEqual(task.select("heldout").split, "heldout")
+
+    def test_unknown_and_empty_splits_are_errors(self):
+        task = self._task()
+        with self.assertRaises(tb.TaskError):
+            task.select("test")
+        only_dev = tb.load_task(write_task(MINI))
+        with self.assertRaises(tb.TaskError):
+            only_dev.select("heldout")
+
+    def test_bad_split_value_and_repeated_state_are_rejected(self):
+        bad = json.loads(json.dumps(MINI))
+        bad["items"][0]["split"] = "train"
+        with self.assertRaises(tb.TaskError):
+            tb.load_task(write_task(bad))
+        dup = json.loads(json.dumps(MINI))
+        dup["items"][1]["state"] = "  BEE!"
+        dup["items"][1]["split"] = "heldout"
+        with self.assertRaises(tb.TaskError):
+            tb.load_task(write_task(dup))
+
+    def test_report_names_the_split(self):
+        task = self._task().select("heldout")
+        result = tb.run(task, tb.make_runner("rules", task))
+        self.assertIn("1 items (heldout split)", tb.render_markdown([result], task, "x"))
+
+
+class ShippedSuiteTests(unittest.TestCase):
+    SUITES = ("message-routing", "mail-triage", "receipt-category", "schema-extraction")
+
+    def test_every_suite_has_dev_and_heldout_items_and_no_shared_text(self):
+        for name in self.SUITES:
+            task = tb.load_task(TASK_FILE.with_name(f"{name}.json"))
+            dev, held = task.select("dev"), task.select("heldout")
+            self.assertGreaterEqual(len(dev.items), 16, name)
+            self.assertGreaterEqual(len(held.items), 8, name)
+            self.assertFalse(
+                {i["state"] for i in dev.items} & {i["state"] for i in held.items}, name
+            )
+
+
 if __name__ == "__main__":
     unittest.main()

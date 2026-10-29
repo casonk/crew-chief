@@ -1,0 +1,322 @@
+{
+  "name": "mail-triage",
+  "description": "Triage an incoming email: its kind, how much attention it needs, and whether it looks like phishing. All messages are synthetic. Baseline rules were written against the dev split only.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "What kind of email is this?",
+      "criteria": {
+        "personal": "From a friend or family member about their own life or plans",
+        "billing": "A bill, invoice, payment confirmation or subscription charge",
+        "work": "About a job, a project, a meeting or a colleague's request",
+        "promo": "Marketing, a sale, a newsletter or an unsolicited offer",
+        "security": "About an account's sign-in, password, verification or suspicious activity"
+      }
+    },
+    "action": {
+      "type": "score",
+      "instructions": "How much attention does this email need?",
+      "criteria": [
+        "None: archive or delete",
+        "Read later: useful but nothing is due",
+        "Respond or act soon"
+      ]
+    },
+    "phishing": {
+      "type": "noul",
+      "instructions": "This email looks like a phishing or scam attempt",
+      "criteria": {
+        "true": "Urgent threats, odd sender or links, requests for credentials or payment details",
+        "false": "It reads as a genuine message"
+      }
+    }
+  },
+  "baseline": {
+    "category": {
+      "default": "personal",
+      "rules": [
+        {
+          "if_any": [
+            "password",
+            "sign-in",
+            "verification",
+            "security"
+          ],
+          "then": "security"
+        },
+        {
+          "if_any": [
+            "invoice",
+            "receipt",
+            "bill",
+            "charged",
+            "payment"
+          ],
+          "then": "billing"
+        },
+        {
+          "if_any": [
+            "meeting",
+            "review",
+            "expense",
+            "build",
+            "project"
+          ],
+          "then": "work"
+        },
+        {
+          "if_any": [
+            "sale",
+            "% off",
+            "digest",
+            "won a"
+          ],
+          "then": "promo"
+        }
+      ]
+    },
+    "action": {
+      "default": "1",
+      "rules": [
+        {
+          "if_any": [
+            "sale",
+            "digest",
+            "receipt",
+            "build",
+            "won a",
+            "urgent"
+          ],
+          "then": "0"
+        },
+        {
+          "if_any": [
+            "can you",
+            "could you",
+            "want to",
+            "please",
+            "changed"
+          ],
+          "then": "2"
+        }
+      ]
+    },
+    "phishing": {
+      "default": false,
+      "rules": [
+        {
+          "if_any": [
+            "urgent",
+            "within",
+            "full card",
+            "claim your prize",
+            "pin"
+          ],
+          "then": true
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "From: Maya\nSubject: Saturday hike?\nThe forecast is clear. Want to start at the lower trailhead around nine?",
+      "expected": {
+        "category": "personal",
+        "action": "2",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Billing\nSubject: Your invoice for October\nInvoice 4412 for $24.00 is attached and will be charged on the 3rd.",
+      "expected": {
+        "category": "billing",
+        "action": "1",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Priya (Platform)\nSubject: Review needed on the migration plan\nCould you read section 3 before Thursday's meeting?",
+      "expected": {
+        "category": "work",
+        "action": "2",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Shopfront Deals\nSubject: 40% off everything this weekend\nOur biggest sale of the season ends Sunday night.",
+      "expected": {
+        "category": "promo",
+        "action": "0",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Account Security\nSubject: New sign-in from Berlin\nWe noticed a sign-in from a new device. If this was you, no action is needed.",
+      "expected": {
+        "category": "security",
+        "action": "1",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Support <helpdesk@secure-verify-login.example>\nSubject: URGENT: account suspended\nVerify your password within 12 hours at the link below or lose access permanently.",
+      "expected": {
+        "category": "security",
+        "action": "0",
+        "phishing": true
+      }
+    },
+    {
+      "state": "From: Uncle Tom\nSubject: Photos from the lake\nHere are the pictures from last weekend. The kids loved it.",
+      "expected": {
+        "category": "personal",
+        "action": "1",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Streamly\nSubject: Payment receipt\nWe charged $11.99 to your card ending 4417 for your monthly plan.",
+      "expected": {
+        "category": "billing",
+        "action": "0",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Jordan (Finance)\nSubject: Expense report is missing receipts\nPlease upload the receipts for the March trip by Friday so I can close the month.",
+      "expected": {
+        "category": "work",
+        "action": "2",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: The Weekly Digest\nSubject: Ten stories you may have missed\nThis week: cooking, travel and a new camera review.",
+      "expected": {
+        "category": "promo",
+        "action": "0",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Accounts <billing@acct-update.example>\nSubject: Payment declined, update now\nYour card was declined. Enter your full card number and PIN here to avoid cancellation today.",
+      "expected": {
+        "category": "billing",
+        "action": "0",
+        "phishing": true
+      }
+    },
+    {
+      "state": "From: Sam\nSubject: Can you cover my shift Tuesday?\nSomething came up. I would owe you one.",
+      "expected": {
+        "category": "personal",
+        "action": "2",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Account Security\nSubject: Your password was changed\nYour password was changed today. If you did not do this, reset it now and contact support.",
+      "expected": {
+        "category": "security",
+        "action": "2",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Project Bot\nSubject: Build 981 passed\nAll 212 checks passed on the main branch.",
+      "expected": {
+        "category": "work",
+        "action": "0",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Gift Center\nSubject: You won a $500 gift card!\nClaim your prize in the next hour by entering your email password and date of birth.",
+      "expected": {
+        "category": "promo",
+        "action": "0",
+        "phishing": true
+      }
+    },
+    {
+      "state": "From: Utilities\nSubject: Your water bill is ready\nYour statement for $38.20 is due on the 20th. View it in your account.",
+      "expected": {
+        "category": "billing",
+        "action": "1",
+        "phishing": false
+      }
+    },
+    {
+      "state": "From: Dana\nSubject: Dinner on Friday?\nI booked a table for seven at the new place. Does that work for you?",
+      "expected": {
+        "category": "personal",
+        "action": "2",
+        "phishing": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "From: Payments\nSubject: Subscription renewed\nYour annual plan renewed for $59.00. No action is needed.",
+      "expected": {
+        "category": "billing",
+        "action": "0",
+        "phishing": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "From: Lee (Design)\nSubject: Feedback on the mockups\nI added comments to the shared file. Can you respond to the open questions by tomorrow?",
+      "expected": {
+        "category": "work",
+        "action": "2",
+        "phishing": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "From: Outlet Store\nSubject: Last chance: free shipping\nFree shipping on orders over $25 ends tonight.",
+      "expected": {
+        "category": "promo",
+        "action": "0",
+        "phishing": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "From: Security Team <alert@account-recover.example>\nSubject: Immediate action required\nYour mailbox will be deleted. Confirm your login and recovery code at the link now.",
+      "expected": {
+        "category": "security",
+        "action": "0",
+        "phishing": true
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "From: Account Security\nSubject: Your verification code\nYour one-time code is 482913. It expires in ten minutes.",
+      "expected": {
+        "category": "security",
+        "action": "1",
+        "phishing": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "From: Grandma\nSubject: Thank you\nThe sweater fits perfectly. Come see us when you can.",
+      "expected": {
+        "category": "personal",
+        "action": "1",
+        "phishing": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "From: Alex (Ops)\nSubject: Maintenance window moved\nThe database maintenance now starts at 22:00 Sunday. Please confirm you can cover on-call.",
+      "expected": {
+        "category": "work",
+        "action": "2",
+        "phishing": false
+      },
+      "split": "heldout"
+    }
+  ]
+}

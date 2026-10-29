@@ -1,0 +1,272 @@
+{
+  "name": "receipt-category",
+  "description": "Categorize a receipt line and tell whether the charge recurs. All merchants and amounts are synthetic. Baseline rules were written against the dev split only.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which spending category does this receipt line belong to?",
+      "criteria": {
+        "groceries": "Food and household supplies bought to take home",
+        "dining": "Restaurants, cafes, bars and takeaway meals",
+        "transport": "Fuel, transit, parking, rideshare and vehicle costs",
+        "utilities": "Electricity, water, internet, phone and similar services",
+        "entertainment": "Streaming, games, events, hobbies and subscriptions for fun",
+        "health": "Pharmacy, clinic, dental and fitness costs"
+      }
+    },
+    "recurring": {
+      "type": "noul",
+      "instructions": "This charge repeats on a regular schedule",
+      "criteria": {
+        "true": "A subscription, bill or membership charged every period",
+        "false": "A one-off purchase"
+      }
+    }
+  },
+  "baseline": {
+    "category": {
+      "default": "groceries",
+      "rules": [
+        {
+          "if_any": [
+            "pharmacy",
+            "dental",
+            "fitness",
+            "clinic",
+            "prescription"
+          ],
+          "then": "health"
+        },
+        {
+          "if_any": [
+            "transit",
+            "fuel",
+            "garage",
+            "park",
+            "unleaded"
+          ],
+          "then": "transport"
+        },
+        {
+          "if_any": [
+            "electric",
+            "internet",
+            "wireless"
+          ],
+          "then": "utilities"
+        },
+        {
+          "if_any": [
+            "streamly",
+            "game",
+            "arcade"
+          ],
+          "then": "entertainment"
+        },
+        {
+          "if_any": [
+            "cafe",
+            "pizza",
+            "bakery",
+            "dinner"
+          ],
+          "then": "dining"
+        }
+      ]
+    },
+    "recurring": {
+      "default": false,
+      "rules": [
+        {
+          "if_any": [
+            "monthly",
+            "membership",
+            "electric",
+            "internet",
+            "wireless",
+            "pass"
+          ],
+          "then": true
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "GREENLEAF MARKET #12 AUSTIN  PRODUCE 18.42",
+      "expected": {
+        "category": "groceries",
+        "recurring": false
+      }
+    },
+    {
+      "state": "COPPER KETTLE CAFE  LATTE + SCONE 9.80",
+      "expected": {
+        "category": "dining",
+        "recurring": false
+      }
+    },
+    {
+      "state": "CITY TRANSIT  MONTHLY PASS 64.00",
+      "expected": {
+        "category": "transport",
+        "recurring": true
+      }
+    },
+    {
+      "state": "LUMEN POWER  ELECTRIC SERVICE OCT 91.15",
+      "expected": {
+        "category": "utilities",
+        "recurring": true
+      }
+    },
+    {
+      "state": "STREAMLY  MONTHLY PLAN 11.99",
+      "expected": {
+        "category": "entertainment",
+        "recurring": true
+      }
+    },
+    {
+      "state": "HARBOR PHARMACY  PRESCRIPTION 14.00",
+      "expected": {
+        "category": "health",
+        "recurring": false
+      }
+    },
+    {
+      "state": "NORTHSIDE FUEL  UNLEADED 41.30",
+      "expected": {
+        "category": "transport",
+        "recurring": false
+      }
+    },
+    {
+      "state": "PAPER MOON PIZZA  DINNER FOR TWO 36.50",
+      "expected": {
+        "category": "dining",
+        "recurring": false
+      }
+    },
+    {
+      "state": "FIBERNET  HOME INTERNET 59.99",
+      "expected": {
+        "category": "utilities",
+        "recurring": true
+      }
+    },
+    {
+      "state": "PEAK FITNESS  MEMBERSHIP DUES 29.00",
+      "expected": {
+        "category": "health",
+        "recurring": true
+      }
+    },
+    {
+      "state": "VALLEY GROCER  MILK EGGS BREAD 12.77",
+      "expected": {
+        "category": "groceries",
+        "recurring": false
+      }
+    },
+    {
+      "state": "PIXEL ARCADE  GAME DLC 7.99",
+      "expected": {
+        "category": "entertainment",
+        "recurring": false
+      }
+    },
+    {
+      "state": "QUICKPARK  GARAGE 2 HRS 8.00",
+      "expected": {
+        "category": "transport",
+        "recurring": false
+      }
+    },
+    {
+      "state": "SMILE DENTAL  CLEANING COPAY 25.00",
+      "expected": {
+        "category": "health",
+        "recurring": false
+      }
+    },
+    {
+      "state": "MOBILE ONE  WIRELESS PLAN 45.00",
+      "expected": {
+        "category": "utilities",
+        "recurring": true
+      }
+    },
+    {
+      "state": "SUNRISE BAKERY  CROISSANTS 6.50",
+      "expected": {
+        "category": "dining",
+        "recurring": false
+      }
+    },
+    {
+      "state": "FARMERS CO-OP  VEGETABLES 22.10",
+      "expected": {
+        "category": "groceries",
+        "recurring": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "NOODLE HOUSE  LUNCH SPECIAL 13.25",
+      "expected": {
+        "category": "dining",
+        "recurring": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "RIDEGO  TRIP DOWNTOWN 17.60",
+      "expected": {
+        "category": "transport",
+        "recurring": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "AQUA WORKS  WATER AND SEWER 48.30",
+      "expected": {
+        "category": "utilities",
+        "recurring": true
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "MOVIE PALACE  TWO TICKETS 24.00",
+      "expected": {
+        "category": "entertainment",
+        "recurring": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "WELLNESS CLINIC  VISIT COPAY 30.00",
+      "expected": {
+        "category": "health",
+        "recurring": false
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "TUNEBOX  FAMILY MUSIC PLAN 16.99",
+      "expected": {
+        "category": "entertainment",
+        "recurring": true
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "BULK BARN WAREHOUSE  PANTRY RESTOCK 87.40",
+      "expected": {
+        "category": "groceries",
+        "recurring": false
+      },
+      "split": "heldout"
+    }
+  ]
+}

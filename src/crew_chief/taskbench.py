@@ -46,6 +46,9 @@ from typing import Any
 
 JEV_URL = "https://api.typesafe.ai/v1/systemone"
 QUESTION_TYPES = ("choice", "score", "noul")
+# Items are `dev` (rules and prompts may be fitted to them) or `heldout` (scored
+# once a configuration is fixed, never tuned against). `all` selects both.
+SPLITS = ("dev", "heldout")
 
 
 class TaskError(ValueError):
@@ -90,6 +93,18 @@ class Task:
     questions: dict[str, Question]
     items: list[dict[str, Any]]
     baseline: dict[str, Any] = field(default_factory=dict)
+    split: str = "all"
+
+    def select(self, split: str) -> Task:
+        """This task restricted to one split; ``all`` keeps every item."""
+        if split == "all":
+            return self
+        if split not in SPLITS:
+            raise TaskError(f"unknown split {split!r}; use dev, heldout or all")
+        items = [i for i in self.items if i.get("split", "dev") == split]
+        if not items:
+            raise TaskError(f"{self.name} has no {split} items")
+        return Task(self.name, self.description, self.questions, items, self.baseline, split)
 
 
 def load_task(path: Path) -> Task:
@@ -111,7 +126,15 @@ def load_task(path: Path) -> Task:
     if not questions:
         raise TaskError(f"{path}: no questions")
     items = doc.get("items", [])
+    seen: dict[str, int] = {}
     for index, item in enumerate(items):
+        if item.get("split", "dev") not in SPLITS:
+            raise TaskError(f"{path}: item {index} has split {item.get('split')!r}")
+        # The same text in two items could leak a dev answer into the held-out score.
+        key = " ".join(str(item.get("state", "")).lower().split())
+        if key in seen:
+            raise TaskError(f"{path}: item {index} repeats the state of item {seen[key]}")
+        seen[key] = index
         expected = item.get("expected", {})
         for qid, value in expected.items():
             if qid not in questions:
@@ -453,7 +476,7 @@ def render_markdown(results: list[dict[str, Any]], task: Task, stamp: str) -> st
         "",
         task.description,
         "",
-        f"{len(task.items)} items. Accuracy per question; Brier is the multi-class Brier",
+        f"{len(task.items)} items ({task.split} split). Accuracy per question; Brier is the multi-class Brier",
         "score over questions where the runner reports probabilities (lower is better).",
         "",
         header,
