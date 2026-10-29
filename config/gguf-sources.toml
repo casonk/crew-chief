@@ -90,3 +90,12 @@ repo = "TheBloke/deepseek-coder-6.7B-instruct-GGUF"
 file = "deepseek-coder-6.7b-instruct.Q4_0.gguf"
 sha256 = "0c7cf89d9b2dc8671bfade603181aaa18b3dfd93e1b6a2c569a9807c65d4d438"
 bytes = 3827818720
+
+# Draft models for speculative decoding (serving-policy `draft = "..."`). They
+# have no Ollama copy, so the engine matrix skips them.
+[models."qwen3:0.6b-q8_0"]
+repo = "Qwen/Qwen3-0.6B-GGUF"
+file = "Qwen3-0.6B-Q8_0.gguf"
+sha256 = "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031"
+bytes = 639446688
+draft = true

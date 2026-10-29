@@ -65,6 +65,8 @@ class ModelPolicy:
     kv_cache: str = "f16"
     flash_attention: bool = True
     speculative: str = ""
+    draft: str = ""
+    draft_tokens: int = 8
     gpu_mib: int | None = None
     evidence: tuple[str, ...] = ()
     reviewed: str = ""
@@ -149,7 +151,14 @@ def _entry(name: str, table: dict) -> ModelPolicy:
         )
     if speculative and backend != "llamacpp":
         raise PolicyError(f'{where}: speculative decoding needs backend = "llamacpp"')
-    for key in ("context", "gpu_mib"):
+    draft = table.get("draft", "")
+    if not isinstance(draft, str):
+        raise PolicyError(f"{where}: draft must be a model name from gguf-sources.toml")
+    if draft and backend != "llamacpp":
+        raise PolicyError(f'{where}: a draft model needs backend = "llamacpp"')
+    if draft and speculative:
+        raise PolicyError(f"{where}: set either draft or speculative, not both")
+    for key in ("context", "gpu_mib", "draft_tokens"):
         value = table.get(key)
         if value is not None and (isinstance(value, bool) or not isinstance(value, int)):
             raise PolicyError(f"{where}: {key} must be a whole number")
@@ -164,6 +173,8 @@ def _entry(name: str, table: dict) -> ModelPolicy:
         kv_cache=kv,
         flash_attention=bool(table.get("flash_attention", True)),
         speculative=speculative,
+        draft=draft,
+        draft_tokens=table.get("draft_tokens", 8),
         gpu_mib=table.get("gpu_mib"),
         evidence=tuple(evidence),
         reviewed=str(table.get("reviewed", "")),
@@ -354,6 +365,8 @@ def describe(model: ModelPolicy) -> str:
     parts.append(f"kv {model.kv_cache}")
     if model.speculative:
         parts.append(f"speculative {model.speculative}")
+    if model.draft:
+        parts.append(f"draft {model.draft} x{model.draft_tokens}")
     if model.gpu_mib:
         parts.append(f"{model.gpu_mib} MiB")
     text = ", ".join(parts)
