@@ -105,6 +105,8 @@ def podman_argv(
     if not entry.context:
         raise ServeError(f"{model}: the policy entry has no context window")
     flags = ["-fa", "on" if entry.flash_attention else "off"]
+    if entry.speculative:
+        flags += ["--spec-type", entry.speculative]
     return [
         "podman", "run", "--rm", "--name", CONTAINER_NAME,
         *(gpu if gpu is not None else gpu_args()),
