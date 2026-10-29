@@ -181,8 +181,10 @@ crew-chief storage bench-due     # llama.cpp benchmark of warm/cold models due o
   are copied, not moved.
 - Which tier holds a model is read from disk; when it arrived and when it was
   last benchmarked are kept in `~/.local/state/crew-chief/model-storage.json`.
-- `scripts/run_benchmark.sh` (the weekly timer) runs `storage bench-due` after
-  the hot-tier benchmark once storage tiers are configured.
+- `scripts/run_benchmark.sh` (the weekly timer) re-runs itself under an exclusive
+  ECU lease when `ecu` is installed (`CREW_CHIEF_NO_LEASE=1` skips it), so the
+  numbers are taken on an idle GPU; it then runs `storage bench-due` after the
+  hot-tier benchmark once storage tiers are configured.
 - A model taken back out of retirement (`beta` or `default` again) is reported
   by `storage plan` until it is restored to hot storage.
 - Models Ollama cannot hand to llama.cpp (some multimodal or very new

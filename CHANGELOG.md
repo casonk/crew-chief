@@ -7,6 +7,12 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- The weekly benchmark (`scripts/run_benchmark.sh`) now runs under an exclusive
+  ECU lease. Without one it shared the GPU with other jobs, recorded first-token
+  times of 5-7 minutes and hit the unit's 2 hour limit on 2026-10-25.
+
 ### Added
 
 - Serving-policy keys `draft` and `draft_tokens` for draft-model speculative
