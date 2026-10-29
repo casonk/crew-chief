@@ -72,6 +72,13 @@ class CommandTests(unittest.TestCase):
         self.assertIn("--alias qwen3:32b", text)
         self.assertIn("/b/sha256-abc:/models/sha256-abc:ro", text)
 
+    def test_speculative_type_is_passed_only_when_set(self):
+        plain = serve.podman_argv("qwen3:32b", ENTRY, Path("/b/x"), 8081, gpu=[])
+        self.assertNotIn("--spec-type", plain)
+        ngram = ModelPolicy(name="m", backend="llamacpp", context=4096, speculative="ngram-mod")
+        argv = serve.podman_argv("m", ngram, Path("/b/x"), 8081, gpu=[])
+        self.assertEqual(argv[argv.index("--spec-type") + 1], "ngram-mod")
+
     def test_flash_attention_off_and_no_context(self):
         off = ModelPolicy(name="m", backend="llamacpp", context=4096, flash_attention=False)
         self.assertIn("off", serve.podman_argv("m", off, Path("/b/x"), 8081, gpu=[]))

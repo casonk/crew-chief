@@ -44,12 +44,20 @@ class LoadTests(unittest.TestCase):
             '[models."m"]\nstatus = "great"\n',
             '[models."m"]\nbackend = "vllm"\n',
             '[models."m"]\nkv_cache = "q2"\n',
+            '[models."m"]\nbackend = "llamacpp"\nspeculative = "magic"\n',
+            '[models."m"]\nbackend = "ollama"\nspeculative = "ngram-mod"\n',
             '[models."m"]\ncontext = "big"\n',
             '[models."m"]\nspeed = 9\n',
             '[models."m"]\nevidence = "one.md"\n',
         ):
             with self.subTest(body=body), self.assertRaises(PolicyError):
                 load_policy(_write(body))
+
+    def test_speculative_accepted_for_llamacpp(self):
+        policy = load_policy(
+            _write('[models."m"]\nbackend = "llamacpp"\nspeculative = "ngram-mod"\n')
+        )
+        self.assertEqual(policy.get("m").speculative, "ngram-mod")
 
     def test_missing_file(self):
         with self.assertRaises(PolicyError):
