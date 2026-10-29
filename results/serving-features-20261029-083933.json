@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "gpu": "NVIDIA GeForce RTX 3090, 580.178.04",
+    "llamacpp": "0.7.0-dev (build 11783, commit 339f3242c)"
+  },
+  "settings": {
+    "experiments": [
+      "spec"
+    ],
+    "model": "qwen3:14b",
+    "spec_model": "qwen3:32b",
+    "draft": "/home/user/.local/share/crew-chief/gguf/Qwen3-0.6B-Q8_0.gguf",
+    "runs": 3,
+    "gen": 128,
+    "ctx": 8192,
+    "prefix": 6000,
+    "out": "results"
+  },
+  "rows": [
+    {
+      "experiment": "spec",
+      "config": "no draft",
+      "prompt": "prose",
+      "gpu_mib": 21398,
+      "gen_tps": 29.4
+    },
+    {
+      "experiment": "spec",
+      "config": "no draft",
+      "prompt": "structured",
+      "gpu_mib": 21398,
+      "gen_tps": 29.4
+    },
+    {
+      "experiment": "spec",
+      "config": "ngram-mod",
+      "prompt": "prose",
+      "gpu_mib": 21398,
+      "gen_tps": 29.3,
+      "accept_pct": 5
+    },
+    {
+      "experiment": "spec",
+      "config": "ngram-mod",
+      "prompt": "structured",
+      "gpu_mib": 21398,
+      "gen_tps": 43.7,
+      "accept_pct": 73
+    },
+    {
+      "experiment": "spec",
+      "config": "draft max 8",
+      "prompt": "prose",
+      "gpu_mib": 22938,
+      "gen_tps": 29.9,
+      "accept_pct": 17
+    },
+    {
+      "experiment": "spec",
+      "config": "draft max 8",
+      "prompt": "structured",
+      "gpu_mib": 22938,
+      "gen_tps": 70.0,
+      "accept_pct": 57
+    },
+    {
+      "experiment": "spec",
+      "config": "draft max 16",
+      "prompt": "prose",
+      "gpu_mib": 22938,
+      "gen_tps": 23.6,
+      "accept_pct": 9
+    },
+    {
+      "experiment": "spec",
+      "config": "draft max 16",
+      "prompt": "structured",
+      "gpu_mib": 22938,
+      "gen_tps": 66.9,
+      "accept_pct": 38
+    }
+  ]
+}
