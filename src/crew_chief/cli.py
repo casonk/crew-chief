@@ -203,6 +203,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     show_p = policy_sub.add_parser("show", help="Print the policy, or one model's entry.")
     show_p.add_argument("model", nargs="?")
+    show_p.add_argument(
+        "--task",
+        nargs="?",
+        const="",
+        default=None,
+        metavar="NAME",
+        help="Show the model chosen for a task (all tasks without a name).",
+    )
 
     storage_p = sub.add_parser(
         "storage",
@@ -383,6 +391,7 @@ def main(argv: list[str] | None = None) -> None:
         from crew_chief.serving_policy import (
             PolicyError,
             describe,
+            describe_task,
             load_policy,
             pulled_models,
             review,
@@ -391,6 +400,14 @@ def main(argv: list[str] | None = None) -> None:
         try:
             policy = load_policy()
             if args.policy_command == "show":
+                if args.task is not None:
+                    tasks = [policy.task(args.task)] if args.task else list(policy.tasks.values())
+                    if tasks == [None]:
+                        print(f"{args.task}: not a task in the serving policy", file=sys.stderr)
+                        sys.exit(1)
+                    for task in tasks:
+                        print(describe_task(task))
+                    return
                 entries = [policy.get(args.model)] if args.model else list(policy.models.values())
                 if entries == [None]:
                     print(f"{args.model}: not in the serving policy", file=sys.stderr)

@@ -173,3 +173,16 @@ note = "Superseded code model; nothing in the portfolio uses it"
 status = "retired"
 reviewed = "2026-10-22"
 note = "Superseded code model; nothing in the portfolio uses it"
+
+# Per-task routing: which model answers a named task, from `crew-chief taskbench`
+# evidence. A `chat` task gives the listener a model chain (first model, then the
+# fallbacks); an entry in the listener's own [llm.task_chains] for the same task
+# wins. A `systemone` task names a decision model asked through /v1/systemone; the
+# listener does not call it yet (see BACKLOG).
+[tasks."message-routing"]
+status = "beta"
+runner = "systemone"
+model = "clef-flash"
+evidence = ["results/taskbench-message-routing-20261022-systemone.md"]
+reviewed = "2026-10-22"
+note = "intent 0.97, urgency 1.00, risk 0.93 at 120 ms/item; qwen3:14b chat scores 0.93/1.00/0.97 at 421 ms"

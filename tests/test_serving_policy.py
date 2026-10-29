@@ -170,3 +170,83 @@ class ResolveTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+TASK_POLICY = """
+[models."a:1"]
+status = "default"
+evidence = ["results/e.md"]
+reviewed = "2026-10-01"
+
+[models."b:1"]
+status = "retired"
+
+[tasks."code"]
+status = "beta"
+model = "a:1"
+fallback = ["a:1"]
+evidence = ["results/e.md"]
+reviewed = "2026-10-01"
+"""
+
+
+class TaskRoutingTests(unittest.TestCase):
+    def _root(self) -> Path:
+        tmp = TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        (Path(tmp.name) / "results").mkdir()
+        (Path(tmp.name) / "results" / "e.md").write_text("x")
+        return Path(tmp.name)
+
+    def test_a_task_gives_an_ordered_chain(self):
+        policy = load_policy(_write(TASK_POLICY))
+        self.assertEqual(policy.task("code").chain, ["a:1", "a:1"])
+        self.assertEqual(review(policy, self._root(), today=TODAY), ([], []))
+
+    def test_task_chain_only_serves_chat_tasks(self):
+        from crew_chief.serving_policy import task_chain
+
+        chat = load_policy(_write(TASK_POLICY))
+        self.assertEqual(task_chain("code", lambda: chat), ["a:1", "a:1"])
+        self.assertEqual(task_chain("other", lambda: chat), [])
+        decision = load_policy(
+            _write(
+                TASK_POLICY.replace(
+                    'status = "beta"\nmodel', 'status = "beta"\nrunner = "systemone"\nmodel'
+                )
+            )
+        )
+        self.assertEqual(task_chain("code", lambda: decision), [])
+
+    def test_unreadable_policy_yields_no_chain(self):
+        from crew_chief.serving_policy import task_chain
+
+        def boom():
+            raise PolicyError("nope")
+
+        self.assertEqual(task_chain("code", boom), [])
+
+    def test_review_flags_missing_evidence_unknown_and_retired_models(self):
+        policy = load_policy(
+            _write(TASK_POLICY.replace('fallback = ["a:1"]', 'fallback = ["b:1", "c:1"]'))
+        )
+        errors, _ = review(policy, self._root(), today=TODAY)
+        self.assertTrue(any("b:1 is retired" in e for e in errors))
+        self.assertTrue(any("c:1 is not in the serving policy" in e for e in errors))
+        bare = load_policy(
+            _write(TASK_POLICY.split("[tasks")[0] + '[tasks."t"]\nstatus = "beta"\nmodel = "a:1"\n')
+        )
+        errors, _ = review(bare, self._root(), today=TODAY)
+        self.assertIn("task t (beta): no taskbench evidence cited", errors)
+
+    def test_invalid_tasks_are_rejected(self):
+        for bad in ('runner = "magic"', 'status = "retired"', "bogus = 1", "fallback = 3"):
+            with self.assertRaises(PolicyError, msg=bad):
+                load_policy(_write(f'[tasks."t"]\nmodel = "a:1"\n{bad}\n'))
+        with self.assertRaises(PolicyError):
+            load_policy(_write('[tasks."t"]\nstatus = "beta"\n'))
+
+    def test_the_shipped_policy_routes_message_routing(self):
+        policy = load_policy(DEFAULT_POLICY_PATH)
+        self.assertEqual(policy.task("message-routing").runner, "systemone")
+        self.assertEqual(review(policy, REPO_ROOT, today=TODAY)[0], [])

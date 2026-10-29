@@ -36,6 +36,9 @@ DEFAULT_POLICY_PATH = Path(
 BACKENDS = ("ollama", "llamacpp")
 STATUSES = ("default", "beta", "unreviewed", "retired")
 KV_TYPES = ("f16", "q8_0", "q4_0")
+# How a task's model is asked: a chat completion, or a decision model's
+# /v1/systemone endpoint (choice/score/yes-no answers with probabilities).
+TASK_RUNNERS = ("chat", "systemone")
 # Evidence older than this is reported as stale by `policy check`.
 EVIDENCE_MAX_AGE_DAYS = 120
 # Storage tiers, fastest first: hot is the Ollama volume (M.2), warm a SATA SSD,
@@ -67,6 +70,24 @@ class ModelPolicy:
 
 
 @dataclass(frozen=True)
+class TaskPolicy:
+    """Which model serves a named task, chosen from ``taskbench`` evidence."""
+
+    name: str
+    model: str
+    runner: str = "chat"
+    fallback: tuple[str, ...] = ()
+    status: str = "unreviewed"
+    evidence: tuple[str, ...] = ()
+    reviewed: str = ""
+    note: str = ""
+
+    @property
+    def chain(self) -> list[str]:
+        return [self.model, *self.fallback]
+
+
+@dataclass(frozen=True)
 class TierRule:
     """How often a tier's models are benchmarked, and how long they stay in it."""
 
@@ -87,6 +108,10 @@ class ServingPolicy:
     models: dict[str, ModelPolicy]
     backend_urls: dict[str, str] = field(default_factory=dict)
     rotation: dict[str, TierRule] = field(default_factory=lambda: dict(DEFAULT_ROTATION))
+    tasks: dict[str, TaskPolicy] = field(default_factory=dict)
+
+    def task(self, name: str) -> TaskPolicy | None:
+        return self.tasks.get(name)
 
     def get(self, model: str) -> ModelPolicy | None:
         wanted = canonical(model)
@@ -136,6 +161,35 @@ def _entry(name: str, table: dict) -> ModelPolicy:
     )
 
 
+def _task(name: str, table: dict) -> TaskPolicy:
+    where = f'[tasks."{name}"]'
+    known = set(TaskPolicy.__dataclass_fields__) - {"name"}
+    unknown = set(table) - known
+    if unknown:
+        raise PolicyError(f"{where}: unknown keys {', '.join(sorted(unknown))}")
+    if not isinstance(table.get("model"), str) or not table["model"]:
+        raise PolicyError(f"{where}: model is required")
+    runner = table.get("runner", "chat")
+    if runner not in TASK_RUNNERS:
+        raise PolicyError(f"{where}: runner must be one of {', '.join(TASK_RUNNERS)}")
+    status = table.get("status", "unreviewed")
+    if status not in STATUSES or status == "retired":
+        raise PolicyError(f"{where}: status must be default, beta or unreviewed")
+    fallback = table.get("fallback", [])
+    if not isinstance(fallback, list) or not all(isinstance(m, str) for m in fallback):
+        raise PolicyError(f"{where}: fallback must be a list of model names")
+    return TaskPolicy(
+        name=name,
+        model=table["model"],
+        runner=runner,
+        fallback=tuple(fallback),
+        status=status,
+        evidence=tuple(table.get("evidence", ())),
+        reviewed=str(table.get("reviewed", "")),
+        note=str(table.get("note", "")),
+    )
+
+
 def _rotation(document: dict) -> dict[str, TierRule]:
     table = document.get("rotation", {})
     unknown = sorted(set(table) - set(TIERS))
@@ -172,7 +226,24 @@ def load_policy(path: Path = DEFAULT_POLICY_PATH) -> ServingPolicy:
         raise PolicyError(f"{path}: {exc}") from exc
     models = {name: _entry(name, table) for name, table in document.get("models", {}).items()}
     urls = {k: str(v) for k, v in document.get("backends", {}).items() if k in BACKENDS}
-    return ServingPolicy(models=models, backend_urls=urls, rotation=_rotation(document))
+    tasks = {name: _task(name, table) for name, table in document.get("tasks", {}).items()}
+    return ServingPolicy(
+        models=models, backend_urls=urls, rotation=_rotation(document), tasks=tasks
+    )
+
+
+def task_chain(task: str, policy_loader=None) -> list[str]:
+    """The ordered chat models the policy picks for ``task``, or [] for none.
+
+    Only ``chat`` tasks give a chain: a decision model answers through
+    ``/v1/systemone`` and is not a chat provider. An unreadable policy yields [],
+    so routing falls back to the listener's own configuration.
+    """
+    try:
+        entry = (policy_loader or load_policy)().task(task)
+    except PolicyError:
+        return []
+    return entry.chain if entry is not None and entry.runner == "chat" else []
 
 
 def review(
@@ -216,6 +287,25 @@ def review(
                 if age > EVIDENCE_MAX_AGE_DAYS:
                     warnings.append(f"{label}: reviewed {age} days ago; re-benchmark")
 
+    for task in policy.tasks.values():
+        label = f"task {task.name} ({task.status})"
+        if task.status in ("default", "beta"):
+            if not task.evidence:
+                errors.append(f"{label}: no taskbench evidence cited")
+            if not task.reviewed:
+                errors.append(f"{label}: no reviewed date")
+        for item in task.evidence:
+            if not (repo_root / item).is_file():
+                errors.append(f"{label}: evidence file missing: {item}")
+        for name in task.chain:
+            entry = policy.get(name)
+            if entry is None:
+                errors.append(f"{label}: model {name} is not in the serving policy")
+            elif entry.status == "retired":
+                errors.append(f"{label}: model {name} is retired")
+        if task.runner == "systemone" and task.fallback:
+            warnings.append(f"{label}: fallback models are ignored for the systemone runner")
+
     if pulled is not None:
         have = {canonical(name) for name in pulled}
         listed = {canonical(name) for name in policy.models}
@@ -256,3 +346,9 @@ def describe(model: ModelPolicy) -> str:
         parts.append(f"{model.gpu_mib} MiB")
     text = ", ".join(parts)
     return text + (f" — {model.note}" if model.note else "")
+
+
+def describe_task(task: TaskPolicy) -> str:
+    parts = [f"task {task.name}: {task.status}, {task.runner}", " -> ".join(task.chain)]
+    text = ", ".join(parts)
+    return text + (f" — {task.note}" if task.note else "")
