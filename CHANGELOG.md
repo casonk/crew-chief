@@ -9,6 +9,8 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Serving-policy key `speculative = "ngram-mod"` for `llamacpp` entries;
+  `crew-chief serve` passes it as `--spec-type ngram-mod`.
 - `scripts/serving_features.py` measures llama-server's prompt-cache reuse,
   parallel slots, KV-cache type and speculative decoding on an idle GPU;
   first results and findings in `docs/local-inference-roadmap.md`.

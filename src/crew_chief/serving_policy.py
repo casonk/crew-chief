@@ -36,6 +36,7 @@ DEFAULT_POLICY_PATH = Path(
 BACKENDS = ("ollama", "llamacpp")
 STATUSES = ("default", "beta", "unreviewed", "retired")
 KV_TYPES = ("f16", "q8_0", "q4_0")
+SPECULATIVE = ("", "ngram-mod")
 # How a task's model is asked: a chat completion, or a decision model's
 # /v1/systemone endpoint (choice/score/yes-no answers with probabilities).
 TASK_RUNNERS = ("chat", "systemone")
@@ -63,6 +64,7 @@ class ModelPolicy:
     context: int | None = None
     kv_cache: str = "f16"
     flash_attention: bool = True
+    speculative: str = ""
     gpu_mib: int | None = None
     evidence: tuple[str, ...] = ()
     reviewed: str = ""
@@ -140,6 +142,13 @@ def _entry(name: str, table: dict) -> ModelPolicy:
         raise PolicyError(f"{where}: backend must be one of {', '.join(BACKENDS)}")
     if kv not in KV_TYPES:
         raise PolicyError(f"{where}: kv_cache must be one of {', '.join(KV_TYPES)}")
+    speculative = table.get("speculative", "")
+    if speculative not in SPECULATIVE:
+        raise PolicyError(
+            f"{where}: speculative must be one of {', '.join(repr(x) for x in SPECULATIVE)}"
+        )
+    if speculative and backend != "llamacpp":
+        raise PolicyError(f'{where}: speculative decoding needs backend = "llamacpp"')
     for key in ("context", "gpu_mib"):
         value = table.get(key)
         if value is not None and (isinstance(value, bool) or not isinstance(value, int)):
@@ -154,6 +163,7 @@ def _entry(name: str, table: dict) -> ModelPolicy:
         context=table.get("context"),
         kv_cache=kv,
         flash_attention=bool(table.get("flash_attention", True)),
+        speculative=speculative,
         gpu_mib=table.get("gpu_mib"),
         evidence=tuple(evidence),
         reviewed=str(table.get("reviewed", "")),
@@ -342,6 +352,8 @@ def describe(model: ModelPolicy) -> str:
     if model.context:
         parts.append(f"context {model.context}")
     parts.append(f"kv {model.kv_cache}")
+    if model.speculative:
+        parts.append(f"speculative {model.speculative}")
     if model.gpu_mib:
         parts.append(f"{model.gpu_mib} MiB")
     text = ", ".join(parts)
