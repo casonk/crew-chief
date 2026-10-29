@@ -21,6 +21,8 @@ from crew_chief.code_launcher import LEASE_ENV
 from crew_chief.serving_policy import ModelPolicy, canonical
 
 IMAGE = os.environ.get("LLAMACPP_IMAGE", "ghcr.io/ggml-org/llama.cpp:full-cuda")
+SWAP_IMAGE = os.environ.get("LLAMA_SWAP_IMAGE", "ghcr.io/mostlygeek/llama-swap:cuda")
+SWAP_CONTAINER_NAME = "crew-chief-llama-swap"
 MODELS_VOLUME = os.environ.get("CREW_CHIEF_MODELS_VOLUME", "crew-chief-models")
 HOST_NVIDIA_LIB = Path(os.environ.get("HOST_NVIDIA_LIB", "/usr/lib64"))
 CONTAINER_NAME = "crew-chief-llama-server"
@@ -104,9 +106,6 @@ def podman_argv(
     """The ``podman run`` command that serves ``model`` as its entry says."""
     if not entry.context:
         raise ServeError(f"{model}: the policy entry has no context window")
-    flags = ["-fa", "on" if entry.flash_attention else "off"]
-    if entry.speculative:
-        flags += ["--spec-type", entry.speculative]
     return [
         "podman", "run", "--rm", "--name", CONTAINER_NAME,
         *(gpu if gpu is not None else gpu_args()),
@@ -114,10 +113,57 @@ def podman_argv(
         "-v", f"{blob}:/models/{blob.name}:ro",
         "-p", f"127.0.0.1:{port}:{CONTAINER_PORT}",
         "--entrypoint", "/app/llama-server", IMAGE,
-        "-m", f"/models/{blob.name}", "--alias", model, "--jinja", "-ngl", "99",
-        "-c", str(entry.context), *flags,
-        "-ctk", entry.kv_cache, "-ctv", entry.kv_cache,
-        "--host", "0.0.0.0", "--port", str(CONTAINER_PORT),
+        *server_flags(model, entry, blob.name), "--host", "0.0.0.0",
+        "--port", str(CONTAINER_PORT),
+    ]  # fmt: skip
+
+
+def server_flags(model: str, entry: ModelPolicy, blob_name: str) -> list[str]:
+    """The llama-server flags a policy entry sets, without host and port."""
+    flags = ["-fa", "on" if entry.flash_attention else "off"]
+    if entry.speculative:
+        flags += ["--spec-type", entry.speculative]
+    return [
+        "-m", f"/models/{blob_name}", "--alias", model, "--jinja", "-ngl", "99",
+        "-c", str(entry.context), *flags, "-ctk", entry.kv_cache, "-ctv", entry.kv_cache,
+    ]  # fmt: skip
+
+
+def swap_config(models: list[tuple[str, ModelPolicy, Path]], ttl: int = 300) -> str:
+    """A llama-swap config that serves each model with its policy settings.
+
+    llama-swap starts one llama-server per request's model, stops the previous
+    one, and unloads an idle model after ``ttl`` seconds. Values are JSON strings,
+    which YAML accepts, so no YAML library is needed.
+    """
+    lines = ["healthCheckTimeout: 500", "models:"]
+    for model, entry, blob in models:
+        if not entry.context:
+            raise ServeError(f"{model}: the policy entry has no context window")
+        cmd = " ".join(
+            ["/app/llama-server", "--port", "${PORT}", *server_flags(model, entry, blob.name)]
+        )
+        lines += [f"  {json.dumps(model)}:", f"    ttl: {ttl}", f"    cmd: {json.dumps(cmd)}"]
+    return "\n".join(lines) + "\n"
+
+
+def swap_argv(
+    models: list[tuple[str, ModelPolicy, Path]],
+    config: Path,
+    port: int,
+    gpu: list[str] | None = None,
+) -> list[str]:
+    """The ``podman run`` command for llama-swap in front of ``models``."""
+    mounts: list[str] = []
+    for _, _, blob in models:
+        mounts += ["-v", f"{blob}:/models/{blob.name}:ro"]
+    return [
+        "podman", "run", "--rm", "--name", SWAP_CONTAINER_NAME,
+        *(gpu if gpu is not None else gpu_args()),
+        "-e", "LD_LIBRARY_PATH=/usr/local/nvidia/lib64:/usr/local/cuda/lib64",
+        *mounts, "-v", f"{config}:/config/config.yaml:ro",
+        "-p", f"127.0.0.1:{port}:{CONTAINER_PORT}",
+        SWAP_IMAGE, "-config", "/config/config.yaml", "-listen", f":{CONTAINER_PORT}",
     ]  # fmt: skip
 
 
@@ -180,6 +226,22 @@ def plan(model: str, entry: ModelPolicy | None, base_url: str, run: Callable = s
     if entry.backend != "llamacpp":
         return None
     return podman_argv(model, entry, blob_for(model, models_dir(run)), server_port(base_url))
+
+
+def plan_swap(
+    names: list[str], policy, run: Callable = subprocess.run
+) -> list[tuple[str, ModelPolicy, Path]]:
+    """Each model with its policy entry and weights file, ready for ``swap_config``."""
+    entries = []
+    for name in names:
+        entry = policy.get(name)
+        if entry is None:
+            raise ServeError(f"{name} is not in the serving policy; add an entry first")
+        if entry.status == "retired":
+            raise ServeError(f"{name} is retired; restore it with `crew-chief storage restore`")
+        entries.append((name, entry))
+    root = models_dir(run)
+    return [(name, entry, blob_for(name, root)) for name, entry in entries]
 
 
 def serve(command: list[str], model: str, gpu_mib: int | None, leased: bool) -> None:
