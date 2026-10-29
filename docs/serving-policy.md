@@ -104,6 +104,16 @@ recorded, but the listener does not call decision models yet.
 
 ## Who reads it
 
+- `crew-chief serve --swap <model> [<model> ...]` runs llama-swap
+  (`ghcr.io/mostlygeek/llama-swap:cuda`, override with `LLAMA_SWAP_IMAGE`) in
+  front of several models on `127.0.0.1:8085` (`--port`). It writes a config that
+  gives each model its policy flags, loads the model a request names, stops the
+  previous one, and unloads an idle model after `--ttl` seconds (default 300).
+  Any OpenAI-compatible client selects a model with the usual `model` field. The
+  lease is sized for the largest model, since one runs at a time. Measured
+  2026-10-29 on one RTX 3090 with `qwen3:14b`, `qwen2.5-coder:7b` and `qwen3:32b`:
+  a request to the loaded model answers in 0.2 s, and a swap takes 6-13 s (the
+  32B takes longest); GPU memory matched each entry's `gpu_mib`.
 - `crew-chief code -m <model>` takes the backend, server URL, and context from
   the entry. `--backend`, `--url`, and `--context` override it with a note; a
   `retired` model is served with a note that its first load is slower.

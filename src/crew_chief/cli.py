@@ -180,7 +180,19 @@ def build_parser() -> argparse.ArgumentParser:
             "the policy serves on Ollama need nothing started."
         ),
     )
-    serve_p.add_argument("serve_model", metavar="MODEL", help="Model name, as in the policy.")
+    serve_p.add_argument(
+        "serve_models", metavar="MODEL", nargs="+", help="Model name, as in the policy."
+    )
+    serve_p.add_argument(
+        "--swap",
+        action="store_true",
+        help=(
+            "Serve several models behind one endpoint with llama-swap: it loads the model a "
+            "request names, stops the previous one, and unloads an idle model after --ttl."
+        ),
+    )
+    serve_p.add_argument("--port", type=int, default=8085, help="Host port for --swap.")
+    serve_p.add_argument("--ttl", type=int, default=300, help="Idle seconds before --swap unloads.")
     serve_p.add_argument(
         "--dry-run", action="store_true", help="Print the command instead of running it."
     )
@@ -379,23 +391,29 @@ def main(argv: list[str] | None = None) -> None:
         from crew_chief import serve as serving
         from crew_chief.serving_policy import PolicyError, load_policy
 
+        if args.swap:
+            _serve_swap(args, serving)
+            return
+        if len(args.serve_models) > 1:
+            print("Error: several models need --swap", file=sys.stderr)
+            sys.exit(2)
+        model = args.serve_models[0]
         try:
             policy = load_policy()
-            entry = policy.get(args.serve_model)
-            command = serving.plan(args.serve_model, entry, policy.url_for("llamacpp"))
+            entry = policy.get(model)
+            command = serving.plan(model, entry, policy.url_for("llamacpp"))
         except (PolicyError, serving.ServeError) as exc:
             print(f"Error: {exc}", file=sys.stderr)
             sys.exit(2)
         if command is None:
             print(
-                f"{args.serve_model} is served by {entry.backend}, which loads it on demand; "
-                "nothing to start."
+                f"{model} is served by {entry.backend}, which loads it on demand; nothing to start."
             )
             return
         if args.dry_run:
             print(" ".join(command))
             return
-        serving.serve(command, args.serve_model, entry.gpu_mib, leased=not args.no_lease)
+        serving.serve(command, model, entry.gpu_mib, leased=not args.no_lease)
 
     elif args.command == "policy":
         from crew_chief.serving_policy import (
@@ -526,6 +544,33 @@ def main(argv: list[str] | None = None) -> None:
             max_iterations=args.max_iterations,
         )
         print(agent.run(args.prompt))
+
+
+def _serve_swap(args: argparse.Namespace, serving) -> None:
+    """Run llama-swap in front of the named models, each served as its policy entry says."""
+    from pathlib import Path
+
+    from crew_chief.serving_policy import PolicyError, load_policy
+
+    try:
+        models = serving.plan_swap(args.serve_models, load_policy())
+        config = serving.swap_config(models, args.ttl)
+    except (PolicyError, serving.ServeError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(2)
+    if args.dry_run:
+        print(config, end="")
+        return
+    # serve() replaces this process, so the config lives at one fixed path, rewritten per run.
+    path = Path.home() / ".cache" / "crew-chief" / "llama-swap.yaml"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(config, encoding="utf-8")
+    command = serving.swap_argv(models, path, args.port)
+    # The largest model sets the lease: llama-swap runs one at a time.
+    gpu_mib = max(entry.gpu_mib or 0 for _, entry, _ in models)
+    print(f"crew-chief: llama-swap on 127.0.0.1:{args.port} for {len(models)} model(s)",
+          file=sys.stderr)  # fmt: skip
+    serving.serve(command, "llama-swap", gpu_mib, leased=not args.no_lease)
 
 
 def _gguf(args: argparse.Namespace) -> None:
