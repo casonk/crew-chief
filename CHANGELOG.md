@@ -9,6 +9,9 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Serving-policy keys `draft` and `draft_tokens` for draft-model speculative
+  decoding; `config/gguf-sources.toml` gains `draft = true` sources and lists
+  Qwen3-0.6B. The engine matrix skips draft-only sources.
 - `crew-chief serve --swap MODEL...` fronts several policy-served models with
   llama-swap, one endpoint that swaps models on demand.
 - `scripts/serving_features.py --draft` accepts a GGUF path; a Qwen3-0.6B draft
