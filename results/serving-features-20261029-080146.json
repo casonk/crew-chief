@@ -1,0 +1,175 @@
+{
+  "meta": {
+    "gpu": "NVIDIA GeForce RTX 3090, 580.178.04",
+    "llamacpp": "0.7.0-dev (build 11783, commit 339f3242c)"
+  },
+  "settings": {
+    "experiments": [],
+    "model": "qwen3:14b",
+    "spec_model": "llama3.1:8b",
+    "draft": "llama3.2:latest",
+    "runs": 3,
+    "gen": 128,
+    "ctx": 8192,
+    "prefix": 6000,
+    "out": "results"
+  },
+  "rows": [
+    {
+      "experiment": "kv",
+      "config": "kv f16",
+      "ctx": 8192,
+      "gpu_mib": 10160,
+      "gen_tps": 64.1,
+      "prompt_tps": 2434.0
+    },
+    {
+      "experiment": "kv",
+      "config": "kv q8_0",
+      "ctx": 8192,
+      "gpu_mib": 9562,
+      "gen_tps": 63.0,
+      "prompt_tps": 2357.1
+    },
+    {
+      "experiment": "kv",
+      "config": "kv q4_0",
+      "ctx": 8192,
+      "gpu_mib": 9242,
+      "gen_tps": 62.6,
+      "prompt_tps": 2331.9
+    },
+    {
+      "experiment": "cache",
+      "config": "cache_prompt off",
+      "gpu_mib": 10160,
+      "turns": [
+        {
+          "prompt_n": 4854,
+          "seconds": 3.0
+        },
+        {
+          "prompt_n": 4854,
+          "seconds": 2.69
+        },
+        {
+          "prompt_n": 4854,
+          "seconds": 2.7
+        },
+        {
+          "prompt_n": 4854,
+          "seconds": 2.71
+        }
+      ],
+      "first_s": 3.0,
+      "later_s": 2.7,
+      "later_prompt_n": 4854
+    },
+    {
+      "experiment": "cache",
+      "config": "cache_prompt on",
+      "gpu_mib": 10160,
+      "turns": [
+        {
+          "prompt_n": 4854,
+          "seconds": 2.99
+        },
+        {
+          "prompt_n": 10,
+          "seconds": 0.55
+        },
+        {
+          "prompt_n": 10,
+          "seconds": 0.57
+        },
+        {
+          "prompt_n": 10,
+          "seconds": 0.54
+        }
+      ],
+      "first_s": 2.99,
+      "later_s": 0.55,
+      "later_prompt_n": 10
+    },
+    {
+      "experiment": "slots",
+      "config": "-np 1",
+      "slots": 1,
+      "gpu_mib": 10160,
+      "wall_s": 9.12,
+      "aggregate_tps": 56.1,
+      "per_request_tps": 62.3
+    },
+    {
+      "experiment": "slots",
+      "config": "-np 4",
+      "slots": 4,
+      "gpu_mib": 14000,
+      "wall_s": 4.11,
+      "aggregate_tps": 124.5,
+      "per_request_tps": 37.5
+    },
+    {
+      "experiment": "spec",
+      "config": "no draft",
+      "prompt": "prose",
+      "gpu_mib": 5856,
+      "gen_tps": 116.3
+    },
+    {
+      "experiment": "spec",
+      "config": "no draft",
+      "prompt": "structured",
+      "gpu_mib": 5856,
+      "gen_tps": 117.4
+    },
+    {
+      "experiment": "spec",
+      "config": "ngram-mod",
+      "prompt": "prose",
+      "gpu_mib": 5856,
+      "gen_tps": 116.6,
+      "accept_pct": 23
+    },
+    {
+      "experiment": "spec",
+      "config": "ngram-mod",
+      "prompt": "structured",
+      "gpu_mib": 5856,
+      "gen_tps": 585.9,
+      "accept_pct": 95
+    },
+    {
+      "experiment": "spec",
+      "config": "draft max 8",
+      "prompt": "prose",
+      "gpu_mib": 8756,
+      "gen_tps": 60.5,
+      "accept_pct": 34
+    },
+    {
+      "experiment": "spec",
+      "config": "draft max 8",
+      "prompt": "structured",
+      "gpu_mib": 8756,
+      "gen_tps": 112.8,
+      "accept_pct": 76
+    },
+    {
+      "experiment": "spec",
+      "config": "draft max 16",
+      "prompt": "prose",
+      "gpu_mib": 8756,
+      "gen_tps": 43.5,
+      "accept_pct": 18
+    },
+    {
+      "experiment": "spec",
+      "config": "draft max 16",
+      "prompt": "structured",
+      "gpu_mib": 8756,
+      "gen_tps": 103.8,
+      "accept_pct": 60
+    }
+  ]
+}

@@ -9,6 +9,9 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `scripts/serving_features.py` measures llama-server's prompt-cache reuse,
+  parallel slots, KV-cache type and speculative decoding on an idle GPU;
+  first results and findings in `docs/local-inference-roadmap.md`.
 - `taskbench` runner `systemone:<model>` for local decision models on Ollama's
   `/v1/systemone` endpoint (Clef, Nimble, Tev1). Serving-policy entries and
   evidence for clef-flash, nimble, and tev1. Decision tasks move to

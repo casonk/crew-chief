@@ -37,11 +37,13 @@ Mark items `[x]` when complete and move them to Done.
   edits). Add OpenRouter as an opt-in metered provider with the key held as a
   secret, for comparing local models with larger open-weight siblings.
 
-- [ ] [manual:2026-10-21] **Roadmap phase 3: llama.cpp and ExLlamaV3 backends.**
-  Run `llama-server` (+ `llama-swap`) and TabbyAPI as Podman containers beside
-  Ollama, add them to the benchmark, and record tokens/s, TTFT, prefill and
-  VRAM per model. Explore prompt-cache reuse, parallel slots, KV-cache
-  quantization and speculative decoding. Ship as beta even if gains are small.
+- [ ] [manual:2026-10-21] **Roadmap phase 3: remaining backends.** `llama-server`
+  is served per policy (`crew-chief serve`) and its prompt cache, parallel
+  slots, KV quantization and speculative decoding are measured
+  (`scripts/serving_features.py`). Left: `llama-swap` for on-demand model
+  switching, a draft-model trial on the 32B-class models, an `ngram-mod`
+  option for structured-output tasks, and the ExLlamaV3 / TabbyAPI container
+  with the same benchmark. Ship as beta even if gains are small.
 
 - [ ] [manual:2026-10-21] **Jev reference run** (lower priority now that local
   decision models exist). With TypeSafe early access, run
