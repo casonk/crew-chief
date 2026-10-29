@@ -309,6 +309,10 @@ def render(rows: list[dict], args: argparse.Namespace, stamp: str, meta: dict) -
 
 
 def resolve(model: str) -> Path:
+    """An existing GGUF path as given, otherwise the weights Ollama pulled for ``model``."""
+    path = Path(model).expanduser()
+    if path.is_file():
+        return path
     return serve.blob_for(model, serve.models_dir())
 
 
@@ -318,7 +322,11 @@ def main() -> int:
                         help="Which to run (default: all).")  # fmt: skip
     parser.add_argument("--model", default="qwen3:14b", help="Target for kv, cache and slots.")
     parser.add_argument("--spec-model", default="llama3.1:8b", help="Target for spec.")
-    parser.add_argument("--draft", default="llama3.2:latest", help="Draft model for spec.")
+    parser.add_argument(
+        "--draft",
+        default="llama3.2:latest",
+        help="Draft model for spec: an Ollama model or a GGUF path.",
+    )
     parser.add_argument("--runs", type=int, default=3)
     parser.add_argument("--gen", type=int, default=128)
     parser.add_argument("--ctx", type=int, default=8192)
