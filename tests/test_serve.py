@@ -125,8 +125,53 @@ class LeaseTests(unittest.TestCase):
 class ParserTests(unittest.TestCase):
     def test_serve_parses(self):
         args = build_parser().parse_args(["serve", "qwen3:32b", "--dry-run"])
-        self.assertEqual(args.serve_model, "qwen3:32b")
+        self.assertEqual(args.serve_models, ["qwen3:32b"])
         self.assertTrue(args.dry_run)
+
+    def test_swap_parses_several_models(self):
+        args = build_parser().parse_args(["serve", "--swap", "a", "b", "--ttl", "60"])
+        self.assertTrue(args.swap)
+        self.assertEqual((args.serve_models, args.ttl, args.port), (["a", "b"], 60, 8085))
+
+
+class SwapTests(unittest.TestCase):
+    def test_config_gives_each_model_its_policy_flags(self):
+        small = ModelPolicy(name="small", backend="llamacpp", context=4096, speculative="ngram-mod")
+        models = [
+            ("qwen3:32b", ENTRY, Path("/b/sha256-abc")),
+            ("small", small, Path("/b/sha256-d")),
+        ]
+        config = serve.swap_config(models, ttl=60)
+        self.assertIn('"qwen3:32b":', config)
+        self.assertIn("ttl: 60", config)
+        self.assertIn("--port ${PORT}", config)
+        self.assertIn("-m /models/sha256-abc --alias qwen3:32b", config)
+        self.assertIn("-ctk q8_0 -ctv q8_0", config)
+        self.assertIn("--spec-type ngram-mod", config)
+        self.assertEqual(config.count("--spec-type"), 1)
+
+    def test_config_needs_a_context(self):
+        bare = ModelPolicy(name="m", backend="llamacpp")
+        with self.assertRaises(serve.ServeError):
+            serve.swap_config([("m", bare, Path("/b/x"))])
+
+    def test_argv_mounts_every_blob_and_the_config(self):
+        models = [("a", ENTRY, Path("/b/sha256-1")), ("b", ENTRY, Path("/b/sha256-2"))]
+        text = " ".join(serve.swap_argv(models, Path("/t/c.yaml"), 8085, gpu=[]))
+        self.assertIn("/b/sha256-1:/models/sha256-1:ro", text)
+        self.assertIn("/b/sha256-2:/models/sha256-2:ro", text)
+        self.assertIn("/t/c.yaml:/config/config.yaml:ro", text)
+        self.assertIn("127.0.0.1:8085:8080", text)
+        self.assertIn("-config /config/config.yaml", text)
+
+    def test_plan_swap_rejects_unknown_and_retired(self):
+        class Policy:
+            def get(self, name):
+                return {"gone": ModelPolicy(name="gone", status="retired")}.get(name)
+
+        for name in ("missing", "gone"):
+            with self.subTest(name=name), self.assertRaises(serve.ServeError):
+                serve.plan_swap([name], Policy(), run=lambda *a, **k: None)
 
 
 if __name__ == "__main__":

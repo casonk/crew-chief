@@ -9,6 +9,8 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `crew-chief serve --swap MODEL...` fronts several policy-served models with
+  llama-swap, one endpoint that swaps models on demand.
 - `scripts/serving_features.py --draft` accepts a GGUF path; a Qwen3-0.6B draft
   trial on `qwen3:32b` is recorded in the roadmap.
 - Serving-policy key `speculative = "ngram-mod"` for `llamacpp` entries;

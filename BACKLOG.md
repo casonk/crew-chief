@@ -40,8 +40,7 @@ Mark items `[x]` when complete and move them to Done.
 - [ ] [manual:2026-10-21] **Roadmap phase 3: remaining backends.** `llama-server`
   is served per policy (`crew-chief serve`) and its prompt cache, parallel
   slots, KV quantization and speculative decoding are measured
-  (`scripts/serving_features.py`). Left: `llama-swap` for on-demand model
-  switching, a policy field for a draft model (a 0.6B draft made `qwen3:32b` 2.4x faster on structured output), an `ngram-mod`
+  (`scripts/serving_features.py`). Left: a systemd unit for `serve --swap`, a policy field for a draft model (a 0.6B draft made `qwen3:32b` 2.4x faster on structured output), an `ngram-mod`
   measurement on the model that serves structured tasks (the policy key
   exists), and the ExLlamaV3 / TabbyAPI container
   with the same benchmark. Ship as beta even if gains are small.
