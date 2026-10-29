@@ -154,6 +154,14 @@ def _resolve_api_key(env_var: str, auto_pass_entry: str, auto_pass_env_file: str
     return ""
 
 
+def _policy_task_chain(task: str) -> list[str]:
+    """The serving policy's chat models for ``task``; the listener's own
+    ``[llm.task_chains]`` entry for the same task wins over it."""
+    from crew_chief.serving_policy import task_chain
+
+    return task_chain(task)
+
+
 def _build_single_provider(name: str, cfg: Any, task: str = "") -> Any:
     """Build one provider from its name and a LlmConfig-like *cfg* object.
 
@@ -165,6 +173,7 @@ def _build_single_provider(name: str, cfg: Any, task: str = "") -> Any:
         task_chains: dict[str, list[str]] = getattr(cfg, "task_chains", {})
         chain = (
             task_chains.get(task)
+            or (_policy_task_chain(task) if task else [])
             or task_chains.get("default")
             or getattr(cfg, "ollama_model_chain", [])
         )

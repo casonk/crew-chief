@@ -48,10 +48,6 @@ Mark items `[x]` when complete and move them to Done.
   extraction; split each into dev and held-out items, and write baseline rules
   against dev only (the message-routing rules were fitted to all 30 items).
 
-- [ ] [manual:2026-10-21] **Per-task routing in the serving policy.** Add
-  `[tasks."<name>"]` entries (model, backend, runner mode, evidence from
-  `taskbench`) and have the listener's task chains read them.
-
 - [ ] [manual:2026-10-21] **Jev reference run** (lower priority now that local
   decision models exist). With TypeSafe early access, run
   `taskbench --runner jev` on the synthetic suites only and record it as the

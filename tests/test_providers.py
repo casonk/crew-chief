@@ -918,3 +918,37 @@ class TestOpenAIProviderChat(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PolicyTaskChainTests(unittest.TestCase):
+    """The serving policy picks a task's Ollama chain unless the listener's own config does."""
+
+    def _cfg(self, **kw):
+        from types import SimpleNamespace
+
+        base = {
+            "base_url": "http://x",
+            "timeout_seconds": 5,
+            "model": "plain:1",
+            "ollama_model_chain": [],
+            "task_chains": {},
+        }
+        return SimpleNamespace(**{**base, **kw})
+
+    def _models(self, provider) -> list[str]:
+        return [p.model for p in getattr(provider, "providers", [provider])]
+
+    def test_policy_chain_beats_the_default_but_not_listener_config(self):
+        from unittest.mock import patch
+
+        from crew_chief.providers import _build_single_provider
+
+        with patch("crew_chief.serving_policy.task_chain", return_value=["a:1", "b:1"]):
+            got = _build_single_provider("ollama", self._cfg(), task="code")
+            self.assertEqual(self._models(got), ["a:1", "b:1"])
+            own = self._cfg(task_chains={"code": ["mine:1"]})
+            self.assertEqual(
+                self._models(_build_single_provider("ollama", own, task="code")), ["mine:1"]
+            )
+            none = _build_single_provider("ollama", self._cfg())
+            self.assertEqual(self._models(none), ["plain:1"])
