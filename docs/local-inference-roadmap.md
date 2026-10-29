@@ -147,6 +147,45 @@ tokens), generating at ~55 tok/s. The model fixed the seeded bug but pasted
 the `Read` tool's line-number prefixes into the file, a model-quality
 failure to track in the coding benchmark.
 
+### Step 3: serving features (`scripts/serving_features.py`)
+
+Starts a fresh `llama-server` per configuration on an idle GPU and measures one
+feature at a time (raw completions, temperature 0, flash attention on):
+
+```bash
+ecu run --gpu exclusive --own-gpu-process llama-server --cpu-cores 2 \
+  --priority batch --max-wait 2h -- python3 scripts/serving_features.py [kv cache slots spec]
+```
+
+First run (2026-10-29, `qwen3:14b` Q4_K_M, RTX 3090,
+`results/serving-features-20261029-080146.md`):
+
+- **Prompt-cache reuse is the big win for agents.** Four turns over a shared
+  6K-token prefix: with `cache_prompt` a later turn evaluates 10 tokens and
+  takes 0.55 s; without, it re-evaluates 4.9K tokens and takes 2.7 s. `crew-chief
+  serve` and `code` already send `cache_prompt`; keep one slot per agent so the
+  cache is not evicted.
+- **Parallel slots** trade latency for throughput. Four concurrent requests:
+  `-np 4` gives 124 tok/s aggregate (37 each) against 56 tok/s at `-np 1`,
+  for 3.8 GiB more GPU memory (the context is split across slots). Use it
+  only for concurrent agents or batch jobs; a single agent wants `-np 1`.
+- **KV-cache quantization** costs 2% of generation speed for q8_0 and 3% for
+  q4_0, and saves 0.6 GiB / 0.9 GiB at an 8K context (more at longer
+  contexts). q8_0 is the default for models that need the room, as in the
+  serving policy.
+- **Speculative decoding** depends on the text. With `llama3.1:8b` (already
+  117 tok/s), a `llama3.2` 3B draft model *slowed* generation (prose 60 tok/s,
+  structured 113) because the draft's cost is not repaid by a fast target; it
+  would pay off on the 32B-class models, not yet measured. The draft-free
+  `--spec-type ngram-mod` is the useful one: no change on prose (23% of drafted
+  tokens accepted), but 5× on repetitive structured output (586 vs 117 tok/s,
+  95% accepted). That fits JSON extraction, schema-shaped replies and
+  edit-heavy code, so it is worth enabling for those tasks.
+
+Flag names changed in the current llama.cpp image (`--draft-max` became
+`--spec-draft-n-max`; `--spec-type draft-simple` is required for a draft
+model).
+
 ## Decision models (beta, alongside phase 3)
 
 Many workloads are bounded decisions, not generation. `crew-chief taskbench`
