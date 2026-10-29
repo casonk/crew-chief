@@ -27,6 +27,23 @@ crew-chief taskbench benchmarks/decisions/message-routing.json \
   --runner rules --runner ollama:qwen3:14b --runner llamacpp:qwen3:32b
 ```
 
+## Dev and held-out splits
+
+Each item may carry `"split": "heldout"`; items without one are `dev`. Fit
+keyword rules, prompts and thresholds against `dev` only, then score the fixed
+configuration once on `heldout`. `crew-chief taskbench` runs `dev` by default
+(`--split heldout` or `--split all` otherwise) and names held-out result files
+`taskbench-<task>-heldout-<stamp>`. A state that appears twice in a task file is
+rejected, so a dev answer cannot leak into the held-out score.
+
+Suites: `message-routing`, `mail-triage`, `receipt-category` and
+`schema-extraction`. The first one's keyword rules were fitted to all of its
+original 30 items, so those are `dev` and its 10 newer items are the held-out
+split; the other three have 16 dev and 8 held-out items each, with rules written
+from the dev items. The gap between a runner's dev and held-out accuracy is the
+overfit: the keyword baseline on `receipt-category` scores 1.00 on dev and 0.38 on
+held-out category.
+
 ## Runners
 
 | Runner | How it answers | Probabilities |

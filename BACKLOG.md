@@ -43,11 +43,6 @@ Mark items `[x]` when complete and move them to Done.
   VRAM per model. Explore prompt-cache reuse, parallel slots, KV-cache
   quantization and speculative decoding. Ship as beta even if gains are small.
 
-- [ ] [manual:2026-10-21] **Grow the task suites, with held-out splits.** Add
-  synthetic suites for mail triage, receipt categorization, and schema
-  extraction; split each into dev and held-out items, and write baseline rules
-  against dev only (the message-routing rules were fitted to all 30 items).
-
 - [ ] [manual:2026-10-21] **Jev reference run** (lower priority now that local
   decision models exist). With TypeSafe early access, run
   `taskbench --runner jev` on the synthetic suites only and record it as the
@@ -60,7 +55,7 @@ Mark items `[x]` when complete and move them to Done.
 
 - [ ] [manual:2026-10-22] **Route listener decisions to a decision model.** Clef
   Flash beat the chat models on message-routing at 120 ms per call with
-  calibrated probabilities. After a held-out run confirms it, have the listener
+  calibrated probabilities. The 2026-10-29 held-out run (10 items) did not separate `clef-flash` from `nimble`; grow the held-out set, then have the listener
   classify incoming messages via `/v1/systemone` and gate low-confidence
   answers to the chat-model path.
 
