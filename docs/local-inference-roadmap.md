@@ -182,6 +182,26 @@ First run (2026-10-29, `qwen3:14b` Q4_K_M, RTX 3090,
   95% accepted). That fits JSON extraction, schema-shaped replies and
   edit-heavy code, so it is worth enabling for those tasks.
 
+Draft-model trial on a 32B-class target (2026-10-29, `qwen3:32b` Q4_K_M at
+29 tok/s, draft `Qwen3-0.6B-Q8_0.gguf`, same tokenizer family; sha256
+`9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031`,
+`results/serving-features-20261029-083933.md`; pass it as
+`--draft ~/.local/share/crew-chief/gguf/Qwen3-0.6B-Q8_0.gguf`):
+
+| Setting | Prose tok/s | Structured tok/s |
+|---|---:|---:|
+| no draft | 29.4 | 29.4 |
+| `ngram-mod` | 29.3 | 43.7 |
+| draft, max 8 tokens | 29.9 (17% accepted) | **70.0** (57% accepted) |
+| draft, max 16 tokens | 23.6 | 66.9 |
+
+A draft pays off when the target is slow: the same technique slowed the 8B
+target above. On 32B, an 8-token draft is neutral on prose and 2.4x on
+structured output, so it is the setting to try for a 32B entry that serves
+extraction or code edits. Longer drafts lose on prose (rejections cost more
+than they save). The draft adds 1.5 GiB of GPU memory (21,398 to 22,938 MiB at an 8K context), which
+matters for a 32B entry that already fills the card.
+
 Flag names changed in the current llama.cpp image (`--draft-max` became
 `--spec-draft-n-max`; `--spec-type draft-simple` is required for a draft
 model).
