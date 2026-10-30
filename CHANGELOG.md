@@ -7,6 +7,16 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Seven synthetic Clockwork list-sorting suites for `crew-chief taskbench`
+  (`benchmarks/decisions/clockwork-*.json`), each with dev and held-out items.
+- `taskbench` states every allowed value before the input, reports a confusion
+  matrix and macro-F1 per runner and question, and records latency per item.
+- `crew-chief routebench` compares single models, a profile lookup, a router
+  model, confidence cascades and an oracle on accuracy, macro-F1 and time to
+  inference. See `docs/decision-model-selection.md`.
+
 ### Fixed
 
 - The weekly benchmark (`scripts/run_benchmark.sh`) now runs under an exclusive

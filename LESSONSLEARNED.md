@@ -12,6 +12,15 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
+- **Score a model selector on total latency against the best single model.** A
+  router's cost is its own call plus the chosen model's call, so accuracy alone
+  hides the loss. Compare it with always using each candidate, a free lookup of
+  the best dev-accuracy model, and a confidence cascade, and keep the oracle (the
+  fastest correct candidate) off the Pareto front because it cannot be deployed.
+  On 2026-10-30 `clef-flash` routing among four System One models matched asking
+  `clef-flash` directly on accuracy at 3.3 times the latency, and chose the
+  fastest correct model for 3 of 88 items.
+
 - **Show the allowed answers before the input in decision prompts.** With the
   item first and the categories after it, `qwen2.5-coder:7b` scored 0.45 on the
   Clockwork watch suite; with the question and every allowed value first it

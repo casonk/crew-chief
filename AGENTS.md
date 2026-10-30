@@ -20,12 +20,13 @@ crew-chief/
 │   ├── __init__.py                        # Public re-exports, __version__
 │   ├── __main__.py                        # python -m crew_chief entry point
 │   ├── client.py                          # CrewChiefClient — legacy Ollama HTTP client
-│   ├── cli.py                             # CLI: generate / health / models / listen / agent / code / policy / storage / gguf / taskbench
+│   ├── cli.py                             # CLI: generate / health / models / listen / agent / code / policy / storage / gguf / taskbench / routebench
 │   ├── code_launcher.py                   # `crew-chief code`: Claude Code on a local backend
 │   ├── serving_policy.py                  # Per-model backend policy: load, review, drift
 │   ├── model_storage.py                   # Storage tiers: rotate retired models hot→warm→cold
 │   ├── gguf_sources.py                    # llama.cpp-native GGUF copies: fetch + SHA-256 check
 │   ├── taskbench.py                       # Task-based decision benchmarks (choice/score/noul)
+│   ├── routerbench.py                     # `routebench`: model selection scored on quality against latency
 │   ├── model_router.py                    # Bounded model selection for test-repair trials
 │   ├── agent.py                           # Agent — multi-step plan→act→observe loop
 │   ├── tools.py                           # Tool base class + ShellTool / ReadFileTool / WriteFileTool

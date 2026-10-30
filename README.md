@@ -86,6 +86,9 @@ crew-chief code -- --resume <id>  # reopen one
 
 Decision workloads (routing, categorization, schema filling) are scored with
 `crew-chief taskbench`; see [docs/task-benchmarks.md](docs/task-benchmarks.md).
+Which decision model to use, how selection strategies compare on accuracy and
+latency, and how to add models and use cases:
+[docs/decision-model-selection.md](docs/decision-model-selection.md).
 
 Which backend serves each model, and with what settings, comes from the
 governed serving policy (`config/serving-policy.toml`, see
