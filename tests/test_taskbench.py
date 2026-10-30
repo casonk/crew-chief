@@ -207,6 +207,48 @@ class RunnerTests(unittest.TestCase):
         md = tb.render_markdown([result], self.task, "now")
         self.assertIn("| rules | 1.00 |", md)
 
+    def test_prompt_lists_allowed_values_before_the_input(self):
+        text = tb._prompt(self.task, "bee!")
+        self.assertLess(text.index("Allowed values"), text.index("INPUT:"))
+        self.assertLess(text.index("- a: A"), text.index("bee!"))
+        with patch.object(tb, "_post", return_value={"message": {"content": "{}"}}) as post:
+            tb.OllamaRunner("m").answer(self.task, "bee!")
+        roles = [m["role"] for m in post.call_args.args[1]["messages"]]
+        self.assertEqual(roles, ["system", "user"])
+        self.assertNotIn("bee!", post.call_args.args[1]["messages"][0]["content"])
+
+    def test_confusion_matrix_counts_and_rates(self):
+        task = tb.Task(
+            "c",
+            "",
+            {"kind": tb.Question("kind", "choice", "?", {"a": "A", "b": "B"})},
+            [
+                {"state": "1", "expected": {"kind": "a"}},
+                {"state": "2", "expected": {"kind": "a"}},
+                {"state": "3", "expected": {"kind": "b"}},
+                {"state": "4", "expected": {"kind": "b"}},
+            ],
+        )
+        picks = iter(["a", "b", "b", None])
+
+        class Fake:
+            name = "fake"
+
+            def answer(self, task, state):
+                return {"kind": tb.Answer(next(picks))}
+
+        result = tb.run(task, Fake())
+        conf = result["questions"]["kind"]["confusion"]
+        self.assertEqual(conf["counts"], {"a": {"a": 1, "b": 1}, "b": {"a": 0, "b": 1}})
+        self.assertEqual(conf["invalid"], {"a": 0, "b": 1})
+        self.assertEqual(conf["per_label"]["a"]["recall"], 0.5)
+        self.assertEqual(conf["per_label"]["b"]["precision"], 0.5)
+        self.assertEqual(conf["per_label"]["b"]["recall"], 0.5)
+        md = tb.render_markdown([result], task, "now")
+        self.assertIn("## Confusion matrix: fake / kind", md)
+        self.assertIn("| a | 1 | 1 | 0 | 0.50 |", md)
+        self.assertIn("| b | 0 | 1 | 1 | 0.50 |", md)
+
     def test_runner_errors_are_counted_not_raised(self):
         with patch.object(tb, "_post", side_effect=OSError("refused")):
             result = tb.run(self.task, tb.OllamaRunner("m"))

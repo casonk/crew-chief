@@ -82,9 +82,26 @@ done
 | `systemone:<model>` | local decision model via Ollama's `/v1/systemone` (Nimble, Tev1, Clef) | yes, from the model |
 | `jev[:<model>]` | TypeSafe's hosted API (`TYPESAFE_API_KEY`) | yes, calibrated by the vendor |
 
+Prompts state each question and every allowed value **before** the input (for
+`ollama:` as a system message, so the prefix is also cacheable), then show the
+item. On the Clockwork watch suite this order took `qwen2.5-coder:7b` from 0.45
+to 0.80 accuracy against input-first prompting, so results from before
+2026-10-30 are not comparable.
+
 Metrics: accuracy and invalid answers per question, median and p90 latency per
 item, and the multi-class Brier score where probabilities exist (lower is
 better; it rewards being confident only when right).
+
+## Confusion matrices
+
+Each result file also carries, for every runner and question, a confusion matrix:
+rows are the expected label, columns what the runner answered, so the diagonal
+is correct and each off-diagonal cell names a specific mix-up (for example
+Documentaries sorted as Movies). Recall per row and precision per column sit on
+the matrix; an `invalid` column appears when an answer fell outside the allowed
+values. The JSON result keeps the raw counts and per-label precision, recall and
+F1 under `questions.<id>.confusion`. Read the matrix before the accuracy: it
+shows whether errors are spread out or concentrated in one confusable pair.
 
 ## Decision models and Jev
 

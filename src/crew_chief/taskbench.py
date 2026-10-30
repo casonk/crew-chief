@@ -178,19 +178,23 @@ def _post(url: str, payload: dict, headers: dict | None = None, timeout: int = 3
         return json.loads(resp.read().decode())
 
 
-def _prompt(task: Task, state: str) -> str:
+def _instructions(task: Task) -> str:
+    """The questions and every allowed answer, stated before any input is shown."""
     lines = [
-        "You make bounded decisions about the input below. Answer every question with",
-        "exactly one of its allowed values.",
-        "",
-        "INPUT:",
-        state,
+        "You make bounded decisions about the input you are given. Answer every question",
+        "with exactly one of its allowed values; do not invent values outside the list.",
         "",
     ]
     for q in task.questions.values():
         lines.append(f"QUESTION {q.qid} ({q.type}): {q.instructions}")
+        lines.append("Allowed values:")
         lines.extend(f"  - {line}" for line in q.describe())
-    return "\n".join(lines)
+        lines.append("")
+    return "\n".join(lines).rstrip()
+
+
+def _prompt(task: Task, state: str) -> str:
+    return f"{_instructions(task)}\n\nINPUT:\n{state}"
 
 
 class RulesRunner:
@@ -238,7 +242,10 @@ class OllamaRunner:
             f"{self.url}/api/chat",
             {
                 "model": self.model,
-                "messages": [{"role": "user", "content": _prompt(task, state)}],
+                "messages": [
+                    {"role": "system", "content": _instructions(task)},
+                    {"role": "user", "content": f"INPUT:\n{state}"},
+                ],
                 "format": self.schema(task),
                 "stream": False,
                 "think": False,
@@ -277,8 +284,8 @@ class LlamaCppRunner:
             f"{letter}) {line}" for letter, line in zip(letters, q.describe(), strict=True)
         )
         prompt = (
-            f"INPUT:\n{state}\n\nQUESTION: {q.instructions}\n{options}\n\n"
-            "Reply with the single letter of the best option."
+            f"QUESTION: {q.instructions}\nAllowed options:\n{options}\n\n"
+            f"INPUT:\n{state}\n\nReply with the single letter of the best option."
         )
         grammar = "root ::= " + " | ".join(f'"{letter}"' for letter in letters)
         body = _post(
@@ -411,7 +418,15 @@ def brier(probabilities: dict[str, float], truth: str, labels: list[str]) -> flo
 
 def run(task: Task, runner, *, clock=time.perf_counter) -> dict[str, Any]:
     per_question = {
-        qid: {"correct": 0, "invalid": 0, "total": 0, "brier": []} for qid in task.questions
+        qid: {
+            "correct": 0,
+            "invalid": 0,
+            "total": 0,
+            "brier": [],
+            "counts": {t: {p: 0 for p in q.labels} for t in q.labels},
+            "missed": {t: 0 for t in q.labels},
+        }
+        for qid, q in task.questions.items()
     }
     latencies, errors, rows = [], 0, []
     for index, item in enumerate(task.items):
@@ -432,8 +447,11 @@ def run(task: Task, runner, *, clock=time.perf_counter) -> dict[str, Any]:
             stats["total"] += 1
             if ans.value is None:
                 stats["invalid"] += 1
-            elif ans.value == truth:
-                stats["correct"] += 1
+                stats["missed"][truth] += 1
+            else:
+                stats["counts"][truth][ans.value] += 1
+                if ans.value == truth:
+                    stats["correct"] += 1
             if ans.probabilities:
                 stats["brier"].append(brier(ans.probabilities, truth, q.labels))
             row["answers"][qid] = {"value": ans.value, "expected": truth, "p": ans.probabilities}
@@ -446,6 +464,7 @@ def run(task: Task, runner, *, clock=time.perf_counter) -> dict[str, Any]:
             "invalid": s["invalid"],
             "n": s["total"],
             "brier": round(statistics.fmean(s["brier"]), 3) if s["brier"] else None,
+            "confusion": confusion(task.questions[qid].labels, s["counts"], s["missed"]),
         }
     return {
         "runner": runner.name,
@@ -457,6 +476,35 @@ def run(task: Task, runner, *, clock=time.perf_counter) -> dict[str, Any]:
         "questions": summary,
         "rows": rows,
     }
+
+
+def confusion(
+    labels: list[str], counts: dict[str, dict[str, int]], missed: dict[str, int]
+) -> dict[str, Any]:
+    """Confusion matrix (rows: expected, columns: answered) with per-label precision/recall.
+
+    ``invalid`` counts items whose answer was not an allowed value; they lower
+    recall for the expected label but belong to no predicted column.
+    """
+    per_label = {}
+    for label in labels:
+        support = sum(counts[label].values()) + missed[label]
+        predicted = sum(counts[t][label] for t in labels)
+        hit = counts[label][label]
+        precision = hit / predicted if predicted else None
+        recall = hit / support if support else None
+        f1 = (
+            2 * precision * recall / (precision + recall)
+            if precision and recall
+            else (0.0 if support and predicted else None)
+        )
+        per_label[label] = {
+            "support": support,
+            "precision": None if precision is None else round(precision, 3),
+            "recall": None if recall is None else round(recall, 3),
+            "f1": None if f1 is None else round(f1, 3),
+        }
+    return {"labels": labels, "counts": counts, "invalid": missed, "per_label": per_label}
 
 
 def _p90(values: list[float]) -> float:
@@ -496,7 +544,46 @@ def render_markdown(results: list[dict[str, Any]], task: Task, stamp: str) -> st
             str(r["latency_ms_p90"]),
         ]
         lines.append("| " + " | ".join(cells) + " |")
+    for r in results:
+        for qid in qids:
+            lines.extend(render_confusion(r["runner"], qid, r["questions"][qid]["confusion"]))
     return "\n".join(lines) + "\n"
+
+
+def render_confusion(runner: str, qid: str, conf: dict[str, Any]) -> list[str]:
+    """Markdown confusion matrix for one runner and question.
+
+    Rows are the expected label, columns what the runner answered; the diagonal
+    is correct. ``invalid`` is a column for answers outside the allowed values.
+    """
+    labels = conf["labels"]
+    if not any(v["support"] for v in conf["per_label"].values()):
+        return []
+    show_invalid = any(conf["invalid"].values())
+    head = ["expected \\ answered", *labels, *(["invalid"] if show_invalid else []), "recall"]
+    lines = [
+        "",
+        f"## Confusion matrix: {runner} / {qid}",
+        "",
+        "| " + " | ".join(head) + " |",
+        "|" + "---|" * len(head),
+    ]
+    for t in labels:
+        stats = conf["per_label"][t]
+        if not stats["support"]:
+            continue
+        cells = [t, *(str(conf["counts"][t][p]) for p in labels)]
+        if show_invalid:
+            cells.append(str(conf["invalid"][t]))
+        cells.append("—" if stats["recall"] is None else f"{stats['recall']:.2f}")
+        lines.append("| " + " | ".join(cells) + " |")
+    precision = ["precision"]
+    for p in labels:
+        value = conf["per_label"][p]["precision"]
+        precision.append("—" if value is None else f"{value:.2f}")
+    precision.extend([""] * (len(head) - len(precision)))
+    lines.append("| " + " | ".join(precision) + " |")
+    return lines
 
 
 def slug(text: str) -> str:

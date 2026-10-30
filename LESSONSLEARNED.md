@@ -12,6 +12,13 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
+- **Show the allowed answers before the input in decision prompts.** With the
+  item first and the categories after it, `qwen2.5-coder:7b` scored 0.45 on the
+  Clockwork watch suite; with the question and every allowed value first it
+  scored 0.80. A low score first suggested missing model knowledge; it was
+  prompt order. Check the prompt and read the confusion matrix before blaming
+  the model.
+
 - **Historical test replay needs three independent checks.** Run the old suite
   on the before commit (green), apply only selected tests from the after commit
   to old source (red), and run the same suite at the after commit (green).
