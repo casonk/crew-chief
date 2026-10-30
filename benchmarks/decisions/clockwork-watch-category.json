@@ -1,0 +1,177 @@
+{
+  "name": "clockwork-watch-category",
+  "description": "Sort a title into a Clockwork To Watch category. Titles are well-known public works, not entries from any real list. Baseline rules were written against the dev split only.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which To Watch category does this title belong to?",
+      "criteria": {
+        "Movies": "Live-action or animated feature films, excluding anime and documentaries",
+        "TV Shows": "Episodic live-action or western-animated series, excluding anime and documentaries",
+        "Anime": "Japanese animated series and feature films",
+        "Documentaries": "Non-fiction films and series"
+      }
+    }
+  },
+  "baseline": {
+    "category": {
+      "default": "Movies",
+      "rules": [
+        {
+          "if_any": [
+            "bebop",
+            "spirited",
+            "titan"
+          ],
+          "then": "Anime"
+        },
+        {
+          "if_any": [
+            "planet",
+            "solo",
+            "dilemma"
+          ],
+          "then": "Documentaries"
+        },
+        {
+          "if_any": [
+            "breaking",
+            "office",
+            "succession"
+          ],
+          "then": "TV Shows"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "The Godfather",
+      "expected": {
+        "category": "Movies"
+      }
+    },
+    {
+      "state": "Inception",
+      "expected": {
+        "category": "Movies"
+      }
+    },
+    {
+      "state": "Toy Story",
+      "expected": {
+        "category": "Movies"
+      }
+    },
+    {
+      "state": "Breaking Bad",
+      "expected": {
+        "category": "TV Shows"
+      }
+    },
+    {
+      "state": "The Office",
+      "expected": {
+        "category": "TV Shows"
+      }
+    },
+    {
+      "state": "Succession",
+      "expected": {
+        "category": "TV Shows"
+      }
+    },
+    {
+      "state": "Cowboy Bebop",
+      "expected": {
+        "category": "Anime"
+      }
+    },
+    {
+      "state": "Spirited Away",
+      "expected": {
+        "category": "Anime"
+      }
+    },
+    {
+      "state": "Attack on Titan",
+      "expected": {
+        "category": "Anime"
+      }
+    },
+    {
+      "state": "Planet Earth",
+      "expected": {
+        "category": "Documentaries"
+      }
+    },
+    {
+      "state": "Free Solo",
+      "expected": {
+        "category": "Documentaries"
+      }
+    },
+    {
+      "state": "The Social Dilemma",
+      "expected": {
+        "category": "Documentaries"
+      }
+    },
+    {
+      "state": "Parasite",
+      "expected": {
+        "category": "Movies"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Mad Max: Fury Road",
+      "expected": {
+        "category": "Movies"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Severance",
+      "expected": {
+        "category": "TV Shows"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Seinfeld",
+      "expected": {
+        "category": "TV Shows"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Death Note",
+      "expected": {
+        "category": "Anime"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Your Name",
+      "expected": {
+        "category": "Anime"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Won't You Be My Neighbor?",
+      "expected": {
+        "category": "Documentaries"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "My Octopus Teacher",
+      "expected": {
+        "category": "Documentaries"
+      },
+      "split": "heldout"
+    }
+  ]
+}

@@ -43,6 +43,40 @@ def write_task(doc: dict) -> Path:
 write_task.keep = []
 
 
+CLOCKWORK_SUITES = sorted(TASK_FILE.parent.glob("clockwork-*.json"))
+
+
+class ClockworkSuiteTests(unittest.TestCase):
+    def test_suites_cover_every_list(self):
+        names = {p.stem for p in CLOCKWORK_SUITES}
+        self.assertEqual(
+            names,
+            {
+                f"clockwork-{n}"
+                for n in (
+                    "grocery-type",
+                    "shopping-type",
+                    "watch-category",
+                    "listen-category",
+                    "read-category",
+                    "todo-category",
+                    "invest-category",
+                )
+            },
+        )
+
+    def test_each_suite_has_both_splits_and_every_label(self):
+        for path in CLOCKWORK_SUITES:
+            with self.subTest(suite=path.stem):
+                task = tb.load_task(path)
+                labels = set(task.questions["category"].labels)
+                for split in tb.SPLITS:
+                    chosen = task.select(split)
+                    self.assertEqual(
+                        {i["expected"]["category"] for i in chosen.items}, labels, split
+                    )
+
+
 class LoadTests(unittest.TestCase):
     def test_shipped_task_loads(self):
         task = tb.load_task(TASK_FILE)

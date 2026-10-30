@@ -44,6 +44,34 @@ from the dev items. The gap between a runner's dev and held-out accuracy is the
 overfit: the keyword baseline on `receipt-category` scores 1.00 on dev and 0.38 on
 held-out category.
 
+## Clockwork list sorting
+
+Clockwork's lists are categorized, and its AI categorize actions ask a local model
+to sort items into those categories. The `clockwork-*` suites measure how well a
+model does that, one suite per list, each with a single `category` choice
+question whose options are the list's real categories:
+
+| Suite | Labels |
+|---|---|
+| `clockwork-grocery-type` | 12 grocery types (Meat ... Frozen), as in `_ai_categorize` |
+| `clockwork-shopping-type` | 16 consumer-goods types (Tops ... Electronics) |
+| `clockwork-watch-category` | Movies, TV Shows, Anime, Documentaries |
+| `clockwork-listen-category` | Albums, Podcasts, Audiobooks, Radio, Artists |
+| `clockwork-read-category` | Books, Articles, Papers, Comics |
+| `clockwork-todo-category` | Tasks, Projects, Errands, Goals, Hardware |
+| `clockwork-invest-category` | Stocks, ETFs, Crypto, Bonds, REITs, Themes |
+
+Every label has dev and held-out items. Items are generic names or well-known
+public titles, never entries from a real list; keep it that way. If a Clockwork
+list gains a category or type, add it to the matching suite so the benchmark
+keeps testing what the list uses.
+
+```bash
+for t in benchmarks/decisions/clockwork-*.json; do
+  crew-chief taskbench "$t" --split all --runner rules --runner ollama:qwen2.5-coder:7b
+done
+```
+
 ## Runners
 
 | Runner | How it answers | Probabilities |

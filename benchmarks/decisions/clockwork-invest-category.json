@@ -1,0 +1,259 @@
+{
+  "name": "clockwork-invest-category",
+  "description": "Sort a security or idea into a Clockwork To Invest category. Names are well-known public instruments and generic themes, not holdings. Baseline rules were written against the dev split only.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which To Invest category does this security or idea belong to?",
+      "criteria": {
+        "Stocks": "Shares of a single operating company",
+        "ETFs": "Exchange-traded or mutual funds holding a basket of securities",
+        "Crypto": "Cryptocurrencies and tokens",
+        "Bonds": "Government, corporate or municipal debt securities",
+        "REITs": "Real estate investment trusts",
+        "Themes": "An investing idea or sector thesis, not one specific security"
+      }
+    }
+  },
+  "baseline": {
+    "category": {
+      "default": "Stocks",
+      "rules": [
+        {
+          "if_any": [
+            "treasury note",
+            "ladder",
+            "corporate bond"
+          ],
+          "then": "Bonds"
+        },
+        {
+          "if_any": [
+            "btc",
+            "ethereum",
+            "sol"
+          ],
+          "then": "Crypto"
+        },
+        {
+          "if_any": [
+            "voo",
+            "fund",
+            "qqq"
+          ],
+          "then": "ETFs"
+        },
+        {
+          "if_any": [
+            "realty",
+            "prologis",
+            "storage"
+          ],
+          "then": "REITs"
+        },
+        {
+          "if_any": [
+            "buildout",
+            "population",
+            "reshoring"
+          ],
+          "then": "Themes"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "AAPL",
+      "expected": {
+        "category": "Stocks"
+      }
+    },
+    {
+      "state": "Microsoft Corp",
+      "expected": {
+        "category": "Stocks"
+      }
+    },
+    {
+      "state": "NVDA",
+      "expected": {
+        "category": "Stocks"
+      }
+    },
+    {
+      "state": "VOO",
+      "expected": {
+        "category": "ETFs"
+      }
+    },
+    {
+      "state": "Vanguard Total Stock Market Fund",
+      "expected": {
+        "category": "ETFs"
+      }
+    },
+    {
+      "state": "QQQ",
+      "expected": {
+        "category": "ETFs"
+      }
+    },
+    {
+      "state": "BTC",
+      "expected": {
+        "category": "Crypto"
+      }
+    },
+    {
+      "state": "Ethereum",
+      "expected": {
+        "category": "Crypto"
+      }
+    },
+    {
+      "state": "SOL",
+      "expected": {
+        "category": "Crypto"
+      }
+    },
+    {
+      "state": "10-year US Treasury note",
+      "expected": {
+        "category": "Bonds"
+      }
+    },
+    {
+      "state": "Municipal bond ladder",
+      "expected": {
+        "category": "Bonds"
+      }
+    },
+    {
+      "state": "Investment-grade corporate bond 2032",
+      "expected": {
+        "category": "Bonds"
+      }
+    },
+    {
+      "state": "Realty Income (O)",
+      "expected": {
+        "category": "REITs"
+      }
+    },
+    {
+      "state": "Prologis",
+      "expected": {
+        "category": "REITs"
+      }
+    },
+    {
+      "state": "Public Storage REIT",
+      "expected": {
+        "category": "REITs"
+      }
+    },
+    {
+      "state": "AI infrastructure buildout",
+      "expected": {
+        "category": "Themes"
+      }
+    },
+    {
+      "state": "Aging population and healthcare",
+      "expected": {
+        "category": "Themes"
+      }
+    },
+    {
+      "state": "Reshoring of manufacturing",
+      "expected": {
+        "category": "Themes"
+      }
+    },
+    {
+      "state": "Costco Wholesale",
+      "expected": {
+        "category": "Stocks"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "JPM",
+      "expected": {
+        "category": "Stocks"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "SCHD",
+      "expected": {
+        "category": "ETFs"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "iShares Core Aggregate Bond ETF",
+      "expected": {
+        "category": "ETFs"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Litecoin",
+      "expected": {
+        "category": "Crypto"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "XRP",
+      "expected": {
+        "category": "Crypto"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Series I savings bond",
+      "expected": {
+        "category": "Bonds"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "30-year Treasury bond",
+      "expected": {
+        "category": "Bonds"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Equinix (EQIX)",
+      "expected": {
+        "category": "REITs"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "American Tower",
+      "expected": {
+        "category": "REITs"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Water scarcity plays",
+      "expected": {
+        "category": "Themes"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Grid modernization and power demand",
+      "expected": {
+        "category": "Themes"
+      },
+      "split": "heldout"
+    }
+  ]
+}
