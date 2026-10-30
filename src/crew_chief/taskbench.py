@@ -437,8 +437,9 @@ def run(task: Task, runner, *, clock=time.perf_counter) -> dict[str, Any]:
             errors += 1
             rows.append({"item": index, "error": str(exc)[:200]})
             continue
-        latencies.append((clock() - started) * 1000)
-        row = {"item": index, "answers": {}}
+        elapsed_ms = (clock() - started) * 1000
+        latencies.append(elapsed_ms)
+        row = {"item": index, "ms": round(elapsed_ms, 2), "answers": {}}
         for qid, truth in item.get("expected", {}).items():
             q = task.questions[qid]
             truth = normalize(q, truth)
@@ -507,6 +508,12 @@ def confusion(
     return {"labels": labels, "counts": counts, "invalid": missed, "per_label": per_label}
 
 
+def macro_f1(conf: dict[str, Any]) -> float | None:
+    """Unweighted mean F1 over the labels that occur; a never-predicted label scores 0."""
+    scores = [stats["f1"] or 0.0 for stats in conf["per_label"].values() if stats["support"]]
+    return statistics.fmean(scores) if scores else None
+
+
 def _p90(values: list[float]) -> float:
     ordered = sorted(values)
     return ordered[min(len(ordered) - 1, math.ceil(0.9 * len(ordered)) - 1)]
@@ -517,6 +524,8 @@ def render_markdown(results: list[dict[str, Any]], task: Task, stamp: str) -> st
     header = (
         "| Runner | "
         + " | ".join(f"{q} acc" for q in qids)
+        + " | "
+        + " | ".join(f"{q} macro F1" for q in qids)
         + " | Brier (mean) | invalid | errors | median ms | p90 ms |"
     )
     lines = [
@@ -528,15 +537,17 @@ def render_markdown(results: list[dict[str, Any]], task: Task, stamp: str) -> st
         "score over questions where the runner reports probabilities (lower is better).",
         "",
         header,
-        "|" + "---|" * (len(qids) + 6),
+        "|" + "---|" * (2 * len(qids) + 6),
     ]
     for r in results:
         qs = r["questions"]
         accuracy = ["—" if qs[q]["accuracy"] is None else f"{qs[q]['accuracy']:.2f}" for q in qids]
         briers = [qs[q]["brier"] for q in qids if qs[q]["brier"] is not None]
+        f1s = [macro_f1(qs[q]["confusion"]) for q in qids]
         cells = [
             r["runner"],
             *accuracy,
+            *["—" if f is None else f"{f:.2f}" for f in f1s],
             f"{statistics.fmean(briers):.3f}" if briers else "—",
             str(sum(qs[q]["invalid"] for q in qids)),
             str(r["errors"]),

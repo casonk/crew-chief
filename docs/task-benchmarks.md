@@ -103,6 +103,40 @@ values. The JSON result keeps the raw counts and per-label precision, recall and
 F1 under `questions.<id>.confusion`. Read the matrix before the accuracy: it
 shows whether errors are spread out or concentrated in one confusable pair.
 
+## Choosing a model: quality against time to inference
+
+A decision model's accuracy is only half the answer; each call costs time, and
+using one model to choose another costs a second call. `crew-chief routebench`
+scores that trade-off directly, on the single-question suites:
+
+```bash
+crew-chief routebench benchmarks/decisions/clockwork-*.json \
+  --router systemone:clef-flash \
+  --candidate systemone:tev1 --candidate systemone:clef-flash \
+  --candidate systemone:nimble --candidate systemone:clef
+```
+
+Every candidate runs once on every item. Then these strategies are scored on the
+**held-out** items, each by accuracy, macro-F1 (from its confusion matrix) and
+mean, median and p90 latency per item:
+
+| Strategy | What it does |
+|---|---|
+| `single:<m>` | always ask one candidate: the baselines a router must beat |
+| `lookup` | the candidate with the best dev accuracy for the task; no extra call |
+| `route:<router>` | a router model picks a candidate; the options carry each candidate's dev accuracy and median latency, so it chooses from evidence, not names. Cost: router call + chosen call |
+| `cascade@<t>` | ask the fastest candidate; if its top probability is under `t`, ask the next fastest. The candidate's own probabilities are the prior that decides whether to escalate |
+| `oracle` | the fastest candidate that was right; an unreachable bound |
+
+The report (`results/routebench-<stamp>.{md,svg,json}`) has a table sorted by mean
+latency with a `*` on every strategy that no other beats on both accuracy and
+latency (the Pareto front), an SVG scatter of accuracy against log latency, the
+per-task accuracy, the router's confusion matrix against the *fastest correct*
+candidate, and the routed answers' per-task confusion matrices. A strategy's
+latency is composed from the measured per-call times, never re-run. Profiles shown
+to the router come from dev items only. A router must beat both `lookup` and the
+best `single:` on the Pareto front to be worth its extra call.
+
 ## Decision models and Jev
 
 Jev ([TypeSafe AI](https://typesafe.ai/blog/introducing-system-one-models-and-jev),

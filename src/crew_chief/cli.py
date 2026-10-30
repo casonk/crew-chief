@@ -286,6 +286,33 @@ def build_parser() -> argparse.ArgumentParser:
     )
     task_p.add_argument("--out", default="results", help="Output directory (default: results).")
 
+    route_p = sub.add_parser(
+        "routebench",
+        help="Score a model that picks among decision models: quality against latency.",
+        description=(
+            "Run every candidate on the task files, then compare single models, a profile "
+            "lookup, a router model, confidence cascades and an oracle on the held-out items, "
+            "by accuracy, macro-F1 and time to inference. Results go to "
+            "results/routebench-<timestamp>.{md,svg,json}."
+        ),
+    )
+    route_p.add_argument("tasks", nargs="+", help="Single-question task files.")
+    route_p.add_argument(
+        "--candidate",
+        action="append",
+        help="Candidate runner spec; repeat (default: the four installed decision models).",
+    )
+    route_p.add_argument(
+        "--router", default="systemone:clef-flash", help="Runner that picks (default: %(default)s)."
+    )
+    route_p.add_argument(
+        "--threshold",
+        action="append",
+        type=float,
+        help="Cascade confidence threshold; repeat (default: 0.6 0.8 0.95).",
+    )
+    route_p.add_argument("--out", default="results", help="Output directory (default: results).")
+
     return p
 
 
@@ -386,6 +413,42 @@ def main(argv: list[str] | None = None) -> None:
         base.with_suffix(".json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
         print(markdown)
         print(f"Saved: {base}.md and .json", file=sys.stderr)
+
+    elif args.command == "routebench":
+        import time as _time
+
+        args.candidate = args.candidate or [
+            f"systemone:{m}" for m in ("tev1", "clef-flash", "nimble", "clef")
+        ]
+        args.threshold = args.threshold or [0.6, 0.8, 0.95]
+        from pathlib import Path
+
+        from crew_chief import routerbench as rb
+        from crew_chief import taskbench as tb
+
+        try:
+            tasks = [tb.load_task(Path(p)) for p in args.tasks]
+            router = tb.make_runner(args.router, tasks[0])
+            print(
+                f"routing with {router.name} over {len(args.candidate)} candidates ...",
+                file=sys.stderr,
+            )
+            result = rb.run_benchmark(
+                tasks, args.candidate, router, thresholds=tuple(args.threshold)
+            )
+        except (tb.TaskError, rb.RouteError) as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(2)
+        stamp = _time.strftime("%Y%m%d-%H%M%S")
+        out = Path(args.out)
+        out.mkdir(parents=True, exist_ok=True)
+        base = out / f"routebench-{stamp}"
+        base.with_suffix(".svg").write_text(rb.render_svg(result), encoding="utf-8")
+        markdown = rb.render_markdown(result, stamp, chart=base.with_suffix(".svg").name)
+        base.with_suffix(".md").write_text(markdown, encoding="utf-8")
+        base.with_suffix(".json").write_text(rb.to_json(result), encoding="utf-8")
+        print(markdown)
+        print(f"Saved: {base}.md, .svg and .json", file=sys.stderr)
 
     elif args.command == "serve":
         from crew_chief import serve as serving
