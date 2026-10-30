@@ -285,6 +285,13 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     task_p.add_argument("--out", default="results", help="Output directory (default: results).")
+    task_p.add_argument(
+        "--profiles",
+        help="Scoring profiles TOML (default: config/scoring-profiles.toml).",
+    )
+    task_p.add_argument(
+        "--no-score", action="store_true", help="Omit the accuracy-and-speed score columns."
+    )
 
     route_p = sub.add_parser(
         "routebench",
@@ -312,8 +319,35 @@ def build_parser() -> argparse.ArgumentParser:
         help="Cascade confidence threshold; repeat (default: 0.6 0.8 0.95).",
     )
     route_p.add_argument("--out", default="results", help="Output directory (default: results).")
+    route_p.add_argument(
+        "--profiles",
+        help="Scoring profiles TOML (default: config/scoring-profiles.toml).",
+    )
+    route_p.add_argument(
+        "--no-score", action="store_true", help="Omit the accuracy-and-speed score columns."
+    )
 
     return p
+
+
+def _scoring_profiles(args) -> list:
+    """Profiles for the score columns; the default file is optional, an explicit one is not."""
+    from pathlib import Path
+
+    from crew_chief import scoring
+
+    if args.no_score:
+        return []
+    if args.profiles:
+        try:
+            return scoring.load_profiles(Path(args.profiles))
+        except scoring.ScoringError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(2)
+    try:
+        return scoring.load_profiles()
+    except scoring.ScoringError:
+        return []
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -408,7 +442,7 @@ def main(argv: list[str] | None = None) -> None:
         out.mkdir(parents=True, exist_ok=True)
         suffix = "" if args.split == "dev" else f"-{args.split}"
         base = out / f"taskbench-{tb.slug(task.name)}{suffix}-{stamp}"
-        markdown = tb.render_markdown(results, task, stamp)
+        markdown = tb.render_markdown(results, task, stamp, _scoring_profiles(args))
         base.with_suffix(".md").write_text(markdown, encoding="utf-8")
         base.with_suffix(".json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
         print(markdown)
@@ -434,7 +468,11 @@ def main(argv: list[str] | None = None) -> None:
                 file=sys.stderr,
             )
             result = rb.run_benchmark(
-                tasks, args.candidate, router, thresholds=tuple(args.threshold)
+                tasks,
+                args.candidate,
+                router,
+                thresholds=tuple(args.threshold),
+                profiles=_scoring_profiles(args),
             )
         except (tb.TaskError, rb.RouteError) as exc:
             print(f"Error: {exc}", file=sys.stderr)

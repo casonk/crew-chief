@@ -26,6 +26,7 @@ crew-chief/
 │   ├── model_storage.py                   # Storage tiers: rotate retired models hot→warm→cold
 │   ├── gguf_sources.py                    # llama.cpp-native GGUF copies: fetch + SHA-256 check
 │   ├── taskbench.py                       # Task-based decision benchmarks (choice/score/noul)
+│   ├── scoring.py                         # Scoring profiles: accuracy + latency -> one gated, tie-aware score
 │   ├── routerbench.py                     # `routebench`: model selection scored on quality against latency
 │   ├── model_router.py                    # Bounded model selection for test-repair trials
 │   ├── agent.py                           # Agent — multi-step plan→act→observe loop

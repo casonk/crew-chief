@@ -38,6 +38,7 @@ import time
 from dataclasses import dataclass
 from typing import Any
 
+from crew_chief import scoring
 from crew_chief import taskbench as tb
 
 DEFAULT_THRESHOLDS = (0.6, 0.8, 0.95)
@@ -256,6 +257,30 @@ def pareto(strategies: dict[str, dict[str, Any]]) -> set[str]:
     return front
 
 
+def score_strategies(
+    strategies: dict[str, dict[str, Any]], profiles: list[scoring.Profile]
+) -> dict[str, Any]:
+    """Rank the achievable strategies under each profile, with a weight sensitivity sweep.
+
+    The oracle is left out: it cannot be deployed, so it must not take a rank.
+    """
+    entries = {
+        name: (s["accuracy"], s["ms_mean"], s["ms_p90"])
+        for name, s in strategies.items()
+        if name != "oracle" and s["accuracy"] is not None
+    }
+    return {
+        p.name: {
+            "profile": p.describe(),
+            "ranking": scoring.rank(p, entries),
+            "sensitivity": {
+                f"{w:g}": names for w, names in scoring.sensitivity(p, entries).items()
+            },
+        }
+        for p in profiles
+    }
+
+
 # -- benchmark ---------------------------------------------------------------
 
 
@@ -266,6 +291,7 @@ def run_benchmark(
     *,
     thresholds: tuple[float, ...] = DEFAULT_THRESHOLDS,
     clock=time.perf_counter,
+    profiles: list[scoring.Profile] | None = None,
 ) -> dict[str, Any]:
     """Score single models, lookup, a router, cascades and an oracle on held-out items."""
     names = [model_label(spec) for spec in candidates]
@@ -298,10 +324,10 @@ def run_benchmark(
         heldout = sorted(i for i in common if item_split(task, i) == "heldout")
         if not heldout:
             raise RouteError(f"{task.name}: no held-out items answered by every candidate")
-        profiles = {n: dev_profile(task, per_model[n]) for n in names}
-        profiles_by_task[task.name] = profiles
-        fallback = lookup_choice(profiles)
-        order = sorted(names, key=lambda n: profiles[n]["ms"] or math.inf)
+        dev_profiles = {n: dev_profile(task, per_model[n]) for n in names}
+        profiles_by_task[task.name] = dev_profiles
+        fallback = lookup_choice(dev_profiles)
+        order = sorted(names, key=lambda n: dev_profiles[n]["ms"] or math.inf)
 
         for n in names:
             add(f"single:{n}", task.name, _single(per_model, n, heldout))
@@ -310,7 +336,7 @@ def run_benchmark(
         for t in thresholds:
             add(f"cascade@{t:g}", task.name, _cascade(per_model, order, t, heldout))
 
-        rtask = router_task(task, profiles)
+        rtask = router_task(task, dev_profiles)
         picks: dict[int, tuple[str | None, float]] = {}
         log: dict[int, dict[str, Any]] = {}
         for i in heldout:
@@ -341,6 +367,7 @@ def run_benchmark(
         "profiles": profiles_by_task,
         "strategies": strategies,
         "pareto": sorted(pareto(strategies)),
+        "scores": score_strategies(strategies, profiles or []),
         "router_picks": counts,
         "router_log": picks_log,
     }
@@ -365,8 +392,9 @@ def render_markdown(result: dict[str, Any], stamp: str, chart: str | None = None
         "routed item costs the router call plus the chosen model's call, a cascade item costs",
         "every call it made. `*` marks strategies no other beats on both accuracy and mean latency.",
         "",
-        "| Strategy | n | accuracy | macro F1 | mean ms | median ms | p90 ms | |",
-        "|---|---|---|---|---|---|---|---|",
+        "| Strategy | n | accuracy | macro F1 | mean ms | median ms | p90 ms | |"
+        + "".join(f" score: {name} |" for name in result.get("scores", {})),
+        "|---|---|---|---|---|---|---|---|" + "---|" * len(result.get("scores", {})),
     ]
     for name in ordered:
         s = strategies[name]
@@ -374,6 +402,9 @@ def render_markdown(result: dict[str, Any], stamp: str, chart: str | None = None
             f"| {name} | {s['n']} | {_fmt(s['accuracy'])} | {_fmt(s['macro_f1'])} | "
             f"{_fmt(s['ms_mean'], 1)} | {_fmt(s['ms_median'], 1)} | {_fmt(s['ms_p90'], 1)} | "
             f"{'*' if name in front else ''} |"
+            + "".join(
+                f" {_score_cell(result['scores'][p], name)} |" for p in result.get("scores", {})
+            )
         )
     if chart:
         lines += ["", f"![accuracy against mean latency]({chart})"]
@@ -385,6 +416,9 @@ def render_markdown(result: dict[str, Any], stamp: str, chart: str | None = None
     for name in ordered:
         cells = [_fmt(strategies[name]["per_task"][t]["accuracy"]) for t in result["tasks"]]
         lines.append(f"| {name} | " + " | ".join(cells) + " |")
+
+    for pname, block in result.get("scores", {}).items():
+        lines.extend(_render_scores(pname, block))
 
     counts = result["router_picks"]
     labels = [*result["candidates"], "none"]
@@ -414,6 +448,45 @@ def render_markdown(result: dict[str, Any], stamp: str, chart: str | None = None
     for task_name, conf in strategies[routed]["confusion"].items():
         lines.extend(tb.render_confusion(routed, task_name, conf))
     return "\n".join(lines) + "\n"
+
+
+def _score_cell(block: dict[str, Any], name: str) -> str:
+    for row in block["ranking"]:
+        if row["name"] == name:
+            return "gated" if row["score"] is None else f"{row['score']:.3f}"
+    return "—"  # the oracle is not ranked
+
+
+def _render_scores(name: str, block: dict[str, Any]) -> list[str]:
+    ranking = block["ranking"]
+    lines = [
+        "",
+        f"## Scores: {name}",
+        "",
+        block["profile"] + ".",
+        "Tied rows are within the profile's tie margin of the best score; treat them as",
+        "equal. The oracle is not ranked.",
+        "",
+        "| Rank | Strategy | score | accuracy | speed | note |",
+        "|---|---|---|---|---|---|",
+    ]
+    for rank_, row in enumerate(ranking, 1):
+        note = (
+            f"gated: {row['gate']}" if row["gate"] else ("tied for the lead" if row["tied"] else "")
+        )
+        score_ = "—" if row["score"] is None else f"{row['score']:.3f}"
+        lines.append(
+            f"| {rank_} | {row['name']} | {score_} | {row['quality']:.3f} | {row['speed']:.3f} | {note} |"
+        )
+    lines += [
+        "",
+        "Who leads as the weight on accuracy changes (speed gets the rest):",
+        "",
+        "| accuracy weight | tied for the lead |",
+        "|---|---|",
+    ]
+    lines.extend(f"| {w} | {', '.join(names)} |" for w, names in block["sensitivity"].items())
+    return lines
 
 
 def render_svg(result: dict[str, Any]) -> str:

@@ -1,0 +1,33 @@
+# Scoring profiles: how much a use case values speed against accuracy.
+#
+# A profile turns a model's accuracy and latency into one 0-1 number so many
+# models and suites can be ranked and tracked. It is a ranking aid, never a
+# verdict: reports also show the Pareto front, the confusion matrices and a
+# sensitivity table, and call two scores tied when they differ by less than
+# `tie_margin`. Choosing weights is a product decision; change them in a pull
+# request that says why, since every ranking moves with them.
+#
+#   score = accuracy_weight * accuracy + (1 - accuracy_weight) * speed
+#   speed = 1 at or under target_ms, 0 at or over ceiling_ms, log-linear between;
+#           computed on the mean and on the p90, blended by tail_weight
+#   gates = a model that misses min_accuracy or exceeds max_p90_ms is "gated"
+#           and ranks below every model that passes, whatever its score
+
+[profiles.interactive]
+description = "A person waits on the answer (a Clockwork action, a chat reply)"
+accuracy_weight = 0.7
+target_ms = 100
+ceiling_ms = 1000
+tail_weight = 0.3
+min_accuracy = 0.80
+max_p90_ms = 1500
+tie_margin = 0.02
+
+[profiles.batch]
+description = "Nobody waits (a nightly recategorize, a backfill)"
+accuracy_weight = 0.95
+target_ms = 500
+ceiling_ms = 10000
+tail_weight = 0.0
+min_accuracy = 0.85
+tie_margin = 0.01

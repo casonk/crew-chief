@@ -472,6 +472,7 @@ def run(task: Task, runner, *, clock=time.perf_counter) -> dict[str, Any]:
         "task": task.name,
         "items": len(task.items),
         "errors": errors,
+        "latency_ms_mean": round(statistics.fmean(latencies), 1) if latencies else None,
         "latency_ms_median": round(statistics.median(latencies), 1) if latencies else None,
         "latency_ms_p90": round(_p90(latencies), 1) if latencies else None,
         "questions": summary,
@@ -519,7 +520,26 @@ def _p90(values: list[float]) -> float:
     return ordered[min(len(ordered) - 1, math.ceil(0.9 * len(ordered)) - 1)]
 
 
-def render_markdown(results: list[dict[str, Any]], task: Task, stamp: str) -> str:
+def result_score(result: dict[str, Any], profile) -> str:
+    """A run's score under a scoring profile: accuracy averaged over its questions."""
+    from crew_chief import scoring
+
+    accuracies = [q["accuracy"] for q in result["questions"].values() if q["accuracy"] is not None]
+    if not accuracies or result["latency_ms_mean"] is None:
+        return "—"
+    got = scoring.score(
+        profile,
+        statistics.fmean(accuracies),
+        result["latency_ms_mean"],
+        result["latency_ms_p90"],
+    )
+    return "gated" if got.value is None else f"{got.value:.3f}"
+
+
+def render_markdown(
+    results: list[dict[str, Any]], task: Task, stamp: str, profiles: list | None = None
+) -> str:
+    profiles = profiles or []
     qids = list(task.questions)
     header = (
         "| Runner | "
@@ -527,6 +547,7 @@ def render_markdown(results: list[dict[str, Any]], task: Task, stamp: str) -> st
         + " | "
         + " | ".join(f"{q} macro F1" for q in qids)
         + " | Brier (mean) | invalid | errors | median ms | p90 ms |"
+        + "".join(f" score: {p.name} |" for p in profiles)
     )
     lines = [
         f"# Task benchmark: {task.name} ({stamp})",
@@ -537,7 +558,7 @@ def render_markdown(results: list[dict[str, Any]], task: Task, stamp: str) -> st
         "score over questions where the runner reports probabilities (lower is better).",
         "",
         header,
-        "|" + "---|" * (2 * len(qids) + 6),
+        "|" + "---|" * (2 * len(qids) + 6 + len(profiles)),
     ]
     for r in results:
         qs = r["questions"]
@@ -553,8 +574,12 @@ def render_markdown(results: list[dict[str, Any]], task: Task, stamp: str) -> st
             str(r["errors"]),
             str(r["latency_ms_median"]),
             str(r["latency_ms_p90"]),
+            *[result_score(r, p) for p in profiles],
         ]
         lines.append("| " + " | ".join(cells) + " |")
+    if profiles:
+        lines += ["", "Scores (accuracy averaged over questions; `gated` fails a profile's gate):"]
+        lines.extend(f"- `{p.name}`: {p.describe()}" for p in profiles)
     for r in results:
         for qid in qids:
             lines.extend(render_confusion(r["runner"], qid, r["questions"][qid]["confusion"]))

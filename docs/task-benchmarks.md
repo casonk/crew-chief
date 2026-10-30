@@ -92,6 +92,15 @@ Metrics: accuracy and invalid answers per question, median and p90 latency per
 item, and the multi-class Brier score where probabilities exist (lower is
 better; it rewards being confident only when right).
 
+## Aggregate score
+
+`taskbench` and `routebench` add a `score: <profile>` column that combines
+accuracy and latency under a scoring profile (`config/scoring-profiles.toml`:
+`interactive`, `batch`). The score ranks; the Pareto front, confusion matrices and
+sensitivity table decide whether a ranking means anything. See
+[decision-model-selection.md](decision-model-selection.md#aggregate-score).
+`--profiles PATH` selects another file and `--no-score` omits the columns.
+
 ## Confusion matrices
 
 Each result file also carries, for every runner and question, a confusion matrix:

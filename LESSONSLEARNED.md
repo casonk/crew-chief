@@ -12,6 +12,13 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
+- **An aggregate score needs gates, ties and a sensitivity sweep.** A weighted
+  sum of accuracy and speed lets a fast, inaccurate model win and turns a
+  one-item difference into a rank. Gate unacceptable accuracy and tail latency
+  first, call scores within a tie margin equal, and show who leads at other
+  weights. On 2026-10-30 `clef-flash` and `tev1` swapped the lead at an accuracy
+  weight near 0.78, so the honest `interactive` result was a three-way tie.
+
 - **Score a model selector on total latency against the best single model.** A
   router's cost is its own call plus the chosen model's call, so accuracy alone
   hides the loss. Compare it with always using each candidate, a free lookup of

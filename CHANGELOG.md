@@ -16,6 +16,9 @@ uses [Semantic Versioning](https://semver.org/).
 - `crew-chief routebench` compares single models, a profile lookup, a router
   model, confidence cascades and an oracle on accuracy, macro-F1 and time to
   inference. See `docs/decision-model-selection.md`.
+- Scoring profiles (`config/scoring-profiles.toml`, `crew_chief.scoring`): one
+  accuracy-and-latency score per use case with hard gates, tie margins and a
+  weight sensitivity table, added to `taskbench` and `routebench` reports.
 
 ### Fixed
 

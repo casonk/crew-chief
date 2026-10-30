@@ -58,6 +58,41 @@ score should send you to the prompt before it sends you to the model.
 
 Read the matrix before the accuracy, and read accuracy next to latency.
 
+### Aggregate score
+
+For ranking many models and suites, reports add one score per **scoring
+profile** (`config/scoring-profiles.toml`; the code is `src/crew_chief/scoring.py`):
+
+```
+score = accuracy_weight * accuracy + (1 - accuracy_weight) * speed
+speed = 1 at or under target_ms, 0 at or over ceiling_ms, log-linear between
+        (taken on the mean and on the p90, blended by tail_weight)
+```
+
+| Profile | For | accuracy / speed | full speed credit | no speed credit | gates |
+|---|---|---|---|---|---|
+| `interactive` | a person waits (a Clockwork action, a chat reply) | 0.7 / 0.3 | <= 100 ms | >= 1,000 ms | accuracy >= 0.80, p90 <= 1,500 ms |
+| `batch` | nobody waits (a nightly recategorize) | 0.95 / 0.05 | <= 500 ms | >= 10,000 ms | accuracy >= 0.85 |
+
+The weights are a product decision, not a measurement, so the score is a ranking
+aid and never a verdict:
+
+- A model that misses a gate is shown as `gated` and ranks below every model
+  that passes, so speed cannot buy back an unacceptable miss.
+- Scores within the profile's `tie_margin` of the best are marked **tied for the
+  lead**. Treat them as equal; the margin is about one held-out item.
+- Every ranking comes with a sensitivity table: who leads at accuracy weights
+  from 0.5 to 0.95. A lead that flips inside that range is not a lead.
+- The oracle is never ranked, and the Pareto front, the confusion matrices and the
+  raw accuracy and latency stay in the report.
+- Change a profile only in a pull request that says why. Every ranking moves with
+  it, so a result file records which profile text produced it.
+
+`taskbench` adds a `score: <profile>` column per profile (accuracy averaged over
+the task's questions); `routebench` adds the columns plus a ranking and
+sensitivity section per profile. `--profiles PATH` uses another file and
+`--no-score` omits the columns.
+
 ### Model comparison (`taskbench`)
 
 Run each candidate on the same items with `crew-chief taskbench <suite>
@@ -141,6 +176,26 @@ calibration on groceries (Brier 0.003); `nimble` on read and todo.
 - The oracle gains about four points over `tev1` at similar speed, so these four
   models leave little for a selector to win.
 
+Scores for the same strategies (full ranking and sensitivity in the result file):
+
+| Strategy | `interactive` | `batch` |
+|---|---|---|
+| cascade, escalate below 0.6 | **0.950** (tied) | 0.935 |
+| single `clef-flash` | **0.947** (tied) | **0.946** (tied) |
+| single `tev1` | **0.935** (tied) | 0.914 |
+| single `nimble` | 0.915 | 0.924 |
+| cascade, below 0.8 | 0.896 | **0.946** (tied) |
+| route (`clef-flash` picks) | 0.818 | **0.946** (tied) |
+| lookup | 0.778 | 0.903 |
+| cascade, below 0.95 | 0.776 | **0.946** (tied) |
+| single `clef` | 0.672 | **0.937** (tied) |
+
+For `interactive`, `cascade@0.6`, `clef-flash` and `tev1` are tied for the lead
+(within 0.02); routing and `clef` fall behind because of latency. For `batch`,
+speed barely counts, so five strategies tie at 0.946 and only `lookup`, `tev1`,
+`nimble` and the 0.6 cascade trail on accuracy. Routing is harmless when nobody
+waits but also gains nothing.
+
 ## Recommendation
 
 For sorting Clockwork list items into categories:
@@ -148,8 +203,12 @@ For sorting Clockwork list items into categories:
 1. **Use `clef-flash` as the default decision model** (0.94 held-out, 98 ms mean,
    139 ms p90 on a router-free path).
 2. **Use `tev1` where latency matters more than three points** (0.91, 71 ms).
-3. **Do not route among System One models, and do not cascade between them.** On
-   these tasks selection cost more than it saved.
+3. **Do not route among System One models.** On these tasks selection cost more
+   than it saved: under `interactive` routing scores 0.818 against 0.947 for
+   `clef-flash` alone. A cascade from `tev1` at a 0.6 threshold ties
+   `clef-flash` on score (0.950 against 0.947) with a better p90 (107 against
+   139 ms), but it adds a moving part for no accuracy, so it is not worth it
+   unless tail latency becomes the constraint.
 4. **Avoid `clef` for interactive use**; use it only where its better calibration
    matters and 0.6-1.1 s per item is acceptable.
 5. **Do not put `lookup` on dev accuracy in front of models with very different
@@ -170,6 +229,10 @@ set tracked in BACKLOG first.
   chat-model candidate, can change the answer.
 - Item names are short and generic. Real list entries (typos, brand names,
   mixed languages) are harder; the suites measure relative, not absolute, quality.
+- Scores depend on the profile weights and on the speed curve's target and
+  ceiling. At `interactive`, `clef-flash` and `tev1` swap the lead around an
+  accuracy weight of 0.78; the ties and the sensitivity table show that, a single
+  rank does not.
 - Latency is Ollama on one RTX 3090, per-item and sequential. It does not
   measure throughput under concurrent load.
 
@@ -182,7 +245,9 @@ set tracked in BACKLOG first.
    alongside, on an idle GPU. Include held-out items (`--split all`).
 3. Add it as a `--candidate` to `routebench` and compare it with the current best
    `single:` on the front.
-4. Commit the result files under `results/` and update the Results and
+4. Check the score under each profile and the sensitivity table, not just the
+   rank.
+5. Commit the result files under `results/` and update the Results and
    Recommendation sections above. Only then change a policy entry's status.
 
 A model that is better on one suite and worse on another is a finding, not a
@@ -204,6 +269,16 @@ tie: record both and say which use case each fits.
    [task-benchmarks.md](task-benchmarks.md), and rerun the model comparison.
 6. If the source list changes (a category added), update the suite in the same
    change.
+
+## Adding or changing a scoring profile
+
+Add a `[profiles.<name>]` table to `config/scoring-profiles.toml` with
+`accuracy_weight`, `target_ms` and `ceiling_ms`, and optionally `tail_weight`,
+`min_accuracy`, `max_p90_ms` and `tie_margin`. Name the use case it stands for in
+`description`, pick the target from what the caller actually waits for, and set
+gates for what is unacceptable rather than for what is merely worse. The loader
+rejects out-of-range values (`tests/test_scoring.py`). New or changed profiles
+need a pull request, since every ranking moves with them.
 
 ## Adding selection strategies
 
