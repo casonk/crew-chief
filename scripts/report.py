@@ -245,7 +245,7 @@ def _bar_chart(models: list[str], pt: dict[str, dict[str, dict]], prompt: str) -
             f'<div class="bar-model" title="{model}">{model}</div>'
             f'<div class="bar-track">'
             f'<div class="bar-fill" style="width:{pct}%;background:{color}">'
-            f"<span>{label}</span></div></div>"
+            f"{'<span>' + label + '</span>' if pct >= 14 else ''}</div></div>"
             f'<div class="bar-val">{tps:.1f}</div>'
             f"</div>"
         )
@@ -253,8 +253,10 @@ def _bar_chart(models: list[str], pt: dict[str, dict[str, dict]], prompt: str) -
     return "\n".join(rows)
 
 
-def _ttft_bar_chart(models: list[str], pt: dict[str, dict[str, dict]], prompt: str) -> str:
-    """Log-scale TTFT bars (ms), non-thinking and thinking grouped."""
+def _ttft_bar_chart(
+    models: list[str], pt: dict[str, dict[str, dict]], prompt: str, log: bool = True
+) -> str:
+    """TTFT bars (ms) on a log or a linear scale, fastest first."""
     values = []
     for model in models:
         r = pt.get(model, {}).get(prompt)
@@ -262,10 +264,11 @@ def _ttft_bar_chart(models: list[str], pt: dict[str, dict[str, dict]], prompt: s
             values.append((model, r["ttft_ms"]))
     if not values:
         return "<p>No data.</p>"
-    max_log = math.log10(max(v for _, v in values) + 1) or 1
+    top = max(v for _, v in values)
+    max_scaled = (math.log10(top + 1) if log else top) or 1
     rows = ['<div class="chart">']
     for model, ms in sorted(values, key=lambda x: x[1]):
-        pct = max(2, int(math.log10(ms + 1) / max_log * 100))
+        pct = max(2, int((math.log10(ms + 1) if log else ms) / max_scaled * 100))
         color = _bar_color(model)
         label = _fmt_ttft(ms)
         rows.append(
@@ -273,12 +276,69 @@ def _ttft_bar_chart(models: list[str], pt: dict[str, dict[str, dict]], prompt: s
             f'<div class="bar-model" title="{model}">{model}</div>'
             f'<div class="bar-track">'
             f'<div class="bar-fill" style="width:{pct}%;background:{color}">'
-            f"<span>{label}</span></div></div>"
+            f"{'<span>' + label + '</span>' if pct >= 14 else ''}</div></div>"
             f'<div class="bar-val">{label}</div>'
             f"</div>"
         )
     rows.append("</div>")
     return "\n".join(rows)
+
+
+CHART_VIEWS = (
+    ("tps", "Throughput, tokens / second"),
+    ("ttft-log", "Time to first token, log scale"),
+    ("ttft-lin", "Time to first token, linear scale"),
+)
+
+# Without JavaScript every view shows; with it only the selected one does.
+CHART_CSS = """
+.chart-controls { margin: 0.5rem 0 0.25rem; display: flex; gap: 0.5rem; align-items: center; }
+.js .charts .chart-view { display: none; }
+.js .charts[data-view="tps"] .chart-view[data-view="tps"],
+.js .charts[data-view="ttft-log"] .chart-view[data-view="ttft-log"],
+.js .charts[data-view="ttft-lin"] .chart-view[data-view="ttft-lin"] { display: block; }
+.chart-view > p.meta { margin: 0 0 0.3rem; }
+"""
+
+CHART_JS = """<script>
+(function () {
+  var box = document.querySelector(".charts"), pick = document.getElementById("chart-view");
+  if (!box || !pick) return;
+  var KEY = "bench-chart-view", views = Array.prototype.map.call(pick.options, function (o) { return o.value; });
+  document.documentElement.classList.add("js");
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  function show(view) { box.setAttribute("data-view", view); pick.value = view; }
+  show(views.indexOf(saved) >= 0 ? saved : views[0]);
+  pick.addEventListener("change", function () {
+    show(pick.value);
+    try { localStorage.setItem(KEY, pick.value); } catch (e) {}
+  });
+})();
+</script>"""
+
+
+def _chart_section(models: list[str], pt: dict[str, dict[str, dict]], prompts: list[str]) -> str:
+    """One chart per prompt, with a scale selector choosing what every chart shows."""
+    options = "".join(f'<option value="{key}">{label}</option>' for key, label in CHART_VIEWS)
+    parts = [
+        f'<div class="section charts" data-view="{CHART_VIEWS[0][0]}"><h2>Charts</h2>',
+        '<div class="chart-controls"><label for="chart-view">Show</label>'
+        f'<select id="chart-view" class="theme-switch">{options}</select></div>',
+    ]
+    for prompt in prompts:
+        parts.append(f"<h3>{prompt}</h3>")
+        for key, label in CHART_VIEWS:
+            chart = (
+                _bar_chart(models, pt, prompt)
+                if key == "tps"
+                else _ttft_bar_chart(models, pt, prompt, log=key == "ttft-log")
+            )
+            parts.append(
+                f'<div class="chart-view" data-view="{key}"><p class="meta">{label}</p>{chart}</div>'
+            )
+    parts.append("</div>" + CHART_JS)
+    return "\n".join(parts)
 
 
 def _trend_section(runs: dict[str, list[dict]], models: list[str]) -> str:
@@ -377,14 +437,8 @@ def build_report(runs: dict[str, list[dict]], out: pathlib.Path) -> None:
         + "</div>"
     )
 
-    # ── Bar charts
-    chart_html = []
-    for prompt in prompts:
-        chart_html.append(f"<h3>Throughput — {prompt}</h3>")
-        chart_html.append(_bar_chart(models, pt, prompt))
-        chart_html.append(f"<h3>TTFT — {prompt} (log scale)</h3>")
-        chart_html.append(_ttft_bar_chart(models, pt, prompt))
-    sections.append('<div class="section"><h2>Charts</h2>' + "\n".join(chart_html) + "</div>")
+    # ── Bar charts: one per prompt, the scale chosen by a selector
+    sections.append(_chart_section(models, pt, prompts))
 
     # ── Trend (if multiple runs)
     trend = _trend_section(runs, models)
@@ -397,7 +451,7 @@ def build_report(runs: dict[str, list[dict]], out: pathlib.Path) -> None:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>crew-chief Benchmark — {latest_label}</title>
-{theme.HEAD}<style>{theme.SWITCHER_CSS}{theme.REPORT_CSS}{CSS}</style>
+{theme.HEAD}<style>{theme.SWITCHER_CSS}{theme.REPORT_CSS}{CSS}{CHART_CSS}</style>
 </head>
 <body>
 <div class="page">
