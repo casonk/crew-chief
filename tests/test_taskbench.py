@@ -79,27 +79,47 @@ class ClockworkSuiteTests(unittest.TestCase):
 
 class BacklogTriageSuiteTests(unittest.TestCase):
     PATH = TASK_FILE.parent / "backlog-triage.json"
+    ACTIVE = {pct: TASK_FILE.parent / f"backlog-triage-active-{pct}.json" for pct in (25, 50, 75)}
 
-    def test_both_questions_have_unknown_and_both_splits_cover_every_label(self):
+    def test_one_repository_question_with_unknown_and_both_splits_cover_every_label(self):
         task = tb.load_task(self.PATH)
-        self.assertEqual(set(task.questions), {"group", "repo"})
-        for qid in ("group", "repo"):
-            labels = set(task.questions[qid].labels)
-            self.assertIn("unknown", labels)
-            for split in tb.SPLITS:
-                chosen = task.select(split)
-                self.assertEqual({i["expected"][qid] for i in chosen.items}, labels, (qid, split))
+        self.assertEqual(set(task.questions), {"repo"})  # a group follows from its repository
+        labels = set(task.questions["repo"].labels)
+        self.assertIn("unknown", labels)
+        self.assertEqual(len(labels), 27)  # 26 repositories and unknown
+        for split in tb.SPLITS:
+            chosen = task.select(split)
+            self.assertEqual({i["expected"]["repo"] for i in chosen.items}, labels, split)
 
-    def test_the_suite_is_synthetic_and_unknown_items_are_unknown_for_both_questions(self):
-        task = tb.load_task(self.PATH)
-        for item in task.items:
-            expected = item["expected"]
-            if expected["repo"] == "unknown":
-                self.assertEqual(expected["group"], "unknown", item["state"])
-        # repository names are descriptive stand-ins, never a real repository's name
+    def test_the_suite_is_synthetic_and_plain(self):
         text = self.PATH.read_text(encoding="utf-8")
         for real in ("clockwork", "crew-chief", "tachometer", "magneto", "locility", "career"):
             self.assertNotIn(real, text)
+        self.assertNotIn("Examples:", text)  # active sorting is never mixed into the plain suite
+
+    def test_it_keeps_vague_entries_that_name_no_repository(self):
+        task = tb.load_task(self.PATH)
+        vague = [i for i in task.items if i["expected"]["repo"] == "unknown"]
+        self.assertGreaterEqual(len(vague), 12)
+        self.assertGreaterEqual(len(task.items), 150)
+
+    def test_the_active_variants_pass_examples_and_score_only_the_rest(self):
+        plain = tb.load_task(self.PATH)
+        plain_states = {i["state"] for i in plain.items}
+        sizes = []
+        for pct, path in self.ACTIVE.items():
+            task = tb.load_task(path)
+            self.assertEqual(
+                set(task.questions["repo"].labels), set(plain.questions["repo"].labels)
+            )
+            descriptions = " ".join(task.questions["repo"].criteria.values())
+            self.assertIn("Examples:", descriptions, pct)
+            scored = {i["state"] for i in task.items}
+            self.assertTrue(scored < plain_states, pct)
+            for state in scored:  # nothing scored was handed to the model as an example
+                self.assertNotIn(f'"{state}"', descriptions, state)
+            sizes.append(len(task.items))
+        self.assertEqual(sizes, sorted(sizes, reverse=True))  # more examples, fewer scored items
 
 
 class LoadTests(unittest.TestCase):

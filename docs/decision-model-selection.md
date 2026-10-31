@@ -242,43 +242,52 @@ Speed is half relative (against these nine strategies) and half absolute. For
 it relative, accuracy decides, and routing trails because it pays a second call
 for no accuracy gain.
 
-## Backlog triage: sorting an entry into a group and a repository
+## Backlog triage: sorting an entry into a repository
 
-`benchmarks/decisions/backlog-triage.json` (91 synthetic entries, 12 stand-in repositories with one-line
-descriptions plus `unknown`, 6 groups plus `unknown`) models Clockwork's To Code form: a new entry arrives with
-no group or repository and a decision model must pick both or admit it does not know. Results on held-out
-entries (`results/backlog-triage-gating-20261031.md`, raw runs beside it):
+`benchmarks/decisions/backlog-triage.json` (185 synthetic entries, 26 stand-in repositories with uneven
+descriptions plus `unknown`) models Clockwork's To Code form: a new entry arrives with no repository and a
+decision model must pick one or admit it does not know. A group is a function of the repository there (on the
+real backlog, 27 of 27 repositories sit in exactly one group, and always answering the commonest group is right
+73% of the time, against about 46% for a model asked for the group), so only the repository is classified and
+the group follows from it. 24 entries are hard: typos, two repositories in one sentence, vague wording with no
+repository, and entries that imply a repository without naming it. Full tables, by kind and gated, are in
+`results/backlog-triage-v2-20261031.md`.
 
-| Model | repo accuracy | group accuracy | median ms per entry |
+| Model | repo accuracy (all) | held-out | median ms per entry |
 |---|---|---|---|
-| `clef` | 0.82 | **0.74** | 897 |
-| `clef-flash` | **0.82** | 0.54 | 189 |
-| `nimble` | 0.74 | 0.49 | 211 |
-| `tev1` | 0.51 | 0.28 | 140 |
-| `qwen2.5-coder:7b` (chat) | 0.46 | 0.31 | 167 |
+| `clef` | **0.89** | 0.82 | 1076 |
+| `clef-flash` | 0.83 | 0.78 | 217 |
+| `nimble` | 0.79 | 0.71 | 272 |
+| `tev1` | 0.72 | 0.63 | 169 |
+| keyword rules | 0.76 | 0.72 | 0 |
 
-- **The repository is a good fit for a decision model** when each repository comes with a short description.
-  `clef-flash` matches `clef` at a fifth of the latency. Gated at confidence 0.6 it answers 74% of entries and is
-  wrong on 8%; the rest become `unknown`.
-- **The group is the hard part.** Only `clef` is usable, and only gated: at 0.6 it answers 59% and is wrong on
-  8%. The groups overlap (a security fix is also a fix), so expect `unknown` often, or a stronger model later.
-- Clockwork's auto-sort uses `clef-flash` for the repository and `clef` for the group at 0.6, and files
-  anything unsure as `unknown` (PR in Clockwork).
+- **A model now beats the keywords.** On the earlier 12-repository suite the keyword baseline beat every model
+  because the entries shared vocabulary. With 26 repositories and hard entries `clef` leads by 13 points and
+  `clef-flash` by 7, and the keywords collapse on entries that name two repositories (0.17) or none (0.40).
+  The rules were written with every entry in view, so this is the best case for them.
+- **`clef-flash` never says `unknown` to a vague entry** ("Make it faster" gets a repository, 0.00 on that kind);
+  `clef`, `nimble` and `tev1` decline. Gate it: at confidence 0.6, `clef-flash` answers 82% of entries and is
+  wrong on 6%, `clef` answers 78% and is wrong on 3%; the rest become `unknown`, which Clockwork files in an
+  `unknown` group.
+- **Passing the active sorting does not help.** Writing a share (25, 50, 75%) of each repository's entries into
+  its description as examples, and scoring only the rest, left `clef-flash` flat, cost `clef` 2 to 7 points and
+  `nimble` 2 to 8, made every model two to three times slower, and cut the answers that pass a 0.6 gate (for
+  `clef-flash`, from 82% to 47%, 24% and 15%). Only `tev1` gained (+0.10 at 75%, five entries of 48). This agrees
+  with the real-backlog check (30 repositories, leave-one-out, `clef`): two example titles per repository gave
+  24% answered at 0.6 and 65% right, no better than descriptions alone. Clockwork's auto-sort therefore
+  keeps using repository descriptions only; the active-sorting variants
+  (`backlog-triage-active-<25|50|75>.json`) exist to re-test this with new models and are never mixed into the
+  plain suite.
+- Clockwork's auto-sort uses one model, `clef` by default, for the repository at 0.6 and files anything unsure
+  as `unknown`. On the real backlog about 41% of items get a repository at 0.6 and 72% of those are right; the
+  stand-in suites look easier than that (78% answered, 82% right on this one), because real repository names
+  are not self-describing and real entries are messier.
 
-**Correction (2026-10-31, real backlog).** Calibrating Clockwork's auto-sort on the real To Code list showed the
-`group` question does not model how groups work there: a group is a family of repositories, no repository spans two
-groups (27 of 27), and always answering the commonest group is right 73% of the time, against about 46% for a model.
-Only the repository needs classifying; the group follows from it. On the real backlog (30 repositories,
-leave-one-out, `clef`), about 41% of items get a repository at confidence 0.6 and 72% of those are right; with 12
-stand-in repositories the held-out suite looked easier (74% answered, 92% right). Passing two example titles per
-repository inside each description did not help (`k=2`: 24% answered at 0.6, 65% right). The group numbers above
-describe a different task and should not be used to choose a model for the group.
-
-Limits: the keyword baseline scores 0.97 on groups and 0.82 on repositories, higher than every model. The
-entries share vocabulary (I wrote them and the rules together), so keyword rules look better here than they
-would on real, messier entries; treat the baseline as an upper bound, not a floor. Real repository names are not
-self-describing, so the result assumes Clockwork supplies each repository's description (it reads
-`.github/repository.toml`). Single run, 39 held-out entries: a point is one entry.
+Limits: single runs, and the hard kinds hold 5 to 7 entries each, so a cell is a handful of entries; the
+75% variant scores 48 entries and differences of a few points are noise (the direction is the same in all
+three variants). The suite is synthetic, and it assumes Clockwork supplies each repository's description (it
+reads `.github/repository.toml`). Case variants of one repository name are normalised by Clockwork
+(`canonical_repos`), not asked of the model.
 
 ## Recommendation
 
