@@ -151,6 +151,7 @@ a { color: var(--accent); }
     </div>
     <h2 style="margin-top:14px" id="r-runners-title">Runners</h2>
     <div class="checks" id="r-runners"></div>
+    <div class="actions" id="r-runners-cats" style="margin-top:6px"></div>
     <label for="r-extra" style="margin-top:8px">More runner specs, one per line
       (rules, ollama:&lt;model&gt;, llamacpp:&lt;model&gt;, systemone:&lt;model&gt;)</label>
     <textarea id="r-extra" rows="2"></textarea>
@@ -161,6 +162,7 @@ a { color: var(--accent); }
     <div id="r-routeonly" hidden>
       <h2 style="margin-top:14px">Routing models</h2>
       <div class="checks" id="r-routers"></div>
+      <div class="actions" id="r-routers-cats" style="margin-top:6px"></div>
       <label for="r-routers-extra" style="margin-top:8px">More routing models, one spec per line</label>
       <textarea id="r-routers-extra" rows="2"></textarea>
       <p class="muted">Each routing model gets its own run over the same candidates and suites.</p>
@@ -380,11 +382,32 @@ async function loadRunForm() {
   $("r-suites").innerHTML = suites.suites.map((s) =>
     `<label><input type="checkbox" name="suite" value="${esc(s)}"> ${esc(s)}</label>`).join("");
   const runners = ["rules", ...models.systemone.map((m) => "systemone:" + m), ...models.ollama.map((m) => "ollama:" + m)];
+  const groups = models.groups || {};
+  const group = (spec) => esc(groups[spec] || "other");
   $("r-runners").innerHTML = runners.map((r) =>
-    `<label><input type="checkbox" name="runner" value="${esc(r)}"${r.startsWith("systemone:") ? " checked" : ""}> ${esc(r)}</label>`).join("");
+    `<label><input type="checkbox" name="runner" value="${esc(r)}" data-group="${group(r)}"${r.startsWith("systemone:") ? " checked" : ""}> ${esc(r)}</label>`).join("");
   $("r-routers").innerHTML = models.systemone.map((m) =>
-    `<label><input type="checkbox" name="router" value="systemone:${esc(m)}"${m === "clef-flash" ? " checked" : ""}> systemone:${esc(m)}</label>`).join("");
+    `<label><input type="checkbox" name="router" value="systemone:${esc(m)}" data-group="${group("systemone:" + m)}"${m === "clef-flash" ? " checked" : ""}> systemone:${esc(m)}</label>`).join("");
+  categoryButtons("r-runners", "r-runners-cats", "runner");
+  categoryButtons("r-routers", "r-routers-cats", "router");
   setKind();
+}
+// All / one button per category present / None, for a list of model checkboxes (like the suites').
+const CATEGORY_LABELS = {coding: "Coding", workhorse: "Workhorse", system1: "System 1"};
+function categoryButtons(boxId, barId, name) {
+  const boxes = [...document.querySelectorAll(`#${boxId} input[name=${name}]`)];
+  const present = Object.keys(CATEGORY_LABELS).filter((g) => boxes.some((b) => b.dataset.group === g));
+  const set = (pred) => boxes.forEach((b) => { b.checked = pred(b); });
+  const buttons = [["All", () => true], ...present.map((g) =>
+    [`${CATEGORY_LABELS[g]} (${boxes.filter((b) => b.dataset.group === g).length})`, (b) => b.dataset.group === g]),
+    ["None", () => false]];
+  $(barId).innerHTML = "";
+  buttons.forEach(([label, pred]) => {
+    const btn = document.createElement("button");
+    btn.className = "btn secondary"; btn.type = "button"; btn.textContent = label;
+    btn.addEventListener("click", () => set(pred));
+    $(barId).append(btn);
+  });
 }
 function setKind() {
   const route = $("r-kind").value === "routebench";
