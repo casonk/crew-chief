@@ -134,7 +134,7 @@ def files_page(names: list[str]) -> bytes:
     def row(n: str) -> str:
         suffix = Path(n).suffix
         label = html.escape(n)
-        href = f"/view/results/{n}" if suffix in (".md", ".json") else f"/{n}"
+        href = f"/view/results/{n}" if suffix in (".md", ".json", ".svg") else f"/{n}"
         raw = (
             f' <a class="muted" href="/{html.escape(n, quote=True)}">raw</a>'
             if href != f"/{n}"
@@ -620,6 +620,7 @@ class BenchApp:
     def renderings(self, ref: str) -> str:
         """Links to the other renderings of a result that is in the store, for the viewer's bar."""
         label, _, name = ref.partition("/")
+        name = name[:-4] + ".json" if name.endswith(".svg") else name  # a chart's data is its JSON
         if label != "results" or not name.endswith(".json"):
             return ""
         conn = self.store()

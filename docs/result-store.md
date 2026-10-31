@@ -41,7 +41,7 @@ Files that are not benchmark results (the test-bench and inference-speed reports
 | `tasks` | `csv` `json` `md` `html` | per task and performer |
 
 `table.html` is a themed page with both charts inline, the tables and a link to every other rendering. A
-result's JSON viewer shows links to its renderings.
+result's JSON viewer, and the viewer for its saved `.svg`, show links to its renderings.
 
 **SVG and themes.** Charts style themselves with the portfolio tokens. Inline in a page they follow the page.
 As a standalone file they carry their own: `?theme=neon` (any theme in `themes/themes.toml`) embeds that
