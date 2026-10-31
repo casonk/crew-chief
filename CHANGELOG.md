@@ -7,6 +7,7 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- Add an optional decision-model gate to the listener (`listener_gate.py`, `[llm] decision_gate`, off by default). The serving policy's `message-routing` task classifies each natural-language message, and one it is confident is a notification or small talk skips the chat-model step. Anything else, or any error, continues through the unchanged extraction, allowlist and dispatcher.
 - Answer `/_portfolio/*` itself from a vendored portfolio site seam (`crew_chief/portfolio/`), which replaces the old `theme/` copy, so the theme and top bar work with no Caddy in front: the owner-only site store first, then a pinned fallback copy. Add `/.portfolio` (ignored) and `config/portfolio-site.example.toml`. See traction-control `docs/portfolio-sites.md`.
 
 ### Added

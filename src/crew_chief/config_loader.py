@@ -34,6 +34,12 @@ class LlmConfig:
     # command extraction.  When False, only messages starting with "!" are
     # processed (the "!" prefix is stripped and the rest is used verbatim).
     natural_language: bool = True
+    # When True, a decision model (the serving policy's message-routing task)
+    # first drops messages it is confident are notifications or small talk, so
+    # the chat model is not asked about them. Off by default; any doubt or error
+    # lets the message through. Only applies to natural-language messages.
+    decision_gate: bool = False
+    decision_gate_threshold: float = 0.8
     base_url: str = "http://localhost:11434"
     timeout_seconds: int = 60
 
@@ -308,6 +314,13 @@ def load(path: str | Path) -> ListenerConfig:
         cfg.llm.model = _str(llm["model"], "llm.model")
     if "natural_language" in llm:
         cfg.llm.natural_language = _bool(llm["natural_language"], "llm.natural_language")
+    if "decision_gate" in llm:
+        cfg.llm.decision_gate = _bool(llm["decision_gate"], "llm.decision_gate")
+    if "decision_gate_threshold" in llm:
+        threshold = _float(llm["decision_gate_threshold"], "llm.decision_gate_threshold")
+        if not 0.0 < threshold <= 1.0:
+            raise ConfigError("Config key 'llm.decision_gate_threshold' must be in (0, 1].")
+        cfg.llm.decision_gate_threshold = threshold
     if "base_url" in llm:
         cfg.llm.base_url = _str(llm["base_url"], "llm.base_url")
     if "timeout_seconds" in llm:

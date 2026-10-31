@@ -178,7 +178,8 @@ note = "Superseded code model; nothing in the portfolio uses it"
 # evidence. A `chat` task gives the listener a model chain (first model, then the
 # fallbacks); an entry in the listener's own [llm.task_chains] for the same task
 # wins. A `systemone` task names a decision model asked through /v1/systemone; the
-# listener does not call it yet (see BACKLOG).
+# listener asks `message-routing` when `[llm] decision_gate = true` (see
+# listener_gate.py) and uses the model, then the fallbacks, in order.
 [tasks."message-routing"]
 status = "beta"
 runner = "systemone"

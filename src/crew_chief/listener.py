@@ -53,6 +53,7 @@ from email.utils import parseaddr
 from pathlib import Path
 from typing import Any
 
+from crew_chief import listener_gate
 from crew_chief.agent import Agent, AgentCascade
 from crew_chief.client import CrewChiefClient
 from crew_chief.config_loader import GmailConfig, ListenerConfig, SignalConfig
@@ -864,6 +865,7 @@ def _process_message(
     llm_client: CrewChiefClient,
     dispatcher: Dispatcher,
     agent: Agent | AgentCascade | None = None,
+    gate: listener_gate.Gate | None = None,
 ) -> bool:
     """Interpret, dispatch, and reply to a single incoming message.
 
@@ -882,6 +884,12 @@ def _process_message(
         model_label = getattr(agent, "last_used_model", "") or "unknown"
         model_header = f"[Model: {model_label}]"
     else:
+        stripped = msg.text.strip()
+        if gate is not None and cfg.llm.natural_language and not stripped.startswith(DIRECT_PREFIX):
+            skip, decision = gate.should_skip(stripped)
+            if skip:
+                log.info("[%s] Gated out (%s).", msg.channel, listener_gate.describe(decision))
+                return False
         command = resolve_command(msg.text, cfg, llm_client)
         if command is None:
             log.info("[%s] No actionable command extracted from message.", msg.channel)
@@ -923,6 +931,7 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
         model=cfg.llm.model,
         timeout=cfg.llm.timeout_seconds,
     )
+    gate = listener_gate.build(cfg.llm.decision_gate, cfg.llm.decision_gate_threshold)
     dispatcher = Dispatcher(
         allowed_commands=cfg.dispatch.allowed_commands,
         timeout_seconds=cfg.dispatch.timeout_seconds,
@@ -1012,7 +1021,7 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
                     msg.sender,
                 )
                 continue
-            if _process_message(msg, cfg, llm_client, dispatcher, agent):
+            if _process_message(msg, cfg, llm_client, dispatcher, agent, gate):
                 cycle_replies += 1
 
         for msg in poll_gmail(cfg.gmail):
@@ -1026,7 +1035,7 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
                 continue
             if not _claim_gmail_message(msg, seen_gmail_fingerprints):
                 continue
-            if _process_message(msg, cfg, llm_client, dispatcher, agent):
+            if _process_message(msg, cfg, llm_client, dispatcher, agent, gate):
                 cycle_replies += 1
 
         if once:
