@@ -116,8 +116,10 @@ prints them.
 
 A `chat` task gives the listener its Ollama model chain (the model, then the
 fallbacks). The listener's own `[llm.task_chains]` entry for the same task wins,
-then the policy, then `default` and `ollama_model_chain`. A `systemone` task is
-recorded, but the listener does not call decision models yet.
+then the policy, then `default` and `ollama_model_chain`. A `systemone` task names a
+decision model: the listener asks `message-routing` when `[llm] decision_gate = true`
+(see `listener_gate.py`), trying the model and then its fallbacks, and drops only
+messages the model is confident are notifications or small talk.
 
 ## Who reads it
 
