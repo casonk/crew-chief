@@ -542,6 +542,46 @@ class ProxyTests(AppCase):
 
         self.assertIn('["md", "json", "svg"].includes(ext)', PAGE)
 
+    def _four_formats(self, stem="demo"):
+        results = self.root / "results"
+        (results / f"{stem}.html").write_text(
+            "<html><head></head><body><p>report</p></body></html>"
+        )
+        (results / f"{stem}.json").write_text('{"k": 1}')
+        (results / f"{stem}.md").write_text("# demo")
+        (results / f"{stem}.svg").write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4"><rect/></svg>'
+        )
+
+    def test_every_rendering_of_a_result_links_to_the_others(self):
+        self._four_formats()
+        pages = {
+            "html": "/files/results/demo.html",
+            "json": "/view/results/demo.json",
+            "md": "/view/results/demo.md",
+            "svg": "/view/results/demo.svg",
+        }
+        for current, url in pages.items():
+            page = self.call(url)[1].decode()
+            self.assertIn(f'aria-current="page">{current}</b>', page, url)
+            for other, href in pages.items():
+                if other != current:
+                    self.assertIn(f'href="{href}"', page, f"{url} -> {other}")
+        self.assertIn(
+            'aria-current="page">html</b>', self.call("/demo.html")[1].decode()
+        )  # old URL too
+
+    def test_a_result_with_one_rendering_has_no_tabs(self):
+        (self.root / "results" / "solo.md").write_text("# solo")
+        self.assertNotIn('class="fmt"', self.call("/view/results/solo.md")[1].decode())
+
+    def test_a_latest_link_offers_the_renderings_of_the_report_it_points_to(self):
+        self._four_formats("bench-20260101")
+        (self.root / "results" / "latest.html").symlink_to("bench-20260101.html")
+        page = self.call("/latest.html")[1].decode()
+        self.assertIn('href="/view/results/bench-20260101.json"', page)
+        self.assertIn('aria-current="page">html</b>', page)
+
     def test_the_json_viewer_offers_the_renderings_of_a_stored_result_only(self):
         self._stored_result()
         (self.root / "results" / "other.json").write_text('{"k": 1}')

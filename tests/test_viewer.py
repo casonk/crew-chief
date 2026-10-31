@@ -176,6 +176,41 @@ class SvgTests(unittest.TestCase):
         self.assertIn('href="/files/results/c.svg"', bad)
 
 
+class FormatTabTests(unittest.TestCase):
+    ITEMS = [
+        ("html", "/files/results/r.html"),
+        ("json", "/view/results/r.json"),
+        ("md", "/view/results/r.md"),
+    ]
+
+    def test_nothing_to_switch_to_means_no_tabs(self):
+        self.assertEqual(viewer.format_tabs([], "json"), "")
+        self.assertEqual(viewer.format_tabs([("json", "/x")], "json"), "")
+
+    def test_the_current_format_is_marked_and_the_others_are_links(self):
+        tabs = viewer.format_tabs(self.ITEMS, "json")
+        self.assertIn('<b aria-current="page">json</b>', tabs)
+        self.assertIn('<a href="/files/results/r.html">html</a>', tabs)
+        self.assertIn('<a href="/view/results/r.md">md</a>', tabs)
+        self.assertNotIn('href="/view/results/r.json"', tabs)
+
+    def test_inline_tabs_carry_their_own_styles_for_a_page_without_this_css(self):
+        tabs = viewer.format_tabs(self.ITEMS, "html", inline=True)
+        self.assertIn("style=", tabs)
+        self.assertIn("var(--accent", tabs)
+
+    def test_links_are_escaped(self):
+        tabs = viewer.format_tabs([("a", '/x"y'), ("b", "/z")], "b")
+        self.assertNotIn('"y', tabs.replace("&quot;", ""))
+
+    def test_the_viewer_bar_shows_the_tabs_it_is_given(self):
+        page = viewer.render(
+            "r.md", "# t", "/files/results/r.md", viewer.format_tabs(self.ITEMS, "md")
+        )
+        self.assertIn('class="fmt"', page)
+        self.assertIn("/files/results/r.html", page)
+
+
 class PageTests(unittest.TestCase):
     def test_the_page_is_themed_and_links_back_and_to_the_raw_file(self):
         page = viewer.render("notes.md", "# Hi", "/files/results/notes.md")
