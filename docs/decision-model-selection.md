@@ -106,7 +106,16 @@ sensitivity section per profile. `--profiles PATH` uses another file and
 
 ### The bench interface (`benchui`)
 
-`crew-chief benchui` serves a page on `http://127.0.0.1:8766/` (loopback only):
+`crew-chief benchui` serves a page on loopback port 8766. The shared Caddy
+(wiring-harness, client certificate required) puts it at
+`https://bench.crew-chief.internal/`; it also serves the shared `results/` folder
+at the site root (`/latest.html`, `/results/`), as the static site did before it.
+
+- **Run it:** `scripts/install_benchui_systemd.sh` installs and starts the user
+  unit `crew-chief-benchui`, which accepts the Caddy hostname through
+  `CREW_CHIEF_BENCH_HOSTS`. The wiring-harness registry entry
+  (`crew-chief-bench`) is a plain `port = 8766` proxy; apply it with
+  `scripts/apply_site_changes.sh --skip-mtls --skip-dnsmasq --skip-dns-check`.
 
 - **Profiles:** sliders for every profile field, saved under
   `~/.local/state/crew-chief/bench/profiles.toml` (seeded from the tracked

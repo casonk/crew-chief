@@ -209,7 +209,7 @@ class SpecTests(unittest.TestCase):
             self.assertEqual(step.count("--threshold"), 3)
 
 
-class AppTests(unittest.TestCase):
+class AppCase(unittest.TestCase):
     def setUp(self):
         self.tmp = TemporaryDirectory()
         root = Path(self.tmp.name)
@@ -245,6 +245,8 @@ class AppTests(unittest.TestCase):
         except urllib.error.HTTPError as err:
             return err.code, err.read()
 
+
+class AppTests(AppCase):
     def test_page_and_profiles(self):
         status, body = self.call("/")
         self.assertEqual(status, 200)
@@ -383,3 +385,30 @@ class AppTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ProxyTests(AppCase):
+    """The interface behind the shared Caddy: its hostname, and the old static-site URLs."""
+
+    def setUp(self):
+        super().setUp()
+        self.server.RequestHandlerClass.allowed_hosts.add("bench.crew-chief.internal")
+
+    def test_proxied_host_and_same_origin_posts_are_accepted(self):
+        host = {"Host": "bench.crew-chief.internal"}
+        self.assertEqual(self.call("/api/profiles", headers=host)[0], 200)
+        same = {**host, "Origin": "https://bench.crew-chief.internal"}
+        self.assertEqual(self.call("/api/profiles/reset", "POST", {}, headers=same)[0], 200)
+        other = {**host, "Origin": "https://evil.example"}
+        self.assertEqual(self.call("/api/profiles/reset", "POST", {}, headers=other)[0], 403)
+        self.assertEqual(self.call("/", headers={"Host": "other.internal"})[0], 403)
+
+    def test_shared_results_stay_reachable_at_the_site_root(self):
+        (self.root / "results" / "latest.html").write_text("<p>weekly</p>")
+        (self.root / "results" / "notes.py").write_text("x")
+        status, body = self.call("/latest.html")
+        self.assertEqual((status, body), (200, b"<p>weekly</p>"))
+        self.assertEqual(self.call("/notes.py")[0], 400)
+        status, body = self.call("/results/")
+        self.assertIn(b'href="/latest.html"', body)
+        self.assertNotIn(b"notes.py", body)

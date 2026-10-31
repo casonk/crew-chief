@@ -24,6 +24,11 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
   tied; a curve relative to the fastest and slowest performer separates them but
   means nothing across runs. Blend both with one weight, leave rule baselines
   (0 ms) out of the range, and keep gates absolute so the least-bad model cannot pass.
+- **Test a proxied service with the proxy's Host header, through the CLI entry point.**
+  The server unit tests built the server directly and passed while the CLI never
+  forwarded the allowed hostname, so the live service answered 403 behind Caddy. When
+  scripting a patch, assert the old text is present: a formatter rewrap made one
+  replacement a silent no-op.
 - **A benchmark UI that starts jobs must build the command itself.** Accept suite
   names and runner specs of a fixed shape, pass an argument list (never a shell),
   bind to loopback, check Host and Origin, run one job at a time on a shared GPU,

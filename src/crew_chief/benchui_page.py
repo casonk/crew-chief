@@ -95,6 +95,8 @@ a { color: var(--accent); }
     <button role="tab" data-tab="results" aria-selected="false">Results</button>
   </nav>
   <span id="badge"></span>
+  <a href="/latest.html" style="font-size:13px">Weekly report</a>
+  <a href="/results/" style="font-size:13px">All files</a>
 </header>
 <main>
 

@@ -18,6 +18,7 @@ State (saved profiles, job records and logs, private results) lives under
 from __future__ import annotations
 
 import contextlib
+import html
 import json
 import os
 import queue
@@ -345,9 +346,11 @@ class JobManager:
             "out": label,
             "steps": steps,
             "step": 0,
-            "units_total": len(spec["suites"]) * len(spec["runners"])
-            if spec["kind"] == "taskbench"
-            else len(spec["runners"]) + 1,
+            "units_total": (
+                len(spec["suites"]) * len(spec["runners"])
+                if spec["kind"] == "taskbench"
+                else len(spec["runners"]) + 1
+            ),
             "units_done": 0,
             "current": "",
             "gpu_used_mib_at_start": None,
@@ -485,6 +488,7 @@ def list_results(results_dirs: dict[str, Path], jobs: list[dict[str, Any]]) -> l
 class BenchApp:
     def __init__(self, state: Path, results_dir: Path):
         self.state = state
+        self.public = results_dir
         self.results_dirs = {"results": results_dir, "private": state / "private-results"}
         self.results_dirs["private"].mkdir(parents=True, exist_ok=True)
         self.profiles = ProfileStore(state / "profiles.toml")
@@ -616,8 +620,26 @@ class Handler(BaseHTTPRequestHandler):
                         },
                     }
                 )
+            if path == "/results/":
+                names = sorted(
+                    f.name
+                    for f in app.public.iterdir()
+                    if f.is_file() and f.suffix in SERVED_SUFFIXES and FILE_NAME.fullmatch(f.name)
+                )
+                rows = "".join(
+                    f'<li><a href="/{html.escape(n, quote=True)}">{html.escape(n)}</a></li>'
+                    for n in names
+                )
+                page = f"<!doctype html><meta charset=utf-8><title>results</title><ul>{rows}</ul>"
+                return self._send(200, page.encode(), "text/html; charset=utf-8")
             if path.startswith("/files/"):
                 file = app.resolve(path[len("/files/") :])
+                return self._send(200, file.read_bytes(), SERVED_SUFFIXES[file.suffix])
+            # The shared results folder at the site root, as the static site served it
+            # before the interface took over this hostname (latest.html, old report links).
+            name = path.lstrip("/")
+            if name and "/" not in name:
+                file = app.resolve(f"results/{name}")
                 return self._send(200, file.read_bytes(), SERVED_SUFFIXES[file.suffix])
             raise BenchError("not found")
         if method == "POST":
@@ -661,11 +683,16 @@ def make_server(
     results_dir: Path = REPO_ROOT / "results",
     host: str = "127.0.0.1",
     port: int = DEFAULT_PORT,
+    allow_hosts: tuple[str, ...] = (),
 ) -> ThreadingHTTPServer:
+    """``allow_hosts`` names extra Host headers to accept, for a reverse proxy in front."""
     state.mkdir(parents=True, exist_ok=True)
     handler = type(
         "BoundHandler",
         (Handler,),
-        {"app": BenchApp(state, results_dir), "allowed_hosts": {"127.0.0.1", "localhost", "::1"}},
+        {
+            "app": BenchApp(state, results_dir),
+            "allowed_hosts": {"127.0.0.1", "localhost", "::1", *allow_hosts},
+        },
     )
     return ThreadingHTTPServer((host, port), handler)

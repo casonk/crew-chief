@@ -340,6 +340,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--host", default="127.0.0.1", help="Loopback address (default: %(default)s)."
     )
     ui_p.add_argument("--port", type=int, default=8766, help="Port (default: %(default)s).")
+    ui_p.add_argument(
+        "--allow-host",
+        action="append",
+        default=[],
+        help=(
+            "Also accept this Host header, for the reverse proxy in front "
+            "(repeat; CREW_CHIEF_BENCH_HOSTS holds a comma-separated list)."
+        ),
+    )
     ui_p.add_argument("--state-dir", help="Saved profiles, job records and private results.")
     ui_p.add_argument("--results-dir", help="Shared results directory (default: results/).")
 
@@ -525,6 +534,14 @@ def main(argv: list[str] | None = None) -> None:
             Path(args.results_dir) if args.results_dir else benchui.REPO_ROOT / "results",
             args.host,
             args.port,
+            tuple(
+                h.strip()
+                for h in [
+                    *args.allow_host,
+                    *os.environ.get("CREW_CHIEF_BENCH_HOSTS", "").split(","),
+                ]
+                if h.strip()
+            ),
         )
         print(
             f"bench interface on http://{args.host}:{args.port}/  (Ctrl-C to stop)", file=sys.stderr
