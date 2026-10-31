@@ -121,6 +121,10 @@ vendored copy in `src/crew_chief/theme/` against the source. Refresh it with
 A standalone chart SVG cannot read the page's theme and falls back to Midnight; it
 follows the theme when inlined in a page.
 
+A report embeds the portfolio theme from the day it was generated. After a theme change, run
+`python3 scripts/rerender_reports.py` to rebuild the saved reports from their JSON (`--check` lists the
+out-of-date ones); nothing is re-measured.
+
 ## Confusion matrices
 
 Each result file also carries, for every runner and question, a confusion matrix:
