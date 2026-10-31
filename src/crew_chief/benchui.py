@@ -37,7 +37,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlparse
 
-from crew_chief import scoring, theme
+from crew_chief import scoring, theme, viewer
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SUITES_DIR = REPO_ROOT / "benchmarks" / "decisions"
@@ -62,12 +62,22 @@ LOG_TAIL = 12_000
 TERMINAL = ("done", "failed", "cancelled", "interrupted")
 
 
+# A strip under the top bar on every report page: a plain way back to the interface
+# and to the other report pages. In the page flow, so it never covers content.
 HOME_LINK = (
-    '<a href="/" style="position:fixed;bottom:12px;right:12px;z-index:2147483647;padding:4px 10px;'
-    "background:var(--surface,#1a1d27);color:var(--text,#e2e4f0);border:1px solid "
-    "var(--border,#2e3250);border-radius:6px;font:13px system-ui,sans-serif;"
-    'text-decoration:none">&larr; Bench home</a>'
+    '<nav aria-label="Bench" style="display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;'
+    "padding:8px 16px;background:var(--surface,#1a1d27);color:var(--text,#e2e4f0);"
+    'border-bottom:1px solid var(--border,#2e3250);font:14px system-ui,sans-serif">'
+    '<a href="/" style="font-weight:600;color:var(--accent,#5b7fff);text-decoration:none">'
+    "&larr; Bench home</a>"
+    '<a href="/latest.html" style="color:var(--accent,#5b7fff);text-decoration:none">Weekly report</a>'
+    '<a href="/test-bench-latest.html" style="color:var(--accent,#5b7fff);text-decoration:none">'
+    "Test bench</a>"
+    '<a href="/results/" style="color:var(--accent,#5b7fff);text-decoration:none">All files</a></nav>'
 )
+
+# The top bar has the theme control, so a served page drops its own copy of it.
+PAGE_SWITCHER = re.compile(r"<select[^>]*data-theme-switcher[^>]*>\s*</select>", re.I)
 
 
 CHROME_TAG = '<script src="/_portfolio/chrome.js" defer></script>'
@@ -91,6 +101,7 @@ def with_home_link(document: bytes) -> bytes:
     to the interface, without editing the file."""
     text = document.decode("utf-8", "replace")
     text = STALE_THEME.sub(lambda _: theme.HEAD, text, count=1)
+    text = PAGE_SWITCHER.sub("", text)
     head = re.search(r"</head>", text, re.I)
     body = re.search(r"<body[^>]*>", text, re.I)
     extra = "" if CHROME_TAG in text else CHROME_TAG
@@ -118,11 +129,22 @@ FILES_CSS = (
 
 def files_page(names: list[str]) -> bytes:
     """The shared results folder as a themed list, with the top bar and a way back."""
-    rows = "".join(
-        f'<li><a href="/{html.escape(n, quote=True)}">{html.escape(n)}</a>'
-        f'<span class="kind">{html.escape(Path(n).suffix.lstrip("."))}</span></li>'
-        for n in names
-    )
+
+    def row(n: str) -> str:
+        suffix = Path(n).suffix
+        label = html.escape(n)
+        href = f"/view/results/{n}" if suffix in (".md", ".json") else f"/{n}"
+        raw = (
+            f' <a class="muted" href="/{html.escape(n, quote=True)}">raw</a>'
+            if href != f"/{n}"
+            else ""
+        )
+        return (
+            f'<li><a href="{html.escape(href, quote=True)}">{label}</a>{raw}'
+            f'<span class="kind">{html.escape(suffix.lstrip("."))}</span></li>'
+        )
+
+    rows = "".join(row(n) for n in names)
     page = (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -272,7 +294,12 @@ def validate_spec(spec: Any, suites: list[str]) -> dict[str, Any]:
     runners = spec.get("runners")
     if not isinstance(runners, list) or not runners or len(runners) > 12:
         raise BenchError("pick between 1 and 12 runners")
-    for runner in [*runners, *([spec["router"]] if spec.get("router") else [])]:
+    routers = spec.get("routers")
+    if routers is None:
+        routers = [spec["router"]] if spec.get("router") else ["systemone:clef-flash"]
+    if not isinstance(routers, list) or not routers or len(routers) > 8:
+        raise BenchError("pick between 1 and 8 routing models")
+    for runner in [*runners, *routers]:
         if not isinstance(runner, str) or not RUNNER.fullmatch(runner):
             raise BenchError(f"bad runner spec {runner!r}")
     split = spec.get("split", "dev")
@@ -292,7 +319,7 @@ def validate_spec(spec: Any, suites: list[str]) -> dict[str, Any]:
         "kind": kind,
         "suites": list(dict.fromkeys(picked)),
         "runners": list(dict.fromkeys(runners)),
-        "router": spec.get("router") or "systemone:clef-flash",
+        "routers": list(dict.fromkeys(routers)),
         "split": split,
         "thresholds": [float(t) for t in thresholds],
         "private": bool(spec.get("private")),
@@ -316,8 +343,10 @@ def build_steps(
         ]
     candidates = [a for r in spec["runners"] for a in ("--candidate", r)]
     thresholds = [a for t in spec["thresholds"] for a in ("--threshold", f"{t:g}")]
+    # routebench takes one router, so each routing model gets its own run, one after the other.
     return [
-        [*base, "routebench", *paths, *candidates, "--router", spec["router"], *thresholds, *tail]
+        [*base, "routebench", *paths, *candidates, "--router", router, *thresholds, *tail]
+        for router in spec["routers"]
     ]
 
 
@@ -703,6 +732,14 @@ class Handler(BaseHTTPRequestHandler):
                     if f.is_file() and f.suffix in SERVED_SUFFIXES and FILE_NAME.fullmatch(f.name)
                 )
                 return self._send(200, files_page(names), "text/html; charset=utf-8")
+            if path.startswith("/view/"):
+                ref = path[len("/view/") :]
+                file = app.resolve(ref)
+                text = file.read_text(encoding="utf-8", errors="replace")
+                page = viewer.render(file.name, text, f"/files/{ref}")
+                if page is None:  # only Markdown and JSON have a viewer; the rest is shown as is
+                    return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])
+                return self._send(200, with_home_link(page.encode()), "text/html; charset=utf-8")
             if path.startswith("/files/"):
                 file = app.resolve(path[len("/files/") :])
                 return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])

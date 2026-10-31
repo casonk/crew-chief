@@ -209,6 +209,46 @@ class SpecTests(unittest.TestCase):
             self.assertEqual(step.count("--threshold"), 3)
 
 
+class RoutersTests(unittest.TestCase):
+    def route(self, **over):
+        spec = {"kind": "routebench", "suites": ["mail-triage"], "runners": ["systemone:tev1"]}
+        spec.update(over)
+        return spec
+
+    def test_several_routing_models_each_get_their_own_run_in_order(self):
+        routers = ["systemone:clef-flash", "systemone:nimble", "systemone:tev1"]
+        spec = benchui.validate_spec(self.route(routers=routers), SUITES)
+        steps = benchui.build_steps(spec, Path("/out"), None)
+        self.assertEqual([s[s.index("--router") + 1] for s in steps], routers)
+        self.assertTrue(all(s.count("--candidate") == 1 for s in steps))
+
+    def test_the_single_router_field_and_the_default_still_work(self):
+        legacy = benchui.validate_spec(self.route(router="systemone:nimble"), SUITES)
+        self.assertEqual(legacy["routers"], ["systemone:nimble"])
+        default = benchui.validate_spec(self.route(), SUITES)
+        self.assertEqual(default["routers"], ["systemone:clef-flash"])
+
+    def test_duplicates_collapse_and_bad_lists_are_refused(self):
+        same = benchui.validate_spec(self.route(routers=["systemone:a", "systemone:a"]), SUITES)
+        self.assertEqual(same["routers"], ["systemone:a"])
+        for bad in (
+            [],
+            ["systemone:a b"],
+            ["x; rm -rf /"],
+            [f"systemone:m{i}" for i in range(9)],
+            "systemone:a",
+        ):
+            with self.assertRaises(benchui.BenchError, msg=str(bad)):
+                benchui.validate_spec(self.route(routers=bad), SUITES)
+
+    def test_the_form_offers_a_checkbox_per_routing_model(self):
+        from crew_chief.benchui_page import PAGE
+
+        self.assertIn('id="r-routers"', PAGE)
+        self.assertIn('name="router"', PAGE)
+        self.assertNotIn('id="r-router"', PAGE)
+
+
 class AppCase(unittest.TestCase):
     def setUp(self):
         self.tmp = TemporaryDirectory()
@@ -403,6 +443,24 @@ class ProxyTests(AppCase):
         self.assertEqual(self.call("/api/profiles/reset", "POST", {}, headers=other)[0], 403)
         self.assertEqual(self.call("/", headers={"Host": "other.internal"})[0], 403)
 
+    def test_a_served_page_has_one_theme_control_and_a_visible_way_back(self):
+        (self.root / "results" / "two.html").write_text(
+            "<html><head><title>t</title></head><body><nav>"
+            '<select data-theme-switcher class="theme-switch"></select></nav><p>x</p></body></html>'
+        )
+        page = self.call("/two.html")[1].decode()
+        self.assertNotRegex(page, r"<select[^>]*data-theme-switcher")
+        self.assertIn("<p>x</p>", page)
+        for href in ("/", "/latest.html", "/test-bench-latest.html", "/results/"):
+            self.assertIn(f'<a href="{href}"', page)
+        self.assertIn("Bench home", page)
+        self.assertNotIn("position:fixed", page)
+        for path in ("/results/", "/view/results/two.html"):
+            self.assertIn("Bench home", self.call(path)[1].decode())
+
+    def test_the_interface_page_has_no_theme_selector_of_its_own(self):
+        self.assertNotRegex(self.call("/")[1].decode(), r"<select[^>]*data-theme-switcher")
+
     def test_a_stale_embedded_theme_is_replaced_by_the_current_one(self):
         stale = (
             "<style>/* Generated from themes/themes.toml by an older script; do not edit. */"
@@ -426,6 +484,44 @@ class ProxyTests(AppCase):
         self.assertTrue(body.startswith("<!doctype html>"))
         self.assertLess(body.index("<title>Bare</title>"), body.index("/_portfolio/chrome.js"))
         self.assertLess(body.index("/_portfolio/chrome.js"), body.index("<p>x</p>"))
+
+    def test_markdown_and_json_open_in_a_themed_viewer_with_the_top_bar(self):
+        (self.root / "results" / "notes.md").write_text(
+            "# Notes\n\n| a | b |\n|---|---|\n| 1 | 2 |\n"
+        )
+        (self.root / "results" / "data.json").write_text('{"k": [1, 2, 3]}')
+        (self.root / "results" / "page.html").write_text("<p>report</p>")
+        status, body = self.call("/view/results/notes.md")
+        page = body.decode()
+        self.assertEqual(status, 200)
+        self.assertIn("<h1>Notes</h1>", page)
+        self.assertIn("<table>", page)
+        self.assertIn("/_portfolio/chrome.js", page)
+        self.assertIn("Bench home", page)
+        status, body = self.call("/view/results/data.json")
+        self.assertIn(b'id="tree"', body)
+        self.assertIn(b"/_portfolio/chrome.js", body)
+        self.assertIn(b"<p>report</p>", self.call("/view/results/page.html")[1])
+
+    def test_the_viewer_refuses_unknown_files_and_other_folders(self):
+        self.assertEqual(self.call("/view/results/missing.md")[0], 400)
+        self.assertEqual(self.call("/view/results/../secret.md")[0], 400)
+        self.assertEqual(self.call("/view/other/notes.md")[0], 400)
+
+    def test_the_raw_files_are_still_served_unchanged(self):
+        (self.root / "results" / "notes.md").write_text("# Notes")
+        status, body = self.call("/files/results/notes.md")
+        self.assertEqual((status, body), (200, b"# Notes"))
+        self.assertEqual(self.call("/notes.md")[1], b"# Notes")
+
+    def test_the_file_list_opens_markdown_and_json_in_the_viewer(self):
+        for name in ("notes.md", "data.json", "page.html"):
+            (self.root / "results" / name).write_text("{}")
+        page = self.call("/results/")[1].decode()
+        self.assertIn('href="/view/results/notes.md"', page)
+        self.assertIn('href="/view/results/data.json"', page)
+        self.assertIn('href="/page.html"', page)
+        self.assertIn('href="/notes.md"', page)  # the raw link beside it
 
     def test_the_file_list_is_themed_and_leads_back_home(self):
         (self.root / "results" / "latest.html").write_text("<p>weekly</p>")
@@ -456,7 +552,7 @@ class ProxyTests(AppCase):
         for name in ("plain.html", "full.html"):
             body = self.call(f"/{name}")[1]
             self.assertIn(b'href="/"', body)
-        self.assertIn(b"<body class=x><a href=", self.call("/full.html")[1])
+        self.assertIn(b"<body class=x><nav ", self.call("/full.html")[1])
         self.assertTrue(self.call("/plain.html")[1].endswith(b"<h1>no body tag</h1>"))
         status, body = self.call("/results/")
         self.assertIn(b'href="/latest.html"', body)

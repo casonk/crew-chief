@@ -10,7 +10,9 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location("rerender_reports", ROOT / "scripts/rerender_reports.py")
+spec = importlib.util.spec_from_file_location(
+    "rerender_reports", ROOT / "scripts/rerender_reports.py"
+)
 rerender = importlib.util.module_from_spec(spec)
 sys.modules["rerender_reports"] = rerender
 spec.loader.exec_module(rerender)
@@ -26,7 +28,9 @@ class RerenderTests(unittest.TestCase):
         self.addCleanup(tmp.cleanup)
         self.dir = Path(tmp.name)
         shutil.copy(SAMPLE, self.dir / "bench-20260621.json")
-        (self.dir / "bench-20260621.html").write_text(f"<html><head>{STALE}</head><body>old</body></html>")
+        (self.dir / "bench-20260621.html").write_text(
+            f"<html><head>{STALE}</head><body>old</body></html>"
+        )
 
     def run_main(self, *argv):
         sys.argv = ["rerender_reports.py", "--results", str(self.dir), *argv]

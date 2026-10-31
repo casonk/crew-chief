@@ -91,7 +91,6 @@ a { color: var(--accent); }
     <button role="tab" data-tab="results" aria-selected="false">Results</button>
   </nav>
   <span id="badge"></span>
-  __SWITCHER__
   <a href="/latest.html" style="font-size:13px">Weekly report</a>
   <a href="/test-bench-latest.html" style="font-size:13px">Test bench</a>
   <a href="/results/" style="font-size:13px">All files</a>
@@ -160,8 +159,11 @@ a { color: var(--accent); }
       <select id="r-split"><option>dev</option><option>heldout</option><option>all</option></select>
     </div>
     <div id="r-routeonly" hidden>
-      <label for="r-router" style="margin-top:8px">Router</label>
-      <input type="text" id="r-router" value="systemone:clef-flash">
+      <h2 style="margin-top:14px">Routing models</h2>
+      <div class="checks" id="r-routers"></div>
+      <label for="r-routers-extra" style="margin-top:8px">More routing models, one spec per line</label>
+      <textarea id="r-routers-extra" rows="2"></textarea>
+      <p class="muted">Each routing model gets its own run over the same candidates and suites.</p>
       <label for="r-thr" style="margin-top:8px">Cascade thresholds</label>
       <input type="text" id="r-thr" value="0.6, 0.8, 0.95">
     </div>
@@ -380,6 +382,8 @@ async function loadRunForm() {
   const runners = ["rules", ...models.systemone.map((m) => "systemone:" + m), ...models.ollama.map((m) => "ollama:" + m)];
   $("r-runners").innerHTML = runners.map((r) =>
     `<label><input type="checkbox" name="runner" value="${esc(r)}"${r.startsWith("systemone:") ? " checked" : ""}> ${esc(r)}</label>`).join("");
+  $("r-routers").innerHTML = models.systemone.map((m) =>
+    `<label><input type="checkbox" name="router" value="systemone:${esc(m)}"${m === "clef-flash" ? " checked" : ""}> systemone:${esc(m)}</label>`).join("");
   setKind();
 }
 function setKind() {
@@ -397,7 +401,8 @@ $("start").addEventListener("click", async () => {
   const extra = $("r-extra").value.split("\n").map((s) => s.trim()).filter(Boolean);
   const spec = {
     kind: $("r-kind").value, suites: checked("suite"), runners: [...checked("runner"), ...extra],
-    split: $("r-split").value, router: $("r-router").value.trim(),
+    split: $("r-split").value,
+    routers: [...checked("router"), ...$("r-routers-extra").value.split("\n").map((s) => s.trim()).filter(Boolean)],
     thresholds: $("r-thr").value.split(/[ ,]+/).filter(Boolean).map(Number),
     private: $("r-private").checked,
   };
@@ -412,7 +417,11 @@ $("start").addEventListener("click", async () => {
 // ---- jobs and results
 const when = (t) => (t ? new Date(t * 1000).toLocaleString() : "—");
 const dur = (a, b) => (a ? Math.round((b || Date.now() / 1000) - a) + " s" : "—");
-const fileLink = (ref) => `<a href="/files/${esc(ref)}" target="_blank" rel="noopener">${esc(ref.split("/")[1].split(".").pop())}</a>`;
+const fileLink = (ref) => {
+  const ext = ref.split("/")[1].split(".").pop();
+  const base = ext === "md" || ext === "json" ? "/view/" : "/files/";
+  return `<a href="${base}${esc(ref)}" target="_blank" rel="noopener">${esc(ext)}</a>`;
+};
 function openResult(ref) {
   showTab("profiles");
   $("preview-pick").value = ref;
@@ -501,6 +510,4 @@ async function refreshJobs() {
 
 from crew_chief import theme  # noqa: E402
 
-PAGE = _TEMPLATE.replace("__THEME__", theme.HEAD + f"<style>{theme.SWITCHER_CSS}</style>").replace(
-    "__SWITCHER__", theme.SWITCHER
-)
+PAGE = _TEMPLATE.replace("__THEME__", theme.HEAD + f"<style>{theme.SWITCHER_CSS}</style>")

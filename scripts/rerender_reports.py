@@ -45,7 +45,9 @@ def reports(results: pathlib.Path) -> list[pathlib.Path]:
 
 
 def _test_benchmark():
-    spec = importlib.util.spec_from_file_location("test_benchmark", ROOT / "scripts/test_benchmark.py")
+    spec = importlib.util.spec_from_file_location(
+        "test_benchmark", ROOT / "scripts/test_benchmark.py"
+    )
     module = importlib.util.module_from_spec(spec)
     sys.modules["test_benchmark"] = module
     spec.loader.exec_module(module)
@@ -65,12 +67,20 @@ def render(data: pathlib.Path) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("json", nargs="*", type=pathlib.Path, help="result files (default: all in results/)")
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument(
+        "json", nargs="*", type=pathlib.Path, help="result files (default: all in results/)"
+    )
     parser.add_argument("--results", type=pathlib.Path, default=ROOT / "results")
-    parser.add_argument("--check", action="store_true", help="only list out-of-date reports; exit 1 if any")
+    parser.add_argument(
+        "--check", action="store_true", help="only list out-of-date reports; exit 1 if any"
+    )
     args = parser.parse_args()
-    todo = [p for p in (args.json or reports(args.results)) if not is_current(p.with_suffix(".html"))]
+    todo = [
+        p for p in (args.json or reports(args.results)) if not is_current(p.with_suffix(".html"))
+    ]
     for data in todo:
         print(("stale   " if args.check else "render  ") + str(data.with_suffix(".html")))
         if not args.check:
