@@ -74,20 +74,7 @@ def pivot(results: list[dict]) -> dict[str, dict[str, dict]]:
 # ---------------------------------------------------------------------------
 
 CSS = """
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  padding: 2rem 1rem;
-}
-.page { max-width: 1200px; margin: 0 auto; }
-.report-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.3rem; align-items: center; }
-.report-nav a { padding: 0.45rem 0.8rem; border: 1px solid var(--border);
-  border-radius: 6px; color: var(--accent); text-decoration: none; background: var(--surface); }
-.report-nav a[aria-current="page"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-.report-nav .theme-switch { margin-left: auto; }
-h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+* { margin: 0; padding: 0; }
 h2 { font-size: 1.15rem; margin: 2rem 0 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.3rem; }
 h3 { font-size: 0.95rem; margin: 1.25rem 0 0.4rem; color: var(--muted); }
 p.meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.2rem; }
@@ -410,15 +397,11 @@ def build_report(runs: dict[str, list[dict]], out: pathlib.Path) -> None:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>crew-chief Benchmark — {latest_label}</title>
-{theme.HEAD}<style>{theme.SWITCHER_CSS}{CSS}</style>
+{theme.HEAD}<style>{theme.SWITCHER_CSS}{theme.REPORT_CSS}{CSS}</style>
 </head>
 <body>
 <div class="page">
-<nav class="report-nav" aria-label="Benchmark reports">
-  <a href="latest.html" aria-current="page">Inference speed</a>
-  <a href="test-bench-latest.html">Test outcomes</a>
-  {theme.SWITCHER}
-</nav>
+{theme.report_nav("speed")}
 <h1>crew-chief Model Benchmark</h1>
 <p class="meta">
   <span class="badge badge-date">{date_str}</span>
