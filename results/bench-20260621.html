@@ -480,6 +480,13 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
   .trend-grid { grid-template-columns: minmax(0, 1fr); }
   .trend-card { min-width: 0; padding: 0.75rem; }
 }
+
+.chart-controls { margin: 0.5rem 0 0.25rem; display: flex; gap: 0.5rem; align-items: center; }
+.js .charts .chart-view { display: none; }
+.js .charts[data-view="tps"] .chart-view[data-view="tps"],
+.js .charts[data-view="ttft-log"] .chart-view[data-view="ttft-log"],
+.js .charts[data-view="ttft-lin"] .chart-view[data-view="ttft-lin"] { display: block; }
+.chart-view > p.meta { margin: 0 0 0.3rem; }
 </style>
 </head>
 <body>
@@ -487,7 +494,7 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <nav class="report-nav" aria-label="Benchmark reports"><a href="latest.html" aria-current="page">Inference speed</a><a href="test-bench-latest.html">Test outcomes</a><select data-theme-switcher class="theme-switch"></select></nav>
 <h1>crew-chief Model Benchmark</h1>
 <p class="meta">
-  <span class="badge badge-date">2026-10-31 06:34</span>
+  <span class="badge badge-date">2026-10-31 07:05</span>
   <span class="badge badge-hw">RTX 3090 24 GB</span>
   <span class="badge badge-hw">Ollama / Podman</span>
   <span class="badge badge-date">13 models &middot; 4 prompts</span>
@@ -717,8 +724,10 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <td class="tps-err">error</td>
 <td class="ttft-slow">1.1 min</td>
 </tr>
-</tbody></table></div></div><div class="section"><h2>Charts</h2><h3>Throughput — latency</h3>
-<div class="chart">
+</tbody></table></div></div><div class="section charts" data-view="tps"><h2>Charts</h2>
+<div class="chart-controls"><label for="chart-view">Show</label><select id="chart-view" class="theme-switch"><option value="tps">Throughput, tokens / second</option><option value="ttft-log">Time to first token, log scale</option><option value="ttft-lin">Time to first token, linear scale</option></select></div>
+<h3>latency</h3>
+<div class="chart-view" data-view="tps"><p class="meta">Throughput, tokens / second</p><div class="chart">
 <div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"><span>402 tok/s</span></div></div><div class="bar-val">402.5</div></div>
 <div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:66%;background:var(--accent)"><span>268 tok/s</span></div></div><div class="bar-val">268.4</div></div>
 <div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:63%;background:var(--accent)"><span>257 tok/s</span></div></div><div class="bar-val">257.2</div></div>
@@ -729,12 +738,11 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--accent)"><span>164 tok/s</span></div></div><div class="bar-val">163.5</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:19%;background:var(--red)"><span>78 tok/s</span></div></div><div class="bar-val">78.1</div></div>
 <div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent)"><span>62 tok/s</span></div></div><div class="bar-val">62.2</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--red)"><span>52 tok/s</span></div></div><div class="bar-val">51.9</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--red)"><span>14 tok/s</span></div></div><div class="bar-val">13.8</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"><span>8 tok/s</span></div></div><div class="bar-val">7.6</div></div>
-</div>
-<h3>TTFT — latency (log scale)</h3>
-<div class="chart">
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--red)"></div></div><div class="bar-val">51.9</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--red)"></div></div><div class="bar-val">13.8</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"></div></div><div class="bar-val">7.6</div></div>
+</div></div>
+<div class="chart-view" data-view="ttft-log"><p class="meta">Time to first token, log scale</p><div class="chart">
 <div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:36%;background:var(--accent)"><span>34 ms</span></div></div><div class="bar-val">34 ms</div></div>
 <div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--accent)"><span>41 ms</span></div></div><div class="bar-val">41 ms</div></div>
 <div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--accent)"><span>51 ms</span></div></div><div class="bar-val">51 ms</div></div>
@@ -748,9 +756,24 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:90%;background:var(--red)"><span>6.0 s</span></div></div><div class="bar-val">6.0 s</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:93%;background:var(--red)"><span>8.1 s</span></div></div><div class="bar-val">8.1 s</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>15.4 s</span></div></div><div class="bar-val">15.4 s</div></div>
-</div>
-<h3>Throughput — reasoning</h3>
-<div class="chart">
+</div></div>
+<div class="chart-view" data-view="ttft-lin"><p class="meta">Time to first token, linear scale</p><div class="chart">
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">34 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">41 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">51 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">128 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">142 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">145 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">147 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">192 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">193 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--red)"><span>2.9 s</span></div></div><div class="bar-val">2.9 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--red)"><span>6.0 s</span></div></div><div class="bar-val">6.0 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--red)"><span>8.1 s</span></div></div><div class="bar-val">8.1 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>15.4 s</span></div></div><div class="bar-val">15.4 s</div></div>
+</div></div>
+<h3>reasoning</h3>
+<div class="chart-view" data-view="tps"><p class="meta">Throughput, tokens / second</p><div class="chart">
 <div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"><span>281 tok/s</span></div></div><div class="bar-val">281.0</div></div>
 <div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--accent)"><span>202 tok/s</span></div></div><div class="bar-val">201.8</div></div>
 <div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--accent)"><span>180 tok/s</span></div></div><div class="bar-val">180.1</div></div>
@@ -762,11 +785,10 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--red)"><span>78 tok/s</span></div></div><div class="bar-val">77.6</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--red)"><span>51 tok/s</span></div></div><div class="bar-val">51.3</div></div>
 <div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent)"><span>44 tok/s</span></div></div><div class="bar-val">43.5</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--red)"><span>14 tok/s</span></div></div><div class="bar-val">13.7</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"><span>7 tok/s</span></div></div><div class="bar-val">7.2</div></div>
-</div>
-<h3>TTFT — reasoning (log scale)</h3>
-<div class="chart">
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--red)"></div></div><div class="bar-val">13.7</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"></div></div><div class="bar-val">7.2</div></div>
+</div></div>
+<div class="chart-view" data-view="ttft-log"><p class="meta">Time to first token, log scale</p><div class="chart">
 <div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:var(--accent)"><span>33 ms</span></div></div><div class="bar-val">33 ms</div></div>
 <div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:var(--accent)"><span>34 ms</span></div></div><div class="bar-val">34 ms</div></div>
 <div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--accent)"><span>54 ms</span></div></div><div class="bar-val">54 ms</div></div>
@@ -780,9 +802,24 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:90%;background:var(--red)"><span>11.4 s</span></div></div><div class="bar-val">11.4 s</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:98%;background:var(--red)"><span>23.8 s</span></div></div><div class="bar-val">23.8 s</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>28.9 s</span></div></div><div class="bar-val">28.9 s</div></div>
-</div>
-<h3>Throughput — codegen</h3>
-<div class="chart">
+</div></div>
+<div class="chart-view" data-view="ttft-lin"><p class="meta">Time to first token, linear scale</p><div class="chart">
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">33 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">34 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">54 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">122 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">138 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">140 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">141 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">179 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">190 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--red)"></div></div><div class="bar-val">2.1 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:39%;background:var(--red)"><span>11.4 s</span></div></div><div class="bar-val">11.4 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:82%;background:var(--red)"><span>23.8 s</span></div></div><div class="bar-val">23.8 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>28.9 s</span></div></div><div class="bar-val">28.9 s</div></div>
+</div></div>
+<h3>codegen</h3>
+<div class="chart-view" data-view="tps"><p class="meta">Throughput, tokens / second</p><div class="chart">
 <div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"><span>274 tok/s</span></div></div><div class="bar-val">273.9</div></div>
 <div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--accent)"><span>196 tok/s</span></div></div><div class="bar-val">196.3</div></div>
 <div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--accent)"><span>177 tok/s</span></div></div><div class="bar-val">176.9</div></div>
@@ -794,10 +831,9 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:21%;background:var(--red)"><span>59 tok/s</span></div></div><div class="bar-val">58.8</div></div>
 <div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent)"><span>42 tok/s</span></div></div><div class="bar-val">41.8</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--red)"><span>41 tok/s</span></div></div><div class="bar-val">41.2</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--red)"><span>14 tok/s</span></div></div><div class="bar-val">13.6</div></div>
-</div>
-<h3>TTFT — codegen (log scale)</h3>
-<div class="chart">
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--red)"></div></div><div class="bar-val">13.6</div></div>
+</div></div>
+<div class="chart-view" data-view="ttft-log"><p class="meta">Time to first token, log scale</p><div class="chart">
 <div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--accent)"><span>35 ms</span></div></div><div class="bar-val">35 ms</div></div>
 <div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--accent)"><span>37 ms</span></div></div><div class="bar-val">37 ms</div></div>
 <div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:29%;background:var(--accent)"><span>45 ms</span></div></div><div class="bar-val">45 ms</div></div>
@@ -810,9 +846,23 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:84%;background:var(--red)"><span>47.7 s</span></div></div><div class="bar-val">47.7 s</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:86%;background:var(--red)"><span>1.1 min</span></div></div><div class="bar-val">1.1 min</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>6.1 min</span></div></div><div class="bar-val">6.1 min</div></div>
-</div>
-<h3>Throughput — summarise</h3>
-<div class="chart">
+</div></div>
+<div class="chart-view" data-view="ttft-lin"><p class="meta">Time to first token, linear scale</p><div class="chart">
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">35 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">37 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">45 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">123 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">136 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">138 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">144 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">180 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">189 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:13%;background:var(--red)"></div></div><div class="bar-val">47.7 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--red)"><span>1.1 min</span></div></div><div class="bar-val">1.1 min</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>6.1 min</span></div></div><div class="bar-val">6.1 min</div></div>
+</div></div>
+<h3>summarise</h3>
+<div class="chart-view" data-view="tps"><p class="meta">Throughput, tokens / second</p><div class="chart">
 <div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"><span>277 tok/s</span></div></div><div class="bar-val">276.7</div></div>
 <div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--accent)"><span>198 tok/s</span></div></div><div class="bar-val">198.2</div></div>
 <div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--accent)"><span>181 tok/s</span></div></div><div class="bar-val">180.8</div></div>
@@ -824,11 +874,10 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:22%;background:var(--red)"><span>62 tok/s</span></div></div><div class="bar-val">61.7</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--red)"><span>44 tok/s</span></div></div><div class="bar-val">43.6</div></div>
 <div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent)"><span>43 tok/s</span></div></div><div class="bar-val">42.6</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--red)"><span>14 tok/s</span></div></div><div class="bar-val">13.5</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"><span>7 tok/s</span></div></div><div class="bar-val">7.0</div></div>
-</div>
-<h3>TTFT — summarise (log scale)</h3>
-<div class="chart">
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--red)"></div></div><div class="bar-val">13.5</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"></div></div><div class="bar-val">7.0</div></div>
+</div></div>
+<div class="chart-view" data-view="ttft-log"><p class="meta">Time to first token, log scale</p><div class="chart">
 <div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:32%;background:var(--accent)"><span>36 ms</span></div></div><div class="bar-val">36 ms</div></div>
 <div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:32%;background:var(--accent)"><span>36 ms</span></div></div><div class="bar-val">36 ms</div></div>
 <div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:var(--accent)"><span>45 ms</span></div></div><div class="bar-val">45 ms</div></div>
@@ -843,6 +892,37 @@ td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 <div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:98%;background:var(--red)"><span>1.1 min</span></div></div><div class="bar-val">1.1 min</div></div>
 <div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>1.2 min</span></div></div><div class="bar-val">1.2 min</div></div>
 </div></div>
+<div class="chart-view" data-view="ttft-lin"><p class="meta">Time to first token, linear scale</p><div class="chart">
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">36 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">36 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">45 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">129 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">138 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">141 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">145 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">179 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--accent)"></div></div><div class="bar-val">193 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--red)"></div></div><div class="bar-val">5.6 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:9%;background:var(--red)"></div></div><div class="bar-val">6.6 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:88%;background:var(--red)"><span>1.1 min</span></div></div><div class="bar-val">1.1 min</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>1.2 min</span></div></div><div class="bar-val">1.2 min</div></div>
+</div></div>
+</div><script>
+(function () {
+  var box = document.querySelector(".charts"), pick = document.getElementById("chart-view");
+  if (!box || !pick) return;
+  var KEY = "bench-chart-view", views = Array.prototype.map.call(pick.options, function (o) { return o.value; });
+  document.documentElement.classList.add("js");
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  function show(view) { box.setAttribute("data-view", view); pick.value = view; }
+  show(views.indexOf(saved) >= 0 ? saved : views[0]);
+  pick.addEventListener("change", function () {
+    show(pick.value);
+    try { localStorage.setItem(KEY, pick.value); } catch (e) {}
+  });
+})();
+</script>
 </div>
 </body>
 </html>
