@@ -265,6 +265,15 @@ entries (`results/backlog-triage-gating-20261031.md`, raw runs beside it):
 - Clockwork's auto-sort uses `clef-flash` for the repository and `clef` for the group at 0.6, and files
   anything unsure as `unknown` (PR in Clockwork).
 
+**Correction (2026-10-31, real backlog).** Calibrating Clockwork's auto-sort on the real To Code list showed the
+`group` question does not model how groups work there: a group is a family of repositories, no repository spans two
+groups (27 of 27), and always answering the commonest group is right 73% of the time, against about 46% for a model.
+Only the repository needs classifying; the group follows from it. On the real backlog (30 repositories,
+leave-one-out, `clef`), about 41% of items get a repository at confidence 0.6 and 72% of those are right; with 12
+stand-in repositories the held-out suite looked easier (74% answered, 92% right). Passing two example titles per
+repository inside each description did not help (`k=2`: 24% answered at 0.6, 65% right). The group numbers above
+describe a different task and should not be used to choose a model for the group.
+
 Limits: the keyword baseline scores 0.97 on groups and 0.82 on repositories, higher than every model. The
 entries share vocabulary (I wrote them and the rules together), so keyword rules look better here than they
 would on real, messier entries; treat the baseline as an upper bound, not a floor. Real repository names are not
