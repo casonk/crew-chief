@@ -80,6 +80,14 @@ timeout_seconds = 60
 # Ignored when agent.enabled = true (agent mode handles its own routing).
 natural_language = true
 
+# When true, the serving policy's [tasks."message-routing"] decision model reads
+# each natural-language message first. A message it is at least
+# decision_gate_threshold sure is a notification or small talk is dropped without
+# asking the chat model; any doubt or error lets the message through unchanged.
+# Messages starting with "!" and agent mode are never gated.
+# decision_gate = false
+# decision_gate_threshold = 0.8
+
 # ── Anthropic API settings ───────────────────────────────────────────────────
 # Name of the environment variable that holds the Anthropic API key.
 # The key itself must be set in config/env (or exported before starting).

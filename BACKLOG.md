@@ -80,11 +80,14 @@ Mark items `[x]` when complete and move them to Done.
   token under log-loss, export GGUF, serve with llama.cpp, and compare with
   base models, rules, and Jev on held-out data.
 
-- [ ] [manual:2026-10-22] **Route listener decisions to a decision model.** Clef
-  Flash beat the chat models on message-routing at 120 ms per call with
-  calibrated probabilities. The 2026-10-29 held-out run (10 items) did not separate `clef-flash` from `nimble`; grow the held-out set, then have the listener
-  classify incoming messages via `/v1/systemone` and gate low-confidence
-  answers to the chat-model path.
+- [ ] [manual:2026-10-22] **Enable the listener decision gate.** The gate is
+  built (`listener_gate.py`, `[llm] decision_gate`, off by default): the
+  `message-routing` decision model drops messages it is at least 80% sure are
+  notifications or small talk, and everything else takes the existing path.
+  Clef Flash beat the chat models on message-routing at 120 ms per call, but the
+  2026-10-29 held-out run (10 items) did not separate `clef-flash` from
+  `nimble`. Grow the held-out set, check how often the gate would have dropped a
+  real command in the listener's own logs, then turn it on in the live config.
 
 - [ ] [manual:2026-10-21] **Roadmap phase 4: 2 x RTX 3090 NVLink plan.** Before
   purchase, benchmark 70B-class 4-bit models on rented dual-GPU capacity;
