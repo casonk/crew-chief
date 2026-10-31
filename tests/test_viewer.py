@@ -211,12 +211,30 @@ class FormatTabTests(unittest.TestCase):
         self.assertIn("/files/results/r.html", page)
 
 
+class CsvTests(unittest.TestCase):
+    def test_a_csv_becomes_a_table_with_escaped_cells(self):
+        page = viewer.render("t.csv", 'name,note\nfast,"a, b"\n<b>x</b>,1\n', "/t.csv?raw=1")
+        self.assertIn("<th>name</th>", page)
+        self.assertIn("<td>a, b</td>", page)
+        self.assertIn("&lt;b&gt;x&lt;/b&gt;", page)
+        self.assertNotIn("<b>x</b>", page)
+
+    def test_a_long_csv_is_cut_with_a_pointer_to_the_raw_file(self):
+        rows = "\n".join(f"{i},v" for i in range(viewer.MAX_CSV_ROWS + 5))
+        page = viewer.render("t.csv", "n,v\n" + rows, "/t.csv?raw=1")
+        self.assertIn("Showing the first", page)
+        self.assertIn('href="/t.csv?raw=1"', page)
+
+    def test_an_empty_csv_says_so(self):
+        self.assertIn("Empty file", viewer.render("t.csv", "", "/t.csv?raw=1"))
+
+
 class PageTests(unittest.TestCase):
-    def test_the_page_is_themed_and_links_back_and_to_the_raw_file(self):
+    def test_the_page_is_themed_and_links_to_the_raw_file(self):
         page = viewer.render("notes.md", "# Hi", "/files/results/notes.md")
         self.assertTrue(page.startswith("<!doctype html>"))
         self.assertIn(theme.JS, page)
-        self.assertIn('href="/results/"', page)
+        self.assertNotIn("All files", page)  # the strip under the top bar already has it
         self.assertIn('href="/files/results/notes.md"', page)
 
     def test_other_kinds_have_no_viewer(self):

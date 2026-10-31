@@ -251,13 +251,20 @@ class RenderTests(StoreCase):
         self.assertTrue(md.startswith("| performer |"))
         self.assertIn("| slow | 4 | 0.900 |", md)
 
-    def test_the_html_page_has_both_charts_the_tables_and_links_to_every_format(self):
+    def test_the_html_page_has_both_charts_and_the_tables_and_a_single_title(self):
         page, ctype = self.get(self.route, "table", "html")
         self.assertTrue(ctype.startswith("text/html"))
         self.assertEqual(page.count("<svg"), 2)
+        self.assertEqual(page.count("<h1>"), 1)  # the bar's title, not repeated in the body
         self.assertIn("<table>", page)
-        for target in ("scatter.svg", "bars.svg", "table.csv", "tasks.json"):
-            self.assertIn(f"/render/{self.route}/{target}", page)
+        self.assertIn("Performers", page)
+        self.assertIn("By task", page)
+
+    def test_tabs_given_to_the_page_land_in_its_bar(self):
+        body, _ = render.render(
+            self.conn, self.route, "table", "html", None, '<span class="fmt">T</span>'
+        )
+        self.assertIn('<span class="fmt">T</span>', body.decode())
 
     def test_a_request_for_something_that_cannot_be_drawn_is_an_error(self):
         for chart, fmt in (("scatter", "csv"), ("nope", "svg"), ("table", "svg")):

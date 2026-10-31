@@ -639,41 +639,60 @@ class BenchApp:
                 self._store_sig = signature
         return conn
 
-    def formats(self, file: Path, inline: bool = False) -> str:
-        """Tabs to switch between this result's renderings (.html, .json, .md, .svg), whichever exist."""
-        real = file.resolve()  # latest.html is a link to a dated report
+    def locate(self, file: Path) -> tuple[str, str] | None:
+        """The results folder label and the stem a file belongs to (a ``latest.html`` link counts
+        as the dated report it points to), or None for a file outside the results folders."""
+        real = file.resolve()
         label = next((k for k, d in self.results_dirs.items() if real.parent == d.resolve()), None)
-        if label is None:
-            return ""
-        items = []
-        for suffix in viewer.FORMATS:
-            if (real.parent / f"{real.stem}{suffix}").is_file():
-                page = "files" if suffix == ".html" else "view"
-                items.append((suffix[1:], f"/{page}/{label}/{real.stem}{suffix}"))
-        return viewer.format_tabs(items, real.suffix[1:], inline=inline)
+        return (label, real.stem) if label else None
 
-    def renderings(self, ref: str) -> str:
-        """Links to the other renderings of a result that is in the store, for the viewer's bar."""
-        label, _, name = ref.partition("/")
-        name = name[:-4] + ".json" if name.endswith(".svg") else name  # a chart's data is its JSON
-        if label != "results" or not name.endswith(".json"):
-            return ""
-        conn = self.store()
-        try:
-            run_id = resultstore.run_for_source(conn, name)
-        finally:
-            conn.close()
-        if run_id is None:
-            return ""
-        shown = (
-            ("page", "table.html"),
-            ("scatter", "scatter.svg"),
-            ("bars", "bars.svg"),
-            ("csv", "table.csv"),
-            ("md", "table.md"),
-        )
-        links = [f'<a href="/render/{run_id}/{target}">{label}</a>' for label, target in shown]
-        return '<span class="muted">render:</span> ' + " ".join(links) + " &middot; "
+    def view_items(self, label: str, stem: str) -> list[tuple[str, str]]:
+        """The views of one result, each name once: html, json, md, svg, bars, csv.
+
+        A view is the saved file when there is one, else an on-demand rendering from the result
+        store when the result is in it; ``json`` is only ever the saved data.
+        """
+        directory = self.results_dirs.get(label)
+        if directory is None:
+            return []
+        run_id = None
+        if label == "results":
+            conn = self.store()
+            try:
+                run_id = resultstore.run_for_source(conn, f"{stem}.json")
+            finally:
+                conn.close()
+
+        def saved(suffix: str) -> bool:
+            return (directory / f"{stem}{suffix}").is_file()
+
+        views: list[tuple[str, str]] = []
+        if saved(".html"):
+            views.append(("html", f"/files/{label}/{stem}.html"))
+        elif run_id:
+            views.append(("html", f"/render/{run_id}/table.html"))
+        if saved(".json"):
+            views.append(("json", f"/view/{label}/{stem}.json"))
+        if saved(".md"):
+            views.append(("md", f"/view/{label}/{stem}.md"))
+        elif run_id:
+            views.append(("md", f"/render/{run_id}/table.md"))
+        if saved(".svg"):
+            views.append(("svg", f"/view/{label}/{stem}.svg"))
+        elif run_id:
+            views.append(("svg", f"/render/{run_id}/scatter.svg"))
+        if run_id:
+            views.append(("bars", f"/render/{run_id}/bars.svg"))
+            views.append(("csv", f"/render/{run_id}/table.csv"))
+        return views
+
+    def tabs(self, label: str, stem: str, current: str, inline: bool = False) -> str:
+        return viewer.format_tabs(self.view_items(label, stem), current, inline=inline)
+
+    def file_tabs(self, file: Path, inline: bool = False) -> str:
+        """The view tabs for a saved result file, with its own format marked."""
+        where = self.locate(file)
+        return self.tabs(*where, file.resolve().suffix[1:], inline=inline) if where else ""
 
     def resolve(self, ref: str) -> Path:
         label, _, name = ref.partition("/")
@@ -724,6 +743,22 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Security-Policy", "default-src 'self' 'unsafe-inline'")
         self.end_headers()
         self.wfile.write(body)
+
+    def _wants_page(self) -> bool:
+        """A browser navigation (Accept: text/html) gets the themed page; scripts get the file."""
+        return "text/html" in (self.headers.get("Accept") or "")
+
+    def _view_file(self, ref: str) -> None:
+        """Send a result file in the viewer; types without one are sent as they are."""
+        app = self.app
+        file = app.resolve(ref)
+        text = file.read_text(encoding="utf-8", errors="replace")
+        page = viewer.render(file.name, text, f"/files/{ref}", app.file_tabs(file))
+        if page is None:
+            return self._send(
+                200, served(file, app.file_tabs(file, True)), SERVED_SUFFIXES[file.suffix]
+            )
+        return self._send(200, with_home_link(page.encode()), "text/html; charset=utf-8")
 
     def _json(self, payload: Any, status: int = 200) -> None:
         self._send(status, json.dumps(payload).encode(), "application/json")
@@ -828,35 +863,36 @@ class Handler(BaseHTTPRequestHandler):
                     raise BenchError(
                         "use /render/<run>/<chart>.<format>, e.g. /render/3/scatter.svg"
                     )
-                theme_name = (parse_qs(urlparse(self.path).query).get("theme") or [None])[0]
+                run_id, chart, fmt = int(match.group(1)), match.group(2), match.group(3)
+                query = parse_qs(urlparse(self.path).query)
+                theme_name = (query.get("theme") or [None])[0]
                 conn = app.store()
                 try:
-                    body, ctype = render.render(
-                        conn, int(match.group(1)), match.group(2), match.group(3), theme_name
+                    row = conn.execute("SELECT source FROM runs WHERE id = ?", (run_id,)).fetchone()
+                    stem = Path(row["source"]).stem if row else None
+                    tabs = (
+                        app.tabs("results", stem, render.VIEW_KEYS.get((chart, fmt), ""))
+                        if stem
+                        else ""
                     )
+                    body, ctype = render.render(conn, run_id, chart, fmt, theme_name, tabs)
                 except render.RenderError as exc:
                     raise BenchError(str(exc)) from exc
                 finally:
                     conn.close()
-                return self._send(
-                    200, with_home_link(body) if match.group(3) == "html" else body, ctype
-                )
-            if path.startswith("/view/"):
-                ref = path[len("/view/") :]
-                file = app.resolve(ref)
-                text = file.read_text(encoding="utf-8", errors="replace")
-                page = viewer.render(
-                    file.name, text, f"/files/{ref}", app.formats(file) + app.renderings(ref)
-                )
-                if page is None:  # the rest is shown as is
-                    return self._send(
-                        200, served(file, app.formats(file, True)), SERVED_SUFFIXES[file.suffix]
-                    )
+                if fmt == "html":
+                    return self._send(200, with_home_link(body), ctype)
+                if "raw" in query or not self._wants_page():
+                    return self._send(200, body, ctype)  # the file itself, for scripts and ?raw=1
+                title = f"{stem} · {chart}.{fmt}"
+                page = viewer.render(title, body.decode("utf-8"), f"{path}?raw=1", tabs)
                 return self._send(200, with_home_link(page.encode()), "text/html; charset=utf-8")
+            if path.startswith("/view/"):
+                return self._view_file(path[len("/view/") :])
             if path.startswith("/files/"):
                 file = app.resolve(path[len("/files/") :])
                 return self._send(
-                    200, served(file, app.formats(file, True)), SERVED_SUFFIXES[file.suffix]
+                    200, served(file, app.file_tabs(file, True)), SERVED_SUFFIXES[file.suffix]
                 )
             if path.startswith("/_portfolio/"):
                 from crew_chief.portfolio import site
@@ -872,8 +908,10 @@ class Handler(BaseHTTPRequestHandler):
             name = path.lstrip("/")
             if name and "/" not in name:
                 file = app.resolve(f"results/{name}")
+                if file.suffix in (".md", ".json", ".svg") and self._wants_page():
+                    return self._view_file(f"results/{name}")  # a browser gets the viewer
                 return self._send(
-                    200, served(file, app.formats(file, True)), SERVED_SUFFIXES[file.suffix]
+                    200, served(file, app.file_tabs(file, True)), SERVED_SUFFIXES[file.suffix]
                 )
             raise BenchError("not found")
         if method == "POST":
