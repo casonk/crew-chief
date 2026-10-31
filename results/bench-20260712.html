@@ -4,78 +4,513 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>crew-chief Benchmark — bench-20260712</title>
-<style>
+<style>/* Generated from themes/themes.toml by scripts/render_portfolio_theme.py; do not edit. */
+:root {
+  color-scheme: dark;
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #22263a;
+  --border: #2e3250;
+  --text: #e2e4f0;
+  --muted: #8890b0;
+  --accent: #5b7fff;
+  --accent-dim: #161c34;
+  --accent-ink: #0f1117;
+  --green: #3ecf6e;
+  --green-dim: #1a4d30;
+  --red: #e05252;
+  --red-dim: #251418;
+  --yellow: #e0b832;
+  --yellow-dim: #4a3d10;
+  --purple: #a06fff;
+  --purple-dim: #29194c;
+  --stripe: transparent;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #f4f5fa;
+    --surface: #ffffff;
+    --surface2: #eceef6;
+    --border: #d3d7e6;
+    --text: #1c2033;
+    --muted: #5b6486;
+    --accent: #3b5bdb;
+    --accent-dim: #e0e8ff;
+    --accent-ink: #ffffff;
+    --green: #17743d;
+    --green-dim: #d3f2df;
+    --red: #c92a2a;
+    --red-dim: #ffe6e6;
+    --yellow: #8a5a00;
+    --yellow-dim: #fff3bf;
+    --purple: #7048e8;
+    --purple-dim: #eee8ff;
+    --stripe: transparent;
+  }
+}
+/* Midnight: The original Clockwork dark palette */
+:root[data-theme="midnight"] {
+  color-scheme: dark;
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #22263a;
+  --border: #2e3250;
+  --text: #e2e4f0;
+  --muted: #8890b0;
+  --accent: #5b7fff;
+  --accent-dim: #161c34;
+  --accent-ink: #0f1117;
+  --green: #3ecf6e;
+  --green-dim: #1a4d30;
+  --red: #e05252;
+  --red-dim: #251418;
+  --yellow: #e0b832;
+  --yellow-dim: #4a3d10;
+  --purple: #a06fff;
+  --purple-dim: #29194c;
+  --stripe: transparent;
+}
+/* Daylight: A light theme for bright rooms and print */
+:root[data-theme="daylight"] {
+  color-scheme: light;
+  --bg: #f4f5fa;
+  --surface: #ffffff;
+  --surface2: #eceef6;
+  --border: #d3d7e6;
+  --text: #1c2033;
+  --muted: #5b6486;
+  --accent: #3b5bdb;
+  --accent-dim: #e0e8ff;
+  --accent-ink: #ffffff;
+  --green: #17743d;
+  --green-dim: #d3f2df;
+  --red: #c92a2a;
+  --red-dim: #ffe6e6;
+  --yellow: #8a5a00;
+  --yellow-dim: #fff3bf;
+  --purple: #7048e8;
+  --purple-dim: #eee8ff;
+  --stripe: transparent;
+}
+/* Ember: A warm dark theme that is easier on the eyes at night */
+:root[data-theme="ember"] {
+  color-scheme: dark;
+  --bg: #1a1614;
+  --surface: #241e1b;
+  --surface2: #2e2622;
+  --border: #44382f;
+  --text: #ece3da;
+  --muted: #a8998c;
+  --accent: #e8913a;
+  --accent-dim: #4d3314;
+  --accent-ink: #1a1614;
+  --green: #7cc27a;
+  --green-dim: #25422a;
+  --red: #e5655b;
+  --red-dim: #3b1c19;
+  --yellow: #e6c04a;
+  --yellow-dim: #4a3d12;
+  --purple: #b98ae0;
+  --purple-dim: #3d2a55;
+  --stripe: transparent;
+}
+/* High contrast dark: Black and white with strong colours, for low vision and glare */
+:root[data-theme="contrast-dark"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #0b0b0b;
+  --surface2: #1c1c1c;
+  --border: #ffffff;
+  --text: #ffffff;
+  --muted: #d6d6d6;
+  --accent: #ffd400;
+  --accent-dim: #4d4000;
+  --accent-ink: #000000;
+  --green: #4dff88;
+  --green-dim: #003d1a;
+  --red: #ff6b6b;
+  --red-dim: #520000;
+  --yellow: #ffd400;
+  --yellow-dim: #4d4000;
+  --purple: #d6a8ff;
+  --purple-dim: #3d1a66;
+  --stripe: transparent;
+}
+/* High contrast white: Black on white with strong colours and black outlines, for low vision and sunlight */
+:root[data-theme="contrast-light"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface2: #ececec;
+  --border: #000000;
+  --text: #000000;
+  --muted: #2e2e2e;
+  --accent: #0000cc;
+  --accent-dim: #d9d9ff;
+  --accent-ink: #ffffff;
+  --green: #005a00;
+  --green-dim: #d2f2d2;
+  --red: #a80000;
+  --red-dim: #ffd6d6;
+  --yellow: #6b4200;
+  --yellow-dim: #ffedb3;
+  --purple: #5200a3;
+  --purple-dim: #e8d9ff;
+  --stripe: transparent;
+}
+/* Liberty: Red, white and blue, like a Bomb Pop */
+:root[data-theme="liberty"] {
+  color-scheme: light;
+  --bg: #f2f5fb;
+  --surface: #ffffff;
+  --surface2: #e4ebf8;
+  --border: #a9b8d8;
+  --text: #0a2342;
+  --muted: #455b85;
+  --accent: #0a3161;
+  --accent-dim: #d6e0f5;
+  --accent-ink: #ffffff;
+  --green: #1b6b38;
+  --green-dim: #d8f0e0;
+  --red: #b31942;
+  --red-dim: #fbdde5;
+  --yellow: #8a5200;
+  --yellow-dim: #fdecc2;
+  --purple: #3a5bbf;
+  --purple-dim: #dde5fb;
+  --stripe: linear-gradient(90deg, #b31942 0 33.34%, #ffffff 33.34% 66.67%, #0a3161 66.67% 100%);
+}
+/* Hulk: Gamma green on deep purple, like the Incredible Hulk */
+:root[data-theme="hulk"] {
+  color-scheme: dark;
+  --bg: #140a1f;
+  --surface: #1e1230;
+  --surface2: #2b1a45;
+  --border: #573a8c;
+  --text: #f0e8ff;
+  --muted: #b9a3e0;
+  --accent: #6fe03a;
+  --accent-dim: #21481a;
+  --accent-ink: #140a1f;
+  --green: #7fe84e;
+  --green-dim: #1c3e14;
+  --red: #ff6b7d;
+  --red-dim: #4a1426;
+  --yellow: #f6c945;
+  --yellow-dim: #4a3b0c;
+  --purple: #bd90ff;
+  --purple-dim: #3b2475;
+  --stripe: linear-gradient(90deg, #6a2fb5 0 50%, #5ccd2d 50% 100%);
+}
+/* Neon: Electric cyan, magenta and lime on near-black */
+:root[data-theme="neon"] {
+  color-scheme: dark;
+  --bg: #07070f;
+  --surface: #0f0f1d;
+  --surface2: #191932;
+  --border: #4a3aa8;
+  --text: #f4f4ff;
+  --muted: #a9a9d6;
+  --accent: #00f0ff;
+  --accent-dim: #043c44;
+  --accent-ink: #02161a;
+  --green: #3dff1f;
+  --green-dim: #0e3d0a;
+  --red: #ff3d7a;
+  --red-dim: #4a0c25;
+  --yellow: #fff23a;
+  --yellow-dim: #4a4608;
+  --purple: #e04bff;
+  --purple-dim: #3f0b50;
+  --stripe: linear-gradient(90deg, #ff2a6d 0 25%, #d400ff 25% 50%, #00f0ff 50% 75%, #39ff14 75% 100%);
+}
+</style><script>/* Generated from themes/themes.toml by scripts/render_portfolio_theme.py; do not edit. */
+(function () {
+  var THEMES = {
+  "midnight": {
+    "label": "Midnight",
+    "scheme": "dark",
+    "icon": "\ud83c\udf19",
+    "swatch": [
+      "#0f1117",
+      "#5b7fff",
+      "#e2e4f0"
+    ]
+  },
+  "daylight": {
+    "label": "Daylight",
+    "scheme": "light",
+    "icon": "\u2600\ufe0f",
+    "swatch": [
+      "#f4f5fa",
+      "#3b5bdb",
+      "#1c2033"
+    ]
+  },
+  "ember": {
+    "label": "Ember",
+    "scheme": "dark",
+    "icon": "\ud83d\udd25",
+    "swatch": [
+      "#1a1614",
+      "#e8913a",
+      "#ece3da"
+    ]
+  },
+  "contrast-dark": {
+    "label": "High contrast dark",
+    "scheme": "dark",
+    "icon": "\u2b1b",
+    "swatch": [
+      "#000000",
+      "#ffd400",
+      "#ffffff"
+    ]
+  },
+  "contrast-light": {
+    "label": "High contrast white",
+    "scheme": "light",
+    "icon": "\u2b1c",
+    "swatch": [
+      "#ffffff",
+      "#0000cc",
+      "#000000"
+    ]
+  },
+  "liberty": {
+    "label": "Liberty",
+    "scheme": "light",
+    "icon": "\ud83c\uddfa\ud83c\uddf8",
+    "swatch": [
+      "#f2f5fb",
+      "#0a3161",
+      "#0a2342"
+    ]
+  },
+  "hulk": {
+    "label": "Hulk",
+    "scheme": "dark",
+    "icon": "\ud83d\udc9a",
+    "swatch": [
+      "#140a1f",
+      "#6fe03a",
+      "#f0e8ff"
+    ]
+  },
+  "neon": {
+    "label": "Neon",
+    "scheme": "dark",
+    "icon": "\u26a1",
+    "swatch": [
+      "#07070f",
+      "#00f0ff",
+      "#f4f4ff"
+    ]
+  }
+};
+  var KEY = "portfolio-theme";
+  var ALIASES = {"contrast": "contrast-dark"};
+  function known(name) { name = ALIASES[name] || name; return THEMES[name] ? name : null; }
+  var DARK = "midnight", LIGHT = "daylight";
+  var root = document.documentElement;
+  function saved() {
+    try { return localStorage.getItem(KEY); } catch (e) { return null; }
+  }
+  function pick() {
+    var asked = new URLSearchParams(location.search).get("theme");
+    if (known(asked)) return known(asked);
+    var kept = saved();
+    if (known(kept)) return known(kept);
+    return window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches ? LIGHT : DARK;
+  }
+  var ORDER = Object.keys(THEMES);
+  function current() { return root.getAttribute("data-theme"); }
+  function following(name) { return ORDER[(ORDER.indexOf(name) + 1) % ORDER.length]; }
+  function paintCycle(el, name) {
+    var theme = THEMES[name], target = THEMES[following(name)];
+    var icon = el.querySelector("[data-theme-icon]"), label = el.querySelector("[data-theme-name]");
+    if (icon || label) {
+      if (icon) icon.textContent = theme.icon;
+      if (label) label.textContent = theme.label;
+    } else {
+      el.textContent = theme.icon + " " + theme.label;
+    }
+    var text = "Theme: " + theme.label + ". Switch to " + target.label + ".";
+    el.setAttribute("aria-label", text);
+    el.setAttribute("title", text);
+  }
+  function apply(name) {
+    root.setAttribute("data-theme", name);
+    document.querySelectorAll("[data-theme-switcher]").forEach(function (el) { el.value = name; });
+    document.querySelectorAll("[data-theme-cycle]").forEach(function (el) { paintCycle(el, name); });
+    document.querySelectorAll("[data-theme-menu]").forEach(function (menu) { paintMenu(menu, name); });
+  }
+  function paintMenu(menu, name) {
+    menu.querySelectorAll("[data-theme-choice]").forEach(function (item) {
+      item.setAttribute("aria-checked", String(item.getAttribute("data-theme-choice") === name));
+    });
+  }
+  function fill(menu) {
+    if (menu.pfFilled) return;
+    menu.pfFilled = true;
+    menu.setAttribute("role", "menu");
+    menu.setAttribute("aria-label", "Themes");
+    ORDER.forEach(function (name) {
+      var theme = THEMES[name], item = document.createElement("button");
+      item.type = "button";
+      item.setAttribute("role", "menuitemradio");
+      item.setAttribute("data-theme-choice", name);
+      var swatch = document.createElement("span");
+      swatch.className = "pf-swatch";
+      swatch.style.background = "linear-gradient(90deg," + theme.swatch[0] + " 0 34%," +
+        theme.swatch[1] + " 34% 67%," + theme.swatch[2] + " 67%)";
+      var label = document.createElement("span");
+      label.textContent = theme.icon + " " + theme.label;
+      var kind = document.createElement("small");
+      kind.textContent = theme.scheme;
+      item.appendChild(swatch); item.appendChild(label); item.appendChild(kind);
+      item.addEventListener("click", function () {
+        set(name);
+        var open = menu.closest && menu.closest("details");
+        if (open) open.open = false;
+      });
+      menu.appendChild(item);
+    });
+    paintMenu(menu, current() || pick());
+  }
+  function set(name) {
+    name = known(name);
+    if (!name) return;
+    try { localStorage.setItem(KEY, name); } catch (e) {}
+    apply(name);
+  }
+  function cycle() { set(following(current() || pick())); }
+  function bind(el) {
+    if (el.pfBound) return;
+    el.pfBound = true;
+    el.addEventListener("click", cycle);
+    paintCycle(el, current() || pick());
+  }
+  apply(pick());
+  window.addEventListener("storage", function (event) {
+    if (event.key === KEY && known(event.newValue)) apply(known(event.newValue));
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("[data-theme-cycle]").forEach(bind);
+    document.querySelectorAll("[data-theme-menu]").forEach(fill);
+    document.querySelectorAll("[data-theme-switcher]").forEach(function (el) {
+      if (el.tagName === "SELECT" && !el.options.length) {
+        Object.keys(THEMES).forEach(function (name) {
+          var option = document.createElement("option");
+          option.value = name;
+          option.textContent = THEMES[name].label;
+          el.appendChild(option);
+        });
+      }
+      el.setAttribute("aria-label", "Theme");
+      el.addEventListener("change", function () { set(el.value); });
+    });
+    apply(root.getAttribute("data-theme") || pick());
+  });
+  window.PortfolioTheme = { themes: THEMES, set: set, cycle: cycle, bind: bind, fill: fill, current: current };
+})();
+</script><style>.theme-switch{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font:inherit;font-size:13px}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #f8f9fa;
-  color: #212529;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
   padding: 2rem 1rem;
 }
 .page { max-width: 1200px; margin: 0 auto; }
+.report-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.3rem; align-items: center; }
+.report-nav a { padding: 0.45rem 0.8rem; border: 1px solid var(--border);
+  border-radius: 6px; color: var(--accent); text-decoration: none; background: var(--surface); }
+.report-nav a[aria-current="page"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.report-nav .theme-switch { margin-left: auto; }
 h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
-h2 { font-size: 1.15rem; margin: 2rem 0 0.75rem; color: #343a40; border-bottom: 2px solid #dee2e6; padding-bottom: 0.3rem; }
-h3 { font-size: 0.95rem; margin: 1.25rem 0 0.4rem; color: #495057; }
-p.meta { color: #6c757d; font-size: 0.85rem; margin-bottom: 1.2rem; }
+h2 { font-size: 1.15rem; margin: 2rem 0 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.3rem; }
+h3 { font-size: 0.95rem; margin: 1.25rem 0 0.4rem; color: var(--muted); }
+p.meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.2rem; }
 .badge {
   display: inline-block; padding: 0.2rem 0.55rem; border-radius: 12px;
   font-size: 0.75rem; margin: 0 0.2rem;
 }
-.badge-hw   { background: #cce5ff; color: #004085; }
-.badge-date { background: #e2e3e5; color: #383d41; }
-.badge-warn { background: #fff3cd; color: #856404; }
+.badge-hw   { background: var(--accent-dim); color: var(--accent); }
+.badge-date { background: var(--surface2); color: var(--muted); }
+.badge-warn { background: var(--yellow-dim); color: var(--yellow); }
 
 /* ── Tables ── */
 table { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin-bottom: 1rem; }
-th, td { padding: 0.4rem 0.6rem; border: 1px solid #dee2e6; text-align: right; }
-th { background: #e9ecef; font-weight: 600; }
-td.model-name { text-align: left; font-family: monospace; white-space: nowrap; }
-td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
+.table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-scroll table { min-width: 560px; }
+th, td { padding: 0.4rem 0.6rem; border: 1px solid var(--border); text-align: right; }
+th { background: var(--surface2); font-weight: 600; }
+td.model-name { text-align: left; font-family: ui-monospace, "Fira Code", monospace; white-space: nowrap; }
+td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 
 /* throughput colour bands */
-.tps-vhigh { background: #d4edda; }
-.tps-high  { background: #e9f7ef; }
-.tps-mid   { background: #fff9e6; }
-.tps-low   { background: #fdecea; }
-.tps-err   { background: #f8d7da; color: #721c24; font-style: italic; }
+.tps-vhigh { background: var(--green-dim); color: var(--green); }
+.tps-high  { background: color-mix(in srgb, var(--green-dim) 45%, var(--surface)); }
+.tps-mid   { background: color-mix(in srgb, var(--yellow-dim) 45%, var(--surface)); }
+.tps-low   { background: color-mix(in srgb, var(--red-dim) 60%, var(--surface)); }
+.tps-err   { background: var(--red-dim); color: var(--red); font-style: italic; }
 
 /* TTFT colour bands */
-.ttft-fast  { background: #d4edda; }
-.ttft-ok    { background: #fff9e6; }
-.ttft-slow  { background: #fdecea; }
+.ttft-fast  { background: var(--green-dim); color: var(--green); }
+.ttft-ok    { background: color-mix(in srgb, var(--yellow-dim) 45%, var(--surface)); }
+.ttft-slow  { background: color-mix(in srgb, var(--red-dim) 60%, var(--surface)); }
 
 /* ── Bar charts ── */
 .chart { margin: 0.5rem 0 1.5rem; }
 .bar-row { display: flex; align-items: center; margin: 3px 0; gap: 8px; }
-.bar-model { width: 220px; font-family: monospace; font-size: 0.78rem;
+.bar-model { width: 220px; font-family: ui-monospace, "Fira Code", monospace; font-size: 0.78rem;
              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bar-track { flex: 1; background: #e9ecef; border-radius: 3px; height: 18px; position: relative; }
+.bar-track { flex: 1; min-width: 0; background: var(--surface2); border-radius: 3px; height: 18px; position: relative; }
 .bar-fill  { height: 100%; border-radius: 3px; min-width: 2px;
              display: flex; align-items: center; padding-left: 5px; }
-.bar-fill span { color: white; font-size: 0.72rem; white-space: nowrap; }
-.bar-val   { width: 70px; font-size: 0.78rem; color: #495057; text-align: right; }
+.bar-fill span { color: var(--accent-ink); font-size: 0.72rem; white-space: nowrap; }
+.bar-val   { width: 70px; font-size: 0.78rem; color: var(--muted); text-align: right; }
 
 /* ── Trend ── */
 .trend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
-.trend-card { background: white; border: 1px solid #dee2e6; border-radius: 6px; padding: 1rem; }
-.trend-card h4 { font-size: 0.85rem; margin-bottom: 0.5rem; font-family: monospace; }
+.trend-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; }
+.trend-card h4 { font-size: 0.85rem; margin-bottom: 0.5rem; font-family: ui-monospace, "Fira Code", monospace; }
 
 /* ── Section spacing ── */
-.section { background: white; border: 1px solid #dee2e6; border-radius: 8px;
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
            padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
+
+@media (max-width: 640px) {
+  body { padding: 1rem 0.75rem; }
+  h1 { font-size: 1.35rem; }
+  .section { min-width: 0; padding: 1rem 0.75rem; }
+  .bar-row { gap: 6px; min-width: 0; }
+  .bar-model { width: min(38vw, 140px); flex: 0 0 min(38vw, 140px); font-size: 0.68rem; }
+  .bar-val { width: 52px; flex: 0 0 52px; font-size: 0.68rem; }
+  .bar-fill span { font-size: 0.62rem; }
+  .trend-grid { grid-template-columns: minmax(0, 1fr); }
+  .trend-card { min-width: 0; padding: 0.75rem; }
+}
 </style>
 </head>
 <body>
 <div class="page">
+<nav class="report-nav" aria-label="Benchmark reports">
+  <a href="latest.html" aria-current="page">Inference speed</a>
+  <a href="test-bench-latest.html">Test outcomes</a>
+  <select data-theme-switcher class="theme-switch"></select>
+</nav>
 <h1>crew-chief Model Benchmark</h1>
 <p class="meta">
-  <span class="badge badge-date">2026-07-12 04:55</span>
+  <span class="badge badge-date">2026-10-31 05:47</span>
   <span class="badge badge-hw">RTX 3090 24 GB</span>
   <span class="badge badge-hw">Ollama / Podman</span>
   <span class="badge badge-date">13 models &middot; 4 prompts</span>
   <span class="badge badge-warn">thinking models: TTFT includes internal reasoning tokens</span>
 </p>
-<div class="section"><h2>Throughput — tokens / second</h2><p>Higher is faster. Colour bands: <span class="badge tps-vhigh">≥200</span> <span class="badge tps-high">≥100</span> <span class="badge tps-mid">≥30</span> <span class="badge tps-low">&lt;30</span></p><table>
+<div class="section"><h2>Throughput — tokens / second</h2><p>Higher is faster. Colour bands: <span class="badge tps-vhigh">≥200</span> <span class="badge tps-high">≥100</span> <span class="badge tps-mid">≥30</span> <span class="badge tps-low">&lt;30</span></p><div class="table-scroll"><table>
 <thead><tr>
 <th>Model</th><th>Tier</th>
 <th>latency</th>
@@ -187,7 +622,7 @@ td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
 <td class="tps-low">6.3</td>
 <td class="tps-low">6.9</td>
 </tr>
-</tbody></table></div><div class="section"><h2>Time to First Token (TTFT)</h2><p>For thinking models this includes internal reasoning before the first visible token. Colour bands: <span class="badge ttft-fast">&lt;500 ms</span> <span class="badge ttft-ok">&lt;10 s</span> <span class="badge ttft-slow">≥10 s</span></p><table>
+</tbody></table></div></div><div class="section"><h2>Time to First Token (TTFT)</h2><p>For thinking models this includes internal reasoning before the first visible token. Colour bands: <span class="badge ttft-fast">&lt;500 ms</span> <span class="badge ttft-ok">&lt;10 s</span> <span class="badge ttft-slow">≥10 s</span></p><div class="table-scroll"><table>
 <thead><tr>
 <th>Model</th><th>Tier</th>
 <th>latency</th>
@@ -299,133 +734,133 @@ td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
 <td class="ttft-slow">8.3 min</td>
 <td class="ttft-slow">48.4 s</td>
 </tr>
-</tbody></table></div><div class="section"><h2>Charts</h2><h3>Throughput — latency</h3>
+</tbody></table></div></div><div class="section"><h2>Charts</h2><h3>Throughput — latency</h3>
 <div class="chart">
-<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#2980b9"><span>398 tok/s</span></div></div><div class="bar-val">397.9</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:96%;background:#2980b9"><span>385 tok/s</span></div></div><div class="bar-val">384.6</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:76%;background:#2980b9"><span>303 tok/s</span></div></div><div class="bar-val">302.8</div></div>
-<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:67%;background:#2980b9"><span>267 tok/s</span></div></div><div class="bar-val">266.9</div></div>
-<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:58%;background:#2980b9"><span>234 tok/s</span></div></div><div class="bar-val">233.7</div></div>
-<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:58%;background:#2980b9"><span>233 tok/s</span></div></div><div class="bar-val">233.3</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:53%;background:#2980b9"><span>213 tok/s</span></div></div><div class="bar-val">213.2</div></div>
-<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:39%;background:#2980b9"><span>158 tok/s</span></div></div><div class="bar-val">158.5</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:19%;background:#c0392b"><span>78 tok/s</span></div></div><div class="bar-val">77.5</div></div>
-<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#2980b9"><span>62 tok/s</span></div></div><div class="bar-val">62.1</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:#c0392b"><span>52 tok/s</span></div></div><div class="bar-val">51.7</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:3%;background:#c0392b"><span>14 tok/s</span></div></div><div class="bar-val">13.8</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:#c0392b"><span>7 tok/s</span></div></div><div class="bar-val">7.0</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"><span>398 tok/s</span></div></div><div class="bar-val">397.9</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:96%;background:var(--accent)"><span>385 tok/s</span></div></div><div class="bar-val">384.6</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:76%;background:var(--accent)"><span>303 tok/s</span></div></div><div class="bar-val">302.8</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:67%;background:var(--accent)"><span>267 tok/s</span></div></div><div class="bar-val">266.9</div></div>
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:58%;background:var(--accent)"><span>234 tok/s</span></div></div><div class="bar-val">233.7</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:58%;background:var(--accent)"><span>233 tok/s</span></div></div><div class="bar-val">233.3</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:53%;background:var(--accent)"><span>213 tok/s</span></div></div><div class="bar-val">213.2</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:39%;background:var(--accent)"><span>158 tok/s</span></div></div><div class="bar-val">158.5</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:19%;background:var(--red)"><span>78 tok/s</span></div></div><div class="bar-val">77.5</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent)"><span>62 tok/s</span></div></div><div class="bar-val">62.1</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--red)"><span>52 tok/s</span></div></div><div class="bar-val">51.7</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--red)"><span>14 tok/s</span></div></div><div class="bar-val">13.8</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"><span>7 tok/s</span></div></div><div class="bar-val">7.0</div></div>
 </div>
 <h3>TTFT — latency (log scale)</h3>
 <div class="chart">
-<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:35%;background:#2980b9"><span>34 ms</span></div></div><div class="bar-val">34 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:37%;background:#2980b9"><span>42 ms</span></div></div><div class="bar-val">42 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:39%;background:#2980b9"><span>53 ms</span></div></div><div class="bar-val">53 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:#2980b9"><span>141 ms</span></div></div><div class="bar-val">141 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:#2980b9"><span>144 ms</span></div></div><div class="bar-val">144 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:#2980b9"><span>146 ms</span></div></div><div class="bar-val">146 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:#2980b9"><span>147 ms</span></div></div><div class="bar-val">147 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:51%;background:#2980b9"><span>177 ms</span></div></div><div class="bar-val">177 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:52%;background:#2980b9"><span>192 ms</span></div></div><div class="bar-val">192 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:74%;background:#c0392b"><span>1.8 s</span></div></div><div class="bar-val">1.8 s</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:75%;background:#c0392b"><span>2.0 s</span></div></div><div class="bar-val">2.0 s</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:95%;background:#c0392b"><span>14.3 s</span></div></div><div class="bar-val">14.3 s</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#c0392b"><span>23.6 s</span></div></div><div class="bar-val">23.6 s</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:35%;background:var(--accent)"><span>34 ms</span></div></div><div class="bar-val">34 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:37%;background:var(--accent)"><span>42 ms</span></div></div><div class="bar-val">42 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:39%;background:var(--accent)"><span>53 ms</span></div></div><div class="bar-val">53 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--accent)"><span>141 ms</span></div></div><div class="bar-val">141 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--accent)"><span>144 ms</span></div></div><div class="bar-val">144 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--accent)"><span>146 ms</span></div></div><div class="bar-val">146 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--accent)"><span>147 ms</span></div></div><div class="bar-val">147 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:51%;background:var(--accent)"><span>177 ms</span></div></div><div class="bar-val">177 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:52%;background:var(--accent)"><span>192 ms</span></div></div><div class="bar-val">192 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:74%;background:var(--red)"><span>1.8 s</span></div></div><div class="bar-val">1.8 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--red)"><span>2.0 s</span></div></div><div class="bar-val">2.0 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--red)"><span>14.3 s</span></div></div><div class="bar-val">14.3 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>23.6 s</span></div></div><div class="bar-val">23.6 s</div></div>
 </div>
 <h3>Throughput — reasoning</h3>
 <div class="chart">
-<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#2980b9"><span>277 tok/s</span></div></div><div class="bar-val">276.6</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:#2980b9"><span>202 tok/s</span></div></div><div class="bar-val">201.7</div></div>
-<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:64%;background:#2980b9"><span>179 tok/s</span></div></div><div class="bar-val">178.6</div></div>
-<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:64%;background:#2980b9"><span>177 tok/s</span></div></div><div class="bar-val">177.1</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:#2980b9"><span>157 tok/s</span></div></div><div class="bar-val">157.4</div></div>
-<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:#2980b9"><span>156 tok/s</span></div></div><div class="bar-val">155.7</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:53%;background:#2980b9"><span>149 tok/s</span></div></div><div class="bar-val">149.0</div></div>
-<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:#2980b9"><span>139 tok/s</span></div></div><div class="bar-val">138.7</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:#c0392b"><span>76 tok/s</span></div></div><div class="bar-val">76.5</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:#c0392b"><span>51 tok/s</span></div></div><div class="bar-val">50.9</div></div>
-<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#2980b9"><span>43 tok/s</span></div></div><div class="bar-val">43.3</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:#c0392b"><span>14 tok/s</span></div></div><div class="bar-val">13.7</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:#c0392b"><span>7 tok/s</span></div></div><div class="bar-val">7.0</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"><span>277 tok/s</span></div></div><div class="bar-val">276.6</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--accent)"><span>202 tok/s</span></div></div><div class="bar-val">201.7</div></div>
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--accent)"><span>179 tok/s</span></div></div><div class="bar-val">178.6</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--accent)"><span>177 tok/s</span></div></div><div class="bar-val">177.1</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:var(--accent)"><span>157 tok/s</span></div></div><div class="bar-val">157.4</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:var(--accent)"><span>156 tok/s</span></div></div><div class="bar-val">155.7</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:53%;background:var(--accent)"><span>149 tok/s</span></div></div><div class="bar-val">149.0</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--accent)"><span>139 tok/s</span></div></div><div class="bar-val">138.7</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--red)"><span>76 tok/s</span></div></div><div class="bar-val">76.5</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--red)"><span>51 tok/s</span></div></div><div class="bar-val">50.9</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent)"><span>43 tok/s</span></div></div><div class="bar-val">43.3</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--red)"><span>14 tok/s</span></div></div><div class="bar-val">13.7</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"><span>7 tok/s</span></div></div><div class="bar-val">7.0</div></div>
 </div>
 <h3>TTFT — reasoning (log scale)</h3>
 <div class="chart">
-<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:#2980b9"><span>34 ms</span></div></div><div class="bar-val">34 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:#2980b9"><span>35 ms</span></div></div><div class="bar-val">35 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:38%;background:#2980b9"><span>55 ms</span></div></div><div class="bar-val">55 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:46%;background:#2980b9"><span>125 ms</span></div></div><div class="bar-val">125 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:47%;background:#2980b9"><span>138 ms</span></div></div><div class="bar-val">138 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:48%;background:#2980b9"><span>142 ms</span></div></div><div class="bar-val">142 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:48%;background:#2980b9"><span>151 ms</span></div></div><div class="bar-val">151 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:#2980b9"><span>180 ms</span></div></div><div class="bar-val">180 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:51%;background:#2980b9"><span>197 ms</span></div></div><div class="bar-val">197 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:76%;background:#c0392b"><span>2.6 s</span></div></div><div class="bar-val">2.6 s</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:81%;background:#c0392b"><span>4.7 s</span></div></div><div class="bar-val">4.7 s</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:95%;background:#c0392b"><span>19.3 s</span></div></div><div class="bar-val">19.3 s</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#c0392b"><span>30.0 s</span></div></div><div class="bar-val">30.0 s</div></div>
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:var(--accent)"><span>34 ms</span></div></div><div class="bar-val">34 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:34%;background:var(--accent)"><span>35 ms</span></div></div><div class="bar-val">35 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--accent)"><span>55 ms</span></div></div><div class="bar-val">55 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:46%;background:var(--accent)"><span>125 ms</span></div></div><div class="bar-val">125 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:47%;background:var(--accent)"><span>138 ms</span></div></div><div class="bar-val">138 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:48%;background:var(--accent)"><span>142 ms</span></div></div><div class="bar-val">142 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:48%;background:var(--accent)"><span>151 ms</span></div></div><div class="bar-val">151 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--accent)"><span>180 ms</span></div></div><div class="bar-val">180 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:51%;background:var(--accent)"><span>197 ms</span></div></div><div class="bar-val">197 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:76%;background:var(--red)"><span>2.6 s</span></div></div><div class="bar-val">2.6 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:81%;background:var(--red)"><span>4.7 s</span></div></div><div class="bar-val">4.7 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--red)"><span>19.3 s</span></div></div><div class="bar-val">19.3 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>30.0 s</span></div></div><div class="bar-val">30.0 s</div></div>
 </div>
 <h3>Throughput — codegen</h3>
 <div class="chart">
-<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#2980b9"><span>267 tok/s</span></div></div><div class="bar-val">266.6</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:#2980b9"><span>194 tok/s</span></div></div><div class="bar-val">194.0</div></div>
-<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:#2980b9"><span>176 tok/s</span></div></div><div class="bar-val">175.6</div></div>
-<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:64%;background:#2980b9"><span>173 tok/s</span></div></div><div class="bar-val">172.9</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:57%;background:#2980b9"><span>152 tok/s</span></div></div><div class="bar-val">152.5</div></div>
-<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:#2980b9"><span>151 tok/s</span></div></div><div class="bar-val">151.0</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:54%;background:#2980b9"><span>145 tok/s</span></div></div><div class="bar-val">145.0</div></div>
-<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:#2980b9"><span>133 tok/s</span></div></div><div class="bar-val">133.3</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:#c0392b"><span>48 tok/s</span></div></div><div class="bar-val">48.5</div></div>
-<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#2980b9"><span>42 tok/s</span></div></div><div class="bar-val">41.8</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:#c0392b"><span>33 tok/s</span></div></div><div class="bar-val">33.3</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:#c0392b"><span>13 tok/s</span></div></div><div class="bar-val">13.2</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:#c0392b"><span>6 tok/s</span></div></div><div class="bar-val">6.3</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"><span>267 tok/s</span></div></div><div class="bar-val">266.6</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--accent)"><span>194 tok/s</span></div></div><div class="bar-val">194.0</div></div>
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--accent)"><span>176 tok/s</span></div></div><div class="bar-val">175.6</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:64%;background:var(--accent)"><span>173 tok/s</span></div></div><div class="bar-val">172.9</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:57%;background:var(--accent)"><span>152 tok/s</span></div></div><div class="bar-val">152.5</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:var(--accent)"><span>151 tok/s</span></div></div><div class="bar-val">151.0</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--accent)"><span>145 tok/s</span></div></div><div class="bar-val">145.0</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--accent)"><span>133 tok/s</span></div></div><div class="bar-val">133.3</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--red)"><span>48 tok/s</span></div></div><div class="bar-val">48.5</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent)"><span>42 tok/s</span></div></div><div class="bar-val">41.8</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--red)"><span>33 tok/s</span></div></div><div class="bar-val">33.3</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--red)"><span>13 tok/s</span></div></div><div class="bar-val">13.2</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"><span>6 tok/s</span></div></div><div class="bar-val">6.3</div></div>
 </div>
 <h3>TTFT — codegen (log scale)</h3>
 <div class="chart">
-<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:#2980b9"><span>36 ms</span></div></div><div class="bar-val">36 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:#2980b9"><span>37 ms</span></div></div><div class="bar-val">37 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:29%;background:#2980b9"><span>46 ms</span></div></div><div class="bar-val">46 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:37%;background:#2980b9"><span>130 ms</span></div></div><div class="bar-val">130 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:37%;background:#2980b9"><span>139 ms</span></div></div><div class="bar-val">139 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:37%;background:#2980b9"><span>143 ms</span></div></div><div class="bar-val">143 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:38%;background:#2980b9"><span>145 ms</span></div></div><div class="bar-val">145 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:39%;background:#2980b9"><span>181 ms</span></div></div><div class="bar-val">181 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:#2980b9"><span>201 ms</span></div></div><div class="bar-val">201 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:84%;background:#c0392b"><span>1.1 min</span></div></div><div class="bar-val">1.1 min</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:#c0392b"><span>1.3 min</span></div></div><div class="bar-val">1.3 min</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:98%;background:#c0392b"><span>6.8 min</span></div></div><div class="bar-val">6.8 min</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#c0392b"><span>8.3 min</span></div></div><div class="bar-val">8.3 min</div></div>
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--accent)"><span>36 ms</span></div></div><div class="bar-val">36 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--accent)"><span>37 ms</span></div></div><div class="bar-val">37 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:29%;background:var(--accent)"><span>46 ms</span></div></div><div class="bar-val">46 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:37%;background:var(--accent)"><span>130 ms</span></div></div><div class="bar-val">130 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:37%;background:var(--accent)"><span>139 ms</span></div></div><div class="bar-val">139 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:37%;background:var(--accent)"><span>143 ms</span></div></div><div class="bar-val">143 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--accent)"><span>145 ms</span></div></div><div class="bar-val">145 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:39%;background:var(--accent)"><span>181 ms</span></div></div><div class="bar-val">181 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:40%;background:var(--accent)"><span>201 ms</span></div></div><div class="bar-val">201 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:84%;background:var(--red)"><span>1.1 min</span></div></div><div class="bar-val">1.1 min</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--red)"><span>1.3 min</span></div></div><div class="bar-val">1.3 min</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:98%;background:var(--red)"><span>6.8 min</span></div></div><div class="bar-val">6.8 min</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>8.3 min</span></div></div><div class="bar-val">8.3 min</div></div>
 </div>
 <h3>Throughput — summarise</h3>
 <div class="chart">
-<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#2980b9"><span>275 tok/s</span></div></div><div class="bar-val">274.9</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:#2980b9"><span>199 tok/s</span></div></div><div class="bar-val">199.0</div></div>
-<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:#2980b9"><span>180 tok/s</span></div></div><div class="bar-val">180.4</div></div>
-<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:63%;background:#2980b9"><span>174 tok/s</span></div></div><div class="bar-val">174.1</div></div>
-<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:57%;background:#2980b9"><span>159 tok/s</span></div></div><div class="bar-val">158.8</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:#2980b9"><span>154 tok/s</span></div></div><div class="bar-val">154.5</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:53%;background:#2980b9"><span>146 tok/s</span></div></div><div class="bar-val">146.1</div></div>
-<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:#2980b9"><span>137 tok/s</span></div></div><div class="bar-val">137.4</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:#c0392b"><span>51 tok/s</span></div></div><div class="bar-val">51.0</div></div>
-<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:#2980b9"><span>43 tok/s</span></div></div><div class="bar-val">43.0</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:#c0392b"><span>34 tok/s</span></div></div><div class="bar-val">34.1</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:#c0392b"><span>13 tok/s</span></div></div><div class="bar-val">12.8</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:#c0392b"><span>7 tok/s</span></div></div><div class="bar-val">6.9</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"><span>275 tok/s</span></div></div><div class="bar-val">274.9</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--accent)"><span>199 tok/s</span></div></div><div class="bar-val">199.0</div></div>
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--accent)"><span>180 tok/s</span></div></div><div class="bar-val">180.4</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:63%;background:var(--accent)"><span>174 tok/s</span></div></div><div class="bar-val">174.1</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:57%;background:var(--accent)"><span>159 tok/s</span></div></div><div class="bar-val">158.8</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:56%;background:var(--accent)"><span>154 tok/s</span></div></div><div class="bar-val">154.5</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:53%;background:var(--accent)"><span>146 tok/s</span></div></div><div class="bar-val">146.1</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--accent)"><span>137 tok/s</span></div></div><div class="bar-val">137.4</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--red)"><span>51 tok/s</span></div></div><div class="bar-val">51.0</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--accent)"><span>43 tok/s</span></div></div><div class="bar-val">43.0</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:12%;background:var(--red)"><span>34 tok/s</span></div></div><div class="bar-val">34.1</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--red)"><span>13 tok/s</span></div></div><div class="bar-val">12.8</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:2%;background:var(--red)"><span>7 tok/s</span></div></div><div class="bar-val">6.9</div></div>
 </div>
 <h3>TTFT — summarise (log scale)</h3>
 <div class="chart">
-<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:32%;background:#2980b9"><span>36 ms</span></div></div><div class="bar-val">36 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:32%;background:#2980b9"><span>37 ms</span></div></div><div class="bar-val">37 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:33%;background:#2980b9"><span>45 ms</span></div></div><div class="bar-val">45 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:42%;background:#2980b9"><span>127 ms</span></div></div><div class="bar-val">127 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:43%;background:#2980b9"><span>139 ms</span></div></div><div class="bar-val">139 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:44%;background:#2980b9"><span>146 ms</span></div></div><div class="bar-val">146 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:44%;background:#2980b9"><span>147 ms</span></div></div><div class="bar-val">147 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:#2980b9"><span>180 ms</span></div></div><div class="bar-val">180 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:46%;background:#2980b9"><span>193 ms</span></div></div><div class="bar-val">193 ms</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:77%;background:#c0392b"><span>6.7 s</span></div></div><div class="bar-val">6.7 s</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:#c0392b"><span>8.9 s</span></div></div><div class="bar-val">8.9 s</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:95%;background:#c0392b"><span>48.4 s</span></div></div><div class="bar-val">48.4 s</div></div>
-<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#c0392b"><span>1.4 min</span></div></div><div class="bar-val">1.4 min</div></div>
+<div class="bar-row"><div class="bar-model" title="codellama:latest">codellama:latest</div><div class="bar-track"><div class="bar-fill" style="width:32%;background:var(--accent)"><span>36 ms</span></div></div><div class="bar-val">36 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="mistral:latest">mistral:latest</div><div class="bar-track"><div class="bar-fill" style="width:32%;background:var(--accent)"><span>37 ms</span></div></div><div class="bar-val">37 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="deepseek-coder:6.7b">deepseek-coder:6.7b</div><div class="bar-track"><div class="bar-fill" style="width:33%;background:var(--accent)"><span>45 ms</span></div></div><div class="bar-val">45 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen2.5-coder:7b">qwen2.5-coder:7b</div><div class="bar-track"><div class="bar-fill" style="width:42%;background:var(--accent)"><span>127 ms</span></div></div><div class="bar-val">127 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:latest">llama3.2:latest</div><div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--accent)"><span>139 ms</span></div></div><div class="bar-val">139 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.2:3b-instruct-q8_0">llama3.2:3b-instruct-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--accent)"><span>146 ms</span></div></div><div class="bar-val">146 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="llama3.1:8b">llama3.1:8b</div><div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--accent)"><span>147 ms</span></div></div><div class="bar-val">147 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="gemma3:27b-it-qat">gemma3:27b-it-qat</div><div class="bar-track"><div class="bar-fill" style="width:45%;background:var(--accent)"><span>180 ms</span></div></div><div class="bar-val">180 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="aya-expanse:8b">aya-expanse:8b</div><div class="bar-track"><div class="bar-fill" style="width:46%;background:var(--accent)"><span>193 ms</span></div></div><div class="bar-val">193 ms</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b">qwen3:14b</div><div class="bar-track"><div class="bar-fill" style="width:77%;background:var(--red)"><span>6.7 s</span></div></div><div class="bar-val">6.7 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:14b-q8_0">qwen3:14b-q8_0</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--red)"><span>8.9 s</span></div></div><div class="bar-val">8.9 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3:32b">qwen3:32b</div><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--red)"><span>48.4 s</span></div></div><div class="bar-val">48.4 s</div></div>
+<div class="bar-row"><div class="bar-model" title="qwen3.5:27b">qwen3.5:27b</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"><span>1.4 min</span></div></div><div class="bar-val">1.4 min</div></div>
 </div></div>
 </div>
 </body>
