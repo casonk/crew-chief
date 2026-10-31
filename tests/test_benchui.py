@@ -461,6 +461,63 @@ class ProxyTests(AppCase):
     def test_the_interface_page_has_no_theme_selector_of_its_own(self):
         self.assertNotRegex(self.call("/")[1].decode(), r"<select[^>]*data-theme-switcher")
 
+    def _stored_result(self, name="taskbench-demo.json", accuracy=0.9):
+        result = [
+            {"runner": r, "task": "demo", "items": 4, "errors": 0, "latency_ms_mean": ms,
+             "latency_ms_median": ms, "latency_ms_p90": ms, "rows": [],
+             "questions": {"q": {"accuracy": accuracy, "n": 4}}}
+            for r, ms in (("fast", 80.0), ("slow", 800.0))
+        ]  # fmt: skip
+        (self.root / "results" / name).write_text(json.dumps(result))
+
+    def test_results_in_the_store_render_on_request_in_every_format(self):
+        self._stored_result()
+        runs = json.loads(self.call("/api/store/runs")[1])
+        run_id = runs["runs"][0]["id"]
+        self.assertEqual(runs["runs"][0]["source"], "taskbench-demo.json")
+        status, svg = self.call(f"/render/{run_id}/scatter.svg?theme=neon")
+        self.assertEqual(status, 200)
+        self.assertIn(b"<svg", svg)
+        self.assertIn(b"fast", svg)
+        self.assertIn(b"fast,", self.call(f"/render/{run_id}/table.csv")[1])
+        page = self.call(f"/render/{run_id}/table.html")[1]
+        self.assertIn(b"/_portfolio/chrome.js", page)  # the page gets the top bar like any report
+        self.assertIn(b"Bench home", page)
+
+    def test_a_bad_render_request_is_refused_with_a_message(self):
+        self._stored_result()
+        run_id = json.loads(self.call("/api/store/runs")[1])["runs"][0]["id"]
+        for path in (
+            f"/render/{run_id}/scatter.svg?theme=nope",
+            f"/render/{run_id}/scatter.csv",
+            f"/render/{run_id}/nothing.svg",
+            "/render/999/table.csv",
+            "/render/abc",
+            f"/render/{run_id}/../x.svg",
+        ):
+            status, body = self.call(path)
+            self.assertEqual(status, 400, path)
+            self.assertIn(b"error", body.lower() if body else b"error")
+
+    def test_the_store_follows_the_results_folder(self):
+        self.assertEqual(json.loads(self.call("/api/store/runs")[1])["runs"], [])
+        self._stored_result("taskbench-a.json")
+        self.assertEqual(len(json.loads(self.call("/api/store/runs")[1])["runs"]), 1)
+        self._stored_result("taskbench-a.json", accuracy=0.5)  # edited in place
+        self._stored_result("taskbench-b.json")
+        runs = json.loads(self.call("/api/store/runs")[1])["runs"]
+        self.assertEqual(
+            sorted(r["source"] for r in runs), ["taskbench-a.json", "taskbench-b.json"]
+        )
+
+    def test_the_json_viewer_offers_the_renderings_of_a_stored_result_only(self):
+        self._stored_result()
+        (self.root / "results" / "other.json").write_text('{"k": 1}')
+        page = self.call("/view/results/taskbench-demo.json")[1].decode()
+        self.assertIn("/scatter.svg", page)
+        self.assertIn("/table.csv", page)
+        self.assertNotIn("/scatter.svg", self.call("/view/results/other.json")[1].decode())
+
     def test_a_stale_embedded_theme_is_replaced_by_the_current_one(self):
         stale = (
             "<style>/* Generated from themes/themes.toml by an older script; do not edit. */"

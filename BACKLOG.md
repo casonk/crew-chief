@@ -10,6 +10,23 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
+- [ ] [manual:2026-10-31] **Archive the result store as zstd JSON Lines.** The store (`resultstore.py`) is SQLite,
+  so a diff-friendly, compact text archive of its rows (Python 3.14 has `compression.zstd` in the standard
+  library) would make a result set easy to commit, share and rebuild from. Add `store export` / `import`.
+
+- [ ] [manual:2026-10-31] **Parquet export for the result store.** Optional, only when `pyarrow` is installed (ask
+  before installing it; crew-chief stays stdlib-only). Useful for pandas or DuckDB analysis of `measures` and
+  `answers`; no speed gain at the current 6 MB of results.
+
+- [ ] [manual:2026-10-31] **Import the other result kinds into the store.** The test-bench reports
+  (`schema_version`, cases and trials), the inference-speed `bench-*.json` and `engine-matrix-*` files are
+  skipped today, as is the interface's private results folder. Then add per-item views from `answers`
+  (confusion matrix, items every model got wrong).
+
+- [ ] [manual:2026-10-31] **Serve reports from the store.** `report.py`, `test_benchmark.py` and `routerbench.render_svg`
+  still write themed HTML and SVG at generation time (and `scripts/rerender_reports.py` exists to refresh them).
+  Once the store covers their data, serve them from `/render/` and stop writing static copies.
+
 - [ ] [manual:2026-10-31] **Re-test two weak spots of the backlog-triage suite.** `clef-flash` answers a repository
   for every vague entry instead of `unknown` (0.00 on that kind), and entries that name two repositories are
   the hardest kind for every runner (best 0.83). Add more of both kinds (the hard kinds hold 5 to 7 entries

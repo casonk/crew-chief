@@ -25,6 +25,7 @@ import queue
 import re
 import secrets
 import signal
+import sqlite3
 import subprocess
 import sys
 import threading
@@ -35,9 +36,9 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
-from crew_chief import scoring, theme, viewer
+from crew_chief import render, resultstore, scoring, theme, viewer
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SUITES_DIR = REPO_ROOT / "benchmarks" / "decisions"
@@ -598,6 +599,45 @@ class BenchApp:
         self.results_dirs["private"].mkdir(parents=True, exist_ok=True)
         self.profiles = ProfileStore(state / "profiles.toml")
         self.jobs = JobManager(state, self.results_dirs, self.profiles)
+        self.store_path = state / "store.sqlite"
+        self._store_lock = threading.Lock()
+        self._store_sig: tuple | None = None
+
+    def store(self) -> sqlite3.Connection:
+        """A connection to the result store, brought up to date when ``results/`` changed.
+
+        The store is derived from the JSON files (see ``resultstore``), so it can be deleted
+        and rebuilt; a connection per request keeps the threaded server simple.
+        """
+        signature = resultstore.signature(self.public)
+        conn = resultstore.connect(self.store_path)
+        with self._store_lock:
+            if signature != self._store_sig:
+                resultstore.import_dir(conn, self.public)
+                self._store_sig = signature
+        return conn
+
+    def renderings(self, ref: str) -> str:
+        """Links to the other renderings of a result that is in the store, for the viewer's bar."""
+        label, _, name = ref.partition("/")
+        if label != "results" or not name.endswith(".json"):
+            return ""
+        conn = self.store()
+        try:
+            run_id = resultstore.run_for_source(conn, name)
+        finally:
+            conn.close()
+        if run_id is None:
+            return ""
+        shown = (
+            ("page", "table.html"),
+            ("scatter", "scatter.svg"),
+            ("bars", "bars.svg"),
+            ("csv", "table.csv"),
+            ("md", "table.md"),
+        )
+        links = [f'<a href="/render/{run_id}/{target}">{label}</a>' for label, target in shown]
+        return '<span class="muted">render:</span> ' + " ".join(links) + " &middot; "
 
     def resolve(self, ref: str) -> Path:
         label, _, name = ref.partition("/")
@@ -732,11 +772,36 @@ class Handler(BaseHTTPRequestHandler):
                     if f.is_file() and f.suffix in SERVED_SUFFIXES and FILE_NAME.fullmatch(f.name)
                 )
                 return self._send(200, files_page(names), "text/html; charset=utf-8")
+            if path == "/api/store/runs":
+                conn = app.store()
+                try:
+                    return self._json({"runs": resultstore.runs(conn), "formats": render.CHARTS})
+                finally:
+                    conn.close()
+            if path.startswith("/render/"):
+                match = re.fullmatch(r"(\d+)/([a-z]+)\.([a-z]+)", path[len("/render/") :])
+                if match is None:
+                    raise BenchError(
+                        "use /render/<run>/<chart>.<format>, e.g. /render/3/scatter.svg"
+                    )
+                theme_name = (parse_qs(urlparse(self.path).query).get("theme") or [None])[0]
+                conn = app.store()
+                try:
+                    body, ctype = render.render(
+                        conn, int(match.group(1)), match.group(2), match.group(3), theme_name
+                    )
+                except render.RenderError as exc:
+                    raise BenchError(str(exc)) from exc
+                finally:
+                    conn.close()
+                return self._send(
+                    200, with_home_link(body) if match.group(3) == "html" else body, ctype
+                )
             if path.startswith("/view/"):
                 ref = path[len("/view/") :]
                 file = app.resolve(ref)
                 text = file.read_text(encoding="utf-8", errors="replace")
-                page = viewer.render(file.name, text, f"/files/{ref}")
+                page = viewer.render(file.name, text, f"/files/{ref}", app.renderings(ref))
                 if page is None:  # only Markdown and JSON have a viewer; the rest is shown as is
                     return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])
                 return self._send(200, with_home_link(page.encode()), "text/html; charset=utf-8")
