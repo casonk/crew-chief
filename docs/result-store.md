@@ -40,8 +40,11 @@ Files that are not benchmark results (the test-bench and inference-speed reports
 | `table` | `csv` `json` `md` `html` | one row per performer |
 | `tasks` | `csv` `json` `md` `html` | per task and performer |
 
-`table.html` is a themed page with both charts inline, the tables and a link to every other rendering. A
-result's JSON viewer, and the viewer for its saved `.svg`, show links to its renderings.
+Every result has one strip of views, `html · json · md · svg · bars · csv`, in the viewer bar and under the top
+bar of an HTML report. A view is the saved file when there is one (`results/<name>.md`, `.svg`, `.html`) and the
+rendering above otherwise; `json` is only ever the saved data, and `bars` and `csv` exist for any result in the
+store. A browser gets each rendering as a themed page with the top bar and a raw link; a script (no
+`Accept: text/html`) or `?raw=1` gets the plain file, and `/files/...` is always plain.
 
 **SVG and themes.** Charts style themselves with the portfolio tokens. Inline in a page they follow the page.
 As a standalone file they carry their own: `?theme=neon` (any theme in `themes/themes.toml`) embeds that

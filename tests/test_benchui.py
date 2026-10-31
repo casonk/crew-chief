@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import threading
 import time
@@ -596,14 +597,69 @@ class ProxyTests(AppCase):
         self.assertIn('href="/view/results/chart.svg"', listing)
         self.assertIn('href="/chart.svg"', listing)
 
-    def test_the_svg_of_a_stored_result_links_to_its_renderings(self):
+    def test_a_stored_result_has_one_strip_of_views_each_named_once(self):
+        self._stored_result("taskbench-demo.json")
+        (self.root / "results" / "taskbench-demo.md").write_text("# demo")
+        page = self.call("/view/results/taskbench-demo.md")[1].decode()
+        strip = page.split('aria-label="Formats"')[1].split("</span>")[0]
+        names = re.findall(r"<(?:a|b)[^>]*>(\w+)</(?:a|b)>", strip)
+        self.assertEqual(names, ["html", "json", "md", "svg", "bars", "csv"])
+        self.assertEqual(len(names), len(set(names)))
+        self.assertNotIn("render:", page)
+        self.assertIn('aria-current="page">md</b>', page)
+        # md is the saved file; html, svg, bars and csv come from the store
+        self.assertIn('href="/view/results/taskbench-demo.json"', strip)
+        self.assertRegex(strip, r'href="/render/\d+/table.html"')
+        self.assertRegex(strip, r'href="/render/\d+/scatter.svg"')
+        self.assertRegex(strip, r'href="/render/\d+/bars.svg"')
+        self.assertRegex(strip, r'href="/render/\d+/table.csv"')
+
+    def test_a_saved_file_wins_over_the_stored_rendering(self):
         self._stored_result("taskbench-demo.json")
         (self.root / "results" / "taskbench-demo.svg").write_text(
             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4"><rect/></svg>'
         )
-        page = self.call("/view/results/taskbench-demo.svg")[1].decode()
-        self.assertIn("/scatter.svg", page)
-        self.assertIn("/table.csv", page)
+        strip = (
+            self.call("/view/results/taskbench-demo.svg")[1]
+            .decode()
+            .split('aria-label="Formats"')[1]
+        )
+        self.assertIn('href="/view/results/taskbench-demo.json"', strip)
+        self.assertIn('aria-current="page">svg</b>', strip)
+        self.assertNotIn("/scatter.svg", strip.split("</span>")[0])
+
+    def test_renderings_open_as_themed_pages_for_a_browser_and_raw_for_a_script(self):
+        self._stored_result("taskbench-demo.json")
+        run_id = json.loads(self.call("/api/store/runs")[1])["runs"][0]["id"]
+        browser = {"Accept": "text/html,application/xhtml+xml"}
+        for target, marker in (
+            ("table.csv", b"<table>"),
+            ("table.md", b"<table>"),
+            ("table.json", b'id="tree"'),
+            ("bars.svg", b"<svg"),
+            ("scatter.svg", b"<svg"),
+        ):
+            page = self.call(f"/render/{run_id}/{target}", headers=browser)[1]
+            self.assertIn(marker, page, target)
+            self.assertIn(b"/_portfolio/chrome.js", page, target)  # the top bar
+            self.assertIn(b"Bench home", page, target)
+            self.assertIn(f"/render/{run_id}/{target}?raw=1".encode(), page, target)
+            self.assertNotIn(b"<script>alert", page)
+        # a script (no Accept: text/html) and ?raw=1 get the file itself
+        self.assertTrue(self.call(f"/render/{run_id}/table.csv")[1].startswith(b"performer,"))
+        self.assertTrue(
+            self.call(f"/render/{run_id}/table.csv?raw=1", headers=browser)[1].startswith(
+                b"performer,"
+            )
+        )
+        self.assertTrue(self.call(f"/render/{run_id}/bars.svg")[1].startswith(b"<svg"))
+
+    def test_the_root_urls_of_md_json_and_svg_open_in_the_viewer_for_a_browser(self):
+        (self.root / "results" / "notes.md").write_text("# Notes")
+        browser = {"Accept": "text/html"}
+        self.assertIn(b"<h1>Notes</h1>", self.call("/notes.md", headers=browser)[1])
+        self.assertEqual(self.call("/notes.md")[1], b"# Notes")  # a script still gets the file
+        self.assertEqual(self.call("/files/results/notes.md", headers=browser)[1], b"# Notes")
 
     def test_the_results_tab_opens_svgs_in_the_viewer(self):
         from crew_chief.benchui_page import PAGE

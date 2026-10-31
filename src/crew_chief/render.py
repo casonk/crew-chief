@@ -87,6 +87,20 @@ def pareto(rows: list[dict[str, Any]]) -> set[str]:
     return front
 
 
+def nudge_label(placed: list[tuple[float, float, float]], x0: float, x1: float, y: float) -> float:
+    """The y for a label spanning x0..x1 that does not overprint one already placed.
+
+    ``placed`` holds (x0, x1, y) of the labels drawn so far and is added to. The label keeps its
+    own y if it can, else moves up or down in 12 px steps.
+    """
+    for nudge in (0, -12, 12, -24, 24, -36, 36):
+        if not any(x0 < b1 and x1 > b0 and abs(y + nudge - by) < 12 for b0, b1, by in placed):
+            y += nudge
+            break
+    placed.append((x0, x1, y))
+    return y
+
+
 def _svg_open(width: int, height: int, standalone: bool, name: str | None) -> list[str]:
     head = (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
@@ -160,14 +174,7 @@ def scatter_svg(
             f"{r['ms_mean']:.0f} ms</title></circle>"
         )
         x0, x1 = x + 8, x + 8 + 6.2 * len(r["performer"])
-        label_y = y + 4
-        for nudge in (0, -12, 12, -24, 24, -36, 36):  # the first position that clears the others
-            if not any(
-                x0 < b1 and x1 > b0 and abs(label_y + nudge - by) < 12 for b0, b1, by in placed
-            ):
-                label_y += nudge
-                break
-        placed.append((x0, x1, label_y))
+        label_y = nudge_label(placed, x0, x1, y + 4)
         out.append(f'<text x="{x0:.1f}" y="{label_y:.1f}">{html.escape(r["performer"])}</text>')
     out.append("</svg>")
     return "\n".join(out) + "\n"
@@ -246,10 +253,20 @@ def _table(rows: list[dict[str, Any]], columns: list[str], fmt: str) -> str:
     return f"<table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table>"
 
 
-def _page(conn: sqlite3.Connection, run_id: int, name: str, source: str) -> str:
-    """The run as one themed page: both charts inline, then the tables and links to every format."""
+# The view tab each rendering belongs to (see ``BenchApp.view_items``); the others mark no tab.
+VIEW_KEYS = {
+    ("table", "html"): "html",
+    ("table", "md"): "md",
+    ("scatter", "svg"): "svg",
+    ("bars", "svg"): "bars",
+    ("table", "csv"): "csv",
+}
+
+
+def _page(conn: sqlite3.Connection, run_id: int, name: str, source: str, extra: str = "") -> str:
+    """The run as one themed page: both charts inline, then the tables."""
     perf = resultstore.performers(conn, run_id)
-    parts = [f"<h1>{html.escape(source)}</h1>"]
+    parts: list[str] = []
     for chart in (scatter_svg, bars_svg):
         with contextlib.suppress(RenderError):  # a run with no latency has no scatter
             parts.append(chart(perf, standalone=False))
@@ -257,18 +274,18 @@ def _page(conn: sqlite3.Connection, run_id: int, name: str, source: str) -> str:
     by_task = resultstore.tasks(conn, run_id)
     if by_task:
         parts.append("<h2>By task</h2>" + _table(by_task, _COLUMNS["tasks"], "html"))
-    links = " · ".join(
-        f'<a href="/render/{run_id}/{c}.{f}">{c}.{f}</a>'
-        for c, fs in CHARTS.items()
-        for f in fs
-        if f != "html"
+    return viewer.page(
+        name, f'<div class="doc">{"".join(parts)}</div>', f"/files/results/{source}", extra
     )
-    parts.append(f'<p class="muted">Other renderings: {links}</p>')
-    return viewer.page(name, f'<div class="doc">{"".join(parts)}</div>', f"/files/results/{source}")
 
 
 def render(
-    conn: sqlite3.Connection, run_id: int, chart: str, fmt: str, theme_name: str | None = None
+    conn: sqlite3.Connection,
+    run_id: int,
+    chart: str,
+    fmt: str,
+    theme_name: str | None = None,
+    extra: str = "",
 ) -> tuple[bytes, str]:
     """The requested rendering of one run and its content type."""
     if chart not in CHARTS or fmt not in CHARTS[chart]:
@@ -283,5 +300,6 @@ def render(
         return draw(perf, True, theme_name).encode(), CONTENT_TYPES["svg"]
     rows = perf if chart == "table" else resultstore.tasks(conn, run_id)
     if fmt == "html":
-        return _page(conn, run_id, run["source"], run["source"]).encode(), CONTENT_TYPES["html"]
+        page = _page(conn, run_id, run["source"], run["source"], extra)
+        return page.encode(), CONTENT_TYPES["html"]
     return _table(rows, _COLUMNS[chart], fmt).encode(), CONTENT_TYPES[fmt]

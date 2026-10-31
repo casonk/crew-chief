@@ -40,6 +40,7 @@ from typing import Any
 
 from crew_chief import scoring
 from crew_chief import taskbench as tb
+from crew_chief.render import nudge_label
 
 DEFAULT_THRESHOLDS = (0.6, 0.8, 0.95)
 
@@ -506,7 +507,7 @@ def render_svg(result: dict[str, Any]) -> str:
 
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
-        'font-family="sans-serif" font-size="11" fill="currentColor" '
+        'data-layout="2" font-family="sans-serif" font-size="11" fill="currentColor" '
         'style="color:var(--text,#e2e4f0)">',
         f'<rect width="{width}" height="{height}" style="fill:var(--surface,#1a1d27)"/>',
         f'<rect x="{left}" y="{top}" width="{width - left - right}" height="{height - top - bottom}" '
@@ -529,7 +530,8 @@ def render_svg(result: dict[str, Any]) -> str:
             out.append(
                 f'<text x="{px(tick)}" y="{height - bottom + 16}" text-anchor="middle">{tick}</text>'
             )
-    for name, s in strategies.items():
+    placed: list[tuple[float, float, float]] = []
+    for name, s in sorted(strategies.items(), key=lambda item: item[1]["ms_mean"]):
         x, y = px(s["ms_mean"]), py(s["accuracy"])
         dash = ' stroke-dasharray="2 2"' if name == "oracle" else ""
         colour = "var(--purple,#a06fff)" if name == "oracle" else "var(--accent,#5b7fff)"
@@ -539,9 +541,9 @@ def render_svg(result: dict[str, Any]) -> str:
             f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius}" '
             f'style="fill:{fill};stroke:{colour}" stroke-width="1.5"{dash}/>'
         )
-        out.append(
-            f'<text x="{x + 8:.1f}" y="{y + 4:.1f}">{name.replace("route:", "route ")}</text>'
-        )
+        label = name.replace("route:", "route ")
+        label_y = nudge_label(placed, x + 8, x + 8 + 6.2 * len(label), y + 4)
+        out.append(f'<text x="{x + 8:.1f}" y="{label_y:.1f}">{label}</text>')
     out.append("</svg>")
     return "\n".join(out) + "\n"
 
