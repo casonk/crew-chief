@@ -52,7 +52,9 @@ class MarkdownTests(unittest.TestCase):
             self.assertIn("click", html)
 
     def test_links_are_kept_and_sibling_result_files_open_in_the_viewer(self):
-        html = self.md("[site](https://example.com/a?b=1&c=2) [more](results/run-1.md) [data](x/run-2.json)")
+        html = self.md(
+            "[site](https://example.com/a?b=1&c=2) [more](results/run-1.md) [data](x/run-2.json)"
+        )
         self.assertIn('href="https://example.com/a?b=1&amp;c=2"', html)
         self.assertIn('href="/view/results/run-1.md"', html)
         self.assertIn('href="/view/results/run-2.json"', html)
@@ -60,7 +62,7 @@ class MarkdownTests(unittest.TestCase):
     def test_attribute_breakout_in_a_link_is_escaped(self):
         html = self.md('[x](https://e.com/"onmouseover="alert(1))')
         self.assertNotIn('"onmouseover', html.replace("&quot;", ""))
-        self.assertNotIn(' onmouseover=', html)
+        self.assertNotIn(" onmouseover=", html)
 
     def test_quotes_rules_and_paragraphs(self):
         html = self.md("> quoted\n\n---\n\nfirst line\nsecond line")
