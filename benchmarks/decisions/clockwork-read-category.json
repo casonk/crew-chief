@@ -1,0 +1,185 @@
+{
+  "name": "clockwork-read-category",
+  "description": "Sort an item into a Clockwork To Read category. Titles are generic or well-known public works, not entries from any real list. Baseline rules were written against the dev split only.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which To Read category does this item belong to?",
+      "criteria": {
+        "Books": "A full-length book, fiction or non-fiction",
+        "Articles": "A magazine, newspaper, blog or web article",
+        "Papers": "An academic or technical research paper",
+        "Comics": "A comic book, graphic novel or manga volume"
+      }
+    }
+  },
+  "baseline": {
+    "category": {
+      "default": "Books",
+      "rules": [
+        {
+          "if_any": [
+            "frank herbert",
+            "pragmatic",
+            "educated"
+          ],
+          "then": "Books"
+        },
+        {
+          "if_any": [
+            "longread",
+            "blog post",
+            "new yorker"
+          ],
+          "then": "Articles"
+        },
+        {
+          "if_any": [
+            "attention",
+            "usenix",
+            "arxiv"
+          ],
+          "then": "Papers"
+        },
+        {
+          "if_any": [
+            "maus",
+            "saga",
+            "berserk"
+          ],
+          "then": "Comics"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "Dune by Frank Herbert",
+      "expected": {
+        "category": "Books"
+      }
+    },
+    {
+      "state": "The Pragmatic Programmer",
+      "expected": {
+        "category": "Books"
+      }
+    },
+    {
+      "state": "Educated",
+      "expected": {
+        "category": "Books"
+      }
+    },
+    {
+      "state": "Longread on the history of container shipping",
+      "expected": {
+        "category": "Articles"
+      }
+    },
+    {
+      "state": "Blog post: why I left my startup",
+      "expected": {
+        "category": "Articles"
+      }
+    },
+    {
+      "state": "New Yorker profile of a chef",
+      "expected": {
+        "category": "Articles"
+      }
+    },
+    {
+      "state": "Attention Is All You Need",
+      "expected": {
+        "category": "Papers"
+      }
+    },
+    {
+      "state": "Raft consensus paper (USENIX)",
+      "expected": {
+        "category": "Papers"
+      }
+    },
+    {
+      "state": "arXiv: scaling laws for neural language models",
+      "expected": {
+        "category": "Papers"
+      }
+    },
+    {
+      "state": "Maus",
+      "expected": {
+        "category": "Comics"
+      }
+    },
+    {
+      "state": "Saga vol. 3",
+      "expected": {
+        "category": "Comics"
+      }
+    },
+    {
+      "state": "Berserk volume 1",
+      "expected": {
+        "category": "Comics"
+      }
+    },
+    {
+      "state": "Thinking, Fast and Slow",
+      "expected": {
+        "category": "Books"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The Left Hand of Darkness",
+      "expected": {
+        "category": "Books"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Essay on the decline of third places",
+      "expected": {
+        "category": "Articles"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Magazine feature on deep-sea mining",
+      "expected": {
+        "category": "Articles"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The Google File System",
+      "expected": {
+        "category": "Papers"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Dynamo: Amazon's highly available key-value store",
+      "expected": {
+        "category": "Papers"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Watchmen graphic novel",
+      "expected": {
+        "category": "Comics"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Monster manga vol. 2",
+      "expected": {
+        "category": "Comics"
+      },
+      "split": "heldout"
+    }
+  ]
+}

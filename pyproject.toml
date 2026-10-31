@@ -45,6 +45,9 @@ crew-chief = "crew_chief.cli:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+crew_chief = ["theme/*.css", "theme/*.js"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
