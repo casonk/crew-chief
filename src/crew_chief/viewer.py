@@ -260,22 +260,22 @@ def json_body(text: str, raw_url: str) -> str:
 # -- page --------------------------------------------------------------------
 
 
-def page(title: str, body: str, raw_url: str) -> str:
+def page(title: str, body: str, raw_url: str, extra: str = "") -> str:
     """A complete themed page; the caller adds the top bar (``benchui.with_home_link``)."""
     return (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         f"<title>{html.escape(title)}</title>{theme.HEAD}<style>{theme.SWITCHER_CSS}{CSS}</style></head>"
         f'<body><main><div class="bar"><a href="/results/">&larr; All files</a><h1>{html.escape(title)}</h1>'
-        f'<span class="sp"></span><a href="{html.escape(raw_url, quote=True)}">raw</a></div>{body}</main></body></html>'
+        f'<span class="sp"></span>{extra}<a href="{html.escape(raw_url, quote=True)}">raw</a></div>{body}</main></body></html>'
     )
 
 
-def render(name: str, text: str, raw_url: str) -> str | None:
+def render(name: str, text: str, raw_url: str, extra: str = "") -> str | None:
     """The themed page for a ``.md`` or ``.json`` file, or None for any other kind."""
     suffix = PurePosixPath(name).suffix
     if suffix == ".md":
         return page(name, f'<div class="doc">{markdown_to_html(text)}</div>', raw_url)
     if suffix == ".json":
-        return page(name, json_body(text, raw_url), raw_url)
+        return page(name, json_body(text, raw_url), raw_url, extra)
     return None
