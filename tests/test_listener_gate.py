@@ -90,7 +90,9 @@ class GateTests(unittest.TestCase):
         self.assertEqual(gate.seen, ["systemone:clef-flash"])
 
     def test_a_failing_model_falls_back_to_the_next(self):
-        gate = gate_with(FakeRunner(error=OSError("down")), FakeRunner({"command": 0.9, "question": 0.1}))
+        gate = gate_with(
+            FakeRunner(error=OSError("down")), FakeRunner({"command": 0.9, "question": 0.1})
+        )
         skip, decision = gate.should_skip("restart the media service")
         self.assertFalse(skip)
         self.assertEqual((decision.intent, decision.model), ("command", "nimble"))

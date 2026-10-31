@@ -12,7 +12,7 @@ import urllib.request
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from crew_chief import benchui, scoring
+from crew_chief import benchui, scoring, theme
 
 DEFAULTS = Path(__file__).resolve().parents[1] / "config" / "scoring-profiles.toml"
 SUITES = ["clockwork-grocery-type", "mail-triage"]
@@ -402,6 +402,45 @@ class ProxyTests(AppCase):
         other = {**host, "Origin": "https://evil.example"}
         self.assertEqual(self.call("/api/profiles/reset", "POST", {}, headers=other)[0], 403)
         self.assertEqual(self.call("/", headers={"Host": "other.internal"})[0], 403)
+
+    def test_a_stale_embedded_theme_is_replaced_by_the_current_one(self):
+        stale = (
+            "<style>/* Generated from themes/themes.toml by an older script; do not edit. */"
+            ":root{--old:1}</style><script>var OLDTHEME=1</script>"
+        )
+        (self.root / "results" / "old.html").write_text(
+            f"<html><head><title>t</title>{stale}</head><body><p>report</p></body></html>"
+        )
+        body = self.call("/old.html")[1].decode()
+        self.assertNotIn("OLDTHEME", body)
+        self.assertNotIn("--old:1", body)
+        self.assertIn(theme.JS, body)
+        self.assertIn("<p>report</p>", body)
+        self.assertEqual(body.count("/_portfolio/chrome.js"), 1)
+
+    def test_a_report_without_head_or_body_keeps_standards_mode(self):
+        (self.root / "results" / "bare.html").write_text(
+            '<!doctype html><html lang="en"><meta charset="utf-8"><title>Bare</title><p>x</p>'
+        )
+        body = self.call("/bare.html")[1].decode()
+        self.assertTrue(body.startswith("<!doctype html>"))
+        self.assertLess(body.index("<title>Bare</title>"), body.index("/_portfolio/chrome.js"))
+        self.assertLess(body.index("/_portfolio/chrome.js"), body.index("<p>x</p>"))
+
+    def test_the_file_list_is_themed_and_leads_back_home(self):
+        (self.root / "results" / "latest.html").write_text("<p>weekly</p>")
+        (self.root / "results" / "data.json").write_text("{}")
+        (self.root / "results" / "notes.py").write_text("x")
+        status, body = self.call("/results/")
+        page = body.decode()
+        self.assertEqual(status, 200)
+        self.assertTrue(page.startswith("<!doctype html>"))
+        self.assertIn(theme.JS, page)
+        self.assertIn("/_portfolio/chrome.js", page)
+        self.assertIn('href="/"', page)
+        self.assertIn('href="/latest.html"', page)
+        self.assertIn('href="/data.json"', page)
+        self.assertNotIn("notes.py", page)
 
     def test_shared_results_stay_reachable_at_the_site_root(self):
         (self.root / "results" / "latest.html").write_text("<p>weekly</p>")
