@@ -219,6 +219,31 @@ class TestOllamaProviderChat(unittest.TestCase):
         self.assertIn("tools", captured["payload"])
         self.assertEqual(captured["payload"]["tools"][0]["function"]["name"], "shell")
 
+    def test_options_are_sent_with_chat_and_generate(self):
+        sent = []
+
+        def fake_urlopen(req, timeout=None):
+            sent.append(json.loads(req.data))
+            return _make_urlopen_mock({"message": {"content": "x"}, "response": "x"})
+
+        provider = OllamaProvider(options={"num_ctx": 16384})
+        with patch("urllib.request.urlopen", side_effect=fake_urlopen):
+            provider.chat([{"role": "user", "content": "hi"}])
+            provider.generate("hi")
+
+        self.assertEqual([p["options"] for p in sent], [{"num_ctx": 16384}] * 2)
+
+    def test_no_options_key_by_default(self):
+        captured = {}
+
+        def fake_urlopen(req, timeout=None):
+            captured["payload"] = json.loads(req.data)
+            return _make_urlopen_mock({"message": {"content": "x"}})
+
+        with patch("urllib.request.urlopen", side_effect=fake_urlopen):
+            OllamaProvider().chat([{"role": "user", "content": "hi"}])
+        self.assertNotIn("options", captured["payload"])
+
     def test_chat_without_tools_omits_tools_key(self):
         captured = {}
         body = {"message": {"role": "assistant", "content": "ok"}}
