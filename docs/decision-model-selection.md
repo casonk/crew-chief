@@ -266,7 +266,9 @@ repository, and entries that imply a repository without naming it. Full tables, 
   `clef-flash` by 7, and the keywords collapse on entries that name two repositories (0.17) or none (0.40).
   The rules were written with every entry in view, so this is the best case for them.
 - **`clef-flash` never says `unknown` to a vague entry** ("Make it faster" gets a repository, 0.00 on that kind);
-  `clef`, `nimble` and `tev1` decline. Gate it: at confidence 0.6, `clef-flash` answers 82% of entries and is
+  `clef`, `nimble` and `tev1` decline. A second run was identical (the models are near-deterministic), and the
+  wrong answers are low-confidence (0.19 to 0.52), so the 0.6 gate files all six vague entries as `unknown`
+  at a cost of 6% of the correct answers (`results/backlog-triage-clef-flash-vague-20261031.md`). Gate it: at confidence 0.6, `clef-flash` answers 82% of entries and is
   wrong on 6%, `clef` answers 78% and is wrong on 3%; the rest become `unknown`, which Clockwork files in an
   `unknown` group.
 - **Passing the active sorting does not help.** Writing a share (25, 50, 75%) of each repository's entries into
