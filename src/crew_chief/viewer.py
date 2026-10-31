@@ -101,11 +101,9 @@ def _table(rows: list[str]) -> str:
     def style(i: int) -> str:
         a = aligns[i] if i < len(aligns) else ""
         right, left = a.endswith(":"), a.startswith(":")
-        return (
-            ' style="text-align:center"'
-            if right and left
-            else ' style="text-align:right"' if right else ""
-        )
+        if right and left:
+            return ' style="text-align:center"'
+        return ' style="text-align:right"' if right else ""
 
     th = "".join(f"<th{style(i)}>{inline(c)}</th>" for i, c in enumerate(head))
     body = "".join(
