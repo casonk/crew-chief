@@ -37,7 +37,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlparse
 
-from crew_chief import scoring
+from crew_chief import scoring, theme
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SUITES_DIR = REPO_ROOT / "benchmarks" / "decisions"
@@ -73,19 +73,64 @@ HOME_LINK = (
 CHROME_TAG = '<script src="/_portfolio/chrome.js" defer></script>'
 
 
+# A report generated earlier embeds the theme as it was then (fewer themes, no
+# rotator or menu), which clashes with the top bar. Swap it for the current one.
+STALE_THEME = re.compile(
+    r"<style>/\* Generated from themes/themes\.toml.*?</style>\s*<script>.*?</script>", re.S
+)
+# What may precede injected markup in a page without <head>/<body>: the doctype,
+# the <html> tag and any leading <meta>/<title>, so the page keeps standards mode.
+PROLOGUE = re.compile(
+    r"\s*(?:<!doctype[^>]*>\s*)?(?:<html[^>]*>)?(?:\s*<meta[^>]*>|\s*<title>.*?</title>)*",
+    re.I | re.S,
+)
+
+
 def with_home_link(document: bytes) -> bytes:
-    """Give a generated report page the portfolio top bar and a way back to the interface,
-    without editing the file."""
+    """Give a generated report page the portfolio top bar, the current theme and a way back
+    to the interface, without editing the file."""
     text = document.decode("utf-8", "replace")
-    if CHROME_TAG not in text:
-        head = re.search(r"</head>", text, re.I)
-        text = (
-            text[: head.start()] + CHROME_TAG + text[head.start() :] if head else CHROME_TAG + text
-        )
+    text = STALE_THEME.sub(lambda _: theme.HEAD, text, count=1)
+    head = re.search(r"</head>", text, re.I)
     body = re.search(r"<body[^>]*>", text, re.I)
-    if body is None:
-        return (HOME_LINK + text).encode()
-    return (text[: body.end()] + HOME_LINK + text[body.end() :]).encode()
+    extra = "" if CHROME_TAG in text else CHROME_TAG
+    if head and extra:
+        text = text[: head.start()] + extra + text[head.start() :]
+        extra = ""
+        body = re.search(r"<body[^>]*>", text, re.I)
+    if body:
+        return (text[: body.end()] + HOME_LINK + extra + text[body.end() :]).encode()
+    at = PROLOGUE.match(text).end()
+    return (text[:at] + extra + HOME_LINK + text[at:]).encode()
+
+
+FILES_CSS = (
+    "body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}"
+    "main{max-width:960px;margin:0 auto;padding:16px}h1{font-size:22px;margin:8px 0 4px}"
+    ".muted{color:var(--muted);font-size:13px}"
+    "ul{list-style:none;margin:12px 0;padding:0;background:var(--surface);"
+    "border:1px solid var(--border);border-radius:8px}"
+    "li{display:flex;gap:10px;align-items:baseline;padding:6px 12px;border-bottom:1px solid var(--border)}"
+    "li:last-child{border-bottom:0}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}"
+    ".kind{font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:0 5px}"
+)
+
+
+def files_page(names: list[str]) -> bytes:
+    """The shared results folder as a themed list, with the top bar and a way back."""
+    rows = "".join(
+        f'<li><a href="/{html.escape(n, quote=True)}">{html.escape(n)}</a>'
+        f'<span class="kind">{html.escape(Path(n).suffix.lstrip("."))}</span></li>'
+        for n in names
+    )
+    page = (
+        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        f"<title>All files</title>{theme.HEAD}<style>{FILES_CSS}</style></head>"
+        f'<body><main><h1>All files</h1><div class="muted">{len(names)} files in the shared '
+        f"results folder</div><ul>{rows}</ul></main></body></html>"
+    )
+    return with_home_link(page.encode())
 
 
 def served(file: Path) -> bytes:
@@ -657,12 +702,7 @@ class Handler(BaseHTTPRequestHandler):
                     for f in app.public.iterdir()
                     if f.is_file() and f.suffix in SERVED_SUFFIXES and FILE_NAME.fullmatch(f.name)
                 )
-                rows = "".join(
-                    f'<li><a href="/{html.escape(n, quote=True)}">{html.escape(n)}</a></li>'
-                    for n in names
-                )
-                page = f"<!doctype html><meta charset=utf-8><title>results</title><ul>{rows}</ul>"
-                return self._send(200, page.encode(), "text/html; charset=utf-8")
+                return self._send(200, files_page(names), "text/html; charset=utf-8")
             if path.startswith("/files/"):
                 file = app.resolve(path[len("/files/") :])
                 return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])
