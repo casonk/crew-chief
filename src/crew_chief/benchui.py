@@ -666,6 +666,15 @@ class Handler(BaseHTTPRequestHandler):
             if path.startswith("/files/"):
                 file = app.resolve(path[len("/files/") :])
                 return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])
+            if path.startswith("/_portfolio/"):
+                from crew_chief.portfolio import site
+
+                asset = site.resolve(
+                    REPO_ROOT, vendored=Path(__file__).resolve().parent / "portfolio"
+                ).response(path)
+                if asset is None:
+                    raise BenchError("not found")
+                return self._send(200, *asset)
             # The shared results folder at the site root, as the static site served it
             # before the interface took over this hostname (latest.html, old report links).
             name = path.lstrip("/")

@@ -47,3 +47,6 @@ config/env
 *.swp
 
 /REFS-LOCAL.md
+
+# Link to this checkout's entry in the portfolio site store (owner-only, local)
+/.portfolio
