@@ -1,0 +1,887 @@
+{
+  "name": "backlog-triage",
+  "description": "Sort a new backlog entry into a group and a repository, or answer unknown. Repositories, groups and entries are synthetic. The keyword baseline was written against the dev split only.",
+  "questions": {
+    "group": {
+      "type": "choice",
+      "instructions": "Which backlog group does this entry belong to? Answer unknown if it does not clearly fit.",
+      "criteria": {
+        "util": "Improvements, bugs and features in the tools and services that run the portfolio",
+        "doc": "Documentation, diagrams, write-ups and records",
+        "sec": "Security: credentials, access, exposure and hardening",
+        "research": "Investigation or evaluation before anything is built",
+        "health": "Machine, drive or service health, monitoring and maintenance",
+        "unknown": "Does not clearly belong to any listed group"
+      }
+    },
+    "repo": {
+      "type": "choice",
+      "instructions": "Which repository is this entry about? Answer unknown if it does not clearly belong to one.",
+      "criteria": {
+        "scheduler-service": "Schedules and runs recurring jobs; the job, timer and schedule pages",
+        "list-manager": "Personal lists: groceries, shopping, to-do, watch, read, invest",
+        "media-library": "Organizes, plays and upscales the local video library",
+        "torrent-ui": "A web page to add and manage torrents and their limits",
+        "session-viewer": "Reviews, resumes and deletes AI assistant sessions",
+        "receipt-reader": "Scans, parses and reports on receipts and documents",
+        "local-llm": "Runs local language models and benchmarks them",
+        "network-guard": "VPN switching, private tunnels and network status",
+        "secret-vault": "Password and credential retrieval for other tools",
+        "notifier": "Sends messages and alerts to phones and email",
+        "resource-monitor": "Machine, drive and repository resource dashboards",
+        "web-ingress": "Reverse proxy, certificates and internal DNS for the sites",
+        "unknown": "Does not clearly belong to any listed repository"
+      }
+    }
+  },
+  "baseline": {
+    "group": {
+      "default": "util",
+      "rules": [
+        {
+          "if_any": [
+            "document",
+            "explain",
+            "describe",
+            "list every",
+            "write down"
+          ],
+          "then": "doc"
+        },
+        {
+          "if_any": [
+            "rotate the stored",
+            "client certificate",
+            "no tool writes",
+            "allowlist",
+            "really leaves"
+          ],
+          "then": "sec"
+        },
+        {
+          "if_any": [
+            "compare",
+            "evaluate",
+            "investigate",
+            "serve the large",
+            "fine-tuned"
+          ],
+          "then": "research"
+        },
+        {
+          "if_any": [
+            "drive",
+            "disk temperature",
+            "close to full",
+            "run hot",
+            "gets hot"
+          ],
+          "then": "health"
+        },
+        {
+          "if_any": [
+            "buy a",
+            "dentist",
+            "next year",
+            "that thing",
+            "garage",
+            "warranty",
+            "ideas"
+          ],
+          "then": "unknown"
+        }
+      ]
+    },
+    "repo": {
+      "default": "unknown",
+      "rules": [
+        {
+          "if_any": [
+            "timer",
+            "schedule",
+            "job",
+            "cron"
+          ],
+          "then": "scheduler-service"
+        },
+        {
+          "if_any": [
+            "grocer",
+            "shopping",
+            "to-do",
+            "invest",
+            "read list"
+          ],
+          "then": "list-manager"
+        },
+        {
+          "if_any": [
+            "episode",
+            "subtitle",
+            "upscale",
+            "movie",
+            "library page",
+            "poster"
+          ],
+          "then": "media-library"
+        },
+        {
+          "if_any": [
+            "torrent",
+            "seed",
+            "download limit"
+          ],
+          "then": "torrent-ui"
+        },
+        {
+          "if_any": [
+            "session",
+            "resume"
+          ],
+          "then": "session-viewer"
+        },
+        {
+          "if_any": [
+            "receipt",
+            "merchant"
+          ],
+          "then": "receipt-reader"
+        },
+        {
+          "if_any": [
+            "decision model",
+            "benchmark",
+            "model",
+            "context window"
+          ],
+          "then": "local-llm"
+        },
+        {
+          "if_any": [
+            "vpn",
+            "tunnel",
+            "country"
+          ],
+          "then": "network-guard"
+        },
+        {
+          "if_any": [
+            "password",
+            "credential",
+            "secret",
+            "vault"
+          ],
+          "then": "secret-vault"
+        },
+        {
+          "if_any": [
+            "alert",
+            "text message",
+            "notif",
+            "email bridge",
+            "quiet-hours"
+          ],
+          "then": "notifier"
+        },
+        {
+          "if_any": [
+            "drive",
+            "disk",
+            "gpu",
+            "dashboard",
+            "history is kept"
+          ],
+          "then": "resource-monitor"
+        },
+        {
+          "if_any": [
+            "certificate",
+            "hostname",
+            "proxy",
+            "502",
+            "internal site"
+          ],
+          "then": "web-ingress"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "The schedule page should show when each job last ran and whether it passed",
+      "expected": {
+        "group": "util",
+        "repo": "scheduler-service"
+      }
+    },
+    {
+      "state": "Add a way to pause one timer for a day without disabling the whole job",
+      "expected": {
+        "group": "util",
+        "repo": "scheduler-service"
+      }
+    },
+    {
+      "state": "Job logs are truncated in the web view; let me expand them",
+      "expected": {
+        "group": "util",
+        "repo": "scheduler-service"
+      }
+    },
+    {
+      "state": "Document how to write a manifest for a job that needs two timers",
+      "expected": {
+        "group": "doc",
+        "repo": "scheduler-service"
+      }
+    },
+    {
+      "state": "Jobs that fail twice in a row should be listed at the top of the schedule",
+      "expected": {
+        "group": "util",
+        "repo": "scheduler-service"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Show the next five run times for a cron expression before saving it",
+      "expected": {
+        "group": "util",
+        "repo": "scheduler-service"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Explain in the README why some timers are user units and others system units",
+      "expected": {
+        "group": "doc",
+        "repo": "scheduler-service"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Groceries should remember the store I usually buy each item from",
+      "expected": {
+        "group": "util",
+        "repo": "list-manager"
+      }
+    },
+    {
+      "state": "When I mark a shopping item bought, move it to a history list with the date",
+      "expected": {
+        "group": "util",
+        "repo": "list-manager"
+      }
+    },
+    {
+      "state": "Let me reorder items in the to-do list by dragging",
+      "expected": {
+        "group": "util",
+        "repo": "list-manager"
+      }
+    },
+    {
+      "state": "The invest list needs a column for the target allocation percentage",
+      "expected": {
+        "group": "util",
+        "repo": "list-manager"
+      }
+    },
+    {
+      "state": "Sort the read list by how long ago I added each book",
+      "expected": {
+        "group": "util",
+        "repo": "list-manager"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Add a barcode scan button for adding grocery items from the phone",
+      "expected": {
+        "group": "util",
+        "repo": "list-manager"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Write down the rules the grocery auto-categoriser uses so I can edit them",
+      "expected": {
+        "group": "doc",
+        "repo": "list-manager"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The player should resume an episode where I stopped",
+      "expected": {
+        "group": "util",
+        "repo": "media-library"
+      }
+    },
+    {
+      "state": "Upscaled copies take too long to appear; show the render progress",
+      "expected": {
+        "group": "util",
+        "repo": "media-library"
+      }
+    },
+    {
+      "state": "Subtitles for foreign films are out of sync after the third episode",
+      "expected": {
+        "group": "util",
+        "repo": "media-library"
+      }
+    },
+    {
+      "state": "Add a filter for movies by director on the library page",
+      "expected": {
+        "group": "util",
+        "repo": "media-library"
+      }
+    },
+    {
+      "state": "Detect duplicate movies with different release names and offer to merge them",
+      "expected": {
+        "group": "util",
+        "repo": "media-library"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Evaluate whether AV1 transcoding is worth it for the stored library",
+      "expected": {
+        "group": "research",
+        "repo": "media-library"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Posters for shows are missing after a rename",
+      "expected": {
+        "group": "util",
+        "repo": "media-library"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The page refreshes while I am typing the download limit and loses my entry",
+      "expected": {
+        "group": "util",
+        "repo": "torrent-ui"
+      }
+    },
+    {
+      "state": "Show the seed ratio next to each torrent",
+      "expected": {
+        "group": "util",
+        "repo": "torrent-ui"
+      }
+    },
+    {
+      "state": "Add a per-torrent upload cap in the details view",
+      "expected": {
+        "group": "util",
+        "repo": "torrent-ui"
+      }
+    },
+    {
+      "state": "Email me when a torrent finishes, with a link to its page",
+      "expected": {
+        "group": "util",
+        "repo": "torrent-ui"
+      }
+    },
+    {
+      "state": "Let me tag torrents and filter the list by tag",
+      "expected": {
+        "group": "util",
+        "repo": "torrent-ui"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Pause everything automatically when the VPN drops",
+      "expected": {
+        "group": "util",
+        "repo": "torrent-ui"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Torrent names with brackets break the details link",
+      "expected": {
+        "group": "util",
+        "repo": "torrent-ui"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Resume should open the session in the right working directory",
+      "expected": {
+        "group": "util",
+        "repo": "session-viewer"
+      }
+    },
+    {
+      "state": "Group sessions by repository in the list view",
+      "expected": {
+        "group": "util",
+        "repo": "session-viewer"
+      }
+    },
+    {
+      "state": "The assistant session list shows a schema error for one provider; ignore broken files",
+      "expected": {
+        "group": "util",
+        "repo": "session-viewer"
+      }
+    },
+    {
+      "state": "Bulk delete should ask once and show how many sessions are affected",
+      "expected": {
+        "group": "util",
+        "repo": "session-viewer"
+      }
+    },
+    {
+      "state": "Search session text for a phrase, not only the title",
+      "expected": {
+        "group": "util",
+        "repo": "session-viewer"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Show token usage per session over time",
+      "expected": {
+        "group": "util",
+        "repo": "session-viewer"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Document where each assistant keeps its session files",
+      "expected": {
+        "group": "doc",
+        "repo": "session-viewer"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Receipts from one grocer are read with the totals shifted by a column",
+      "expected": {
+        "group": "util",
+        "repo": "receipt-reader"
+      }
+    },
+    {
+      "state": "Add a monthly spending summary by merchant to the report",
+      "expected": {
+        "group": "util",
+        "repo": "receipt-reader"
+      }
+    },
+    {
+      "state": "Photos taken sideways should be rotated before text recognition",
+      "expected": {
+        "group": "util",
+        "repo": "receipt-reader"
+      }
+    },
+    {
+      "state": "Flag receipts whose line items do not add up to the total",
+      "expected": {
+        "group": "util",
+        "repo": "receipt-reader"
+      }
+    },
+    {
+      "state": "Translate non-English receipts before categorising them",
+      "expected": {
+        "group": "util",
+        "repo": "receipt-reader"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Show me the receipts that were filed under an unknown merchant",
+      "expected": {
+        "group": "util",
+        "repo": "receipt-reader"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Explain how the duplicate receipt check decides two receipts match",
+      "expected": {
+        "group": "doc",
+        "repo": "receipt-reader"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Compare the small decision models on latency as well as accuracy",
+      "expected": {
+        "group": "research",
+        "repo": "local-llm"
+      }
+    },
+    {
+      "state": "The benchmark report should include a confusion matrix per task",
+      "expected": {
+        "group": "util",
+        "repo": "local-llm"
+      }
+    },
+    {
+      "state": "Add a held-out split for the message routing task",
+      "expected": {
+        "group": "util",
+        "repo": "local-llm"
+      }
+    },
+    {
+      "state": "Serve the large model with a longer context window and see if it still fits in memory",
+      "expected": {
+        "group": "research",
+        "repo": "local-llm"
+      }
+    },
+    {
+      "state": "Record which backend each model is served from and why",
+      "expected": {
+        "group": "doc",
+        "repo": "local-llm"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Wake the model on demand and unload it when idle",
+      "expected": {
+        "group": "util",
+        "repo": "local-llm"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Test a fine-tuned classifier against the decision models",
+      "expected": {
+        "group": "research",
+        "repo": "local-llm"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Switching country should reconnect the tunnel to my phone as well",
+      "expected": {
+        "group": "util",
+        "repo": "network-guard"
+      }
+    },
+    {
+      "state": "Show which country the VPN is connected to on the status page",
+      "expected": {
+        "group": "util",
+        "repo": "network-guard"
+      }
+    },
+    {
+      "state": "The tunnel drops after the laptop sleeps and does not come back",
+      "expected": {
+        "group": "util",
+        "repo": "network-guard"
+      }
+    },
+    {
+      "state": "Add a button to rotate to a faster server group",
+      "expected": {
+        "group": "util",
+        "repo": "network-guard"
+      }
+    },
+    {
+      "state": "Alert me when the public address changes unexpectedly",
+      "expected": {
+        "group": "util",
+        "repo": "network-guard"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Document the firewall zones the tunnel needs open",
+      "expected": {
+        "group": "doc",
+        "repo": "network-guard"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Check that traffic really leaves through the VPN and not the normal route",
+      "expected": {
+        "group": "sec",
+        "repo": "network-guard"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Cache a retrieved password for a few minutes so scripts do not prompt twice",
+      "expected": {
+        "group": "util",
+        "repo": "secret-vault"
+      }
+    },
+    {
+      "state": "List which tools asked for which credential entry",
+      "expected": {
+        "group": "util",
+        "repo": "secret-vault"
+      }
+    },
+    {
+      "state": "Rotate the stored application password and update everything that uses it",
+      "expected": {
+        "group": "sec",
+        "repo": "secret-vault"
+      }
+    },
+    {
+      "state": "The unlock fails if the vault file is on a network share",
+      "expected": {
+        "group": "util",
+        "repo": "secret-vault"
+      }
+    },
+    {
+      "state": "Make sure no tool writes a retrieved secret to a log",
+      "expected": {
+        "group": "sec",
+        "repo": "secret-vault"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Add an allowlist of entries a given script may read",
+      "expected": {
+        "group": "sec",
+        "repo": "secret-vault"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Describe how to set the vault up on a new machine",
+      "expected": {
+        "group": "doc",
+        "repo": "secret-vault"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Send a text message when a backup job fails",
+      "expected": {
+        "group": "util",
+        "repo": "notifier"
+      }
+    },
+    {
+      "state": "Alerts should go to every channel, not only the first one that works",
+      "expected": {
+        "group": "util",
+        "repo": "notifier"
+      }
+    },
+    {
+      "state": "Reply to a message with a status summary of the machine",
+      "expected": {
+        "group": "util",
+        "repo": "notifier"
+      }
+    },
+    {
+      "state": "Rate-limit repeated alerts about the same problem",
+      "expected": {
+        "group": "util",
+        "repo": "notifier"
+      }
+    },
+    {
+      "state": "Add a quiet-hours setting for non-urgent notices",
+      "expected": {
+        "group": "util",
+        "repo": "notifier"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The email bridge ignores messages sent from my own address",
+      "expected": {
+        "group": "util",
+        "repo": "notifier"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Document which providers need a token and where it goes",
+      "expected": {
+        "group": "doc",
+        "repo": "notifier"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The dashboard should show disk temperature history for the past week",
+      "expected": {
+        "group": "health",
+        "repo": "resource-monitor"
+      }
+    },
+    {
+      "state": "Warn me when a drive is close to full",
+      "expected": {
+        "group": "health",
+        "repo": "resource-monitor"
+      }
+    },
+    {
+      "state": "Add GPU memory use to the live panel",
+      "expected": {
+        "group": "util",
+        "repo": "resource-monitor"
+      }
+    },
+    {
+      "state": "Show which repositories take the most disk space",
+      "expected": {
+        "group": "util",
+        "repo": "resource-monitor"
+      }
+    },
+    {
+      "state": "One drive reports increasing read errors; decide whether to replace it",
+      "expected": {
+        "group": "health",
+        "repo": "resource-monitor"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The admin page should let me change how long history is kept",
+      "expected": {
+        "group": "util",
+        "repo": "resource-monitor"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Investigate why the host gets hot during nightly jobs",
+      "expected": {
+        "group": "research",
+        "repo": "resource-monitor"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Renew the internal certificate before it expires and deploy it",
+      "expected": {
+        "group": "util",
+        "repo": "web-ingress"
+      }
+    },
+    {
+      "state": "Add a new hostname for the dashboard and publish its DNS record",
+      "expected": {
+        "group": "util",
+        "repo": "web-ingress"
+      }
+    },
+    {
+      "state": "Only devices with the client certificate should reach the admin sites",
+      "expected": {
+        "group": "sec",
+        "repo": "web-ingress"
+      }
+    },
+    {
+      "state": "List every internal site with its owner and the port behind it",
+      "expected": {
+        "group": "doc",
+        "repo": "web-ingress"
+      }
+    },
+    {
+      "state": "One site returns a 502 after the proxy restarts",
+      "expected": {
+        "group": "util",
+        "repo": "web-ingress"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Serve the shared theme files from one place for every site",
+      "expected": {
+        "group": "util",
+        "repo": "web-ingress"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Review which sites are reachable without the client certificate",
+      "expected": {
+        "group": "sec",
+        "repo": "web-ingress"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Buy a second monitor arm",
+      "expected": {
+        "group": "unknown",
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Think about next year's plan",
+      "expected": {
+        "group": "unknown",
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Call the dentist",
+      "expected": {
+        "group": "unknown",
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Look into that thing from last week",
+      "expected": {
+        "group": "unknown",
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Reorganise the garage shelves",
+      "expected": {
+        "group": "unknown",
+        "repo": "unknown"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Ask about the warranty on the printer",
+      "expected": {
+        "group": "unknown",
+        "repo": "unknown"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Make a list of ideas",
+      "expected": {
+        "group": "unknown",
+        "repo": "unknown"
+      },
+      "split": "heldout"
+    }
+  ]
+}
