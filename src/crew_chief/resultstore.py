@@ -70,9 +70,13 @@ def _kind(data: Any) -> str | None:
         if isinstance(data.get("strategies"), dict):
             return "routebench"
         results = data.get("results")
-        if "schema_version" in data and isinstance(results, list) and results:
-            if all(isinstance(r, dict) and "status" in r and "model" in r for r in results):
-                return "testbench"
+        if (
+            "schema_version" in data
+            and isinstance(results, list)
+            and results
+            and all(isinstance(r, dict) and "status" in r and "model" in r for r in results)
+        ):
+            return "testbench"
         if isinstance(data.get("rows"), list) and isinstance(data.get("meta"), dict):
             return "enginebench"  # engine matrix and serving-feature runs
     return None
