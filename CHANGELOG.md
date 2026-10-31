@@ -7,6 +7,7 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- The Weekly report's Charts section has one chart per prompt and a single scale selector (throughput in tokens per second, time to first token on a log scale, or on a linear scale) instead of a throughput chart and a log-scale TTFT chart for each prompt. The choice is remembered in the browser, and with JavaScript off every view shows. Short bars no longer carry an unreadable label inside them; the value stays in the column beside the bar.
 - One strip of views per result instead of two overlapping switchers: `html · json · md · svg · bars · csv`, each name once, the current one marked, in the viewer bar and under the top bar of an HTML report. A view is the saved file when there is one and an on-demand rendering from the result store otherwise (`json` is only ever the saved data). The viewer bar no longer repeats "All files" (the strip has it), and the stored-result page no longer repeats its title.
 - Renderings open as themed pages for a browser instead of raw text: `/render/<run>/<chart>.<format>` for `md`, `csv`, `json` and `svg` (and the root URLs of saved `.md`, `.json` and `.svg` files) return a page with the top bar, theme, view strip and a raw link when the request asks for `text/html`; a script, or `?raw=1`, still gets the file. CSV is shown as a table. `/files/` stays raw.
 - Chart labels no longer overprint: the routebench chart uses the same label placement as the stored-result charts, and `scripts/rerender_reports.py` redraws saved charts drawn before it.
