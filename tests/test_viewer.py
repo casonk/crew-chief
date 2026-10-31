@@ -98,6 +98,84 @@ class JsonTests(unittest.TestCase):
         self.assertNotIn('id="data"', page)
 
 
+SVG = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" width="500" height="300" '
+    'style="color:var(--text,#fff)">%s</svg>'
+)
+
+
+class SvgTests(unittest.TestCase):
+    def clean(self, inner):
+        return viewer.clean_svg(SVG % inner)
+
+    def test_shapes_text_and_theme_tokens_are_kept(self):
+        out = self.clean(
+            '<rect width="5" height="5" style="fill:var(--surface,#000)"/>'
+            '<text x="1" y="2">label</text><title>t</title><circle r="2"/>'
+        )
+        for kept in (
+            "<rect",
+            "<text",
+            "label",
+            "<title",
+            "<circle",
+            "var(--surface,#000)",
+            "viewBox",
+        ):
+            self.assertIn(kept, out)
+
+    def test_it_scales_to_the_page(self):
+        out = self.clean("<rect/>")
+        self.assertNotIn('width="500"', out)
+        self.assertIn("max-width:100%", out)
+
+    def test_scripts_foreign_content_images_and_style_elements_are_removed(self):
+        out = self.clean(
+            "<script>alert(1)</script><foreignObject><div>x</div></foreignObject>"
+            '<image href="http://evil/x.png"/><style>svg{--surface:red}</style><rect id="ok"/>'
+        )
+        for gone in ("script", "foreignObject", "image", "<style", "evil"):
+            self.assertNotIn(gone, out)
+        self.assertIn('id="ok"', out)
+
+    def test_event_handlers_and_external_links_are_removed_but_local_ones_stay(self):
+        out = self.clean(
+            '<rect onclick="alert(1)" onmouseover="x()"/>'
+            '<a href="javascript:alert(1)"><rect/></a>'
+            '<use href="#shape"/><use href="http://evil/x.svg#a"/>'
+        )
+        self.assertNotIn("onclick", out)
+        self.assertNotIn("onmouseover", out)
+        self.assertNotIn("javascript", out)
+        self.assertNotIn("evil", out)
+        self.assertIn('href="#shape"', out)
+
+    def test_style_declarations_that_load_things_are_dropped(self):
+        out = self.clean(
+            '<rect style="fill:url(http://evil/p);stroke:var(--border,#000)"/>'
+            '<rect style="fill:url(#grad)"/><rect style="background:expression(alert(1))"/>'
+        )
+        self.assertNotIn("evil", out)
+        self.assertNotIn("expression", out)
+        self.assertIn("stroke:var(--border,#000)", out)
+        self.assertIn("url(#grad)", out)
+
+    def test_anything_that_is_not_a_usable_svg_is_refused(self):
+        self.assertIsNone(viewer.clean_svg("<html><body>x</body></html>"))
+        self.assertIsNone(viewer.clean_svg("<svg><unclosed>"))
+        self.assertIsNone(viewer.clean_svg("not xml"))
+        big = SVG % ("<text>" + "a" * viewer.MAX_SVG_BYTES + "</text>")
+        self.assertIsNone(viewer.clean_svg(big))
+
+    def test_the_page_inlines_the_drawing_and_explains_a_bad_file(self):
+        page = viewer.render("c.svg", SVG % "<rect/>", "/files/results/c.svg")
+        self.assertIn("<svg", page)
+        self.assertIn(theme.JS, page)
+        bad = viewer.render("c.svg", "not xml", "/files/results/c.svg")
+        self.assertIn("Not a usable SVG", bad)
+        self.assertIn('href="/files/results/c.svg"', bad)
+
+
 class PageTests(unittest.TestCase):
     def test_the_page_is_themed_and_links_back_and_to_the_raw_file(self):
         page = viewer.render("notes.md", "# Hi", "/files/results/notes.md")
