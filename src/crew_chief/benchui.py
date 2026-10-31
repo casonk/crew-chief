@@ -310,9 +310,11 @@ def validate_spec(spec: Any, suites: list[str]) -> dict[str, Any]:
     for runner in [*runners, *routers]:
         if not isinstance(runner, str) or not RUNNER.fullmatch(runner):
             raise BenchError(f"bad runner spec {runner!r}")
-    split = spec.get("split", "dev")
-    if split not in ("dev", "heldout", "all"):
-        raise BenchError("split must be dev, heldout or all")
+    split = {"dev": "train", "heldout": "test"}.get(
+        spec.get("split", "test"), spec.get("split", "test")
+    )
+    if split not in ("test", "train", "all"):
+        raise BenchError("split must be test, train or all")
     thresholds = spec.get("thresholds") or [0.6, 0.8, 0.95]
     if not (
         isinstance(thresholds, list)
@@ -329,6 +331,7 @@ def validate_spec(spec: Any, suites: list[str]) -> dict[str, Any]:
         "runners": list(dict.fromkeys(runners)),
         "routers": list(dict.fromkeys(routers)),
         "split": split,
+        "zero_shot": bool(spec.get("zero_shot")),
         "thresholds": [float(t) for t in thresholds],
         "private": bool(spec.get("private")),
     }
@@ -346,7 +349,16 @@ def build_steps(
     if spec["kind"] == "taskbench":
         runner_args = [a for r in spec["runners"] for a in ("--runner", r)]
         return [
-            [*base, "taskbench", path, *runner_args, "--split", spec["split"], *tail]
+            [
+                *base,
+                "taskbench",
+                path,
+                *runner_args,
+                "--split",
+                spec["split"],
+                *(["--zero-shot"] if spec.get("zero_shot") else []),
+                *tail,
+            ]
             for path in paths
         ]
     candidates = [a for r in spec["runners"] for a in ("--candidate", r)]

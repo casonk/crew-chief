@@ -176,84 +176,84 @@
       "expected": {
         "category": "Stocks"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "JPM",
       "expected": {
         "category": "Stocks"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "SCHD",
       "expected": {
         "category": "ETFs"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "iShares Core Aggregate Bond ETF",
       "expected": {
         "category": "ETFs"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Litecoin",
       "expected": {
         "category": "Crypto"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "XRP",
       "expected": {
         "category": "Crypto"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Series I savings bond",
       "expected": {
         "category": "Bonds"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "30-year Treasury bond",
       "expected": {
         "category": "Bonds"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Equinix (EQIX)",
       "expected": {
         "category": "REITs"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "American Tower",
       "expected": {
         "category": "REITs"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Water scarcity plays",
       "expected": {
         "category": "Themes"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Grid modernization and power demand",
       "expected": {
         "category": "Themes"
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }

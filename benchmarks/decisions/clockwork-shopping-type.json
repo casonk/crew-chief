@@ -335,112 +335,112 @@
       "expected": {
         "category": "Tops"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Cargo Pants",
       "expected": {
         "category": "Bottoms"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Down Parka",
       "expected": {
         "category": "Outerwear"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Shower Sandals",
       "expected": {
         "category": "Footwear"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Canvas Tote Bag",
       "expected": {
         "category": "Accessories"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Thermal Base Layer",
       "expected": {
         "category": "Underwear"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Weighted Blanket",
       "expected": {
         "category": "Bedding"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Non-Slip Bath Mat",
       "expected": {
         "category": "Bath"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Sponges 12-Pack",
       "expected": {
         "category": "Cleaning"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Floor Lamp",
       "expected": {
         "category": "Lighting"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Over-Door Shoe Organizer",
       "expected": {
         "category": "Storage"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Bookshelf",
       "expected": {
         "category": "Furniture"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Resistance Bands",
       "expected": {
         "category": "Fitness"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Sleeping Bag",
       "expected": {
         "category": "Camping"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Baseball Glove",
       "expected": {
         "category": "Sports"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Noise-Cancelling Headphones",
       "expected": {
         "category": "Electronics"
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }

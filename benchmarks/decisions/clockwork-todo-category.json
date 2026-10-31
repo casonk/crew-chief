@@ -157,70 +157,70 @@
       "expected": {
         "category": "Tasks"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Update the emergency contact form",
       "expected": {
         "category": "Tasks"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Build a workbench for the garage",
       "expected": {
         "category": "Projects"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Migrate the photo archive to a new layout",
       "expected": {
         "category": "Projects"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Return the ill-fitting jacket to the store",
       "expected": {
         "category": "Errands"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Pick up the prescription from the pharmacy",
       "expected": {
         "category": "Errands"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Save six months of expenses",
       "expected": {
         "category": "Goals"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Sleep eight hours on weeknights",
       "expected": {
         "category": "Goals"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Install a second monitor arm",
       "expected": {
         "category": "Hardware"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Replace the dead UPS battery",
       "expected": {
         "category": "Hardware"
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }

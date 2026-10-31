@@ -253,7 +253,7 @@
         "action": "2",
         "phishing": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "From: Payments\nSubject: Subscription renewed\nYour annual plan renewed for $59.00. No action is needed.",
@@ -262,7 +262,7 @@
         "action": "0",
         "phishing": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "From: Lee (Design)\nSubject: Feedback on the mockups\nI added comments to the shared file. Can you respond to the open questions by tomorrow?",
@@ -271,7 +271,7 @@
         "action": "2",
         "phishing": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "From: Outlet Store\nSubject: Last chance: free shipping\nFree shipping on orders over $25 ends tonight.",
@@ -280,7 +280,7 @@
         "action": "0",
         "phishing": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "From: Security Team <alert@account-recover.example>\nSubject: Immediate action required\nYour mailbox will be deleted. Confirm your login and recovery code at the link now.",
@@ -289,7 +289,7 @@
         "action": "0",
         "phishing": true
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "From: Account Security\nSubject: Your verification code\nYour one-time code is 482913. It expires in ten minutes.",
@@ -298,7 +298,7 @@
         "action": "1",
         "phishing": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "From: Grandma\nSubject: Thank you\nThe sweater fits perfectly. Come see us when you can.",
@@ -307,7 +307,7 @@
         "action": "1",
         "phishing": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "From: Alex (Ops)\nSubject: Maintenance window moved\nThe database maintenance now starts at 22:00 Sunday. Please confirm you can cover on-call.",
@@ -316,7 +316,7 @@
         "action": "2",
         "phishing": false
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }

@@ -33,10 +33,13 @@ read, todo, invest) plus `message-routing`, `mail-triage`, `receipt-category` an
 - **Synthetic only.** Items are generic names or well-known public titles, never
   entries from a real list, message or receipt.
 - **Every label appears in both splits.** A suite that never shows a label in
-  `heldout` cannot reveal a model that never answers it.
-- **Dev and held-out.** Keyword rules, prompts, router profiles and thresholds
-  are fitted on `dev`; a fixed configuration is scored once on `heldout`. A state
-  that appears twice in a suite is rejected so a dev answer cannot leak.
+  `test` cannot reveal a model that never answers it.
+- **Train and test.** The whole train split is always in every prompt as worked examples, and results are
+  scored on the test split only, with no test item ever shown to a model (see
+  `docs/task-benchmarks.md`). Keyword rules, router profiles and thresholds are fitted on train; a fixed
+  configuration is scored once on test. A state that appears twice in a suite is rejected so a train answer
+  cannot leak. **Results before 2026-10-31 were scored zero-shot and are not comparable with the standard
+  protocol.**
 
 ### Prompts
 
@@ -152,8 +155,8 @@ scores strategies on the **held-out** items using the measured per-call results:
 | Strategy | What it does | Latency |
 |---|---|---|
 | `single:<m>` | always ask one candidate | that call |
-| `lookup` | the candidate with the best dev accuracy for the task | that call |
-| `route:<r>` | a router picks a candidate; its options carry each candidate's dev accuracy and median latency | router call + chosen call |
+| `lookup` | the candidate with the best train accuracy for the task | that call |
+| `route:<r>` | a router picks a candidate; its options carry each candidate's train accuracy and median latency | router call + chosen call |
 | `cascade@<t>` | ask the fastest candidate; escalate to the next if its top probability is below `t` | every call made |
 | `oracle` | the fastest candidate that was right | that call; a bound, not deployable |
 
@@ -161,7 +164,7 @@ Rules that keep the comparison honest:
 
 - All strategies see the same items, and an item counts only if every candidate
   answered it.
-- Router profiles come from dev items; scoring uses held-out items.
+- Router profiles come from train items; scoring uses test items.
 - The oracle is shown but never joins the Pareto front.
 - A router is judged against the best `single:` and against `lookup`, not
   against nothing. It earns its place only if it sits on the front above both.
@@ -354,12 +357,12 @@ tie: record both and say which use case each fits.
    `baseline`. For a list, use the list's real categories and take them from the
    code that uses them (for Clockwork, the category lists in `web/app.py`), so the
    benchmark keeps testing what production sends.
-2. Cover every label in both `dev` and `heldout`; write baseline rules from `dev`
+2. Cover every label in both `train` and `test`; write baseline rules from `train`
    only. Keep items synthetic or public.
 3. Keep it to a single question if you want `routebench` to cover it
    (`routebench` rejects multi-question suites).
-4. Run the rules baseline first: a baseline near 1.00 on `dev` and low on
-   `heldout` shows the split works.
+4. Run the rules baseline first: a baseline near 1.00 on `train` and low on
+   `test` shows the split works.
 5. Add a loader check in `tests/test_taskbench.py`, list the suite in
    [task-benchmarks.md](task-benchmarks.md), and rerun the model comparison.
 6. If the source list changes (a category added), update the suite in the same

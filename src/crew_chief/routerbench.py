@@ -85,7 +85,7 @@ def model_label(spec: str) -> str:
 
 
 def item_split(task: tb.Task, index: int) -> str:
-    return task.items[index].get("split", "dev")
+    return task.items[index].get("split", "train")  # canonical after load_task: train or test
 
 
 def collect(task: tb.Task, runner) -> dict[int, Call]:
@@ -105,7 +105,7 @@ def collect(task: tb.Task, runner) -> dict[int, Call]:
 
 
 def dev_profile(task: tb.Task, calls: dict[int, Call]) -> dict[str, float | None]:
-    dev = [c for i, c in calls.items() if item_split(task, i) == "dev"]
+    dev = [c for i, c in calls.items() if item_split(task, i) == "train"]
     return {
         "accuracy": sum(c.correct for c in dev) / len(dev) if dev else None,
         "ms": statistics.median(c.ms for c in dev) if dev else None,
@@ -322,9 +322,9 @@ def run_benchmark(
         # Pair the comparison: an item counts only if every candidate answered it.
         common = set.intersection(*(set(c) for c in per_model.values()))
         dropped += len(task.items) - len(common)
-        heldout = sorted(i for i in common if item_split(task, i) == "heldout")
+        heldout = sorted(i for i in common if item_split(task, i) == "test")
         if not heldout:
-            raise RouteError(f"{task.name}: no held-out items answered by every candidate")
+            raise RouteError(f"{task.name}: no test items answered by every candidate")
         dev_profiles = {n: dev_profile(task, per_model[n]) for n in names}
         profiles_by_task[task.name] = dev_profiles
         fallback = lookup_choice(dev_profiles)

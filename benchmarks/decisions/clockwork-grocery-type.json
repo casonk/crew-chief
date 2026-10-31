@@ -346,168 +346,168 @@
       "expected": {
         "category": "Meat"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Deli Turkey Slices",
       "expected": {
         "category": "Meat"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Sea Scallops",
       "expected": {
         "category": "Seafood"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Smoked Trout",
       "expected": {
         "category": "Seafood"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Fresh Cilantro",
       "expected": {
         "category": "Produce"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Red Onions",
       "expected": {
         "category": "Produce"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Large Eggs",
       "expected": {
         "category": "Dairy"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Unsalted Butter",
       "expected": {
         "category": "Dairy"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Blueberry Muffins",
       "expected": {
         "category": "Bakery"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Pita Bread",
       "expected": {
         "category": "Bakery"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Green Tea Bags",
       "expected": {
         "category": "Beverages"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Ginger Ale",
       "expected": {
         "category": "Beverages"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Hard Cider",
       "expected": {
         "category": "Spirits"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "London Dry Gin",
       "expected": {
         "category": "Spirits"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Garlic Powder",
       "expected": {
         "category": "Spices"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Chili Flakes",
       "expected": {
         "category": "Spices"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Dijon Mustard",
       "expected": {
         "category": "Condiments"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Sriracha",
       "expected": {
         "category": "Condiments"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Black Beans Can",
       "expected": {
         "category": "Pantry"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "All-Purpose Flour",
       "expected": {
         "category": "Pantry"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Salted Pretzels",
       "expected": {
         "category": "Snacks"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Granola Bars",
       "expected": {
         "category": "Snacks"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Frozen Waffles",
       "expected": {
         "category": "Frozen"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Frozen Blueberries",
       "expected": {
         "category": "Frozen"
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }
