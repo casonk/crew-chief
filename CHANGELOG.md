@@ -11,6 +11,7 @@ uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `OllamaProvider(options=...)` sends Ollama runtime options such as `num_ctx` with every `generate` and `chat` request, so callers with long prompts are no longer truncated at the server default.
 - Seven synthetic Clockwork list-sorting suites for `crew-chief taskbench`
   (`benchmarks/decisions/clockwork-*.json`), each with dev and held-out items.
 - `taskbench` states every allowed value before the input, reports a confusion
