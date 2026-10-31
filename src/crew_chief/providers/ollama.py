@@ -103,10 +103,13 @@ class OllamaProvider:
         base_url: str = DEFAULT_BASE_URL,
         model: str = DEFAULT_MODEL,
         timeout: int = DEFAULT_TIMEOUT,
+        options: dict[str, Any] | None = None,
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.timeout = timeout
+        # Ollama runtime options (e.g. ``num_ctx``) sent with every request.
+        self.options = dict(options) if options else {}
 
     # ------------------------------------------------------------------
     # Provider protocol
@@ -115,6 +118,8 @@ class OllamaProvider:
     def generate(self, prompt: str) -> str:
         """Single-turn generation — returns plain text."""
         payload: dict[str, Any] = {"model": self.model, "prompt": prompt, "stream": False}
+        if self.options:
+            payload["options"] = self.options
         body = self._post("/api/generate", payload)
         return body.get("response") or ""
 
@@ -132,6 +137,8 @@ class OllamaProvider:
             "messages": native_messages,
             "stream": False,
         }
+        if self.options:
+            payload["options"] = self.options
 
         if tools:
             payload["tools"] = [
