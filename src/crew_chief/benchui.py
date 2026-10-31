@@ -70,9 +70,18 @@ HOME_LINK = (
 )
 
 
+CHROME_TAG = '<script src="/_portfolio/chrome.js" defer></script>'
+
+
 def with_home_link(document: bytes) -> bytes:
-    """Give a generated report page a way back to the interface, without editing the file."""
+    """Give a generated report page the portfolio top bar and a way back to the interface,
+    without editing the file."""
     text = document.decode("utf-8", "replace")
+    if CHROME_TAG not in text:
+        head = re.search(r"</head>", text, re.I)
+        text = (
+            text[: head.start()] + CHROME_TAG + text[head.start() :] if head else CHROME_TAG + text
+        )
     body = re.search(r"<body[^>]*>", text, re.I)
     if body is None:
         return (HOME_LINK + text).encode()
