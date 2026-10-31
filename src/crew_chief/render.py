@@ -71,15 +71,32 @@ def svg_style(name: str | None) -> str:
     )
 
 
-def pareto(rows: list[dict[str, Any]]) -> set[str]:
-    """Performers no other performer matches on both accuracy and speed while beating on one."""
+def metric_of(rows: list[dict[str, Any]]) -> str | None:
+    """What the run measures: ``accuracy`` for a benchmark with right answers, ``tps`` (tokens per
+    second) for a speed run, or None when there is nothing to plot."""
+    for key in ("accuracy", "tps"):
+        if any(r.get(key) is not None for r in rows):
+            return key
+    return None
+
+
+def nice_step(span: float, ticks: int = 5) -> float:
+    """A round tick step (1, 2 or 5 times a power of ten) giving about ``ticks`` ticks over ``span``."""
+    raw = span / ticks
+    power = 10 ** math.floor(math.log10(raw))
+    return next(m * power for m in (1, 2, 5, 10) if m * power >= raw)
+
+
+def pareto(rows: list[dict[str, Any]], key: str = "accuracy") -> set[str]:
+    """Performers no other performer matches on both the metric (higher is better) and latency
+    (lower is better) while beating on one."""
     front = set()
     for r in rows:
         dominated = any(
             o is not r
-            and o["accuracy"] >= r["accuracy"]
+            and o[key] >= r[key]
             and o["ms_mean"] <= r["ms_mean"]
-            and (o["accuracy"] > r["accuracy"] or o["ms_mean"] < r["ms_mean"])
+            and (o[key] > r[key] or o["ms_mean"] < r["ms_mean"])
             for o in rows
         )
         if not dominated:
@@ -117,24 +134,38 @@ def _svg_open(width: int, height: int, standalone: bool, name: str | None) -> li
 def scatter_svg(
     rows: list[dict[str, Any]], standalone: bool = True, name: str | None = None
 ) -> str:
-    """Accuracy (y) against mean latency per item (x, log scale), one dot per performer."""
-    rows = [r for r in rows if r["accuracy"] is not None and r["ms_mean"] is not None]
+    """The run's metric (y: accuracy, or tokens per second for a speed run) against mean latency
+    (x, log scale), one dot per performer."""
+    key = metric_of(rows)
+    rows = [r for r in rows if key and r.get(key) is not None and r["ms_mean"] is not None]
     if not rows:
-        raise RenderError("no accuracy and latency to plot in this run")
+        raise RenderError("no accuracy or speed together with latency to plot in this run")
     width, height, left, right, top, bottom = 760, 420, 56, 170, 20, 48
     xs = [max(r["ms_mean"], 1.0) for r in rows]
-    ys = [r["accuracy"] for r in rows]
+    ys = [r[key] for r in rows]
     lo, hi = math.log10(min(xs) * 0.8), math.log10(max(xs) * 1.25)
     if hi - lo < 0.3:
         lo, hi = lo - 0.15, hi + 0.15
-    y_lo = max(0.0, math.floor((min(ys) - 0.05) * 20) / 20)
-    front = pareto(rows)
+    if key == "accuracy":
+        y_lo, y_hi, step, fmt = max(0.0, math.floor((min(ys) - 0.05) * 20) / 20), 1.0, 0.05, ".2f"
+        y_title, x_title = (
+            "accuracy (higher is better)",
+            "mean ms per item (log scale; lower is faster)",
+        )
+    else:
+        step = nice_step(max(ys) * 1.1)
+        y_lo, y_hi, fmt = 0.0, step * math.ceil(max(ys) * 1.05 / step), ".0f"
+        y_title, x_title = (
+            "tokens / second (higher is faster)",
+            "mean time to first token, ms (log scale)",
+        )
+    front = pareto(rows, key)
 
     def px(ms: float) -> float:
         return left + (math.log10(max(ms, 1.0)) - lo) / (hi - lo) * (width - left - right)
 
-    def py(acc: float) -> float:
-        return top + (1 - (acc - y_lo) / (1 - y_lo)) * (height - top - bottom)
+    def py(value: float) -> float:
+        return top + (1 - (value - y_lo) / (y_hi - y_lo)) * (height - top - bottom)
 
     out = _svg_open(width, height, standalone, name)
     out.append(
@@ -143,18 +174,19 @@ def scatter_svg(
     )
     out.append(
         f'<text x="{left + (width - left - right) / 2}" y="{height - 10}" text-anchor="middle">'
-        "mean ms per item (log scale; lower is faster)</text>"
+        f"{x_title}</text>"
     )
     mid = top + (height - top - bottom) / 2
     out.append(
-        f'<text x="14" y="{mid}" text-anchor="middle" transform="rotate(-90 14 {mid})">'
-        "accuracy (higher is better)</text>"
+        f'<text x="14" y="{mid}" text-anchor="middle" transform="rotate(-90 14 {mid})">{y_title}</text>'
     )
-    for k in range(round((1 - y_lo) / 0.05) + 1):
-        acc = y_lo + k * 0.05
-        out.append(f'<text x="{left - 6}" y="{py(acc) + 4:.1f}" text-anchor="end">{acc:.2f}</text>')
+    for k in range(round((y_hi - y_lo) / step) + 1):
+        value = y_lo + k * step
         out.append(
-            f'<line x1="{left}" x2="{width - right}" y1="{py(acc):.1f}" y2="{py(acc):.1f}" '
+            f'<text x="{left - 6}" y="{py(value) + 4:.1f}" text-anchor="end">{value:{fmt}}</text>'
+        )
+        out.append(
+            f'<line x1="{left}" x2="{width - right}" y1="{py(value):.1f}" y2="{py(value):.1f}" '
             'style="stroke:var(--border,#2e3250);stroke-opacity:0.5"/>'
         )
     for tick in (1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000):
@@ -164,14 +196,19 @@ def scatter_svg(
             )
     placed: list[tuple[float, float, float]] = []  # label boxes already drawn: (x0, x1, y)
     for r in sorted(rows, key=lambda r: r["ms_mean"]):
-        x, y, on_front = px(r["ms_mean"]), py(r["accuracy"]), r["performer"] in front
+        x, y, on_front = px(r["ms_mean"]), py(r[key]), r["performer"] in front
         colour = "var(--accent,#5b7fff)" if on_front else "var(--muted,#8890b0)"
         fill = colour if on_front else "none"
         out.append(
             f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{5 if on_front else 4}" '
             f'style="fill:{fill};stroke:{colour}" stroke-width="1.5">'
-            f"<title>{html.escape(r['performer'])}: {r['accuracy']:.3f} accuracy, "
-            f"{r['ms_mean']:.0f} ms</title></circle>"
+            f"<title>{html.escape(r['performer'])}: "
+            + (
+                f"{r['accuracy']:.3f} accuracy, "
+                if key == "accuracy"
+                else f"{r['tps']:.1f} tok/s, "
+            )
+            + f"{r['ms_mean']:.0f} ms</title></circle>"
         )
         x0, x1 = x + 8, x + 8 + 6.2 * len(r["performer"])
         label_y = nudge_label(placed, x0, x1, y + 4)
@@ -181,24 +218,33 @@ def scatter_svg(
 
 
 def bars_svg(rows: list[dict[str, Any]], standalone: bool = True, name: str | None = None) -> str:
-    """Accuracy per performer as horizontal bars, with the mean latency beside each."""
-    rows = [r for r in rows if r["accuracy"] is not None]
+    """One horizontal bar per performer: accuracy (0 to 1), or tokens per second for a speed run,
+    with the mean latency beside it."""
+    key = metric_of(rows)
+    rows = sorted((r for r in rows if key and r.get(key) is not None), key=lambda r: -r[key])
     if not rows:
-        raise RenderError("no accuracy to plot in this run")
-    row_h, left, right, top = 26, 190, 90, 16
+        raise RenderError("no accuracy or speed to plot in this run")
+    row_h, left, right, top = 26, 190, 150 if key == "tps" else 90, 16
     width, height = 760, top + row_h * len(rows) + 28
     span = width - left - right
+    if key == "accuracy":
+        top_value, step, fmt = 1.0, 0.2, ".1f"
+    else:
+        step = nice_step(max(r[key] for r in rows))
+        top_value, fmt = step * math.ceil(max(r[key] for r in rows) / step), ".0f"
     out = _svg_open(width, height, standalone, name)
-    for k in range(0, 11, 2):
-        x = left + span * k / 10
+    for k in range(round(top_value / step) + 1):
+        x = left + span * (k * step) / top_value
         out.append(
             f'<line x1="{x:.1f}" x2="{x:.1f}" y1="{top}" y2="{height - 28}" '
             'style="stroke:var(--border,#2e3250);stroke-opacity:0.6"/>'
         )
-        out.append(f'<text x="{x:.1f}" y="{height - 12}" text-anchor="middle">{k / 10:.1f}</text>')
+        out.append(
+            f'<text x="{x:.1f}" y="{height - 12}" text-anchor="middle">{k * step:{fmt}}</text>'
+        )
     for i, r in enumerate(rows):
         y = top + i * row_h
-        w = span * max(0.0, min(1.0, r["accuracy"]))
+        w = span * max(0.0, min(1.0, r[key] / top_value))
         out.append(
             f'<text x="{left - 8}" y="{y + 16}" text-anchor="end">{html.escape(r["performer"])}</text>'
         )
@@ -207,7 +253,8 @@ def bars_svg(rows: list[dict[str, Any]], standalone: bool = True, name: str | No
             'style="fill:var(--accent,#5b7fff)"/>'
         )
         ms = r["ms_mean"]
-        label = f"{r['accuracy']:.3f}" + (f" · {ms:.0f} ms" if ms is not None else "")
+        value = f"{r['accuracy']:.3f}" if key == "accuracy" else f"{r['tps']:.1f} tok/s"
+        label = value + (f" · {ms:.0f} ms" if ms is not None else "")
         out.append(f'<text x="{left + w + 6:.1f}" y="{y + 16}">{label}</text>')
     out.append("</svg>")
     return "\n".join(out) + "\n"
@@ -216,9 +263,18 @@ def bars_svg(rows: list[dict[str, Any]], standalone: bool = True, name: str | No
 # -- tables ------------------------------------------------------------------
 
 _COLUMNS = {
-    "table": ["performer", "n", "accuracy", "macro_f1", "ms_mean", "ms_median", "ms_p90"],
-    "tasks": ["task", "performer", "n", "accuracy", "macro_f1", "ms_mean"],
+    "table": ["performer", "n", "accuracy", "macro_f1", "tps", "ms_mean", "ms_median", "ms_p90"],
+    "tasks": ["task", "performer", "n", "accuracy", "macro_f1", "tps", "ms_mean"],
 }
+
+
+def _columns(rows: list[dict[str, Any]], chart: str) -> list[str]:
+    """A table's columns, without those that are empty for every row (a speed run has no accuracy)."""
+    return [
+        c
+        for c in _COLUMNS[chart]
+        if c in ("performer", "task") or any(r.get(c) is not None for r in rows)
+    ]
 
 
 def _cell(value: Any, column: str = "") -> str:
@@ -270,10 +326,10 @@ def _page(conn: sqlite3.Connection, run_id: int, name: str, source: str, extra: 
     for chart in (scatter_svg, bars_svg):
         with contextlib.suppress(RenderError):  # a run with no latency has no scatter
             parts.append(chart(perf, standalone=False))
-    parts.append("<h2>Performers</h2>" + _table(perf, _COLUMNS["table"], "html"))
+    parts.append("<h2>Performers</h2>" + _table(perf, _columns(perf, "table"), "html"))
     by_task = resultstore.tasks(conn, run_id)
     if by_task:
-        parts.append("<h2>By task</h2>" + _table(by_task, _COLUMNS["tasks"], "html"))
+        parts.append("<h2>By task</h2>" + _table(by_task, _columns(by_task, "tasks"), "html"))
     return viewer.page(
         name, f'<div class="doc">{"".join(parts)}</div>', f"/files/results/{source}", extra
     )
@@ -302,4 +358,4 @@ def render(
     if fmt == "html":
         page = _page(conn, run_id, run["source"], run["source"], extra)
         return page.encode(), CONTENT_TYPES["html"]
-    return _table(rows, _COLUMNS[chart], fmt).encode(), CONTENT_TYPES[fmt]
+    return _table(rows, _columns(rows, chart), fmt).encode(), CONTENT_TYPES[fmt]

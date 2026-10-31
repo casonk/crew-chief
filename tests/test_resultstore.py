@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import sqlite3
 import tempfile
@@ -32,7 +33,13 @@ def taskbench_result(runner="fast", accuracy=0.8, ms=100.0, task="mail"):
         "latency_ms_median": ms,
         "latency_ms_p90": ms * 1.5,
         "questions": {
-            "kind": {"accuracy": accuracy, "invalid": 0, "n": 4, "brier": None, "confusion": CONF}
+            "kind": {
+                "accuracy": accuracy,
+                "invalid": 0,
+                "n": 4,
+                "brier": None,
+                "confusion": copy.deepcopy(CONF),
+            }
         },
         "rows": [
             {
@@ -71,6 +78,53 @@ ROUTEBENCH = {
             "per_task": {"t1": {"n": 10, "accuracy": 0.95, "macro_f1": 0.9, "ms_mean": 400.0}},
         },
     },
+}
+
+
+TESTBENCH = {
+    "schema_version": 2,
+    "created_at": "2026-10-22T00:00:00+00:00",
+    "results": [
+        {"model": "a", "task": "t1", "status": "passed", "agent_seconds": 10.0, "trial": 1},
+        {"model": "a", "task": "t1", "status": "failed", "agent_seconds": 30.0, "trial": 2},
+        {"model": "a", "task": "t2", "status": "timeout", "agent_seconds": 120.0, "trial": 1},
+        {"model": "b", "task": "t1", "status": "passed", "agent_seconds": 5.0, "trial": 1},
+    ],
+}
+SPEED = [
+    {
+        "model": "fast",
+        "prompt_name": "p1",
+        "ttft_ms": 20.0,
+        "tokens_per_sec": 200.0,
+        "total_tokens": 9,
+        "error": None,
+    },
+    {
+        "model": "fast",
+        "prompt_name": "p2",
+        "ttft_ms": 40.0,
+        "tokens_per_sec": 180.0,
+        "total_tokens": 9,
+        "error": None,
+    },
+    {
+        "model": "slow",
+        "prompt_name": "p1",
+        "ttft_ms": 900.0,
+        "tokens_per_sec": 30.0,
+        "total_tokens": 9,
+        "error": None,
+    },
+    {"model": "gone", "prompt_name": "p1", "ttft_ms": 0, "tokens_per_sec": 0, "error": "timeout"},
+]
+ENGINE = {
+    "meta": {"gpu": "x"},
+    "settings": {"runs": 3},
+    "rows": [
+        {"model": "m", "config": "ollama", "gen_tps": 100.0, "gpu_mib": 3000, "windows": [[1, 2]]},
+        {"model": "m", "config": "llama.cpp", "gen_tps": 150.0, "gpu_mib": 3100},
+    ],
 }
 
 
@@ -178,6 +232,77 @@ class ImportTests(StoreCase):
         self.assertTrue({"runs", "measures", "answers"} <= names)
 
 
+class MoreKindsTests(StoreCase):
+    def imported(self, name, data):
+        self.write(name, data)
+        resultstore.import_dir(self.conn, self.dir)
+        return resultstore.run_for_source(self.conn, name)
+
+    def test_a_test_bench_result_gives_pass_rates_trial_answers_and_agent_time(self):
+        run = self.imported("test-bench-x.json", TESTBENCH)
+        perf = {p["performer"]: p for p in resultstore.performers(self.conn, run)}
+        self.assertAlmostEqual(perf["a"]["accuracy"], 1 / 3)  # 1 pass in 3 trials
+        self.assertEqual(perf["b"]["accuracy"], 1.0)
+        self.assertEqual(perf["b"]["ms_mean"], 5000.0)  # agent seconds as milliseconds
+        outcomes = self.conn.execute(
+            "SELECT value FROM answers WHERE performer = 'a' ORDER BY item"
+        ).fetchall()
+        self.assertEqual([o[0] for o in outcomes], ["passed", "failed", "timeout"])
+        self.assertEqual(self.conn.execute("SELECT kind FROM runs").fetchone()[0], "testbench")
+
+    def test_a_speed_run_keeps_tokens_per_second_and_ttft_and_leaves_out_failed_prompts(self):
+        run = self.imported("bench-1.json", SPEED)
+        perf = {p["performer"]: p for p in resultstore.performers(self.conn, run)}
+        self.assertEqual(perf["fast"]["tps"], 190.0)  # mean of 200 and 180
+        self.assertEqual(perf["fast"]["ms_mean"], 30.0)
+        self.assertIsNone(perf["gone"]["tps"])  # the errored prompt has no speed
+        self.assertIsNone(perf["fast"]["accuracy"])
+        self.assertEqual(
+            [p["performer"] for p in resultstore.performers(self.conn, run)][:2], ["fast", "slow"]
+        )
+        by_prompt = {
+            (t["task"], t["performer"]): t["tps"] for t in resultstore.tasks(self.conn, run)
+        }
+        self.assertEqual(by_prompt[("p1", "slow")], 30.0)
+
+    def test_an_engine_run_labels_each_row_by_model_and_configuration(self):
+        run = self.imported("engine-matrix-1.json", ENGINE)
+        perf = {p["performer"]: p["tps"] for p in resultstore.performers(self.conn, run)}
+        self.assertEqual(perf, {"m · ollama": 100.0, "m · llama.cpp": 150.0})
+        extra = self.conn.execute(
+            "SELECT extra FROM measures WHERE performer = 'm · ollama'"
+        ).fetchone()[0]
+        self.assertEqual(
+            json.loads(extra), {"gpu_mib": 3000}
+        )  # other fields are kept, windows dropped
+
+    def test_every_kind_is_detected_and_unrelated_json_is_still_skipped(self):
+        self.write("a.json", TESTBENCH)
+        self.write("b.json", SPEED)
+        self.write("c.json", ENGINE)
+        self.write("d.json", {"results": [{"x": 1}]})  # looks similar but is not a benchmark
+        self.write("e.json", {"rows": [1], "other": 2})
+        counts = resultstore.import_dir(self.conn, self.dir)
+        self.assertEqual((counts["new"], counts["skipped"]), (3, 2))
+
+    def test_an_older_store_is_rebuilt_when_the_schema_changes(self):
+        path = self.dir / "store.sqlite"
+        old = sqlite3.connect(path)
+        old.executescript(
+            "CREATE TABLE runs (id INTEGER PRIMARY KEY, source TEXT); INSERT INTO runs VALUES (1, 'x');"
+        )
+        old.close()  # user_version 0: the first schema
+        conn = resultstore.connect(path)
+        self.addCleanup(conn.close)
+        self.assertEqual(
+            conn.execute("PRAGMA user_version").fetchone()[0], resultstore.SCHEMA_VERSION
+        )
+        self.assertEqual(conn.execute("SELECT COUNT(*) FROM runs").fetchone()[0], 0)
+        columns = {r[1] for r in conn.execute("PRAGMA table_info(measures)")}
+        self.assertTrue({"tps", "extra"} <= columns)
+        resultstore.connect(path).close()  # a current store is left alone
+
+
 class RenderTests(StoreCase):
     def setUp(self):
         super().setUp()
@@ -265,6 +390,39 @@ class RenderTests(StoreCase):
             self.conn, self.route, "table", "html", None, '<span class="fmt">T</span>'
         )
         self.assertIn('<span class="fmt">T</span>', body.decode())
+
+    def test_a_speed_run_draws_tokens_per_second_and_drops_the_empty_accuracy_columns(self):
+        self.write("bench-1.json", SPEED)
+        resultstore.import_dir(self.conn, self.dir)
+        run = resultstore.run_for_source(self.conn, "bench-1.json")
+        scatter = self.get(run, "scatter", "svg")[0]
+        ET.fromstring(scatter)
+        self.assertIn("tokens / second", scatter)
+        self.assertIn("fast", scatter)
+        bars = self.get(run, "bars", "svg")[0]
+        ET.fromstring(bars)
+        self.assertIn("tok/s", bars)
+        header = self.get(run, "table", "csv")[0].splitlines()[0]
+        self.assertEqual(header, "performer,n,tps,ms_mean")  # no accuracy, macro_f1, median, p90
+
+    def test_a_run_with_speed_but_no_latency_still_has_bars_and_tables(self):
+        self.write("engine-matrix-1.json", ENGINE)
+        resultstore.import_dir(self.conn, self.dir)
+        run = resultstore.run_for_source(self.conn, "engine-matrix-1.json")
+        with self.assertRaises(render.RenderError):
+            self.get(run, "scatter", "svg")
+        self.assertIn("150.0 tok/s", self.get(run, "bars", "svg")[0])
+        self.assertIn("m · llama.cpp", self.get(run, "table", "md")[0])
+
+    def test_the_pareto_front_works_on_speed_too(self):
+        rows = [
+            {"performer": "fast", "tps": 200.0, "ms_mean": 20.0},
+            {"performer": "slowfirst", "tps": 300.0, "ms_mean": 900.0},
+            {"performer": "worse", "tps": 100.0, "ms_mean": 500.0},
+        ]
+        self.assertEqual(render.pareto(rows, "tps"), {"fast", "slowfirst"})
+        self.assertEqual(render.metric_of(rows), "tps")
+        self.assertEqual(render.nice_step(1000), 200)
 
     def test_a_request_for_something_that_cannot_be_drawn_is_an_error(self):
         for chart, fmt in (("scatter", "csv"), ("nope", "svg"), ("table", "svg")):
