@@ -27,10 +27,13 @@ def load_script(name: str):
 class VendoredThemeTests(unittest.TestCase):
     @unittest.skipUnless(SOURCE.is_dir(), "traction-control is not next to this repository")
     def test_vendored_files_match_traction_control(self):
-        for name in ("portfolio-theme.css", "portfolio-theme.js"):
+        for name, source in (
+            ("theme.css", "portfolio-theme.css"),
+            ("theme.js", "portfolio-theme.js"),
+        ):
             self.assertEqual(
                 (theme.DIR / name).read_text(encoding="utf-8"),
-                (SOURCE / name).read_text(encoding="utf-8"),
+                (SOURCE / source).read_text(encoding="utf-8"),
                 f"{name} is stale; run traction-control/scripts/render_portfolio_theme.py "
                 "--install src/crew_chief/theme",
             )

@@ -46,7 +46,7 @@ crew-chief = "crew_chief.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-crew_chief = ["theme/*.css", "theme/*.js"]
+crew_chief = ["portfolio/*.css", "portfolio/*.js", "portfolio/*.sha256"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
