@@ -27,11 +27,12 @@ Mark items `[x]` when complete and move them to Done.
   still write themed HTML and SVG at generation time (and `scripts/rerender_reports.py` exists to refresh them).
   Once the store covers their data, serve them from `/render/` and stop writing static copies.
 
-- [ ] [manual:2026-10-31] **Re-test two weak spots of the backlog-triage suite.** `clef-flash` answers a repository
-  for every vague entry instead of `unknown` (0.00 on that kind), and entries that name two repositories are
-  the hardest kind for every runner (best 0.83). Add more of both kinds (the hard kinds hold 5 to 7 entries
-  each), re-run the four decision models, and check whether a prompt or a gate fixes `clef-flash` before
-  Clockwork's default model changes. See `results/backlog-triage-v2-20261031.md`.
+- [ ] [manual:2026-10-31] **Grow the hard kinds of the backlog-triage suite.** A second run was identical, so
+  repeating adds nothing; what is missing is more entries. `clef-flash` answers a repository for every vague
+  entry but with low confidence, and the 0.6 gate files all six as `unknown` at a 6% cost
+  (`results/backlog-triage-clef-flash-vague-20261031.md`). Add more vague entries and entries that name two
+  repositories (the hardest kind, best 0.83), re-run the four decision models, and check that the gate
+  still covers `clef-flash` before Clockwork's default model changes.
 
 - [ ] [manual:2026-10-30] **Grow the Clockwork sorting suites and repeat the runs.**
   The held-out split has 88 items across seven suites, so differences of a few
