@@ -242,6 +242,35 @@ Speed is half relative (against these nine strategies) and half absolute. For
 it relative, accuracy decides, and routing trails because it pays a second call
 for no accuracy gain.
 
+## Backlog triage: sorting an entry into a group and a repository
+
+`benchmarks/decisions/backlog-triage.json` (91 synthetic entries, 12 stand-in repositories with one-line
+descriptions plus `unknown`, 6 groups plus `unknown`) models Clockwork's To Code form: a new entry arrives with
+no group or repository and a decision model must pick both or admit it does not know. Results on held-out
+entries (`results/backlog-triage-gating-20261031.md`, raw runs beside it):
+
+| Model | repo accuracy | group accuracy | median ms per entry |
+|---|---|---|---|
+| `clef` | 0.82 | **0.74** | 897 |
+| `clef-flash` | **0.82** | 0.54 | 189 |
+| `nimble` | 0.74 | 0.49 | 211 |
+| `tev1` | 0.51 | 0.28 | 140 |
+| `qwen2.5-coder:7b` (chat) | 0.46 | 0.31 | 167 |
+
+- **The repository is a good fit for a decision model** when each repository comes with a short description.
+  `clef-flash` matches `clef` at a fifth of the latency. Gated at confidence 0.6 it answers 74% of entries and is
+  wrong on 8%; the rest become `unknown`.
+- **The group is the hard part.** Only `clef` is usable, and only gated: at 0.6 it answers 59% and is wrong on
+  8%. The groups overlap (a security fix is also a fix), so expect `unknown` often, or a stronger model later.
+- Clockwork's auto-sort uses `clef-flash` for the repository and `clef` for the group at 0.6, and files
+  anything unsure as `unknown` (PR in Clockwork).
+
+Limits: the keyword baseline scores 0.97 on groups and 0.82 on repositories, higher than every model. The
+entries share vocabulary (I wrote them and the rules together), so keyword rules look better here than they
+would on real, messier entries; treat the baseline as an upper bound, not a floor. Real repository names are not
+self-describing, so the result assumes Clockwork supplies each repository's description (it reads
+`.github/repository.toml`). Single run, 39 held-out entries: a point is one entry.
+
 ## Recommendation
 
 For sorting Clockwork list items into categories:

@@ -10,6 +10,11 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
+- [ ] [manual:2026-10-31] **Make the backlog-triage suite harder.** The keyword baseline beats every model on it
+  (0.97 group, 0.82 repo) because the entries share vocabulary. Add entries with typos, two repositories in one
+  sentence, vague wording and entries that name no repository, then re-run the four decision models and report
+  whether a model beats the keyword rules. See `docs/decision-model-selection.md`.
+
 - [ ] [manual:2026-10-30] **Grow the Clockwork sorting suites and repeat the runs.**
   The held-out split has 88 items across seven suites, so differences of a few
   points are single items, and a repeated run moved some scores by up to 5
