@@ -1,0 +1,18 @@
+[[jobs]]
+name = "crew-chief-benchui"
+description = "crew-chief bench interface, behind the shared Caddy at bench.crew-chief.internal"
+scope = "user"
+service_type = "simple"
+working_directory = "__REPO_ROOT__"
+exec_start = "__REPO_ROOT__/scripts/run_benchui.sh"
+after = ["network.target"]
+restart = "on-failure"
+restart_sec = "5"
+standard_output = "journal"
+standard_error = "journal"
+service_install_wanted_by = ["default.target"]
+
+[jobs.environment]
+PYTHONPATH = "__REPO_ROOT__/src"
+CREW_CHIEF_BENCH_HOSTS = "bench.crew-chief.internal"
+TMPDIR = "/run/user/1000"

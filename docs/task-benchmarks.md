@@ -44,6 +44,34 @@ from the dev items. The gap between a runner's dev and held-out accuracy is the
 overfit: the keyword baseline on `receipt-category` scores 1.00 on dev and 0.38 on
 held-out category.
 
+## Clockwork list sorting
+
+Clockwork's lists are categorized, and its AI categorize actions ask a local model
+to sort items into those categories. The `clockwork-*` suites measure how well a
+model does that, one suite per list, each with a single `category` choice
+question whose options are the list's real categories:
+
+| Suite | Labels |
+|---|---|
+| `clockwork-grocery-type` | 12 grocery types (Meat ... Frozen), as in `_ai_categorize` |
+| `clockwork-shopping-type` | 16 consumer-goods types (Tops ... Electronics) |
+| `clockwork-watch-category` | Movies, TV Shows, Anime, Documentaries |
+| `clockwork-listen-category` | Albums, Podcasts, Audiobooks, Radio, Artists |
+| `clockwork-read-category` | Books, Articles, Papers, Comics |
+| `clockwork-todo-category` | Tasks, Projects, Errands, Goals, Hardware |
+| `clockwork-invest-category` | Stocks, ETFs, Crypto, Bonds, REITs, Themes |
+
+Every label has dev and held-out items. Items are generic names or well-known
+public titles, never entries from a real list; keep it that way. If a Clockwork
+list gains a category or type, add it to the matching suite so the benchmark
+keeps testing what the list uses.
+
+```bash
+for t in benchmarks/decisions/clockwork-*.json; do
+  crew-chief taskbench "$t" --split all --runner rules --runner ollama:qwen2.5-coder:7b
+done
+```
+
 ## Runners
 
 | Runner | How it answers | Probabilities |
@@ -54,9 +82,84 @@ held-out category.
 | `systemone:<model>` | local decision model via Ollama's `/v1/systemone` (Nimble, Tev1, Clef) | yes, from the model |
 | `jev[:<model>]` | TypeSafe's hosted API (`TYPESAFE_API_KEY`) | yes, calibrated by the vendor |
 
+Prompts state each question and every allowed value **before** the input (for
+`ollama:` as a system message, so the prefix is also cacheable), then show the
+item. On the Clockwork watch suite this order took `qwen2.5-coder:7b` from 0.45
+to 0.80 accuracy against input-first prompting, so results from before
+2026-10-30 are not comparable.
+
 Metrics: accuracy and invalid answers per question, median and p90 latency per
 item, and the multi-class Brier score where probabilities exist (lower is
 better; it rewards being confident only when right).
+
+## Aggregate score
+
+`taskbench` and `routebench` add a `score: <profile>` column that combines
+accuracy and latency under a scoring profile (`config/scoring-profiles.toml`:
+`interactive`, `batch`). The score ranks; the Pareto front, confusion matrices and
+sensitivity table decide whether a ranking means anything. See
+[decision-model-selection.md](decision-model-selection.md#aggregate-score).
+`--profiles PATH` selects another file and `--no-score` omits the columns. Speed is
+partly relative to the fastest and slowest performer in the same report. Tune
+profiles and start runs from the browser with `crew-chief benchui`.
+
+## Theme
+
+The reports (`latest.html`, `test-bench-latest.html`), the routebench chart and the
+bench interface use the portfolio system themes. They follow the system light or
+dark setting until you pick one in the switcher (Midnight, Daylight, Ember, High
+contrast), or add `?theme=ember` to a URL. The colours are defined in
+traction-control (`docs/system-theme.md`). Generator CSS must use `var(--token)`
+names, never literal colours; `tests/test_theme.py` enforces it and checks the
+vendored copy in `src/crew_chief/theme/` against the source. Refresh it with
+`python3 ../traction-control/scripts/render_portfolio_theme.py --install src/crew_chief/theme`.
+A standalone chart SVG cannot read the page's theme and falls back to Midnight; it
+follows the theme when inlined in a page.
+
+## Confusion matrices
+
+Each result file also carries, for every runner and question, a confusion matrix:
+rows are the expected label, columns what the runner answered, so the diagonal
+is correct and each off-diagonal cell names a specific mix-up (for example
+Documentaries sorted as Movies). Recall per row and precision per column sit on
+the matrix; an `invalid` column appears when an answer fell outside the allowed
+values. The JSON result keeps the raw counts and per-label precision, recall and
+F1 under `questions.<id>.confusion`. Read the matrix before the accuracy: it
+shows whether errors are spread out or concentrated in one confusable pair.
+
+## Choosing a model: quality against time to inference
+
+A decision model's accuracy is only half the answer; each call costs time, and
+using one model to choose another costs a second call. `crew-chief routebench`
+scores that trade-off directly, on the single-question suites:
+
+```bash
+crew-chief routebench benchmarks/decisions/clockwork-*.json \
+  --router systemone:clef-flash \
+  --candidate systemone:tev1 --candidate systemone:clef-flash \
+  --candidate systemone:nimble --candidate systemone:clef
+```
+
+Every candidate runs once on every item. Then these strategies are scored on the
+**held-out** items, each by accuracy, macro-F1 (from its confusion matrix) and
+mean, median and p90 latency per item:
+
+| Strategy | What it does |
+|---|---|
+| `single:<m>` | always ask one candidate: the baselines a router must beat |
+| `lookup` | the candidate with the best dev accuracy for the task; no extra call |
+| `route:<router>` | a router model picks a candidate; the options carry each candidate's dev accuracy and median latency, so it chooses from evidence, not names. Cost: router call + chosen call |
+| `cascade@<t>` | ask the fastest candidate; if its top probability is under `t`, ask the next fastest. The candidate's own probabilities are the prior that decides whether to escalate |
+| `oracle` | the fastest candidate that was right; an unreachable bound |
+
+The report (`results/routebench-<stamp>.{md,svg,json}`) has a table sorted by mean
+latency with a `*` on every strategy that no other beats on both accuracy and
+latency (the Pareto front), an SVG scatter of accuracy against log latency, the
+per-task accuracy, the router's confusion matrix against the *fastest correct*
+candidate, and the routed answers' per-task confusion matrices. A strategy's
+latency is composed from the measured per-call times, never re-run. Profiles shown
+to the router come from dev items only. A router must beat both `lookup` and the
+best `single:` on the Pareto front to be worth its extra call.
 
 ## Decision models and Jev
 

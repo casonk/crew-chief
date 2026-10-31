@@ -1,0 +1,218 @@
+{
+  "name": "clockwork-listen-category",
+  "description": "Sort an item into a Clockwork To Listen category. Names are well-known public works and generic descriptions, not entries from any real list. Baseline rules were written against the dev split only.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which To Listen category does this item belong to?",
+      "criteria": {
+        "Albums": "A music album or record",
+        "Podcasts": "A recurring spoken-word audio show",
+        "Audiobooks": "A book narrated in audio form",
+        "Radio": "A radio station, stream or broadcast",
+        "Artists": "A musician or band to explore, with no specific album named"
+      }
+    }
+  },
+  "baseline": {
+    "category": {
+      "default": "Artists",
+      "rules": [
+        {
+          "if_any": [
+            "(album)",
+            "blue",
+            "computer"
+          ],
+          "then": "Albums"
+        },
+        {
+          "if_any": [
+            "podcast",
+            "history",
+            "money"
+          ],
+          "then": "Podcasts"
+        },
+        {
+          "if_any": [
+            "audiobook",
+            "narrated",
+            "(audio)"
+          ],
+          "then": "Audiobooks"
+        },
+        {
+          "if_any": [
+            "stream",
+            "radio",
+            "fm"
+          ],
+          "then": "Radio"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "Abbey Road (album)",
+      "expected": {
+        "category": "Albums"
+      }
+    },
+    {
+      "state": "Kind of Blue",
+      "expected": {
+        "category": "Albums"
+      }
+    },
+    {
+      "state": "OK Computer",
+      "expected": {
+        "category": "Albums"
+      }
+    },
+    {
+      "state": "Radiolab podcast",
+      "expected": {
+        "category": "Podcasts"
+      }
+    },
+    {
+      "state": "Hardcore History",
+      "expected": {
+        "category": "Podcasts"
+      }
+    },
+    {
+      "state": "Planet Money",
+      "expected": {
+        "category": "Podcasts"
+      }
+    },
+    {
+      "state": "Project Hail Mary audiobook",
+      "expected": {
+        "category": "Audiobooks"
+      }
+    },
+    {
+      "state": "Dune, narrated by Scott Brick",
+      "expected": {
+        "category": "Audiobooks"
+      }
+    },
+    {
+      "state": "Atomic Habits (audio)",
+      "expected": {
+        "category": "Audiobooks"
+      }
+    },
+    {
+      "state": "KEXP live stream",
+      "expected": {
+        "category": "Radio"
+      }
+    },
+    {
+      "state": "BBC Radio 6 Music",
+      "expected": {
+        "category": "Radio"
+      }
+    },
+    {
+      "state": "Local jazz FM 91.7",
+      "expected": {
+        "category": "Radio"
+      }
+    },
+    {
+      "state": "Nina Simone discography",
+      "expected": {
+        "category": "Artists"
+      }
+    },
+    {
+      "state": "Check out Khruangbin",
+      "expected": {
+        "category": "Artists"
+      }
+    },
+    {
+      "state": "Radiohead",
+      "expected": {
+        "category": "Artists"
+      }
+    },
+    {
+      "state": "Rumours",
+      "expected": {
+        "category": "Albums"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "To Pimp a Butterfly",
+      "expected": {
+        "category": "Albums"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "99% Invisible",
+      "expected": {
+        "category": "Podcasts"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Freakonomics Radio",
+      "expected": {
+        "category": "Podcasts"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Unabridged recording of Pride and Prejudice",
+      "expected": {
+        "category": "Audiobooks"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Sapiens audiobook",
+      "expected": {
+        "category": "Audiobooks"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "NPR hourly news stream",
+      "expected": {
+        "category": "Radio"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Classic rock station 101.1",
+      "expected": {
+        "category": "Radio"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Bonobo",
+      "expected": {
+        "category": "Artists"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Look into Fela Kuti",
+      "expected": {
+        "category": "Artists"
+      },
+      "split": "heldout"
+    }
+  ]
+}

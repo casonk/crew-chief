@@ -10,6 +10,26 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
+- [ ] [manual:2026-10-30] **Grow the Clockwork sorting suites and repeat the runs.**
+  The held-out split has 88 items across seven suites, so differences of a few
+  points are single items, and a repeated run moved some scores by up to 5
+  points. Add held-out items until each suite has at least 30, run each
+  configuration three times, and report the spread. See
+  `docs/decision-model-selection.md`.
+
+- [ ] [manual:2026-10-30] **Try selection with a chat-model tier.** The 2026-10-30
+  router run found nothing to choose between four similar System One models. Add
+  `ollama:qwen3:14b` and `ollama:qwen3:32b` as `routebench` candidates and test
+  whether a cascade (`tev1` first, escalate on low confidence) buys accuracy that
+  is worth the added latency; also try `tev1` as the router.
+
+- [ ] [manual:2026-10-30] **Record the Clockwork categorize task in the serving
+  policy.** Add a `[tasks."clockwork-categorize"]` entry (`systemone`,
+  `clef-flash`) citing `results/taskbench-clockwork-sorting-20261030.md` once the
+  held-out set above is large enough to support a `beta` status. Clockwork's
+  `_ai_categorize` calls Ollama's chat endpoint today; switching it is a change in
+  the Clockwork repository.
+
 - [ ] [manual:2026-10-15] **Ask GitHub Support to purge pre-rewrite commits** — this
   repository's published history was rewritten (most recently on 2026-10-15,
   to remove per-commit AI attribution trailers). GitHub keeps serving the old

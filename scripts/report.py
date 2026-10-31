@@ -24,6 +24,10 @@ import sys
 from collections import defaultdict
 from datetime import datetime
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
+
+from crew_chief import theme  # noqa: E402
+
 # Models known to use Ollama thinking mode (long internal reasoning before first token)
 THINKING_MODELS: set[str] = {
     "qwen3:14b",
@@ -34,8 +38,8 @@ THINKING_MODELS: set[str] = {
 
 PROMPT_ORDER = ["latency", "reasoning", "codegen", "summarise"]
 TIER_COLORS = {
-    "thinking": "#c0392b",
-    "fast": "#27ae60",
+    "thinking": "var(--red)",
+    "fast": "var(--green)",
 }
 
 
@@ -72,67 +76,68 @@ def pivot(results: list[dict]) -> dict[str, dict[str, dict]]:
 CSS = """
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #f8f9fa;
-  color: #212529;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
   padding: 2rem 1rem;
 }
 .page { max-width: 1200px; margin: 0 auto; }
-.report-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.3rem; }
-.report-nav a { padding: 0.45rem 0.8rem; border: 1px solid #ced4da;
-  border-radius: 6px; color: #004085; text-decoration: none; background: white; }
-.report-nav a[aria-current="page"] { background: #004085; color: white; border-color: #004085; }
+.report-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.3rem; align-items: center; }
+.report-nav a { padding: 0.45rem 0.8rem; border: 1px solid var(--border);
+  border-radius: 6px; color: var(--accent); text-decoration: none; background: var(--surface); }
+.report-nav a[aria-current="page"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.report-nav .theme-switch { margin-left: auto; }
 h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
-h2 { font-size: 1.15rem; margin: 2rem 0 0.75rem; color: #343a40; border-bottom: 2px solid #dee2e6; padding-bottom: 0.3rem; }
-h3 { font-size: 0.95rem; margin: 1.25rem 0 0.4rem; color: #495057; }
-p.meta { color: #6c757d; font-size: 0.85rem; margin-bottom: 1.2rem; }
+h2 { font-size: 1.15rem; margin: 2rem 0 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.3rem; }
+h3 { font-size: 0.95rem; margin: 1.25rem 0 0.4rem; color: var(--muted); }
+p.meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.2rem; }
 .badge {
   display: inline-block; padding: 0.2rem 0.55rem; border-radius: 12px;
   font-size: 0.75rem; margin: 0 0.2rem;
 }
-.badge-hw   { background: #cce5ff; color: #004085; }
-.badge-date { background: #e2e3e5; color: #383d41; }
-.badge-warn { background: #fff3cd; color: #856404; }
+.badge-hw   { background: var(--accent-dim); color: var(--accent); }
+.badge-date { background: var(--surface2); color: var(--muted); }
+.badge-warn { background: var(--yellow-dim); color: var(--yellow); }
 
 /* ── Tables ── */
 table { border-collapse: collapse; width: 100%; font-size: 0.85rem; margin-bottom: 1rem; }
 .table-scroll { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .table-scroll table { min-width: 560px; }
-th, td { padding: 0.4rem 0.6rem; border: 1px solid #dee2e6; text-align: right; }
-th { background: #e9ecef; font-weight: 600; }
-td.model-name { text-align: left; font-family: monospace; white-space: nowrap; }
-td.tier-label { font-size: 0.7rem; color: #6c757d; text-align: left; }
+th, td { padding: 0.4rem 0.6rem; border: 1px solid var(--border); text-align: right; }
+th { background: var(--surface2); font-weight: 600; }
+td.model-name { text-align: left; font-family: ui-monospace, "Fira Code", monospace; white-space: nowrap; }
+td.tier-label { font-size: 0.7rem; color: var(--muted); text-align: left; }
 
 /* throughput colour bands */
-.tps-vhigh { background: #d4edda; }
-.tps-high  { background: #e9f7ef; }
-.tps-mid   { background: #fff9e6; }
-.tps-low   { background: #fdecea; }
-.tps-err   { background: #f8d7da; color: #721c24; font-style: italic; }
+.tps-vhigh { background: var(--green-dim); color: var(--green); }
+.tps-high  { background: color-mix(in srgb, var(--green-dim) 45%, var(--surface)); }
+.tps-mid   { background: color-mix(in srgb, var(--yellow-dim) 45%, var(--surface)); }
+.tps-low   { background: color-mix(in srgb, var(--red-dim) 60%, var(--surface)); }
+.tps-err   { background: var(--red-dim); color: var(--red); font-style: italic; }
 
 /* TTFT colour bands */
-.ttft-fast  { background: #d4edda; }
-.ttft-ok    { background: #fff9e6; }
-.ttft-slow  { background: #fdecea; }
+.ttft-fast  { background: var(--green-dim); color: var(--green); }
+.ttft-ok    { background: color-mix(in srgb, var(--yellow-dim) 45%, var(--surface)); }
+.ttft-slow  { background: color-mix(in srgb, var(--red-dim) 60%, var(--surface)); }
 
 /* ── Bar charts ── */
 .chart { margin: 0.5rem 0 1.5rem; }
 .bar-row { display: flex; align-items: center; margin: 3px 0; gap: 8px; }
-.bar-model { width: 220px; font-family: monospace; font-size: 0.78rem;
+.bar-model { width: 220px; font-family: ui-monospace, "Fira Code", monospace; font-size: 0.78rem;
              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bar-track { flex: 1; min-width: 0; background: #e9ecef; border-radius: 3px; height: 18px; position: relative; }
+.bar-track { flex: 1; min-width: 0; background: var(--surface2); border-radius: 3px; height: 18px; position: relative; }
 .bar-fill  { height: 100%; border-radius: 3px; min-width: 2px;
              display: flex; align-items: center; padding-left: 5px; }
-.bar-fill span { color: white; font-size: 0.72rem; white-space: nowrap; }
-.bar-val   { width: 70px; font-size: 0.78rem; color: #495057; text-align: right; }
+.bar-fill span { color: var(--accent-ink); font-size: 0.72rem; white-space: nowrap; }
+.bar-val   { width: 70px; font-size: 0.78rem; color: var(--muted); text-align: right; }
 
 /* ── Trend ── */
 .trend-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
-.trend-card { background: white; border: 1px solid #dee2e6; border-radius: 6px; padding: 1rem; }
-.trend-card h4 { font-size: 0.85rem; margin-bottom: 0.5rem; font-family: monospace; }
+.trend-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; }
+.trend-card h4 { font-size: 0.85rem; margin-bottom: 0.5rem; font-family: ui-monospace, "Fira Code", monospace; }
 
 /* ── Section spacing ── */
-.section { background: white; border: 1px solid #dee2e6; border-radius: 8px;
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
            padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; }
 
 @media (max-width: 640px) {
@@ -176,7 +181,7 @@ def _fmt_ttft(ms: float) -> str:
 
 
 def _bar_color(model: str) -> str:
-    return "#c0392b" if model in THINKING_MODELS else "#2980b9"
+    return "var(--red)" if model in THINKING_MODELS else "var(--accent)"
 
 
 # ---------------------------------------------------------------------------
@@ -405,13 +410,14 @@ def build_report(runs: dict[str, list[dict]], out: pathlib.Path) -> None:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>crew-chief Benchmark — {latest_label}</title>
-<style>{CSS}</style>
+{theme.HEAD}<style>{theme.SWITCHER_CSS}{CSS}</style>
 </head>
 <body>
 <div class="page">
 <nav class="report-nav" aria-label="Benchmark reports">
   <a href="latest.html" aria-current="page">Inference speed</a>
   <a href="test-bench-latest.html">Test outcomes</a>
+  {theme.SWITCHER}
 </nav>
 <h1>crew-chief Model Benchmark</h1>
 <p class="meta">

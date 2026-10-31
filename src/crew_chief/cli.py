@@ -285,8 +285,94 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     task_p.add_argument("--out", default="results", help="Output directory (default: results).")
+    task_p.add_argument(
+        "--profiles",
+        help="Scoring profiles TOML (default: config/scoring-profiles.toml).",
+    )
+    task_p.add_argument(
+        "--no-score", action="store_true", help="Omit the accuracy-and-speed score columns."
+    )
+
+    route_p = sub.add_parser(
+        "routebench",
+        help="Score a model that picks among decision models: quality against latency.",
+        description=(
+            "Run every candidate on the task files, then compare single models, a profile "
+            "lookup, a router model, confidence cascades and an oracle on the held-out items, "
+            "by accuracy, macro-F1 and time to inference. Results go to "
+            "results/routebench-<timestamp>.{md,svg,json}."
+        ),
+    )
+    route_p.add_argument("tasks", nargs="+", help="Single-question task files.")
+    route_p.add_argument(
+        "--candidate",
+        action="append",
+        help="Candidate runner spec; repeat (default: the four installed decision models).",
+    )
+    route_p.add_argument(
+        "--router", default="systemone:clef-flash", help="Runner that picks (default: %(default)s)."
+    )
+    route_p.add_argument(
+        "--threshold",
+        action="append",
+        type=float,
+        help="Cascade confidence threshold; repeat (default: 0.6 0.8 0.95).",
+    )
+    route_p.add_argument("--out", default="results", help="Output directory (default: results).")
+    route_p.add_argument(
+        "--profiles",
+        help="Scoring profiles TOML (default: config/scoring-profiles.toml).",
+    )
+    route_p.add_argument(
+        "--no-score", action="store_true", help="Omit the accuracy-and-speed score columns."
+    )
+
+    ui_p = sub.add_parser(
+        "benchui",
+        help="Serve the bench interface: tune scoring profiles, start and follow jobs.",
+        description=(
+            "A local web page for the decision benchmarks: profile sliders with a live "
+            "ranking, a form that starts taskbench and routebench jobs, job status and logs, "
+            "and links to the results. Binds to localhost only."
+        ),
+    )
+    ui_p.add_argument(
+        "--host", default="127.0.0.1", help="Loopback address (default: %(default)s)."
+    )
+    ui_p.add_argument("--port", type=int, default=8766, help="Port (default: %(default)s).")
+    ui_p.add_argument(
+        "--allow-host",
+        action="append",
+        default=[],
+        help=(
+            "Also accept this Host header, for the reverse proxy in front "
+            "(repeat; CREW_CHIEF_BENCH_HOSTS holds a comma-separated list)."
+        ),
+    )
+    ui_p.add_argument("--state-dir", help="Saved profiles, job records and private results.")
+    ui_p.add_argument("--results-dir", help="Shared results directory (default: results/).")
 
     return p
+
+
+def _scoring_profiles(args) -> list:
+    """Profiles for the score columns; the default file is optional, an explicit one is not."""
+    from pathlib import Path
+
+    from crew_chief import scoring
+
+    if args.no_score:
+        return []
+    if args.profiles:
+        try:
+            return scoring.load_profiles(Path(args.profiles))
+        except scoring.ScoringError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(2)
+    try:
+        return scoring.load_profiles()
+    except scoring.ScoringError:
+        return []
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -381,11 +467,91 @@ def main(argv: list[str] | None = None) -> None:
         out.mkdir(parents=True, exist_ok=True)
         suffix = "" if args.split == "dev" else f"-{args.split}"
         base = out / f"taskbench-{tb.slug(task.name)}{suffix}-{stamp}"
-        markdown = tb.render_markdown(results, task, stamp)
+        markdown = tb.render_markdown(results, task, stamp, _scoring_profiles(args))
         base.with_suffix(".md").write_text(markdown, encoding="utf-8")
         base.with_suffix(".json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")
         print(markdown)
         print(f"Saved: {base}.md and .json", file=sys.stderr)
+
+    elif args.command == "routebench":
+        import time as _time
+
+        args.candidate = args.candidate or [
+            f"systemone:{m}" for m in ("tev1", "clef-flash", "nimble", "clef")
+        ]
+        args.threshold = args.threshold or [0.6, 0.8, 0.95]
+        from pathlib import Path
+
+        from crew_chief import routerbench as rb
+        from crew_chief import taskbench as tb
+
+        try:
+            tasks = [tb.load_task(Path(p)) for p in args.tasks]
+            router = tb.make_runner(args.router, tasks[0])
+            print(
+                f"routing with {router.name} over {len(args.candidate)} candidates ...",
+                file=sys.stderr,
+            )
+            result = rb.run_benchmark(
+                tasks,
+                args.candidate,
+                router,
+                thresholds=tuple(args.threshold),
+                profiles=_scoring_profiles(args),
+            )
+        except (tb.TaskError, rb.RouteError) as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            sys.exit(2)
+        stamp = _time.strftime("%Y%m%d-%H%M%S")
+        out = Path(args.out)
+        out.mkdir(parents=True, exist_ok=True)
+        base = out / f"routebench-{stamp}"
+        base.with_suffix(".svg").write_text(rb.render_svg(result), encoding="utf-8")
+        markdown = rb.render_markdown(result, stamp, chart=base.with_suffix(".svg").name)
+        base.with_suffix(".md").write_text(markdown, encoding="utf-8")
+        base.with_suffix(".json").write_text(rb.to_json(result), encoding="utf-8")
+        print(markdown)
+        print(f"Saved: {base}.md, .svg and .json", file=sys.stderr)
+
+    elif args.command == "benchui":
+        import ipaddress
+        from pathlib import Path
+
+        from crew_chief import benchui
+
+        try:
+            loopback = ipaddress.ip_address(args.host).is_loopback
+        except ValueError:
+            loopback = args.host == "localhost"
+        if not loopback:
+            print(
+                "Error: the bench interface starts jobs; bind it to a loopback address",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+        server = benchui.make_server(
+            Path(args.state_dir) if args.state_dir else benchui.DEFAULT_STATE,
+            Path(args.results_dir) if args.results_dir else benchui.REPO_ROOT / "results",
+            args.host,
+            args.port,
+            tuple(
+                h.strip()
+                for h in [
+                    *args.allow_host,
+                    *os.environ.get("CREW_CHIEF_BENCH_HOSTS", "").split(","),
+                ]
+                if h.strip()
+            ),
+        )
+        print(
+            f"bench interface on http://{args.host}:{args.port}/  (Ctrl-C to stop)", file=sys.stderr
+        )
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            server.RequestHandlerClass.app.jobs.shutdown()
 
     elif args.command == "serve":
         from crew_chief import serve as serving

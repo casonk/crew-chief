@@ -1,0 +1,513 @@
+{
+  "name": "clockwork-grocery-type",
+  "description": "Sort a grocery list item into its grocery type, as Clockwork's AI categorize does for the groceries list. Item names are generic and synthetic. Baseline rules were written against the dev split only.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which grocery type does this item belong to?",
+      "criteria": {
+        "Meat": "Beef, pork, poultry, lamb, sausage and deli meat",
+        "Seafood": "Fish, shellfish and other seafood",
+        "Produce": "Fresh fruit, vegetables and herbs",
+        "Dairy": "Milk, cheese, yogurt, butter, cream and eggs",
+        "Bakery": "Bread, rolls, tortillas, pastries and baked goods",
+        "Beverages": "Non-alcoholic drinks: water, juice, soda, coffee, tea",
+        "Spirits": "Alcoholic drinks: beer, wine and liquor",
+        "Spices": "Dried spices, seasoning blends and dried herbs",
+        "Condiments": "Sauces, dressings, spreads and jarred toppings",
+        "Pantry": "Shelf-stable staples: rice, pasta, flour, canned goods, oils",
+        "Snacks": "Chips, crackers, candy, nuts, bars and cookies",
+        "Frozen": "Frozen meals, vegetables, fruit and ice cream"
+      }
+    }
+  },
+  "baseline": {
+    "category": {
+      "default": "Produce",
+      "rules": [
+        {
+          "if_any": [
+            "turkey",
+            "pork",
+            "sausage",
+            "chicken",
+            "beef"
+          ],
+          "then": "Meat"
+        },
+        {
+          "if_any": [
+            "salmon",
+            "shrimp",
+            "tuna"
+          ],
+          "then": "Seafood"
+        },
+        {
+          "if_any": [
+            "milk",
+            "cheese",
+            "yogurt",
+            "butter",
+            "egg"
+          ],
+          "then": "Dairy"
+        },
+        {
+          "if_any": [
+            "frozen",
+            "ice cream",
+            "pizza"
+          ],
+          "then": "Frozen"
+        },
+        {
+          "if_any": [
+            "loaf",
+            "tortillas",
+            "croissant",
+            "bread"
+          ],
+          "then": "Bakery"
+        },
+        {
+          "if_any": [
+            "juice",
+            "water",
+            "coffee",
+            "tea"
+          ],
+          "then": "Beverages"
+        },
+        {
+          "if_any": [
+            "ipa",
+            "noir",
+            "bourbon",
+            "wine",
+            "beer"
+          ],
+          "then": "Spirits"
+        },
+        {
+          "if_any": [
+            "paprika",
+            "cumin",
+            "seasoning"
+          ],
+          "then": "Spices"
+        },
+        {
+          "if_any": [
+            "ketchup",
+            "dressing",
+            "peanut butter"
+          ],
+          "then": "Condiments"
+        },
+        {
+          "if_any": [
+            "rice",
+            "spaghetti",
+            "oil"
+          ],
+          "then": "Pantry"
+        },
+        {
+          "if_any": [
+            "chips",
+            "trail mix",
+            "chocolate"
+          ],
+          "then": "Snacks"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "Ground Turkey",
+      "expected": {
+        "category": "Meat"
+      }
+    },
+    {
+      "state": "Pork Chops",
+      "expected": {
+        "category": "Meat"
+      }
+    },
+    {
+      "state": "Smoked Sausage",
+      "expected": {
+        "category": "Meat"
+      }
+    },
+    {
+      "state": "Salmon Fillet",
+      "expected": {
+        "category": "Seafood"
+      }
+    },
+    {
+      "state": "Shrimp",
+      "expected": {
+        "category": "Seafood"
+      }
+    },
+    {
+      "state": "Canned Tuna Steaks",
+      "expected": {
+        "category": "Seafood"
+      }
+    },
+    {
+      "state": "Bananas",
+      "expected": {
+        "category": "Produce"
+      }
+    },
+    {
+      "state": "Baby Spinach",
+      "expected": {
+        "category": "Produce"
+      }
+    },
+    {
+      "state": "Roma Tomatoes",
+      "expected": {
+        "category": "Produce"
+      }
+    },
+    {
+      "state": "Whole Milk",
+      "expected": {
+        "category": "Dairy"
+      }
+    },
+    {
+      "state": "Cheddar Cheese Block",
+      "expected": {
+        "category": "Dairy"
+      }
+    },
+    {
+      "state": "Greek Yogurt",
+      "expected": {
+        "category": "Dairy"
+      }
+    },
+    {
+      "state": "Sourdough Loaf",
+      "expected": {
+        "category": "Bakery"
+      }
+    },
+    {
+      "state": "Flour Tortillas",
+      "expected": {
+        "category": "Bakery"
+      }
+    },
+    {
+      "state": "Croissants",
+      "expected": {
+        "category": "Bakery"
+      }
+    },
+    {
+      "state": "Orange Juice",
+      "expected": {
+        "category": "Beverages"
+      }
+    },
+    {
+      "state": "Sparkling Water",
+      "expected": {
+        "category": "Beverages"
+      }
+    },
+    {
+      "state": "Cold Brew Coffee",
+      "expected": {
+        "category": "Beverages"
+      }
+    },
+    {
+      "state": "IPA Six Pack",
+      "expected": {
+        "category": "Spirits"
+      }
+    },
+    {
+      "state": "Pinot Noir",
+      "expected": {
+        "category": "Spirits"
+      }
+    },
+    {
+      "state": "Bourbon",
+      "expected": {
+        "category": "Spirits"
+      }
+    },
+    {
+      "state": "Smoked Paprika",
+      "expected": {
+        "category": "Spices"
+      }
+    },
+    {
+      "state": "Cumin",
+      "expected": {
+        "category": "Spices"
+      }
+    },
+    {
+      "state": "Italian Seasoning",
+      "expected": {
+        "category": "Spices"
+      }
+    },
+    {
+      "state": "Ketchup",
+      "expected": {
+        "category": "Condiments"
+      }
+    },
+    {
+      "state": "Ranch Dressing",
+      "expected": {
+        "category": "Condiments"
+      }
+    },
+    {
+      "state": "Peanut Butter",
+      "expected": {
+        "category": "Condiments"
+      }
+    },
+    {
+      "state": "Basmati Rice",
+      "expected": {
+        "category": "Pantry"
+      }
+    },
+    {
+      "state": "Spaghetti",
+      "expected": {
+        "category": "Pantry"
+      }
+    },
+    {
+      "state": "Olive Oil",
+      "expected": {
+        "category": "Pantry"
+      }
+    },
+    {
+      "state": "Tortilla Chips",
+      "expected": {
+        "category": "Snacks"
+      }
+    },
+    {
+      "state": "Trail Mix",
+      "expected": {
+        "category": "Snacks"
+      }
+    },
+    {
+      "state": "Dark Chocolate Bar",
+      "expected": {
+        "category": "Snacks"
+      }
+    },
+    {
+      "state": "Frozen Peas",
+      "expected": {
+        "category": "Frozen"
+      }
+    },
+    {
+      "state": "Vanilla Ice Cream",
+      "expected": {
+        "category": "Frozen"
+      }
+    },
+    {
+      "state": "Frozen Pizza",
+      "expected": {
+        "category": "Frozen"
+      }
+    },
+    {
+      "state": "Chicken Thighs",
+      "expected": {
+        "category": "Meat"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Deli Turkey Slices",
+      "expected": {
+        "category": "Meat"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Sea Scallops",
+      "expected": {
+        "category": "Seafood"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Smoked Trout",
+      "expected": {
+        "category": "Seafood"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Fresh Cilantro",
+      "expected": {
+        "category": "Produce"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Red Onions",
+      "expected": {
+        "category": "Produce"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Large Eggs",
+      "expected": {
+        "category": "Dairy"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Unsalted Butter",
+      "expected": {
+        "category": "Dairy"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Blueberry Muffins",
+      "expected": {
+        "category": "Bakery"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Pita Bread",
+      "expected": {
+        "category": "Bakery"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Green Tea Bags",
+      "expected": {
+        "category": "Beverages"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Ginger Ale",
+      "expected": {
+        "category": "Beverages"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Hard Cider",
+      "expected": {
+        "category": "Spirits"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "London Dry Gin",
+      "expected": {
+        "category": "Spirits"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Garlic Powder",
+      "expected": {
+        "category": "Spices"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Chili Flakes",
+      "expected": {
+        "category": "Spices"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Dijon Mustard",
+      "expected": {
+        "category": "Condiments"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Sriracha",
+      "expected": {
+        "category": "Condiments"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Black Beans Can",
+      "expected": {
+        "category": "Pantry"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "All-Purpose Flour",
+      "expected": {
+        "category": "Pantry"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Salted Pretzels",
+      "expected": {
+        "category": "Snacks"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Granola Bars",
+      "expected": {
+        "category": "Snacks"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Frozen Waffles",
+      "expected": {
+        "category": "Frozen"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Frozen Blueberries",
+      "expected": {
+        "category": "Frozen"
+      },
+      "split": "heldout"
+    }
+  ]
+}

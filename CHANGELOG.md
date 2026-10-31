@@ -7,6 +7,31 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Seven synthetic Clockwork list-sorting suites for `crew-chief taskbench`
+  (`benchmarks/decisions/clockwork-*.json`), each with dev and held-out items.
+- `taskbench` states every allowed value before the input, reports a confusion
+  matrix and macro-F1 per runner and question, and records latency per item.
+- `crew-chief routebench` compares single models, a profile lookup, a router
+  model, confidence cascades and an oracle on accuracy, macro-F1 and time to
+  inference. See `docs/decision-model-selection.md`.
+- Scoring profiles (`config/scoring-profiles.toml`, `crew_chief.scoring`): one
+  accuracy-and-latency score per use case with hard gates, tie margins and a
+  weight sensitivity table, added to `taskbench` and `routebench` reports.
+  Speed credit blends an absolute latency curve with one normalised against every
+  performer in the same report (`relative_weight`).
+- The bench interface, `scripts/report.py`, `scripts/test_benchmark.py` and the routebench
+  chart use the portfolio system themes (Midnight, Daylight, Ember, High contrast; a
+  switcher on every page, following the system by default). Colours live in
+  traction-control (`docs/system-theme.md`); `src/crew_chief/theme/` is the vendored copy.
+- Report pages served by `benchui` (latest.html, test-bench-latest.html, ...) carry a link back to the interface.
+- `crew-chief benchui`: a web interface (loopback listener, reached through the shared
+  Caddy at bench.crew-chief.internal; user unit via `scripts/install_benchui_systemd.sh`) with profile sliders and a
+  live ranking, a form that starts `taskbench` and `routebench` jobs, a one-at-a-time
+  job queue with status, logs and cancel, and results linked to the jobs that wrote
+  them.
+
 ### Fixed
 
 - The weekly benchmark (`scripts/run_benchmark.sh`) now runs under an exclusive

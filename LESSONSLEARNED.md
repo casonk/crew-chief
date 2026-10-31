@@ -12,6 +12,48 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 
 ## Lessons
 
+- **An aggregate score needs gates, ties and a sensitivity sweep.** A weighted
+  sum of accuracy and speed lets a fast, inaccurate model win and turns a
+  one-item difference into a rank. Gate unacceptable accuracy and tail latency
+  first, call scores within a tie margin equal, and show who leads at other
+  weights. On 2026-10-30 `clef-flash` and `tev1` swapped the lead at an accuracy
+  weight near 0.78, so the honest `interactive` result was a three-way tie.
+
+- **Normalise speed against the field as well as against a fixed target.** An absolute
+  latency curve scores every model under its target as 1.0, so a fast field looks
+  tied; a curve relative to the fastest and slowest performer separates them but
+  means nothing across runs. Blend both with one weight, leave rule baselines
+  (0 ms) out of the range, and keep gates absolute so the least-bad model cannot pass.
+- **Style web surfaces with the system theme tokens, never literal colours.** traction-control
+  owns the themes (`themes/themes.toml`, `docs/system-theme.md`); a page inlines the vendored
+  `src/crew_chief/theme/portfolio-theme.{css,js}` and writes `var(--surface)`. A literal colour
+  silently ignores the theme switcher. `tests/test_theme.py` fails on a literal colour in the
+  generators and on a vendored copy that drifted from the source.
+- **Test a proxied service with the proxy's Host header, through the CLI entry point.**
+  The server unit tests built the server directly and passed while the CLI never
+  forwarded the allowed hostname, so the live service answered 403 behind Caddy. When
+  scripting a patch, assert the old text is present: a formatter rewrap made one
+  replacement a silent no-op.
+- **A benchmark UI that starts jobs must build the command itself.** Accept suite
+  names and runner specs of a fixed shape, pass an argument list (never a shell),
+  bind to loopback, check Host and Origin, run one job at a time on a shared GPU,
+  and kill the running job when the server stops.
+- **Score a model selector on total latency against the best single model.** A
+  router's cost is its own call plus the chosen model's call, so accuracy alone
+  hides the loss. Compare it with always using each candidate, a free lookup of
+  the best dev-accuracy model, and a confidence cascade, and keep the oracle (the
+  fastest correct candidate) off the Pareto front because it cannot be deployed.
+  On 2026-10-30 `clef-flash` routing among four System One models matched asking
+  `clef-flash` directly on accuracy at 3.3 times the latency, and chose the
+  fastest correct model for 3 of 88 items.
+
+- **Show the allowed answers before the input in decision prompts.** With the
+  item first and the categories after it, `qwen2.5-coder:7b` scored 0.45 on the
+  Clockwork watch suite; with the question and every allowed value first it
+  scored 0.80. A low score first suggested missing model knowledge; it was
+  prompt order. Check the prompt and read the confusion matrix before blaming
+  the model.
+
 - **Historical test replay needs three independent checks.** Run the old suite
   on the before commit (green), apply only selected tests from the after commit
   to old source (red), and run the same suite at the after commit (green).

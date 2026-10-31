@@ -1,0 +1,226 @@
+{
+  "name": "clockwork-todo-category",
+  "description": "Sort a to-do entry into a Clockwork Todo category. Entries are synthetic. Baseline rules were written against the dev split only.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which Todo category does this entry belong to?",
+      "criteria": {
+        "Tasks": "A small action that can be done in one sitting",
+        "Projects": "A multi-step effort that needs planning and several sessions",
+        "Errands": "Something done by going out: shopping, appointments, drop-offs and pickups",
+        "Goals": "A long-term outcome or habit to work toward, with no single action",
+        "Hardware": "A physical device, part or equipment to fix, build, buy or set up"
+      }
+    }
+  },
+  "baseline": {
+    "category": {
+      "default": "Tasks",
+      "rules": [
+        {
+          "if_any": [
+            "email",
+            "renew",
+            "back up"
+          ],
+          "then": "Tasks"
+        },
+        {
+          "if_any": [
+            "redesign",
+            "tool",
+            "itinerary"
+          ],
+          "then": "Projects"
+        },
+        {
+          "if_any": [
+            "pick up",
+            "drop",
+            "haircut"
+          ],
+          "then": "Errands"
+        },
+        {
+          "if_any": [
+            "marathon",
+            "read 24",
+            "fluent"
+          ],
+          "then": "Goals"
+        },
+        {
+          "if_any": [
+            "ssd",
+            "router",
+            "gpu"
+          ],
+          "then": "Hardware"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "Reply to the landlord's email",
+      "expected": {
+        "category": "Tasks"
+      }
+    },
+    {
+      "state": "Renew the library card online",
+      "expected": {
+        "category": "Tasks"
+      }
+    },
+    {
+      "state": "Back up the phone photos",
+      "expected": {
+        "category": "Tasks"
+      }
+    },
+    {
+      "state": "Redesign the backyard garden beds",
+      "expected": {
+        "category": "Projects"
+      }
+    },
+    {
+      "state": "Write the household budgeting tool",
+      "expected": {
+        "category": "Projects"
+      }
+    },
+    {
+      "state": "Plan the autumn road trip itinerary",
+      "expected": {
+        "category": "Projects"
+      }
+    },
+    {
+      "state": "Pick up dry cleaning",
+      "expected": {
+        "category": "Errands"
+      }
+    },
+    {
+      "state": "Drop the package at the post office",
+      "expected": {
+        "category": "Errands"
+      }
+    },
+    {
+      "state": "Get a haircut Saturday",
+      "expected": {
+        "category": "Errands"
+      }
+    },
+    {
+      "state": "Run a half marathon next year",
+      "expected": {
+        "category": "Goals"
+      }
+    },
+    {
+      "state": "Read 24 books this year",
+      "expected": {
+        "category": "Goals"
+      }
+    },
+    {
+      "state": "Get fluent in conversational Spanish",
+      "expected": {
+        "category": "Goals"
+      }
+    },
+    {
+      "state": "Replace the failing SSD in the NAS",
+      "expected": {
+        "category": "Hardware"
+      }
+    },
+    {
+      "state": "Mount the new router in the hallway",
+      "expected": {
+        "category": "Hardware"
+      }
+    },
+    {
+      "state": "Swap the fan on the GPU",
+      "expected": {
+        "category": "Hardware"
+      }
+    },
+    {
+      "state": "Cancel the unused streaming trial",
+      "expected": {
+        "category": "Tasks"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Update the emergency contact form",
+      "expected": {
+        "category": "Tasks"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Build a workbench for the garage",
+      "expected": {
+        "category": "Projects"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Migrate the photo archive to a new layout",
+      "expected": {
+        "category": "Projects"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Return the ill-fitting jacket to the store",
+      "expected": {
+        "category": "Errands"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Pick up the prescription from the pharmacy",
+      "expected": {
+        "category": "Errands"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Save six months of expenses",
+      "expected": {
+        "category": "Goals"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Sleep eight hours on weeknights",
+      "expected": {
+        "category": "Goals"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Install a second monitor arm",
+      "expected": {
+        "category": "Hardware"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Replace the dead UPS battery",
+      "expected": {
+        "category": "Hardware"
+      },
+      "split": "heldout"
+    }
+  ]
+}

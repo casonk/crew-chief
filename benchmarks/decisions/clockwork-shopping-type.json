@@ -1,0 +1,446 @@
+{
+  "name": "clockwork-shopping-type",
+  "description": "Sort a shopping list item into its consumer-goods type, as Clockwork's AI categorize does for the shopping list. Item names are generic and synthetic. Baseline rules were written against the dev split only.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which consumer-goods type does this item belong to?",
+      "criteria": {
+        "Tops": "Shirts, sweaters, hoodies and blouses",
+        "Bottoms": "Pants, jeans, shorts, skirts and leggings",
+        "Outerwear": "Coats, jackets, rain shells and vests",
+        "Footwear": "Shoes, boots, sandals and slippers",
+        "Accessories": "Belts, hats, scarves, bags, watches and jewelry",
+        "Underwear": "Underwear, socks and base layers",
+        "Bedding": "Sheets, pillows, blankets and comforters",
+        "Bath": "Towels, shower curtains and bath mats",
+        "Cleaning": "Cleaning supplies, brooms, mops and detergents",
+        "Lighting": "Lamps, bulbs and light fixtures",
+        "Storage": "Bins, shelves, hangers and organizers",
+        "Furniture": "Chairs, tables, desks, sofas and bed frames",
+        "Fitness": "Gym equipment, yoga gear and weights",
+        "Camping": "Tents, sleeping bags, stoves and trail gear",
+        "Sports": "Balls, rackets, bats and other sport equipment",
+        "Electronics": "Chargers, headphones, cables, speakers and gadgets"
+      }
+    }
+  },
+  "baseline": {
+    "category": {
+      "default": "Electronics",
+      "rules": [
+        {
+          "if_any": [
+            "sweater",
+            "shirt"
+          ],
+          "then": "Tops"
+        },
+        {
+          "if_any": [
+            "jeans",
+            "shorts"
+          ],
+          "then": "Bottoms"
+        },
+        {
+          "if_any": [
+            "shell",
+            "vest"
+          ],
+          "then": "Outerwear"
+        },
+        {
+          "if_any": [
+            "runners",
+            "boots"
+          ],
+          "then": "Footwear"
+        },
+        {
+          "if_any": [
+            "beanie",
+            "belt"
+          ],
+          "then": "Accessories"
+        },
+        {
+          "if_any": [
+            "socks",
+            "briefs"
+          ],
+          "then": "Underwear"
+        },
+        {
+          "if_any": [
+            "sheet",
+            "pillow"
+          ],
+          "then": "Bedding"
+        },
+        {
+          "if_any": [
+            "towel",
+            "curtain"
+          ],
+          "then": "Bath"
+        },
+        {
+          "if_any": [
+            "detergent",
+            "mop"
+          ],
+          "then": "Cleaning"
+        },
+        {
+          "if_any": [
+            "bulb",
+            "lamp"
+          ],
+          "then": "Lighting"
+        },
+        {
+          "if_any": [
+            "bins",
+            "hangers"
+          ],
+          "then": "Storage"
+        },
+        {
+          "if_any": [
+            "desk",
+            "chair"
+          ],
+          "then": "Furniture"
+        },
+        {
+          "if_any": [
+            "yoga",
+            "dumbbell"
+          ],
+          "then": "Fitness"
+        },
+        {
+          "if_any": [
+            "tent",
+            "stove"
+          ],
+          "then": "Camping"
+        },
+        {
+          "if_any": [
+            "basketball",
+            "racket"
+          ],
+          "then": "Sports"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "Crewneck Sweater",
+      "expected": {
+        "category": "Tops"
+      }
+    },
+    {
+      "state": "Linen Button-Down",
+      "expected": {
+        "category": "Tops"
+      }
+    },
+    {
+      "state": "Slim Jeans",
+      "expected": {
+        "category": "Bottoms"
+      }
+    },
+    {
+      "state": "Running Shorts",
+      "expected": {
+        "category": "Bottoms"
+      }
+    },
+    {
+      "state": "Rain Shell",
+      "expected": {
+        "category": "Outerwear"
+      }
+    },
+    {
+      "state": "Puffer Vest",
+      "expected": {
+        "category": "Outerwear"
+      }
+    },
+    {
+      "state": "Trail Runners",
+      "expected": {
+        "category": "Footwear"
+      }
+    },
+    {
+      "state": "Leather Boots",
+      "expected": {
+        "category": "Footwear"
+      }
+    },
+    {
+      "state": "Wool Beanie",
+      "expected": {
+        "category": "Accessories"
+      }
+    },
+    {
+      "state": "Leather Belt",
+      "expected": {
+        "category": "Accessories"
+      }
+    },
+    {
+      "state": "Merino Socks",
+      "expected": {
+        "category": "Underwear"
+      }
+    },
+    {
+      "state": "Boxer Briefs",
+      "expected": {
+        "category": "Underwear"
+      }
+    },
+    {
+      "state": "Cotton Sheet Set",
+      "expected": {
+        "category": "Bedding"
+      }
+    },
+    {
+      "state": "Memory Foam Pillow",
+      "expected": {
+        "category": "Bedding"
+      }
+    },
+    {
+      "state": "Bath Towels",
+      "expected": {
+        "category": "Bath"
+      }
+    },
+    {
+      "state": "Shower Curtain",
+      "expected": {
+        "category": "Bath"
+      }
+    },
+    {
+      "state": "Laundry Detergent",
+      "expected": {
+        "category": "Cleaning"
+      }
+    },
+    {
+      "state": "Microfiber Mop",
+      "expected": {
+        "category": "Cleaning"
+      }
+    },
+    {
+      "state": "LED Bulbs",
+      "expected": {
+        "category": "Lighting"
+      }
+    },
+    {
+      "state": "Desk Lamp",
+      "expected": {
+        "category": "Lighting"
+      }
+    },
+    {
+      "state": "Clear Storage Bins",
+      "expected": {
+        "category": "Storage"
+      }
+    },
+    {
+      "state": "Wooden Hangers",
+      "expected": {
+        "category": "Storage"
+      }
+    },
+    {
+      "state": "Standing Desk",
+      "expected": {
+        "category": "Furniture"
+      }
+    },
+    {
+      "state": "Accent Chair",
+      "expected": {
+        "category": "Furniture"
+      }
+    },
+    {
+      "state": "Yoga Mat",
+      "expected": {
+        "category": "Fitness"
+      }
+    },
+    {
+      "state": "Adjustable Dumbbells",
+      "expected": {
+        "category": "Fitness"
+      }
+    },
+    {
+      "state": "Two-Person Tent",
+      "expected": {
+        "category": "Camping"
+      }
+    },
+    {
+      "state": "Camp Stove",
+      "expected": {
+        "category": "Camping"
+      }
+    },
+    {
+      "state": "Basketball",
+      "expected": {
+        "category": "Sports"
+      }
+    },
+    {
+      "state": "Tennis Racket",
+      "expected": {
+        "category": "Sports"
+      }
+    },
+    {
+      "state": "USB-C Charger",
+      "expected": {
+        "category": "Electronics"
+      }
+    },
+    {
+      "state": "Bluetooth Speaker",
+      "expected": {
+        "category": "Electronics"
+      }
+    },
+    {
+      "state": "Flannel Shirt",
+      "expected": {
+        "category": "Tops"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Cargo Pants",
+      "expected": {
+        "category": "Bottoms"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Down Parka",
+      "expected": {
+        "category": "Outerwear"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Shower Sandals",
+      "expected": {
+        "category": "Footwear"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Canvas Tote Bag",
+      "expected": {
+        "category": "Accessories"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Thermal Base Layer",
+      "expected": {
+        "category": "Underwear"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Weighted Blanket",
+      "expected": {
+        "category": "Bedding"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Non-Slip Bath Mat",
+      "expected": {
+        "category": "Bath"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Sponges 12-Pack",
+      "expected": {
+        "category": "Cleaning"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Floor Lamp",
+      "expected": {
+        "category": "Lighting"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Over-Door Shoe Organizer",
+      "expected": {
+        "category": "Storage"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Bookshelf",
+      "expected": {
+        "category": "Furniture"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Resistance Bands",
+      "expected": {
+        "category": "Fitness"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Sleeping Bag",
+      "expected": {
+        "category": "Camping"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Baseball Glove",
+      "expected": {
+        "category": "Sports"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Noise-Cancelling Headphones",
+      "expected": {
+        "category": "Electronics"
+      },
+      "split": "heldout"
+    }
+  ]
+}

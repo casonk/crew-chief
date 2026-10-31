@@ -26,6 +26,7 @@ import uuid
 from datetime import datetime, timezone
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
+from crew_chief import theme
 from crew_chief.model_router import route_test_repair
 
 
@@ -486,19 +487,27 @@ def render_html(report: dict) -> str:
         )
     return (
         """<!doctype html><html lang="en"><meta charset="utf-8">
-<title>Test-based model benchmark</title><style>
-body{font:16px system-ui;max-width:1200px;margin:2rem auto;padding:0 1rem;color:#202b38}
+<title>Test-based model benchmark</title>"""
+        + theme.HEAD
+        + """<style>"""
+        + theme.SWITCHER_CSS
+        + """
+body{font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:1200px;margin:2rem auto;padding:0 1rem;background:var(--bg);color:var(--text)}
 .trial-scroll{max-width:100%;overflow-x:auto;margin:1rem 0}
-table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border:1px solid #cad2dc;padding:.55rem;text-align:left}
+table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border:1px solid var(--border);padding:.55rem;text-align:left}
 .trial-table{width:100%;min-width:1500px;table-layout:fixed}
 .trial-table th,.trial-table td{overflow-wrap:anywhere;vertical-align:top}
-th{background:#e8eef5}.passed{background:#e4f6e9}.failed{background:#fff0e8}.error{background:#ffe5e5}.timeout{background:#fff3cd}
-code{background:#edf2f7;padding:.1rem .3rem}small{color:#526171}
-nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.3rem}
-nav a{padding:.45rem .8rem;border:1px solid #cad2dc;border-radius:6px;color:#004085;text-decoration:none}
-nav a[aria-current="page"]{background:#004085;color:white;border-color:#004085}
+th{background:var(--surface2)}.passed{background:var(--green-dim);color:var(--green)}.failed{background:var(--yellow-dim);color:var(--yellow)}.error{background:var(--red-dim);color:var(--red)}.timeout{background:var(--purple-dim);color:var(--purple)}
+code{background:var(--surface2);padding:.1rem .3rem}small{color:var(--muted)}
+a{color:var(--accent)}
+nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.3rem;align-items:center}
+nav a{padding:.45rem .8rem;border:1px solid var(--border);border-radius:6px;color:var(--accent);text-decoration:none;background:var(--surface)}
+nav a[aria-current="page"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+nav .theme-switch{margin-left:auto}
 </style><nav aria-label="Benchmark reports"><a href="latest.html">Inference speed</a>
-<a href="test-bench-latest.html" aria-current="page">Test outcomes</a></nav>
+<a href="test-bench-latest.html" aria-current="page">Test outcomes</a>"""
+        + theme.SWITCHER
+        + """</nav>
 <h1>Test-based model benchmark</h1>
 <p>Each attempt used a fresh checkout with a known failing test. A pass requires
 the fixed test command to pass after an allowed code edit.</p>
