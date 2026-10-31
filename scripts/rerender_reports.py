@@ -55,6 +55,22 @@ def _test_benchmark():
     return module
 
 
+def stale_charts(results: pathlib.Path) -> list[pathlib.Path]:
+    """Saved routebench charts drawn before label placement (no ``data-layout`` marker)."""
+    return [
+        data
+        for data in sorted(results.glob("routebench-*.json"))
+        if data.with_suffix(".svg").is_file()
+        and "data-layout=" not in data.with_suffix(".svg").read_text()[:300]
+    ]
+
+
+def render_chart(data: pathlib.Path) -> None:
+    from crew_chief import routerbench
+
+    data.with_suffix(".svg").write_text(routerbench.render_svg(json.loads(data.read_text())))
+
+
 def render(data: pathlib.Path) -> None:
     page = data.with_suffix(".html")
     if data.name.startswith("test-bench-"):
@@ -88,9 +104,14 @@ def main() -> int:
         print(("stale   " if args.check else "render  ") + str(data.with_suffix(".html")))
         if not args.check:
             render(data)
-    if not todo:
+    charts = [] if args.json else stale_charts(args.results)
+    for data in charts:
+        print(("stale   " if args.check else "render  ") + str(data.with_suffix(".svg")))
+        if not args.check:
+            render_chart(data)
+    if not todo and not charts:
         print("all reports carry the current theme")
-    return 1 if (args.check and todo) else 0
+    return 1 if (args.check and (todo or charts)) else 0
 
 
 if __name__ == "__main__":

@@ -7,7 +7,9 @@ themselves with the portfolio tokens (``var(--surface)``), so they follow the sy
 
 from __future__ import annotations
 
+import csv
 import html
+import io
 import json
 import re
 import xml.etree.ElementTree as ET
@@ -15,14 +17,14 @@ from pathlib import PurePosixPath
 
 from crew_chief import theme
 
-FORMATS = (".html", ".json", ".md", ".svg")  # the renderings a result can have, in tab order
+FORMATS = ("html", "json", "md", "svg", "bars", "csv")  # the views of a result, in tab order
 MAX_JSON_BYTES = 8 * 1024 * 1024
 FILE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 
 CSS = """
 body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,sans-serif}
 main{max-width:1000px;margin:0 auto;padding:16px 16px 64px}
-.bar{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;margin:4px 0 12px}
+.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:4px 0 12px}
 .bar h1{font-size:18px;margin:0;word-break:break-all}.bar .sp{flex:1}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 .btn{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;
@@ -343,6 +345,28 @@ def svg_body(text: str, raw_url: str) -> str:
     return f'<div class="doc" style="text-align:center">{drawing}</div>'
 
 
+# -- CSV ---------------------------------------------------------------------
+
+MAX_CSV_ROWS = 5000
+
+
+def csv_body(text: str, raw_url: str) -> str:
+    """A CSV file as a table, the first row as the header (cells are escaped)."""
+    rows = list(csv.reader(io.StringIO(text)))
+    if not rows:
+        return '<p class="muted">Empty file.</p>'
+    head, body = rows[0], rows[1 : MAX_CSV_ROWS + 1]
+    cut = (
+        f'<p class="muted">Showing the first {MAX_CSV_ROWS} of {len(rows) - 1} rows '
+        f'(<a href="{html.escape(raw_url, quote=True)}">raw</a> has them all).</p>'
+        if len(rows) - 1 > MAX_CSV_ROWS
+        else ""
+    )
+    th = "".join(f"<th>{html.escape(c)}</th>" for c in head)
+    trs = "".join("<tr>" + "".join(f"<td>{html.escape(c)}</td>" for c in r) + "</tr>" for r in body)
+    return f'<div class="doc"><table><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table>{cut}</div>'
+
+
 # -- format tabs -------------------------------------------------------------
 
 
@@ -383,13 +407,13 @@ def page(title: str, body: str, raw_url: str, extra: str = "") -> str:
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         f"<title>{html.escape(title)}</title>{theme.HEAD}<style>{theme.SWITCHER_CSS}{CSS}</style></head>"
-        f'<body><main><div class="bar"><a href="/results/">&larr; All files</a><h1>{html.escape(title)}</h1>'
+        f'<body><main><div class="bar"><h1>{html.escape(title)}</h1>'
         f'<span class="sp"></span>{extra}<a href="{html.escape(raw_url, quote=True)}">raw</a></div>{body}</main></body></html>'
     )
 
 
 def render(name: str, text: str, raw_url: str, extra: str = "") -> str | None:
-    """The themed page for a ``.md``, ``.json`` or ``.svg`` file, or None for any other kind."""
+    """The themed page for a ``.md``, ``.json``, ``.svg`` or ``.csv`` file, or None for any other kind."""
     suffix = PurePosixPath(name).suffix
     if suffix == ".md":
         return page(name, f'<div class="doc">{markdown_to_html(text)}</div>', raw_url, extra)
@@ -397,4 +421,6 @@ def render(name: str, text: str, raw_url: str, extra: str = "") -> str | None:
         return page(name, json_body(text, raw_url), raw_url, extra)
     if suffix == ".svg":
         return page(name, svg_body(text, raw_url), raw_url, extra)
+    if suffix == ".csv":
+        return page(name, csv_body(text, raw_url), raw_url, extra)
     return None

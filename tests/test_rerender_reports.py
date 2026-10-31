@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import re
 import shutil
 import sys
 import tempfile
@@ -55,6 +57,28 @@ class RerenderTests(unittest.TestCase):
         page.write_text(page.read_text() + "<!-- edited -->")
         self.assertEqual(self.run_main("--force"), 0)
         self.assertNotIn("<!-- edited -->", page.read_text())
+
+    def test_an_old_routebench_chart_is_redrawn_with_label_placement(self):
+        route = {
+            "strategies": {
+                "a": {"n": 1, "accuracy": 0.9, "ms_mean": 100.0},
+                "b": {"n": 1, "accuracy": 0.9, "ms_mean": 100.0},
+            },
+            "pareto": ["a"],
+        }
+        (self.dir / "routebench-1.json").write_text(json.dumps(route))
+        svg = self.dir / "routebench-1.svg"
+        svg.write_text('<svg xmlns="http://www.w3.org/2000/svg"><text>old</text></svg>')
+        self.assertEqual(self.run_main("--check"), 1)
+        self.assertEqual(self.run_main(), 0)
+        self.assertIn('data-layout="2"', svg.read_text())
+        self.assertEqual(self.run_main("--check"), 0)
+        ys = [
+            float(y)
+            for y in re.findall(r'<text x="[\d.]+" y="([\d.]+)">[ab]</text>', svg.read_text())
+        ]
+        self.assertEqual(len(ys), 2)
+        self.assertGreaterEqual(abs(ys[0] - ys[1]), 12)  # two close points, labels apart
 
     def test_latest_links_and_reports_without_json_are_left_alone(self):
         (self.dir / "bench-latest.html").symlink_to("bench-20260621.html")
