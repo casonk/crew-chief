@@ -23,11 +23,23 @@ indexes the rows a view needs. A zstd JSON Lines archive and a Parquet export ar
 | Table | One row per | Holds |
 |---|---|---|
 | `runs` | imported result file | source file name, kind (`taskbench` or `routebench`), task, created, content hash |
-| `measures` | run, performer, task, question | items, accuracy, macro F1, mean/median/p90 latency |
+| `measures` | run, performer, task, question | items, accuracy, macro F1, mean/median/p90 latency, tokens per second, extra fields (JSON) |
 | `answers` | run, performer, item, question (taskbench) | the answer, the expected value, its confidence, latency |
 
 Importing is idempotent: a file is read again only when its hash changed, and an edited file replaces its rows.
-Files that are not benchmark results (the test-bench and inference-speed reports) are skipped for now.
+Five kinds of result file are imported; anything else is skipped:
+
+| Kind | Files | Becomes |
+|---|---|---|
+| `taskbench` | `taskbench-*.json` | accuracy and macro F1 per runner, task and question; one answer row per item |
+| `routebench` | `routebench-*.json` | accuracy and latency per strategy and task |
+| `testbench` | `test-bench-*.json` | a model's pass rate on a task is the accuracy, agent seconds the latency; one answer row per trial |
+| `speedbench` | `bench-*.json` (inference speed) | `tps` (tokens per second) and time to first token per model and prompt |
+| `enginebench` | `engine-matrix-*`, `serving-features-*` | `tps` per model and configuration; other fields in `extra` |
+
+A schema change rebuilds the store from `results/` (`PRAGMA user_version`), so it never needs migrating by hand.
+Renderings pick the metric the run has (accuracy, or tokens per second for a speed run) and leave out columns that
+are empty for it.
 
 ## Renderings
 
