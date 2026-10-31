@@ -48,6 +48,14 @@ class RerenderTests(unittest.TestCase):
         self.assertNotIn("--old:1", page)
         self.assertEqual(self.run_main("--check"), 0)
 
+    def test_force_rebuilds_a_report_whose_theme_is_already_current(self):
+        self.assertEqual(self.run_main(), 0)
+        self.assertEqual(self.run_main("--check"), 0)  # current: nothing to do
+        page = self.dir / "bench-20260621.html"
+        page.write_text(page.read_text() + "<!-- edited -->")
+        self.assertEqual(self.run_main("--force"), 0)
+        self.assertNotIn("<!-- edited -->", page.read_text())
+
     def test_latest_links_and_reports_without_json_are_left_alone(self):
         (self.dir / "bench-latest.html").symlink_to("bench-20260621.html")
         (self.dir / "bench-latest.json").symlink_to("bench-20260621.json")
