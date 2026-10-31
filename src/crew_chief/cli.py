@@ -277,11 +277,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     task_p.add_argument(
         "--split",
-        choices=("dev", "heldout", "all"),
-        default="dev",
+        choices=("test", "train", "all", "heldout", "dev"),
+        default="test",
         help=(
-            "Items to score (default: dev). Fit rules and prompts on dev; score a fixed "
-            "configuration once on heldout."
+            "Items to score (default: test). The whole train split is always in every prompt as "
+            "worked examples; scoring train items is leave-one-out (each is scored without its own "
+            "example) and `all` mixes both. dev and heldout are the old names for train and test."
+        ),
+    )
+    task_p.add_argument(
+        "--zero-shot",
+        action="store_true",
+        help=(
+            "Ablation only: leave the train examples out of the prompts. The result is recorded "
+            "as zero-shot and is not comparable with the standard protocol."
         ),
     )
     task_p.add_argument("--out", default="results", help="Output directory (default: results).")
@@ -454,19 +463,25 @@ def main(argv: list[str] | None = None) -> None:
 
         try:
             task = tb.load_task(Path(args.task)).select(args.split)
+            if args.zero_shot:
+                task = task.without_examples()
             runners = [tb.make_runner(spec, task) for spec in args.runner]
         except tb.TaskError as exc:
             print(f"Error: {exc}", file=sys.stderr)
             sys.exit(2)
         results = []
         for runner in runners:
-            print(f"running {runner.name} on {len(task.items)} items ...", file=sys.stderr)
+            print(
+                f"running {runner.name} on {len(task.items)} {task.split} items "
+                f"({'zero-shot' if task.zero_shot else f'{len(task.examples)} train examples in the prompt'}) ...",
+                file=sys.stderr,
+            )
             results.append(tb.run(task, runner))
         stamp = _time.strftime("%Y%m%d-%H%M%S")
         out = Path(args.out)
         out.mkdir(parents=True, exist_ok=True)
-        suffix = "" if args.split == "dev" else f"-{args.split}"
-        base = out / f"taskbench-{tb.slug(task.name)}{suffix}-{stamp}"
+        mode = "-zeroshot" if task.zero_shot else ""
+        base = out / f"taskbench-{tb.slug(task.name)}-{task.split}{mode}-{stamp}"
         markdown = tb.render_markdown(results, task, stamp, _scoring_profiles(args))
         base.with_suffix(".md").write_text(markdown, encoding="utf-8")
         base.with_suffix(".json").write_text(json.dumps(results, indent=2) + "\n", encoding="utf-8")

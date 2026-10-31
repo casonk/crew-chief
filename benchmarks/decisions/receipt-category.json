@@ -210,7 +210,7 @@
         "category": "groceries",
         "recurring": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "NOODLE HOUSE  LUNCH SPECIAL 13.25",
@@ -218,7 +218,7 @@
         "category": "dining",
         "recurring": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "RIDEGO  TRIP DOWNTOWN 17.60",
@@ -226,7 +226,7 @@
         "category": "transport",
         "recurring": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "AQUA WORKS  WATER AND SEWER 48.30",
@@ -234,7 +234,7 @@
         "category": "utilities",
         "recurring": true
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "MOVIE PALACE  TWO TICKETS 24.00",
@@ -242,7 +242,7 @@
         "category": "entertainment",
         "recurring": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "WELLNESS CLINIC  VISIT COPAY 30.00",
@@ -250,7 +250,7 @@
         "category": "health",
         "recurring": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "TUNEBOX  FAMILY MUSIC PLAN 16.99",
@@ -258,7 +258,7 @@
         "category": "entertainment",
         "recurring": true
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "BULK BARN WAREHOUSE  PANTRY RESTOCK 87.40",
@@ -266,7 +266,7 @@
         "category": "groceries",
         "recurring": false
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }

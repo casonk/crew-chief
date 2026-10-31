@@ -306,21 +306,21 @@
       "expected": {
         "repo": "scheduler-service"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Show the next five run times for a cron expression before saving it",
       "expected": {
         "repo": "scheduler-service"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Explain in the README why some timers are user units and others system units",
       "expected": {
         "repo": "scheduler-service"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Groceries should remember the store I usually buy each item from",
@@ -351,21 +351,21 @@
       "expected": {
         "repo": "list-manager"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Add a barcode scan button for adding grocery items from the phone",
       "expected": {
         "repo": "list-manager"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Write down the rules the grocery auto-categoriser uses so I can edit them",
       "expected": {
         "repo": "list-manager"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "The player should resume an episode where I stopped",
@@ -396,21 +396,21 @@
       "expected": {
         "repo": "media-library"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Evaluate whether AV1 transcoding is worth it for the stored library",
       "expected": {
         "repo": "media-library"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Posters for shows are missing after a rename",
       "expected": {
         "repo": "media-library"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "The page refreshes while I am typing the download limit and loses my entry",
@@ -441,21 +441,21 @@
       "expected": {
         "repo": "torrent-ui"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Pause everything automatically when the VPN drops",
       "expected": {
         "repo": "torrent-ui"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Torrent names with brackets break the details link",
       "expected": {
         "repo": "torrent-ui"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Resume should open the session in the right working directory",
@@ -486,21 +486,21 @@
       "expected": {
         "repo": "session-viewer"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Show token usage per session over time",
       "expected": {
         "repo": "session-viewer"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Document where each assistant keeps its session files",
       "expected": {
         "repo": "session-viewer"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Receipts from one grocer are read with the totals shifted by a column",
@@ -531,21 +531,21 @@
       "expected": {
         "repo": "receipt-reader"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Show me the receipts that were filed under an unknown merchant",
       "expected": {
         "repo": "receipt-reader"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Explain how the duplicate receipt check decides two receipts match",
       "expected": {
         "repo": "receipt-reader"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Compare the small decision models on latency as well as accuracy",
@@ -576,21 +576,21 @@
       "expected": {
         "repo": "local-llm"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Wake the model on demand and unload it when idle",
       "expected": {
         "repo": "local-llm"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Test a fine-tuned classifier against the decision models",
       "expected": {
         "repo": "local-llm"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Switching country should reconnect the tunnel to my phone as well",
@@ -621,21 +621,21 @@
       "expected": {
         "repo": "network-guard"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Document the firewall zones the tunnel needs open",
       "expected": {
         "repo": "network-guard"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Check that traffic really leaves through the VPN and not the normal route",
       "expected": {
         "repo": "network-guard"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Cache a retrieved password for a few minutes so scripts do not prompt twice",
@@ -666,21 +666,21 @@
       "expected": {
         "repo": "secret-vault"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Add an allowlist of entries a given script may read",
       "expected": {
         "repo": "secret-vault"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Describe how to set the vault up on a new machine",
       "expected": {
         "repo": "secret-vault"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Send a text message when a backup job fails",
@@ -711,21 +711,21 @@
       "expected": {
         "repo": "notifier"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "The email bridge ignores messages sent from my own address",
       "expected": {
         "repo": "notifier"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Document which providers need a token and where it goes",
       "expected": {
         "repo": "notifier"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "The dashboard should show disk temperature history for the past week",
@@ -756,21 +756,21 @@
       "expected": {
         "repo": "resource-monitor"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "The admin page should let me change how long history is kept",
       "expected": {
         "repo": "resource-monitor"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Investigate why the host gets hot during nightly jobs",
       "expected": {
         "repo": "resource-monitor"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Renew the internal certificate before it expires and deploy it",
@@ -801,21 +801,21 @@
       "expected": {
         "repo": "web-ingress"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Serve the shared theme files from one place for every site",
       "expected": {
         "repo": "web-ingress"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Review which sites are reachable without the client certificate",
       "expected": {
         "repo": "web-ingress"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Buy a second monitor arm",
@@ -846,21 +846,21 @@
       "expected": {
         "repo": "unknown"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Ask about the warranty on the printer",
       "expected": {
         "repo": "unknown"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Make a list of ideas",
       "expected": {
         "repo": "unknown"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Find near-duplicate photos from burst shots and keep the sharpest",
@@ -885,14 +885,14 @@
       "expected": {
         "repo": "photo-archive"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Add a people filter to the album view",
       "expected": {
         "repo": "photo-archive"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Fetch the series name and number for each book automatically",
@@ -917,14 +917,14 @@
       "expected": {
         "repo": "book-catalog"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Export the catalog to a spreadsheet",
       "expected": {
         "repo": "book-catalog"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Gapless playback between tracks of a live album",
@@ -949,14 +949,14 @@
       "expected": {
         "repo": "music-player"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Scrobble plays to a local history file",
       "expected": {
         "repo": "music-player"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Split one transaction across two categories",
@@ -981,14 +981,14 @@
       "expected": {
         "repo": "budget-tracker"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Mark recurring subscriptions and list what they cost per year",
       "expected": {
         "repo": "budget-tracker"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Remind me which forms are still missing for this year",
@@ -1013,14 +1013,14 @@
       "expected": {
         "repo": "tax-helper"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Export the checklist as a printable page",
       "expected": {
         "repo": "tax-helper"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Show applications that have had no reply for two weeks",
@@ -1045,14 +1045,14 @@
       "expected": {
         "repo": "job-tracker"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Link each application to the posting that was archived",
       "expected": {
         "repo": "job-tracker"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Letters should pick up the company name from the posting",
@@ -1077,14 +1077,14 @@
       "expected": {
         "repo": "resume-builder"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Keep a short list of reusable paragraphs for letters",
       "expected": {
         "repo": "resume-builder"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Chart the living room temperature for the last month",
@@ -1109,14 +1109,14 @@
       "expected": {
         "repo": "home-sensors"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Add a battery level column for every wireless sensor",
       "expected": {
         "repo": "home-sensors"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Verify the newest backup by restoring one random file",
@@ -1141,14 +1141,14 @@
       "expected": {
         "repo": "backup-runner"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "A failed run should leave the previous good backup untouched",
       "expected": {
         "repo": "backup-runner"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Show the last sync time for each folder",
@@ -1173,14 +1173,14 @@
       "expected": {
         "repo": "phone-sync"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Let me browse the shared folder from the web",
       "expected": {
         "repo": "phone-sync"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "List every open port and the device behind it",
@@ -1205,14 +1205,14 @@
       "expected": {
         "repo": "router-config"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Give the guest network its own address range",
       "expected": {
         "repo": "router-config"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Show the cost basis next to the current price",
@@ -1237,14 +1237,14 @@
       "expected": {
         "repo": "stock-watcher"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Flag holdings that pay a dividend this month",
       "expected": {
         "repo": "stock-watcher"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Generate a tag page for every tag used in posts",
@@ -1269,14 +1269,14 @@
       "expected": {
         "repo": "blog-site"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Show reading time on each post",
       "expected": {
         "repo": "blog-site"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Warn when a diagram mentions a service the code no longer has",
@@ -1301,14 +1301,14 @@
       "expected": {
         "repo": "diagram-tool"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Check that every repository has the standard architecture files",
       "expected": {
         "repo": "diagram-tool"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "shedule page shows the wrong nexr run time",
@@ -1321,7 +1321,7 @@
       "expected": {
         "repo": "torrent-ui"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "recipt totals are off by a cent after rounding",
@@ -1334,7 +1334,7 @@
       "expected": {
         "repo": "network-guard"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "cretificate renewal fails on the proxy",
@@ -1347,7 +1347,7 @@
       "expected": {
         "repo": "list-manager"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "bakcup of the phone photos skips videos",
@@ -1366,7 +1366,7 @@
       "expected": {
         "repo": "notifier"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Show the VPN country on the resource dashboard",
@@ -1379,7 +1379,7 @@
       "expected": {
         "repo": "job-tracker"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Make the media library pause when the phone sync starts",
@@ -1392,7 +1392,7 @@
       "expected": {
         "repo": "router-config"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Make it faster",
@@ -1411,14 +1411,14 @@
       "expected": {
         "repo": "unknown"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Check why it is slow at night",
       "expected": {
         "repo": "unknown"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Update the docs",
@@ -1431,7 +1431,7 @@
       "expected": {
         "repo": "unknown"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Add a column for how many pages are left",
@@ -1444,7 +1444,7 @@
       "expected": {
         "repo": "scheduler-service"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Need a monthly view of what I spent on food",
@@ -1457,7 +1457,7 @@
       "expected": {
         "repo": "job-tracker"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Which sensor ran out of battery",

@@ -149,70 +149,70 @@
       "expected": {
         "category": "Albums"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "To Pimp a Butterfly",
       "expected": {
         "category": "Albums"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "99% Invisible",
       "expected": {
         "category": "Podcasts"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Freakonomics Radio",
       "expected": {
         "category": "Podcasts"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Unabridged recording of Pride and Prejudice",
       "expected": {
         "category": "Audiobooks"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Sapiens audiobook",
       "expected": {
         "category": "Audiobooks"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "NPR hourly news stream",
       "expected": {
         "category": "Radio"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Classic rock station 101.1",
       "expected": {
         "category": "Radio"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Bonobo",
       "expected": {
         "category": "Artists"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Look into Fela Kuti",
       "expected": {
         "category": "Artists"
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }

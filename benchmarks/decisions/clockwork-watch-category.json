@@ -122,56 +122,56 @@
       "expected": {
         "category": "Movies"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Mad Max: Fury Road",
       "expected": {
         "category": "Movies"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Severance",
       "expected": {
         "category": "TV Shows"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Seinfeld",
       "expected": {
         "category": "TV Shows"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Death Note",
       "expected": {
         "category": "Anime"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Your Name",
       "expected": {
         "category": "Anime"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Won't You Be My Neighbor?",
       "expected": {
         "category": "Documentaries"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "My Octopus Teacher",
       "expected": {
         "category": "Documentaries"
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }
