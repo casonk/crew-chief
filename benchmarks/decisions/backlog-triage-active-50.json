@@ -1,0 +1,908 @@
+{
+  "name": "backlog-triage-active-50",
+  "description": "Active-sorting variant of backlog-triage: 50% of each repository's entries are passed to the model as examples inside its description and removed from the scored items. Compare with backlog-triage, never with it mixed in.",
+  "questions": {
+    "repo": {
+      "type": "choice",
+      "instructions": "Which repository is this entry about? Answer unknown if it does not clearly belong to one.",
+      "criteria": {
+        "scheduler-service": "Schedules and runs recurring jobs from manifests; the job, timer and schedule pages, run history and failure notices Examples: \"The schedule page should show when each job last ran and whether it passed\"; \"Add a way to pause one timer for a day without disabling the whole job\"; \"Job logs are truncated in the web view; let me expand them\"; \"Document how to write a manifest for a job that needs two timers\"; \"Jobs that fail twice in a row should be listed at the top of the schedule\"",
+        "list-manager": "Personal lists: groceries, shopping, to-do, watch, read, invest Examples: \"Groceries should remember the store I usually buy each item from\"; \"When I mark a shopping item bought, move it to a history list with the date\"; \"Let me reorder items in the to-do list by dragging\"; \"The invest list needs a column for the target allocation percentage\"",
+        "media-library": "Organizes, plays and upscales the local video library Examples: \"The player should resume an episode where I stopped\"; \"Upscaled copies take too long to appear; show the render progress\"; \"Subtitles for foreign films are out of sync after the third episode\"; \"Add a filter for movies by director on the library page\"",
+        "torrent-ui": "A web page to add and manage torrents and their limits Examples: \"The page refreshes while I am typing the download limit and loses my entry\"; \"Show the seed ratio next to each torrent\"; \"Add a per-torrent upload cap in the details view\"; \"Email me when a torrent finishes, with a link to its page\"",
+        "session-viewer": "Reviews, resumes and deletes AI assistant sessions Examples: \"Resume should open the session in the right working directory\"; \"Group sessions by repository in the list view\"; \"The assistant session list shows a schema error for one provider; ignore broken files\"; \"Bulk delete should ask once and show how many sessions are affected\"",
+        "receipt-reader": "Scans, parses and reports on receipts and documents Examples: \"Receipts from one grocer are read with the totals shifted by a column\"; \"Add a monthly spending summary by merchant to the report\"; \"Photos taken sideways should be rotated before text recognition\"; \"Flag receipts whose line items do not add up to the total\"",
+        "local-llm": "Runs local language models and benchmarks them Examples: \"Compare the small decision models on latency as well as accuracy\"; \"The benchmark report should include a confusion matrix per task\"; \"Add a held-out split for the message routing task\"; \"Serve the large model with a longer context window and see if it still fits in memory\"",
+        "network-guard": "VPN switching, private tunnels and network status Examples: \"Switching country should reconnect the tunnel to my phone as well\"; \"Show which country the VPN is connected to on the status page\"; \"The tunnel drops after the laptop sleeps and does not come back\"; \"Add a button to rotate to a faster server group\"",
+        "secret-vault": "Passwords Examples: \"Cache a retrieved password for a few minutes so scripts do not prompt twice\"; \"List which tools asked for which credential entry\"; \"Rotate the stored application password and update everything that uses it\"; \"The unlock fails if the vault file is on a network share\"",
+        "notifier": "Alerts Examples: \"Send a text message when a backup job fails\"; \"Alerts should go to every channel, not only the first one that works\"; \"Reply to a message with a status summary of the machine\"; \"Rate-limit repeated alerts about the same problem\"",
+        "resource-monitor": "Machine, drive and repository resource dashboards Examples: \"The dashboard should show disk temperature history for the past week\"; \"Warn me when a drive is close to full\"; \"Add GPU memory use to the live panel\"; \"Show which repositories take the most disk space\"",
+        "web-ingress": "Shared reverse proxy, TLS certificates, client-certificate checks and internal DNS for every home site, including the shared theme and top bar files Examples: \"Renew the internal certificate before it expires and deploy it\"; \"Add a new hostname for the dashboard and publish its DNS record\"; \"Only devices with the client certificate should reach the admin sites\"; \"List every internal site with its owner and the port behind it\"",
+        "photo-archive": "Sorts, deduplicates and backs up personal photos Examples: \"Find near-duplicate photos from burst shots and keep the sharpest\"; \"Group photos by event using the capture time and place\"; \"Thumbnails are blurry for portrait photos after import\"",
+        "book-catalog": "Catalogs ebooks and audiobooks, fetches covers and metadata Examples: \"Fetch the series name and number for each book automatically\"; \"Audiobooks should show the total listening time\"; \"Merge two editions of the same book into one entry\"",
+        "music-player": "Plays the local music collection Examples: \"Gapless playback between tracks of a live album\"; \"Show lyrics next to the track that is playing\"; \"Shuffle should avoid repeating an artist twice in a row\"",
+        "budget-tracker": "Tracks accounts, budgets and spending by category Examples: \"Split one transaction across two categories\"; \"Warn me when a category is at 80 percent of its monthly budget\"; \"Import the bank's CSV export and skip transactions already seen\"",
+        "tax-helper": "Collects documents and figures for the yearly tax return Examples: \"Remind me which forms are still missing for this year\"; \"Total the deductible expenses from the receipts folder\"; \"Keep last year's return next to this year's for comparison\"",
+        "job-tracker": "Tracks job applications, deadlines and follow-ups Examples: \"Show applications that have had no reply for two weeks\"; \"Add a deadline reminder three days before it is due\"; \"Record which version of the CV went with each application\"; \"Sort open positions by deadline\"",
+        "resume-builder": "Builds the CV and cover letters from templates Examples: \"Letters should pick up the company name from the posting\"; \"Add a one-page version of the CV\"; \"Highlight skills that match the posting's requirements\"",
+        "home-sensors": "Reads temperature, power and door sensors around the house Examples: \"Chart the living room temperature for the last month\"; \"Tell me when the garage door has been open for ten minutes\"; \"Log power use of the freezer separately\"",
+        "backup-runner": "Schedules, verifies and prunes backups of the machines and the phone Examples: \"Verify the newest backup by restoring one random file\"; \"Prune weekly snapshots older than a year but keep the first of each month\"; \"Back up the phone photos nightly while it charges\"; \"Show how much space each backup set uses\"",
+        "phone-sync": "Shares files with the phone and syncs photos over the home network Examples: \"Show the last sync time for each folder\"; \"Pick which folders on the phone are shared\"; \"Large videos stall the transfer over weak wifi\"",
+        "router-config": "Configures and audits the home router and firewall rules Examples: \"List every open port and the device behind it\"; \"Back up the router settings before each change\"; \"Block a device from the internet after midnight\"",
+        "stock-watcher": "Fetches quotes and analyses holdings Examples: \"Show the cost basis next to the current price\"; \"Alert when a holding drops more than 8 percent in a day\"; \"Chart the allocation by sector\"",
+        "blog-site": "Static personal website and its build pipeline Examples: \"Generate a tag page for every tag used in posts\"; \"The build fails when a post has no title\"; \"Add an RSS feed for new posts\"",
+        "diagram-tool": "Renders architecture diagrams and checks the docs for drift Examples: \"Warn when a diagram mentions a service the code no longer has\"; \"Render the same diagram in light and dark colours\"; \"Add a legend to every generated diagram\"",
+        "unknown": "Does not clearly belong to any listed repository"
+      }
+    }
+  },
+  "baseline": {
+    "repo": {
+      "default": "unknown",
+      "rules": [
+        {
+          "if_any": [
+            "backup",
+            "bakcup",
+            "prune"
+          ],
+          "then": "backup-runner"
+        },
+        {
+          "if_any": [
+            "timer",
+            "schedule",
+            "shedule",
+            "job",
+            "cron"
+          ],
+          "then": "scheduler-service"
+        },
+        {
+          "if_any": [
+            "grocer",
+            "grocey",
+            "shopping",
+            "to-do",
+            "invest",
+            "read list"
+          ],
+          "then": "list-manager"
+        },
+        {
+          "if_any": [
+            "episode",
+            "subtitle",
+            "upscale",
+            "movie",
+            "library page",
+            "poster"
+          ],
+          "then": "media-library"
+        },
+        {
+          "if_any": [
+            "torrent",
+            "torent",
+            "seed",
+            "download limit"
+          ],
+          "then": "torrent-ui"
+        },
+        {
+          "if_any": [
+            "session",
+            "resume"
+          ],
+          "then": "session-viewer"
+        },
+        {
+          "if_any": [
+            "receipt",
+            "recipt",
+            "merchant"
+          ],
+          "then": "receipt-reader"
+        },
+        {
+          "if_any": [
+            "decision model",
+            "benchmark",
+            "model",
+            "context window"
+          ],
+          "then": "local-llm"
+        },
+        {
+          "if_any": [
+            "vpn",
+            "tunnel",
+            "tunel",
+            "country"
+          ],
+          "then": "network-guard"
+        },
+        {
+          "if_any": [
+            "password",
+            "credential",
+            "secret",
+            "vault"
+          ],
+          "then": "secret-vault"
+        },
+        {
+          "if_any": [
+            "alert",
+            "text message",
+            "notif",
+            "email bridge",
+            "quiet-hours"
+          ],
+          "then": "notifier"
+        },
+        {
+          "if_any": [
+            "drive",
+            "disk",
+            "gpu",
+            "dashboard",
+            "history is kept"
+          ],
+          "then": "resource-monitor"
+        },
+        {
+          "if_any": [
+            "certificate",
+            "cretificate",
+            "hostname",
+            "proxy",
+            "502",
+            "internal site"
+          ],
+          "then": "web-ingress"
+        },
+        {
+          "if_any": [
+            "photo",
+            "thumbnail",
+            "album"
+          ],
+          "then": "photo-archive"
+        },
+        {
+          "if_any": [
+            "book",
+            "audiobook",
+            "isbn"
+          ],
+          "then": "book-catalog"
+        },
+        {
+          "if_any": [
+            "track",
+            "playback",
+            "shuffle",
+            "lyrics",
+            "album"
+          ],
+          "then": "music-player"
+        },
+        {
+          "if_any": [
+            "budget",
+            "transaction",
+            "spending",
+            "subscription"
+          ],
+          "then": "budget-tracker"
+        },
+        {
+          "if_any": [
+            "tax",
+            "deductible",
+            "forms"
+          ],
+          "then": "tax-helper"
+        },
+        {
+          "if_any": [
+            "application",
+            "deadline",
+            "posting",
+            "position"
+          ],
+          "then": "job-tracker"
+        },
+        {
+          "if_any": [
+            "cv",
+            "letter",
+            "pdf export"
+          ],
+          "then": "resume-builder"
+        },
+        {
+          "if_any": [
+            "sensor",
+            "temperature",
+            "garage",
+            "humidity"
+          ],
+          "then": "home-sensors"
+        },
+        {
+          "if_any": [
+            "sync",
+            "phone"
+          ],
+          "then": "phone-sync"
+        },
+        {
+          "if_any": [
+            "router",
+            "firewall",
+            "port",
+            "guest network"
+          ],
+          "then": "router-config"
+        },
+        {
+          "if_any": [
+            "quote",
+            "holding",
+            "cost basis",
+            "dividend",
+            "price"
+          ],
+          "then": "stock-watcher"
+        },
+        {
+          "if_any": [
+            "post",
+            "rss",
+            "tag page",
+            "build"
+          ],
+          "then": "blog-site"
+        },
+        {
+          "if_any": [
+            "diagram",
+            "legend"
+          ],
+          "then": "diagram-tool"
+        }
+      ]
+    }
+  },
+  "items": [
+    {
+      "state": "Show the next five run times for a cron expression before saving it",
+      "expected": {
+        "repo": "scheduler-service"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Explain in the README why some timers are user units and others system units",
+      "expected": {
+        "repo": "scheduler-service"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Sort the read list by how long ago I added each book",
+      "expected": {
+        "repo": "list-manager"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Add a barcode scan button for adding grocery items from the phone",
+      "expected": {
+        "repo": "list-manager"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Write down the rules the grocery auto-categoriser uses so I can edit them",
+      "expected": {
+        "repo": "list-manager"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Detect duplicate movies with different release names and offer to merge them",
+      "expected": {
+        "repo": "media-library"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Evaluate whether AV1 transcoding is worth it for the stored library",
+      "expected": {
+        "repo": "media-library"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Posters for shows are missing after a rename",
+      "expected": {
+        "repo": "media-library"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Let me tag torrents and filter the list by tag",
+      "expected": {
+        "repo": "torrent-ui"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Pause everything automatically when the VPN drops",
+      "expected": {
+        "repo": "torrent-ui"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Torrent names with brackets break the details link",
+      "expected": {
+        "repo": "torrent-ui"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Search session text for a phrase, not only the title",
+      "expected": {
+        "repo": "session-viewer"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Show token usage per session over time",
+      "expected": {
+        "repo": "session-viewer"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Document where each assistant keeps its session files",
+      "expected": {
+        "repo": "session-viewer"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Translate non-English receipts before categorising them",
+      "expected": {
+        "repo": "receipt-reader"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Show me the receipts that were filed under an unknown merchant",
+      "expected": {
+        "repo": "receipt-reader"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Explain how the duplicate receipt check decides two receipts match",
+      "expected": {
+        "repo": "receipt-reader"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Record which backend each model is served from and why",
+      "expected": {
+        "repo": "local-llm"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Wake the model on demand and unload it when idle",
+      "expected": {
+        "repo": "local-llm"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Test a fine-tuned classifier against the decision models",
+      "expected": {
+        "repo": "local-llm"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Alert me when the public address changes unexpectedly",
+      "expected": {
+        "repo": "network-guard"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Document the firewall zones the tunnel needs open",
+      "expected": {
+        "repo": "network-guard"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Check that traffic really leaves through the VPN and not the normal route",
+      "expected": {
+        "repo": "network-guard"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Make sure no tool writes a retrieved secret to a log",
+      "expected": {
+        "repo": "secret-vault"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Add an allowlist of entries a given script may read",
+      "expected": {
+        "repo": "secret-vault"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Describe how to set the vault up on a new machine",
+      "expected": {
+        "repo": "secret-vault"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Add a quiet-hours setting for non-urgent notices",
+      "expected": {
+        "repo": "notifier"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The email bridge ignores messages sent from my own address",
+      "expected": {
+        "repo": "notifier"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Document which providers need a token and where it goes",
+      "expected": {
+        "repo": "notifier"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "One drive reports increasing read errors; decide whether to replace it",
+      "expected": {
+        "repo": "resource-monitor"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The admin page should let me change how long history is kept",
+      "expected": {
+        "repo": "resource-monitor"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Investigate why the host gets hot during nightly jobs",
+      "expected": {
+        "repo": "resource-monitor"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "One site returns a 502 after the proxy restarts",
+      "expected": {
+        "repo": "web-ingress"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Serve the shared theme files from one place for every site",
+      "expected": {
+        "repo": "web-ingress"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Review which sites are reachable without the client certificate",
+      "expected": {
+        "repo": "web-ingress"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Buy a second monitor arm",
+      "expected": {
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Think about next year's plan",
+      "expected": {
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Call the dentist",
+      "expected": {
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Look into that thing from last week",
+      "expected": {
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Reorganise the garage shelves",
+      "expected": {
+        "repo": "unknown"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Ask about the warranty on the printer",
+      "expected": {
+        "repo": "unknown"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Make a list of ideas",
+      "expected": {
+        "repo": "unknown"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Read the date from the file name when the camera clock was wrong",
+      "expected": {
+        "repo": "photo-archive"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Add a people filter to the album view",
+      "expected": {
+        "repo": "photo-archive"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Cover images are missing for books with an ISBN-13",
+      "expected": {
+        "repo": "book-catalog"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Export the catalog to a spreadsheet",
+      "expected": {
+        "repo": "book-catalog"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Remember the position inside a long mix",
+      "expected": {
+        "repo": "music-player"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Scrobble plays to a local history file",
+      "expected": {
+        "repo": "music-player"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Show a year-over-year comparison of grocery spending",
+      "expected": {
+        "repo": "budget-tracker"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Mark recurring subscriptions and list what they cost per year",
+      "expected": {
+        "repo": "budget-tracker"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Estimate the quarterly payment from year-to-date income",
+      "expected": {
+        "repo": "tax-helper"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Export the checklist as a printable page",
+      "expected": {
+        "repo": "tax-helper"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Link each application to the posting that was archived",
+      "expected": {
+        "repo": "job-tracker"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The PDF export drops the accent in names",
+      "expected": {
+        "repo": "resume-builder"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Keep a short list of reusable paragraphs for letters",
+      "expected": {
+        "repo": "resume-builder"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "The humidity sensor in the basement reports zero after a reboot",
+      "expected": {
+        "repo": "home-sensors"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Add a battery level column for every wireless sensor",
+      "expected": {
+        "repo": "home-sensors"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "A failed run should leave the previous good backup untouched",
+      "expected": {
+        "repo": "backup-runner"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Pause syncing when the phone is on mobile data",
+      "expected": {
+        "repo": "phone-sync"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Let me browse the shared folder from the web",
+      "expected": {
+        "repo": "phone-sync"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Compare the live firewall rules with the saved ones and show differences",
+      "expected": {
+        "repo": "router-config"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Give the guest network its own address range",
+      "expected": {
+        "repo": "router-config"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Fetch five years of price history instead of one",
+      "expected": {
+        "repo": "stock-watcher"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Flag holdings that pay a dividend this month",
+      "expected": {
+        "repo": "stock-watcher"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Optimise images to a smaller size on build",
+      "expected": {
+        "repo": "blog-site"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Show reading time on each post",
+      "expected": {
+        "repo": "blog-site"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Write the layout back to the editable file after rendering",
+      "expected": {
+        "repo": "diagram-tool"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Check that every repository has the standard architecture files",
+      "expected": {
+        "repo": "diagram-tool"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "shedule page shows the wrong nexr run time",
+      "expected": {
+        "repo": "scheduler-service"
+      }
+    },
+    {
+      "state": "torent ratio column is blank for seeding items",
+      "expected": {
+        "repo": "torrent-ui"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "recipt totals are off by a cent after rounding",
+      "expected": {
+        "repo": "receipt-reader"
+      }
+    },
+    {
+      "state": "vpn tunel drops when the laptop sleeps",
+      "expected": {
+        "repo": "network-guard"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "cretificate renewal fails on the proxy",
+      "expected": {
+        "repo": "web-ingress"
+      }
+    },
+    {
+      "state": "grocey list forgets my store",
+      "expected": {
+        "repo": "list-manager"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "bakcup of the phone photos skips videos",
+      "expected": {
+        "repo": "backup-runner"
+      }
+    },
+    {
+      "state": "Make the backup runner send a text when a prune fails",
+      "expected": {
+        "repo": "backup-runner"
+      }
+    },
+    {
+      "state": "Let the notifier show which backup finished last",
+      "expected": {
+        "repo": "notifier"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Show the VPN country on the resource dashboard",
+      "expected": {
+        "repo": "resource-monitor"
+      }
+    },
+    {
+      "state": "Have the job tracker add a calendar entry for each deadline",
+      "expected": {
+        "repo": "job-tracker"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Make the media library pause when the phone sync starts",
+      "expected": {
+        "repo": "media-library"
+      }
+    },
+    {
+      "state": "Use the vault to store the router admin password",
+      "expected": {
+        "repo": "router-config"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Make it faster",
+      "expected": {
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Fix the thing that broke yesterday",
+      "expected": {
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Tidy up the settings page",
+      "expected": {
+        "repo": "unknown"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Check why it is slow at night",
+      "expected": {
+        "repo": "unknown"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Update the docs",
+      "expected": {
+        "repo": "unknown"
+      }
+    },
+    {
+      "state": "Add a dark mode",
+      "expected": {
+        "repo": "unknown"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Add a column for how many pages are left",
+      "expected": {
+        "repo": "book-catalog"
+      }
+    },
+    {
+      "state": "The 3am run always overlaps with the 3:05 one",
+      "expected": {
+        "repo": "scheduler-service"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Need a monthly view of what I spent on food",
+      "expected": {
+        "repo": "budget-tracker"
+      }
+    },
+    {
+      "state": "Open positions closing this week first",
+      "expected": {
+        "repo": "job-tracker"
+      },
+      "split": "heldout"
+    },
+    {
+      "state": "Which sensor ran out of battery",
+      "expected": {
+        "repo": "home-sensors"
+      }
+    }
+  ]
+}

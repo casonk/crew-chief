@@ -83,7 +83,9 @@ def inline(text: str) -> str:
 
     out = re.sub(r"`([^`]+)`", keep, out)
     out = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", _link, out)
-    out = re.sub(r"\*\*(.+?)\*\*|__(.+?)__", lambda m: f"<strong>{m.group(1) or m.group(2)}</strong>", out)
+    out = re.sub(
+        r"\*\*(.+?)\*\*|__(.+?)__", lambda m: f"<strong>{m.group(1) or m.group(2)}</strong>", out
+    )
     out = re.sub(r"(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"<em>\1</em>", out)
     out = re.sub(r"(?<![\w])_(?!\s)(.+?)(?<!\s)_(?![\w])", r"<em>\1</em>", out)
     return re.sub(r"\x00(\d+)\x00", lambda m: spans[int(m.group(1))], out)
@@ -99,11 +101,15 @@ def _table(rows: list[str]) -> str:
     def style(i: int) -> str:
         a = aligns[i] if i < len(aligns) else ""
         right, left = a.endswith(":"), a.startswith(":")
-        return ' style="text-align:center"' if right and left else ' style="text-align:right"' if right else ""
+        if right and left:
+            return ' style="text-align:center"'
+        return ' style="text-align:right"' if right else ""
 
     th = "".join(f"<th{style(i)}>{inline(c)}</th>" for i, c in enumerate(head))
     body = "".join(
-        "<tr>" + "".join(f"<td{style(i)}>{inline(c)}</td>" for i, c in enumerate(_cells(r))) + "</tr>"
+        "<tr>"
+        + "".join(f"<td{style(i)}>{inline(c)}</td>" for i, c in enumerate(_cells(r)))
+        + "</tr>"
         for r in rows[2:]
     )
     return f"<table><thead><tr>{th}</tr></thead><tbody>{body}</tbody></table>"
@@ -140,7 +146,12 @@ def markdown_to_html(text: str) -> str:
             flush(), close_lists()
             i += 1
             continue
-        if "|" in line and i + 1 < len(lines) and _TABLE_SEP.match(lines[i + 1]) and "|" in lines[i + 1] + line:
+        if (
+            "|" in line
+            and i + 1 < len(lines)
+            and _TABLE_SEP.match(lines[i + 1])
+            and "|" in lines[i + 1] + line
+        ):
             flush(), close_lists()
             rows = [line, lines[i + 1]]
             i += 2
@@ -165,9 +176,12 @@ def markdown_to_html(text: str) -> str:
                 i += 1
             out.append("<blockquote>" + markdown_to_html("\n".join(quote)) + "</blockquote>")
             continue
-        elif (item := _ITEM.match(line)):
+        elif item := _ITEM.match(line):
             flush()
-            indent, tag = len(item.group(1).expandtabs(4)), "ol" if item.group(2)[0].isdigit() else "ul"
+            indent, tag = (
+                len(item.group(1).expandtabs(4)),
+                "ol" if item.group(2)[0].isdigit() else "ul",
+            )
             if stack and indent > stack[-1][0]:
                 out.append(f"<{tag}><li>")
                 stack.append((indent, tag))

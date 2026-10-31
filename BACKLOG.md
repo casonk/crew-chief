@@ -10,17 +10,11 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
-- [ ] [manual:2026-10-31] **Re-model the backlog-triage suite on how groups really work.** In Clockwork's To Code
-  list a group is a function of the repository, so replace the `group` question with a repository question over
-  a realistic number of repositories (25-30, uneven descriptions, case variants of one name), keep `unknown`
-  items, and add a separate variant that passes a share of the active sorting as examples (0, 25, 50, 100
-  percent), scored on the items not passed. Never mix the examples into the plain suites. See
-  `docs/decision-model-selection.md`.
-
-- [ ] [manual:2026-10-31] **Make the backlog-triage suite harder.** The keyword baseline beats every model on it
-  (0.97 group, 0.82 repo) because the entries share vocabulary. Add entries with typos, two repositories in one
-  sentence, vague wording and entries that name no repository, then re-run the four decision models and report
-  whether a model beats the keyword rules. See `docs/decision-model-selection.md`.
+- [ ] [manual:2026-10-31] **Re-test two weak spots of the backlog-triage suite.** `clef-flash` answers a repository
+  for every vague entry instead of `unknown` (0.00 on that kind), and entries that name two repositories are
+  the hardest kind for every runner (best 0.83). Add more of both kinds (the hard kinds hold 5 to 7 entries
+  each), re-run the four decision models, and check whether a prompt or a gate fixes `clef-flash` before
+  Clockwork's default model changes. See `results/backlog-triage-v2-20261031.md`.
 
 - [ ] [manual:2026-10-30] **Grow the Clockwork sorting suites and repeat the runs.**
   The held-out split has 88 items across seven suites, so differences of a few
