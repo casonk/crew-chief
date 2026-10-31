@@ -38,6 +38,14 @@ shorter context, measured on an idle GPU before it is enabled.
 `llamacpp` entries must also give `context` and `gpu_mib`, because the server
 is started with exactly that configuration.
 
+## Roles
+
+An entry may carry `role = "coding" | "workhorse" | "system1"`. It does not change how the model is served;
+it groups models in the bench interface's New run form (All, Coding, Workhorse, System 1) so a benchmark
+can pick a whole category at once. Without a `role` the name decides: a System One model is `system1`, a name
+with `code` in it (`qwen2.5-coder`, `codellama`, `deepseek-coder`) is `coding`, anything else is `workhorse`.
+Set a `role` where the guess is wrong (for example a general model that is mostly used for code).
+
 ## Changing an entry
 
 1. Measure on an idle GPU (stop other GPU services first). `llamacpp_bench.sh`

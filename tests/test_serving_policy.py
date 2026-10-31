@@ -52,6 +52,7 @@ class LoadTests(unittest.TestCase):
             '[models."m"]\ncontext = "big"\n',
             '[models."m"]\nspeed = 9\n',
             '[models."m"]\nevidence = "one.md"\n',
+            '[models."m"]\nrole = "gardener"\n',
         ):
             with self.subTest(body=body), self.assertRaises(PolicyError):
                 load_policy(_write(body))
@@ -108,6 +109,39 @@ class ReviewTests(unittest.TestCase):
         self.assertIn(
             "old: retired but still on hot storage; run `crew-chief storage apply`", warnings
         )
+
+
+class RoleTests(unittest.TestCase):
+    def test_the_name_decides_when_the_policy_has_no_role(self):
+        from crew_chief.serving_policy import role_of
+
+        for name, role in (
+            ("tev1", "system1"),
+            ("clef-flash:latest", "system1"),
+            ("nimble", "system1"),
+            ("qwen2.5-coder:7b", "coding"),
+            ("codellama:latest", "coding"),
+            ("deepseek-coder:6.7b", "coding"),
+            ("qwen3:14b", "workhorse"),
+            ("llama3.1:8b", "workhorse"),
+            ("some-new-model", "workhorse"),
+        ):
+            self.assertEqual(role_of(name), role, name)
+
+    def test_a_policy_role_overrides_the_name(self):
+        from crew_chief.serving_policy import role_of
+
+        policy = load_policy(
+            _write(
+                '[models."qwen3:32b"]\nrole = "coding"\n[models."my-coder"]\nrole = "workhorse"\n'
+            )
+        )
+        self.assertEqual(role_of("qwen3:32b", policy), "coding")
+        self.assertEqual(role_of("my-coder", policy), "workhorse")
+        self.assertEqual(role_of("qwen3:14b", policy), "workhorse")  # unlisted: by name
+
+    def test_the_tracked_policy_still_loads_with_roles_allowed(self):
+        self.assertTrue(load_policy(DEFAULT_POLICY_PATH).models)
 
 
 class StubDriftTests(unittest.TestCase):

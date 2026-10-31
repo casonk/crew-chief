@@ -35,6 +35,9 @@ DEFAULT_POLICY_PATH = Path(
 
 BACKENDS = ("ollama", "llamacpp")
 STATUSES = ("default", "beta", "unreviewed", "retired")
+# What a model is for, used to group models in the bench interface (candidates, routers).
+ROLES = ("coding", "workhorse", "system1")
+SYSTEM1_MODELS = ("tev1", "clef-flash", "nimble", "clef")
 KV_TYPES = ("f16", "q8_0", "q4_0")
 SPECULATIVE = ("", "ngram-mod")
 # How a task's model is asked: a chat completion, or a decision model's
@@ -71,6 +74,7 @@ class ModelPolicy:
     evidence: tuple[str, ...] = ()
     reviewed: str = ""
     note: str = ""
+    role: str = ""  # coding, workhorse or system1; empty means decided by role_of()
 
 
 @dataclass(frozen=True)
@@ -165,6 +169,9 @@ def _entry(name: str, table: dict) -> ModelPolicy:
     evidence = table.get("evidence", [])
     if not isinstance(evidence, list) or not all(isinstance(e, str) for e in evidence):
         raise PolicyError(f"{where}: evidence must be a list of repo-relative paths")
+    role = table.get("role", "")
+    if role and role not in ROLES:
+        raise PolicyError(f"{where}: role must be one of {', '.join(ROLES)}")
     return ModelPolicy(
         name=name,
         status=status,
@@ -179,7 +186,23 @@ def _entry(name: str, table: dict) -> ModelPolicy:
         evidence=tuple(evidence),
         reviewed=str(table.get("reviewed", "")),
         note=str(table.get("note", "")),
+        role=role,
     )
+
+
+def role_of(name: str, policy: ServingPolicy | None = None) -> str:
+    """A model's role: the policy entry's ``role`` if it has one, else a guess from its name.
+
+    System One decision models are ``system1``; a name with ``code`` in it (``qwen2.5-coder``,
+    ``codellama``, ``deepseek-coder``) is ``coding``; anything else is a general ``workhorse``.
+    """
+    entry = policy.get(name) if policy is not None else None
+    if entry is not None and entry.role:
+        return entry.role
+    base = name.split(":")[0]
+    if base in SYSTEM1_MODELS:
+        return "system1"
+    return "coding" if "code" in base.lower() else "workhorse"
 
 
 def _task(name: str, table: dict) -> TaskPolicy:
