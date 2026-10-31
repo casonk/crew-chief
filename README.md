@@ -86,6 +86,8 @@ crew-chief code -- --resume <id>  # reopen one
 
 Decision workloads (routing, categorization, schema filling) are scored with
 `crew-chief taskbench`; see [docs/task-benchmarks.md](docs/task-benchmarks.md).
+`crew-chief benchui` serves a local page (127.0.0.1:8766) for tuning scoring
+profiles with sliders, starting benchmark jobs and following them to their results.
 Which decision model to use, how selection strategies compare on accuracy and
 latency, and how to add models and use cases:
 [docs/decision-model-selection.md](docs/decision-model-selection.md).

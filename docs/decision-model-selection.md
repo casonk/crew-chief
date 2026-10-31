@@ -65,14 +65,25 @@ profile** (`config/scoring-profiles.toml`; the code is `src/crew_chief/scoring.p
 
 ```
 score = accuracy_weight * accuracy + (1 - accuracy_weight) * speed
-speed = 1 at or under target_ms, 0 at or over ceiling_ms, log-linear between
-        (taken on the mean and on the p90, blended by tail_weight)
+speed = (1 - relative_weight) * absolute + relative_weight * relative
+        (each taken on the mean and on the p90, blended by tail_weight)
+absolute = 1 at or under target_ms, 0 at or over ceiling_ms, log-linear between
+relative = 1 for the fastest performer in the comparison, 0 for the slowest,
+           log-linear between
 ```
 
-| Profile | For | accuracy / speed | full speed credit | no speed credit | gates |
-|---|---|---|---|---|---|
-| `interactive` | a person waits (a Clockwork action, a chat reply) | 0.7 / 0.3 | <= 100 ms | >= 1,000 ms | accuracy >= 0.80, p90 <= 1,500 ms |
-| `batch` | nobody waits (a nightly recategorize) | 0.95 / 0.05 | <= 500 ms | >= 10,000 ms | accuracy >= 0.85 |
+The absolute curve keeps a score meaning the same thing from run to run; the
+relative curve spreads the models actually on the table, so five models that are
+all under the target are still told apart. `relative_weight` is the global factor
+that blends them, and both profiles use 0.5. The comparison is every performer in
+the same report: the runners of one `taskbench` suite, or the strategies of one
+`routebench` run (the oracle and zero-latency rule baselines set no range). Gates
+stay absolute, so a model cannot pass by being the least bad.
+
+| Profile | For | accuracy / speed | relative share of speed | full speed credit | no speed credit | gates |
+|---|---|---|---|---|---|---|
+| `interactive` | a person waits (a Clockwork action, a chat reply) | 0.7 / 0.3 | 0.5 | <= 100 ms | >= 1,000 ms | accuracy >= 0.80, p90 <= 1,500 ms |
+| `batch` | nobody waits (a nightly recategorize) | 0.95 / 0.05 | 0.5 | <= 500 ms | >= 10,000 ms | accuracy >= 0.85 |
 
 The weights are a product decision, not a measurement, so the score is a ranking
 aid and never a verdict:
@@ -92,6 +103,31 @@ aid and never a verdict:
 the task's questions); `routebench` adds the columns plus a ranking and
 sensitivity section per profile. `--profiles PATH` uses another file and
 `--no-score` omits the columns.
+
+### The bench interface (`benchui`)
+
+`crew-chief benchui` serves a page on `http://127.0.0.1:8766/` (loopback only):
+
+- **Profiles:** sliders for every profile field, saved under
+  `~/.local/state/crew-chief/bench/profiles.toml` (seeded from the tracked
+  defaults; `CREW_CHIEF_BENCH_STATE` moves it). While you drag, the server
+  rescores a chosen result and the ranking, the accuracy and speed points and the
+  sensitivity table move with it. Saved profiles are what new jobs score with.
+  Promote one to `config/scoring-profiles.toml` in a pull request to make it a
+  tracked default.
+- **New run:** pick `taskbench` or `routebench`, the suites, the runners or
+  candidates (the System One models and whatever Ollama has pulled), the split,
+  and optionally "private", which writes to the state directory instead of the
+  shared `results/` folder.
+- **Jobs:** a queue that runs one job at a time (concurrent runs on one GPU would
+  distort each other's latency), with status, progress, a log, cancel, and the GPU
+  memory in use at start.
+- **Results:** every `taskbench` and `routebench` result, linked both ways to the
+  job that wrote it; "Score" opens any result under the profile being edited.
+
+The interface only builds command lines from known suites and a fixed runner
+syntax, never runs a shell, rejects non-loopback hosts and cross-origin posts,
+and stops its running job when it exits.
 
 ### Model comparison (`taskbench`)
 
@@ -180,21 +216,22 @@ Scores for the same strategies (full ranking and sensitivity in the result file)
 
 | Strategy | `interactive` | `batch` |
 |---|---|---|
-| cascade, escalate below 0.6 | **0.950** (tied) | 0.935 |
-| single `clef-flash` | **0.947** (tied) | **0.946** (tied) |
+| cascade, escalate below 0.6 | **0.937** (tied) | 0.932 |
 | single `tev1` | **0.935** (tied) | 0.914 |
-| single `nimble` | 0.915 | 0.924 |
-| cascade, below 0.8 | 0.896 | **0.946** (tied) |
-| route (`clef-flash` picks) | 0.818 | **0.946** (tied) |
-| lookup | 0.778 | 0.903 |
-| cascade, below 0.95 | 0.776 | **0.946** (tied) |
-| single `clef` | 0.672 | **0.937** (tied) |
+| single `clef-flash` | **0.935** (tied) | **0.943** (lead) |
+| single `nimble` | 0.903 | 0.919 |
+| cascade, below 0.8 | 0.886 | **0.939** (tied) |
+| route (`clef-flash` picks) | 0.810 | 0.931 |
+| lookup | 0.769 | 0.893 |
+| cascade, below 0.95 | 0.767 | 0.932 |
+| single `clef` | 0.666 | 0.916 |
 
-For `interactive`, `cascade@0.6`, `clef-flash` and `tev1` are tied for the lead
+Speed is half relative (against these nine strategies) and half absolute. For
+`interactive`, `cascade@0.6`, `tev1` and `clef-flash` are tied for the lead
 (within 0.02); routing and `clef` fall behind because of latency. For `batch`,
-speed barely counts, so five strategies tie at 0.946 and only `lookup`, `tev1`,
-`nimble` and the 0.6 cascade trail on accuracy. Routing is harmless when nobody
-waits but also gains nothing.
+`clef-flash` leads, tied only with `cascade@0.8`: with speed worth 5% and half of
+it relative, accuracy decides, and routing trails because it pays a second call
+for no accuracy gain.
 
 ## Recommendation
 
@@ -204,9 +241,9 @@ For sorting Clockwork list items into categories:
    139 ms p90 on a router-free path).
 2. **Use `tev1` where latency matters more than three points** (0.91, 71 ms).
 3. **Do not route among System One models.** On these tasks selection cost more
-   than it saved: under `interactive` routing scores 0.818 against 0.947 for
+   than it saved: under `interactive` routing scores 0.810 against 0.935 for
    `clef-flash` alone. A cascade from `tev1` at a 0.6 threshold ties
-   `clef-flash` on score (0.950 against 0.947) with a better p90 (107 against
+   `clef-flash` on score (0.937 against 0.935) with a better p90 (107 against
    139 ms), but it adds a moving part for no accuracy, so it is not worth it
    unless tail latency becomes the constraint.
 4. **Avoid `clef` for interactive use**; use it only where its better calibration
@@ -231,7 +268,7 @@ set tracked in BACKLOG first.
   mixed languages) are harder; the suites measure relative, not absolute, quality.
 - Scores depend on the profile weights and on the speed curve's target and
   ceiling. At `interactive`, `clef-flash` and `tev1` swap the lead around an
-  accuracy weight of 0.78; the ties and the sensitivity table show that, a single
+  accuracy weight between 0.7 and 0.8; the ties and the sensitivity table show that, a single
   rank does not.
 - Latency is Ollama on one RTX 3090, per-item and sequential. It does not
   measure throughput under concurrent load.

@@ -1,10 +1,17 @@
 """crew_chief.scoring — one number for accuracy and time to inference.
 
 A profile (``config/scoring-profiles.toml``) states how much a use case values
-speed. ``score`` combines accuracy with a speed score that is 1 at or under a
-target latency, 0 at or over a ceiling and log-linear between, computed on the
-mean and on the p90 so a slow tail costs something. Hard gates (minimum accuracy,
-maximum p90) rank a model below every model that passes.
+speed. ``score`` combines accuracy with a speed score built from two curves, each
+computed on the mean and on the p90 so a slow tail costs something:
+
+- an absolute curve: 1 at or under a target latency, 0 at or over a ceiling and
+  log-linear between, so a score means the same thing in every run;
+- a relative curve: 1 for the fastest performer in the comparison, 0 for the
+  slowest, log-linear between, so the score separates the models actually on the
+  table even when all of them are fast.
+
+``relative_weight`` blends the two. Hard gates (minimum accuracy, maximum p90)
+rank a model below every model that passes.
 
 The score orders a list; it does not decide. ``rank`` marks every entry within
 ``tie_margin`` of the best as tied, and ``sensitivity`` shows who leads at other
@@ -15,8 +22,10 @@ Stdlib only. TOML needs ``tomllib`` (Python 3.11+) or the ``tomli`` back-port.
 
 from __future__ import annotations
 
+import json
 import math
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -51,6 +60,7 @@ class Profile:
     min_accuracy: float | None = None
     max_p90_ms: float | None = None
     tie_margin: float = 0.02
+    relative_weight: float = 0.0
 
     @property
     def speed_weight(self) -> float:
@@ -65,9 +75,18 @@ class Profile:
         return (
             f"{self.accuracy_weight:g} accuracy + {self.speed_weight:g} speed; full speed credit "
             f"at {self.target_ms:g} ms or less, none at {self.ceiling_ms:g} ms or more"
-            f"{f', {self.tail_weight:g} of it from p90' if self.tail_weight else ''}; "
+            f"{f', {self.tail_weight:g} of it from p90' if self.tail_weight else ''}"
+            f"{f'; {self.relative_weight:g} of speed is relative to the fastest and slowest performer' if self.relative_weight else ''}; "
             f"gates: {', '.join(gates) or 'none'}; ties within {self.tie_margin:g}"
         )
+
+
+@dataclass(frozen=True)
+class Reference:
+    """The fastest and slowest performer in a comparison, by mean and by p90 (ms)."""
+
+    mean: tuple[float, float]
+    p90: tuple[float, float]
 
 
 @dataclass(frozen=True)
@@ -101,8 +120,9 @@ def _profile(name: str, table: dict[str, Any]) -> Profile:
         min_accuracy=number("min_accuracy"),
         max_p90_ms=number("max_p90_ms"),
         tie_margin=number("tie_margin", 0.02),  # type: ignore[arg-type]
+        relative_weight=number("relative_weight", 0.0),  # type: ignore[arg-type]
     )
-    for key in ("accuracy_weight", "tail_weight"):
+    for key in ("accuracy_weight", "tail_weight", "relative_weight"):
         if not 0 <= getattr(profile, key) <= 1:
             raise ScoringError(f"profile {name!r}: {key} must be between 0 and 1")
     if not 0 < profile.target_ms < profile.ceiling_ms:
@@ -140,6 +160,39 @@ def speed_score(ms: float, target_ms: float, ceiling_ms: float) -> float:
     return 1.0 - math.log(ms / target_ms) / math.log(ceiling_ms / target_ms)
 
 
+def relative_speed(ms: float, fastest: float, slowest: float) -> float:
+    """1 for the fastest performer, 0 for the slowest, log-linear between."""
+    if ms <= fastest or slowest <= fastest:
+        return 1.0
+    if ms >= slowest:
+        return 0.0
+    return 1.0 - math.log(ms / fastest) / math.log(slowest / fastest)
+
+
+def reference(entries: dict[str, tuple[float, float, float]]) -> Reference | None:
+    """The latency range of every performer in a comparison.
+
+    Entries with no measured latency (a rule baseline reports 0 ms) are not
+    performers in the race and do not set the range.
+    """
+    means = [mean for _, mean, _ in entries.values() if mean > 0]
+    p90s = [p90 for _, _, p90 in entries.values() if p90 > 0]
+    if not means or not p90s:
+        return None
+    return Reference((min(means), max(means)), (min(p90s), max(p90s)))
+
+
+def _speed(profile: Profile, ms: float, ref: tuple[float, float] | None) -> float:
+    if ms <= 0:
+        return 1.0
+    absolute = speed_score(ms, profile.target_ms, profile.ceiling_ms)
+    if not profile.relative_weight or ref is None:
+        return absolute
+    return (1 - profile.relative_weight) * absolute + profile.relative_weight * relative_speed(
+        ms, *ref
+    )
+
+
 def score(
     profile: Profile,
     accuracy: float,
@@ -147,16 +200,19 @@ def score(
     p90_ms: float,
     *,
     accuracy_weight: float | None = None,
+    ref: Reference | None = None,
 ) -> Score:
     """Combine one model's accuracy and latency under a profile.
 
     ``accuracy_weight`` overrides the profile's weight, for sensitivity sweeps;
-    the gates always come from the profile.
+    the gates always come from the profile. ``ref`` is the comparison's latency
+    range: without it the relative curve has nothing to measure against and the
+    absolute curve alone is used.
     """
     weight = profile.accuracy_weight if accuracy_weight is None else accuracy_weight
-    speed = (1 - profile.tail_weight) * speed_score(
-        mean_ms, profile.target_ms, profile.ceiling_ms
-    ) + profile.tail_weight * speed_score(p90_ms, profile.target_ms, profile.ceiling_ms)
+    speed = (1 - profile.tail_weight) * _speed(
+        profile, mean_ms, ref.mean if ref else None
+    ) + profile.tail_weight * _speed(profile, p90_ms, ref.p90 if ref else None)
     gate = None
     if profile.min_accuracy is not None and accuracy < profile.min_accuracy:
         gate = f"accuracy {accuracy:.2f} < {profile.min_accuracy:g}"
@@ -176,8 +232,9 @@ def rank(
 
     ``tied`` is true for every passing entry within ``tie_margin`` of the best.
     """
+    ref = reference(entries)
     scored = {
-        name: score(profile, acc, mean, p90, accuracy_weight=accuracy_weight)
+        name: score(profile, acc, mean, p90, accuracy_weight=accuracy_weight, ref=ref)
         for name, (acc, mean, p90) in entries.items()
     }
     order = sorted(
@@ -211,3 +268,53 @@ def sensitivity(
         ranking = rank(profile, entries, accuracy_weight=weight)
         out[weight] = [row["name"] for row in ranking if row["tied"]]
     return out
+
+
+def _toml_string(text: str) -> str:
+    return json.dumps(text, ensure_ascii=False)
+
+
+def dump_profiles(profiles: list[Profile]) -> str:
+    """The TOML ``load_profiles`` reads back (the standard library has no writer)."""
+    lines = [
+        "# Scoring profiles saved from the bench interface. See config/scoring-profiles.toml",
+        "# for what each field means.",
+    ]
+    for p in profiles:
+        lines += ["", f"[profiles.{p.name}]", f"description = {_toml_string(p.description)}"]
+        for key in (
+            "accuracy_weight",
+            "relative_weight",
+            "tail_weight",
+            "target_ms",
+            "ceiling_ms",
+            "min_accuracy",
+            "max_p90_ms",
+            "tie_margin",
+        ):
+            value = getattr(p, key)
+            if value is not None:
+                lines.append(f"{key} = {value!r}")
+    return "\n".join(lines) + "\n"
+
+
+def profile_from_dict(name: str, table: dict[str, Any]) -> Profile:
+    """Validate a profile submitted as data (the bench interface's save call)."""
+    if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]{0,31}", name):
+        raise ScoringError(f"profile name {name!r}: use letters, digits, - and _ (max 32)")
+    return _profile(name, table)
+
+
+def profile_to_dict(p: Profile) -> dict[str, Any]:
+    return {
+        "name": p.name,
+        "description": p.description,
+        "accuracy_weight": p.accuracy_weight,
+        "relative_weight": p.relative_weight,
+        "tail_weight": p.tail_weight,
+        "target_ms": p.target_ms,
+        "ceiling_ms": p.ceiling_ms,
+        "min_accuracy": p.min_accuracy,
+        "max_p90_ms": p.max_p90_ms,
+        "tie_margin": p.tie_margin,
+    }

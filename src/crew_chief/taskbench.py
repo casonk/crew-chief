@@ -520,19 +520,23 @@ def _p90(values: list[float]) -> float:
     return ordered[min(len(ordered) - 1, math.ceil(0.9 * len(ordered)) - 1)]
 
 
-def result_score(result: dict[str, Any], profile) -> str:
-    """A run's score under a scoring profile: accuracy averaged over its questions."""
+def result_entry(result: dict[str, Any]) -> tuple[float, float, float] | None:
+    """A run's accuracy (averaged over its questions), mean latency and p90 latency."""
+    accuracies = [q["accuracy"] for q in result["questions"].values() if q["accuracy"] is not None]
+    mean, p90 = result.get("latency_ms_mean"), result.get("latency_ms_p90")
+    if not accuracies or mean is None or p90 is None:
+        return None
+    return statistics.fmean(accuracies), mean, p90
+
+
+def result_score(result: dict[str, Any], profile, ref=None) -> str:
+    """A run's score under a scoring profile; ``ref`` is the latency range of all runners."""
     from crew_chief import scoring
 
-    accuracies = [q["accuracy"] for q in result["questions"].values() if q["accuracy"] is not None]
-    if not accuracies or result["latency_ms_mean"] is None:
+    entry = result_entry(result)
+    if entry is None:
         return "—"
-    got = scoring.score(
-        profile,
-        statistics.fmean(accuracies),
-        result["latency_ms_mean"],
-        result["latency_ms_p90"],
-    )
+    got = scoring.score(profile, *entry, ref=ref)
     return "gated" if got.value is None else f"{got.value:.3f}"
 
 
@@ -541,6 +545,11 @@ def render_markdown(
 ) -> str:
     profiles = profiles or []
     qids = list(task.questions)
+    from crew_chief import scoring
+
+    ref = scoring.reference(
+        {r["runner"]: entry for r in results if (entry := result_entry(r)) is not None}
+    )
     header = (
         "| Runner | "
         + " | ".join(f"{q} acc" for q in qids)
@@ -574,11 +583,15 @@ def render_markdown(
             str(r["errors"]),
             str(r["latency_ms_median"]),
             str(r["latency_ms_p90"]),
-            *[result_score(r, p) for p in profiles],
+            *[result_score(r, p, ref) for p in profiles],
         ]
         lines.append("| " + " | ".join(cells) + " |")
     if profiles:
-        lines += ["", "Scores (accuracy averaged over questions; `gated` fails a profile's gate):"]
+        lines += [
+            "",
+            "Scores (accuracy averaged over questions; relative speed is measured against the "
+            "runners in this table; `gated` fails a profile's gate):",
+        ]
         lines.extend(f"- `{p.name}`: {p.describe()}" for p in profiles)
     for r in results:
         for qid in qids:

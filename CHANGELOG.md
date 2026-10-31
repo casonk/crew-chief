@@ -19,6 +19,12 @@ uses [Semantic Versioning](https://semver.org/).
 - Scoring profiles (`config/scoring-profiles.toml`, `crew_chief.scoring`): one
   accuracy-and-latency score per use case with hard gates, tie margins and a
   weight sensitivity table, added to `taskbench` and `routebench` reports.
+  Speed credit blends an absolute latency curve with one normalised against every
+  performer in the same report (`relative_weight`).
+- `crew-chief benchui`: a loopback-only web interface with profile sliders and a
+  live ranking, a form that starts `taskbench` and `routebench` jobs, a one-at-a-time
+  job queue with status, logs and cancel, and results linked to the jobs that wrote
+  them.
 
 ### Fixed
 

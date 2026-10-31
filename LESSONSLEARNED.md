@@ -19,6 +19,15 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
   weights. On 2026-10-30 `clef-flash` and `tev1` swapped the lead at an accuracy
   weight near 0.78, so the honest `interactive` result was a three-way tie.
 
+- **Normalise speed against the field as well as against a fixed target.** An absolute
+  latency curve scores every model under its target as 1.0, so a fast field looks
+  tied; a curve relative to the fastest and slowest performer separates them but
+  means nothing across runs. Blend both with one weight, leave rule baselines
+  (0 ms) out of the range, and keep gates absolute so the least-bad model cannot pass.
+- **A benchmark UI that starts jobs must build the command itself.** Accept suite
+  names and runner specs of a fixed shape, pass an argument list (never a shell),
+  bind to loopback, check Host and Origin, run one job at a time on a shared GPU,
+  and kill the running job when the server stops.
 - **Score a model selector on total latency against the best single model.** A
   router's cost is its own call plus the chosen model's call, so accuracy alone
   hides the loss. Compare it with always using each candidate, a free lookup of

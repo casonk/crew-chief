@@ -99,7 +99,9 @@ accuracy and latency under a scoring profile (`config/scoring-profiles.toml`:
 `interactive`, `batch`). The score ranks; the Pareto front, confusion matrices and
 sensitivity table decide whether a ranking means anything. See
 [decision-model-selection.md](decision-model-selection.md#aggregate-score).
-`--profiles PATH` selects another file and `--no-score` omits the columns.
+`--profiles PATH` selects another file and `--no-score` omits the columns. Speed is
+partly relative to the fastest and slowest performer in the same report. Tune
+profiles and start runs from the browser with `crew-chief benchui`.
 
 ## Confusion matrices
 

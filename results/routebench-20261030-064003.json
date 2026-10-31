@@ -12710,96 +12710,95 @@
   },
   "scores": {
     "interactive": {
-      "profile": "0.7 accuracy + 0.3 speed; full speed credit at 100 ms or less, none at 1000 ms or more, 0.3 of it from p90; gates: accuracy >= 0.8, p90 <= 1500 ms; ties within 0.02",
+      "profile": "0.7 accuracy + 0.3 speed; full speed credit at 100 ms or less, none at 1000 ms or more, 0.3 of it from p90; 0.5 of speed is relative to the fastest and slowest performer; gates: accuracy >= 0.8, p90 <= 1500 ms; ties within 0.02",
       "ranking": [
         {
           "name": "cascade@0.6",
-          "score": 0.9497,
+          "score": 0.9368,
           "quality": 0.932,
-          "speed": 0.9909,
-          "gate": null,
-          "tied": true
-        },
-        {
-          "name": "single:clef-flash",
-          "score": 0.9472,
-          "quality": 0.943,
-          "speed": 0.9571,
+          "speed": 0.9479,
           "gate": null,
           "tied": true
         },
         {
           "name": "single:tev1",
-          "score": 0.9346,
+          "score": 0.9354,
           "quality": 0.909,
-          "speed": 0.9943,
+          "speed": 0.9971,
+          "gate": null,
+          "tied": true
+        },
+        {
+          "name": "single:clef-flash",
+          "score": 0.9354,
+          "quality": 0.943,
+          "speed": 0.9177,
           "gate": null,
           "tied": true
         },
         {
           "name": "single:nimble",
-          "score": 0.9153,
+          "score": 0.9031,
           "quality": 0.92,
-          "speed": 0.9042,
+          "speed": 0.8636,
           "gate": null,
           "tied": false
         },
         {
           "name": "cascade@0.8",
-          "score": 0.8964,
+          "score": 0.8858,
           "quality": 0.943,
-          "speed": 0.7877,
+          "speed": 0.7524,
           "gate": null,
           "tied": false
         },
         {
           "name": "route:systemone:clef-flash",
-          "score": 0.8176,
+          "score": 0.8103,
           "quality": 0.943,
-          "speed": 0.525,
+          "speed": 0.5008,
           "gate": null,
           "tied": false
         },
         {
           "name": "lookup",
-          "score": 0.7776,
+          "score": 0.7692,
           "quality": 0.898,
-          "speed": 0.4967,
+          "speed": 0.4686,
           "gate": null,
           "tied": false
         },
         {
           "name": "cascade@0.95",
-          "score": 0.7764,
+          "score": 0.767,
           "quality": 0.943,
-          "speed": 0.3876,
+          "speed": 0.3563,
           "gate": null,
           "tied": false
         },
         {
           "name": "single:clef",
-          "score": 0.6725,
+          "score": 0.6663,
           "quality": 0.943,
-          "speed": 0.0415,
+          "speed": 0.0207,
           "gate": null,
           "tied": false
         }
       ],
       "sensitivity": {
         "0.5": [
-          "cascade@0.6",
           "single:tev1",
-          "single:clef-flash"
+          "cascade@0.6"
         ],
         "0.6": [
+          "single:tev1",
           "cascade@0.6",
-          "single:clef-flash",
-          "single:tev1"
+          "single:clef-flash"
         ],
         "0.7": [
           "cascade@0.6",
-          "single:clef-flash",
-          "single:tev1"
+          "single:tev1",
+          "single:clef-flash"
         ],
         "0.8": [
           "single:clef-flash",
@@ -12819,61 +12818,61 @@
       }
     },
     "batch": {
-      "profile": "0.95 accuracy + 0.05 speed; full speed credit at 500 ms or less, none at 10000 ms or more; gates: accuracy >= 0.85; ties within 0.01",
+      "profile": "0.95 accuracy + 0.05 speed; full speed credit at 500 ms or less, none at 10000 ms or more; 0.5 of speed is relative to the fastest and slowest performer; gates: accuracy >= 0.85; ties within 0.01",
       "ranking": [
         {
-          "name": "cascade@0.8",
-          "score": 0.9458,
+          "name": "single:clef-flash",
+          "score": 0.9427,
           "quality": 0.943,
-          "speed": 1.0,
+          "speed": 0.9368,
+          "gate": null,
+          "tied": true
+        },
+        {
+          "name": "cascade@0.8",
+          "score": 0.9388,
+          "quality": 0.943,
+          "speed": 0.8598,
           "gate": null,
           "tied": true
         },
         {
           "name": "cascade@0.95",
-          "score": 0.9458,
+          "score": 0.9322,
           "quality": 0.943,
-          "speed": 1.0,
+          "speed": 0.727,
           "gate": null,
-          "tied": true
-        },
-        {
-          "name": "route:systemone:clef-flash",
-          "score": 0.9458,
-          "quality": 0.943,
-          "speed": 1.0,
-          "gate": null,
-          "tied": true
-        },
-        {
-          "name": "single:clef-flash",
-          "score": 0.9458,
-          "quality": 0.943,
-          "speed": 1.0,
-          "gate": null,
-          "tied": true
-        },
-        {
-          "name": "single:clef",
-          "score": 0.9366,
-          "quality": 0.943,
-          "speed": 0.8142,
-          "gate": null,
-          "tied": true
+          "tied": false
         },
         {
           "name": "cascade@0.6",
-          "score": 0.9354,
+          "score": 0.9321,
           "quality": 0.932,
-          "speed": 1.0,
+          "speed": 0.9341,
+          "gate": null,
+          "tied": false
+        },
+        {
+          "name": "route:systemone:clef-flash",
+          "score": 0.9308,
+          "quality": 0.943,
+          "speed": 0.6985,
           "gate": null,
           "tied": false
         },
         {
           "name": "single:nimble",
-          "score": 0.924,
+          "score": 0.9194,
           "quality": 0.92,
-          "speed": 1.0,
+          "speed": 0.9088,
+          "gate": null,
+          "tied": false
+        },
+        {
+          "name": "single:clef",
+          "score": 0.9162,
+          "quality": 0.943,
+          "speed": 0.4071,
           "gate": null,
           "tied": false
         },
@@ -12887,55 +12886,37 @@
         },
         {
           "name": "lookup",
-          "score": 0.9031,
+          "score": 0.893,
           "quality": 0.898,
-          "speed": 1.0,
+          "speed": 0.7984,
           "gate": null,
           "tied": false
         }
       ],
       "sensitivity": {
         "0.5": [
-          "cascade@0.8",
-          "cascade@0.95",
-          "route:systemone:clef-flash",
-          "single:clef-flash",
-          "cascade@0.6"
+          "single:tev1"
         ],
         "0.6": [
-          "cascade@0.8",
-          "cascade@0.95",
-          "route:systemone:clef-flash",
-          "single:clef-flash",
-          "cascade@0.6"
+          "single:tev1",
+          "single:clef-flash"
         ],
         "0.7": [
-          "cascade@0.8",
-          "cascade@0.95",
-          "route:systemone:clef-flash",
           "single:clef-flash",
+          "single:tev1",
           "cascade@0.6"
         ],
         "0.8": [
-          "cascade@0.8",
-          "cascade@0.95",
-          "route:systemone:clef-flash",
           "single:clef-flash",
           "cascade@0.6"
         ],
         "0.9": [
-          "cascade@0.8",
-          "cascade@0.95",
-          "route:systemone:clef-flash",
           "single:clef-flash",
-          "cascade@0.6"
+          "cascade@0.8"
         ],
         "0.95": [
-          "cascade@0.8",
-          "cascade@0.95",
-          "route:systemone:clef-flash",
           "single:clef-flash",
-          "single:clef"
+          "cascade@0.8"
         ]
       }
     }

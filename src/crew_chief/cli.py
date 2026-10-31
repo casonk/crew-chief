@@ -327,6 +327,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--no-score", action="store_true", help="Omit the accuracy-and-speed score columns."
     )
 
+    ui_p = sub.add_parser(
+        "benchui",
+        help="Serve the bench interface: tune scoring profiles, start and follow jobs.",
+        description=(
+            "A local web page for the decision benchmarks: profile sliders with a live "
+            "ranking, a form that starts taskbench and routebench jobs, job status and logs, "
+            "and links to the results. Binds to localhost only."
+        ),
+    )
+    ui_p.add_argument(
+        "--host", default="127.0.0.1", help="Loopback address (default: %(default)s)."
+    )
+    ui_p.add_argument("--port", type=int, default=8766, help="Port (default: %(default)s).")
+    ui_p.add_argument("--state-dir", help="Saved profiles, job records and private results.")
+    ui_p.add_argument("--results-dir", help="Shared results directory (default: results/).")
+
     return p
 
 
@@ -487,6 +503,38 @@ def main(argv: list[str] | None = None) -> None:
         base.with_suffix(".json").write_text(rb.to_json(result), encoding="utf-8")
         print(markdown)
         print(f"Saved: {base}.md, .svg and .json", file=sys.stderr)
+
+    elif args.command == "benchui":
+        import ipaddress
+        from pathlib import Path
+
+        from crew_chief import benchui
+
+        try:
+            loopback = ipaddress.ip_address(args.host).is_loopback
+        except ValueError:
+            loopback = args.host == "localhost"
+        if not loopback:
+            print(
+                "Error: the bench interface starts jobs; bind it to a loopback address",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+        server = benchui.make_server(
+            Path(args.state_dir) if args.state_dir else benchui.DEFAULT_STATE,
+            Path(args.results_dir) if args.results_dir else benchui.REPO_ROOT / "results",
+            args.host,
+            args.port,
+        )
+        print(
+            f"bench interface on http://{args.host}:{args.port}/  (Ctrl-C to stop)", file=sys.stderr
+        )
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            server.RequestHandlerClass.app.jobs.shutdown()
 
     elif args.command == "serve":
         from crew_chief import serve as serving

@@ -8,14 +8,18 @@
 # request that says why, since every ranking moves with them.
 #
 #   score = accuracy_weight * accuracy + (1 - accuracy_weight) * speed
-#   speed = 1 at or under target_ms, 0 at or over ceiling_ms, log-linear between;
-#           computed on the mean and on the p90, blended by tail_weight
+#   speed = absolute and relative curves blended by relative_weight, each computed
+#           on the mean and on the p90 and blended by tail_weight
+#     absolute: 1 at or under target_ms, 0 at or over ceiling_ms, log-linear between
+#     relative: 1 for the fastest performer in the comparison, 0 for the slowest,
+#               log-linear between (so a score separates the models on the table)
 #   gates = a model that misses min_accuracy or exceeds max_p90_ms is "gated"
 #           and ranks below every model that passes, whatever its score
 
 [profiles.interactive]
 description = "A person waits on the answer (a Clockwork action, a chat reply)"
 accuracy_weight = 0.7
+relative_weight = 0.5
 target_ms = 100
 ceiling_ms = 1000
 tail_weight = 0.3
@@ -26,6 +30,7 @@ tie_margin = 0.02
 [profiles.batch]
 description = "Nobody waits (a nightly recategorize, a backfill)"
 accuracy_weight = 0.95
+relative_weight = 0.5
 target_ms = 500
 ceiling_ms = 10000
 tail_weight = 0.0
