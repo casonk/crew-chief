@@ -63,19 +63,25 @@ LOG_TAIL = 12_000
 TERMINAL = ("done", "failed", "cancelled", "interrupted")
 
 
-# A strip under the top bar on every report page: a plain way back to the interface
-# and to the other report pages. In the page flow, so it never covers content.
-HOME_LINK = (
-    '<nav aria-label="Bench" style="display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;'
-    "padding:8px 16px;background:var(--surface,#1a1d27);color:var(--text,#e2e4f0);"
-    'border-bottom:1px solid var(--border,#2e3250);font:14px system-ui,sans-serif">'
-    '<a href="/" style="font-weight:600;color:var(--accent,#5b7fff);text-decoration:none">'
-    "&larr; Bench home</a>"
-    '<a href="/latest.html" style="color:var(--accent,#5b7fff);text-decoration:none">Weekly report</a>'
-    '<a href="/test-bench-latest.html" style="color:var(--accent,#5b7fff);text-decoration:none">'
-    "Test bench</a>"
-    '<a href="/results/" style="color:var(--accent,#5b7fff);text-decoration:none">All files</a></nav>'
-)
+# A strip under the top bar on every report page: a plain way back to the interface and to the
+# other report pages, and the tabs to switch to the other renderings of this result. In the page
+# flow, so it never covers content.
+def home_link(tabs: str = "") -> str:
+    link = "color:var(--accent,#5b7fff);text-decoration:none"
+    return (
+        '<nav aria-label="Bench" style="display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;'
+        "padding:8px 16px;background:var(--surface,#1a1d27);color:var(--text,#e2e4f0);"
+        'border-bottom:1px solid var(--border,#2e3250);font:14px system-ui,sans-serif">'
+        f'<a href="/" style="font-weight:600;{link}">&larr; Bench home</a>'
+        f'<a href="/latest.html" style="{link}">Weekly report</a>'
+        f'<a href="/test-bench-latest.html" style="{link}">Test bench</a>'
+        f'<a href="/results/" style="{link}">All files</a>'
+        + (f'<span style="margin-left:auto">{tabs}</span>' if tabs else "")
+        + "</nav>"
+    )
+
+
+HOME_LINK = home_link()
 
 # The top bar has the theme control, so a served page drops its own copy of it.
 PAGE_SWITCHER = re.compile(r"<select[^>]*data-theme-switcher[^>]*>\s*</select>", re.I)
@@ -97,7 +103,7 @@ PROLOGUE = re.compile(
 )
 
 
-def with_home_link(document: bytes) -> bytes:
+def with_home_link(document: bytes, tabs: str = "") -> bytes:
     """Give a generated report page the portfolio top bar, the current theme and a way back
     to the interface, without editing the file."""
     text = document.decode("utf-8", "replace")
@@ -106,14 +112,15 @@ def with_home_link(document: bytes) -> bytes:
     head = re.search(r"</head>", text, re.I)
     body = re.search(r"<body[^>]*>", text, re.I)
     extra = "" if CHROME_TAG in text else CHROME_TAG
+    strip = home_link(tabs)
     if head and extra:
         text = text[: head.start()] + extra + text[head.start() :]
         extra = ""
         body = re.search(r"<body[^>]*>", text, re.I)
     if body:
-        return (text[: body.end()] + HOME_LINK + extra + text[body.end() :]).encode()
+        return (text[: body.end()] + strip + extra + text[body.end() :]).encode()
     at = PROLOGUE.match(text).end()
-    return (text[:at] + extra + HOME_LINK + text[at:]).encode()
+    return (text[:at] + extra + strip + text[at:]).encode()
 
 
 FILES_CSS = (
@@ -156,9 +163,9 @@ def files_page(names: list[str]) -> bytes:
     return with_home_link(page.encode())
 
 
-def served(file: Path) -> bytes:
+def served(file: Path, tabs: str = "") -> bytes:
     data = file.read_bytes()
-    return with_home_link(data) if file.suffix == ".html" else data
+    return with_home_link(data, tabs) if file.suffix == ".html" else data
 
 
 class BenchError(ValueError):
@@ -617,6 +624,19 @@ class BenchApp:
                 self._store_sig = signature
         return conn
 
+    def formats(self, file: Path, inline: bool = False) -> str:
+        """Tabs to switch between this result's renderings (.html, .json, .md, .svg), whichever exist."""
+        real = file.resolve()  # latest.html is a link to a dated report
+        label = next((k for k, d in self.results_dirs.items() if real.parent == d.resolve()), None)
+        if label is None:
+            return ""
+        items = []
+        for suffix in viewer.FORMATS:
+            if (real.parent / f"{real.stem}{suffix}").is_file():
+                page = "files" if suffix == ".html" else "view"
+                items.append((suffix[1:], f"/{page}/{label}/{real.stem}{suffix}"))
+        return viewer.format_tabs(items, real.suffix[1:], inline=inline)
+
     def renderings(self, ref: str) -> str:
         """Links to the other renderings of a result that is in the store, for the viewer's bar."""
         label, _, name = ref.partition("/")
@@ -802,13 +822,19 @@ class Handler(BaseHTTPRequestHandler):
                 ref = path[len("/view/") :]
                 file = app.resolve(ref)
                 text = file.read_text(encoding="utf-8", errors="replace")
-                page = viewer.render(file.name, text, f"/files/{ref}", app.renderings(ref))
-                if page is None:  # only Markdown and JSON have a viewer; the rest is shown as is
-                    return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])
+                page = viewer.render(
+                    file.name, text, f"/files/{ref}", app.formats(file) + app.renderings(ref)
+                )
+                if page is None:  # the rest is shown as is
+                    return self._send(
+                        200, served(file, app.formats(file, True)), SERVED_SUFFIXES[file.suffix]
+                    )
                 return self._send(200, with_home_link(page.encode()), "text/html; charset=utf-8")
             if path.startswith("/files/"):
                 file = app.resolve(path[len("/files/") :])
-                return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])
+                return self._send(
+                    200, served(file, app.formats(file, True)), SERVED_SUFFIXES[file.suffix]
+                )
             if path.startswith("/_portfolio/"):
                 from crew_chief.portfolio import site
 
@@ -823,7 +849,9 @@ class Handler(BaseHTTPRequestHandler):
             name = path.lstrip("/")
             if name and "/" not in name:
                 file = app.resolve(f"results/{name}")
-                return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])
+                return self._send(
+                    200, served(file, app.formats(file, True)), SERVED_SUFFIXES[file.suffix]
+                )
             raise BenchError("not found")
         if method == "POST":
             body = self._body()

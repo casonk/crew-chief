@@ -15,6 +15,7 @@ from pathlib import PurePosixPath
 
 from crew_chief import theme
 
+FORMATS = (".html", ".json", ".md", ".svg")  # the renderings a result can have, in tab order
 MAX_JSON_BYTES = 8 * 1024 * 1024
 FILE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 
@@ -39,6 +40,9 @@ overflow:auto}.doc pre code{background:none;padding:0}
 .doc blockquote{margin:10px 0;padding:2px 14px;border-left:3px solid var(--accent);color:var(--muted)}
 .doc hr{border:0;border-top:1px solid var(--border);margin:16px 0}
 .doc ul,.doc ol{padding-left:24px}
+.fmt{display:inline-flex;gap:4px;align-items:center}
+.fmt a,.fmt b{padding:2px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-weight:400}
+.fmt b{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .tree{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;
 font:13px/1.55 ui-monospace,monospace;overflow:auto}
 .tree details{margin-left:0}.tree .j-kids{margin-left:18px;border-left:1px dotted var(--border);padding-left:10px}
@@ -339,6 +343,37 @@ def svg_body(text: str, raw_url: str) -> str:
     return f'<div class="doc" style="text-align:center">{drawing}</div>'
 
 
+# -- format tabs -------------------------------------------------------------
+
+
+def format_tabs(items: list[tuple[str, str]], current: str, inline: bool = False) -> str:
+    """Tabs to switch between the renderings of one result: ``items`` are (extension, link) pairs.
+
+    Empty when there is nothing to switch to. ``inline`` carries its own styles, for a report page
+    that has none of this module's CSS.
+    """
+    if len(items) < 2:
+        return ""
+    if inline:
+        tab = "padding:2px 10px;border:1px solid var(--border,#2e3250);border-radius:6px;font-size:13px"
+        on = f"{tab};background:var(--accent,#5b7fff);color:var(--accent-ink,#0f1117);font-weight:600"
+        link = f"{tab};color:var(--accent,#5b7fff);text-decoration:none"
+    cells = []
+    for ext, href in items:
+        label = html.escape(ext)
+        if ext == current:
+            cells.append(
+                f'<b style="{on}" aria-current="page">{label}</b>'
+                if inline
+                else f'<b aria-current="page">{label}</b>'
+            )
+        else:
+            style = f' style="{link}"' if inline else ""
+            cells.append(f'<a href="{html.escape(href, quote=True)}"{style}>{label}</a>')
+    box = ' style="display:inline-flex;gap:4px;align-items:center"' if inline else ""
+    return f'<span class="fmt"{box} aria-label="Formats">{"".join(cells)}</span>'
+
+
 # -- page --------------------------------------------------------------------
 
 
@@ -357,7 +392,7 @@ def render(name: str, text: str, raw_url: str, extra: str = "") -> str | None:
     """The themed page for a ``.md``, ``.json`` or ``.svg`` file, or None for any other kind."""
     suffix = PurePosixPath(name).suffix
     if suffix == ".md":
-        return page(name, f'<div class="doc">{markdown_to_html(text)}</div>', raw_url)
+        return page(name, f'<div class="doc">{markdown_to_html(text)}</div>', raw_url, extra)
     if suffix == ".json":
         return page(name, json_body(text, raw_url), raw_url, extra)
     if suffix == ".svg":
