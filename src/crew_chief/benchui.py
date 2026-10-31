@@ -62,6 +62,27 @@ LOG_TAIL = 12_000
 TERMINAL = ("done", "failed", "cancelled", "interrupted")
 
 
+HOME_LINK = (
+    '<a href="/" style="position:fixed;top:8px;right:12px;z-index:2147483647;padding:4px 10px;'
+    "background:#1b2029;color:#e6e9ef;border:1px solid #64707f;border-radius:6px;"
+    'font:13px system-ui,sans-serif;text-decoration:none">&larr; Bench home</a>'
+)
+
+
+def with_home_link(document: bytes) -> bytes:
+    """Give a generated report page a way back to the interface, without editing the file."""
+    text = document.decode("utf-8", "replace")
+    body = re.search(r"<body[^>]*>", text, re.I)
+    if body is None:
+        return (HOME_LINK + text).encode()
+    return (text[: body.end()] + HOME_LINK + text[body.end() :]).encode()
+
+
+def served(file: Path) -> bytes:
+    data = file.read_bytes()
+    return with_home_link(data) if file.suffix == ".html" else data
+
+
 class BenchError(ValueError):
     """A request the interface refuses; the message is shown to the user."""
 
@@ -634,13 +655,13 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, page.encode(), "text/html; charset=utf-8")
             if path.startswith("/files/"):
                 file = app.resolve(path[len("/files/") :])
-                return self._send(200, file.read_bytes(), SERVED_SUFFIXES[file.suffix])
+                return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])
             # The shared results folder at the site root, as the static site served it
             # before the interface took over this hostname (latest.html, old report links).
             name = path.lstrip("/")
             if name and "/" not in name:
                 file = app.resolve(f"results/{name}")
-                return self._send(200, file.read_bytes(), SERVED_SUFFIXES[file.suffix])
+                return self._send(200, served(file), SERVED_SUFFIXES[file.suffix])
             raise BenchError("not found")
         if method == "POST":
             body = self._body()

@@ -96,6 +96,7 @@ a { color: var(--accent); }
   </nav>
   <span id="badge"></span>
   <a href="/latest.html" style="font-size:13px">Weekly report</a>
+  <a href="/test-bench-latest.html" style="font-size:13px">Test bench</a>
   <a href="/results/" style="font-size:13px">All files</a>
 </header>
 <main>

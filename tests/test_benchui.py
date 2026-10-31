@@ -407,8 +407,18 @@ class ProxyTests(AppCase):
         (self.root / "results" / "latest.html").write_text("<p>weekly</p>")
         (self.root / "results" / "notes.py").write_text("x")
         status, body = self.call("/latest.html")
-        self.assertEqual((status, body), (200, b"<p>weekly</p>"))
+        self.assertEqual(status, 200)
+        self.assertIn(b"<p>weekly</p>", body)
         self.assertEqual(self.call("/notes.py")[0], 400)
+        (self.root / "results" / "plain.html").write_text("<h1>no body tag</h1>")
+        (self.root / "results" / "full.html").write_text(
+            "<html><body class=x><p>hi</p></body></html>"
+        )
+        for name in ("plain.html", "full.html"):
+            body = self.call(f"/{name}")[1]
+            self.assertIn(b'href="/"', body)
+        self.assertIn(b"<body class=x><a href=", self.call("/full.html")[1])
+        self.assertTrue(self.call("/plain.html")[1].endswith(b"<h1>no body tag</h1>"))
         status, body = self.call("/results/")
         self.assertIn(b'href="/latest.html"', body)
         self.assertNotIn(b"notes.py", body)
