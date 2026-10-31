@@ -18,10 +18,10 @@ Mark items `[x]` when complete and move them to Done.
   before installing it; crew-chief stays stdlib-only). Useful for pandas or DuckDB analysis of `measures` and
   `answers`; no speed gain at the current 6 MB of results.
 
-- [ ] [manual:2026-10-31] **Import the other result kinds into the store.** The test-bench reports
-  (`schema_version`, cases and trials), the inference-speed `bench-*.json` and `engine-matrix-*` files are
-  skipped today, as is the interface's private results folder. Then add per-item views from `answers`
-  (confusion matrix, items every model got wrong).
+- [ ] [manual:2026-10-31] **Per-item views and the private results folder for the result store.** Every public
+  result kind is imported now (taskbench, routebench, test-bench, inference speed, engine matrix); the interface's
+  private results folder is not. Add per-item views from `answers` (a confusion matrix, the items every model got
+  wrong) and decide how private runs are named in the store without leaking them into the shared one.
 
 - [ ] [manual:2026-10-31] **Serve reports from the store.** `report.py`, `test_benchmark.py` and `routerbench.render_svg`
   still write themed HTML and SVG at generation time (and `scripts/rerender_reports.py` exists to refresh them).
