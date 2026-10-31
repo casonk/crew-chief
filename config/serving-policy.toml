@@ -14,6 +14,9 @@
 #          retired    — kept for occasional use; rotates down slower storage and
 #                       loads more slowly (see [rotation])
 # gpu_mib: GPU memory the configuration needs on this host (measured, not estimated).
+# role:    optional — coding, workhorse or system1. Groups models in the bench interface's
+#          New run form (All / Coding / Workhorse / System 1). Left out, the name decides:
+#          System One models are system1, a name with "code" in it is coding, the rest workhorse.
 
 [backends]
 ollama = "http://localhost:11434"

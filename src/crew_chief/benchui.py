@@ -38,7 +38,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, unquote, urlparse
 
-from crew_chief import render, resultstore, scoring, theme, viewer
+from crew_chief import render, resultstore, scoring, serving_policy, theme, viewer
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SUITES_DIR = REPO_ROOT / "benchmarks" / "decisions"
@@ -48,7 +48,7 @@ DEFAULT_STATE = Path(
     )
 )
 DEFAULT_PORT = 8766
-SYSTEMONE_MODELS = ("tev1", "clef-flash", "nimble", "clef")
+SYSTEMONE_MODELS = serving_policy.SYSTEM1_MODELS
 RUNNER = re.compile(r"(rules|jev|(ollama|llamacpp|systemone):[A-Za-z0-9][A-Za-z0-9._:/-]{0,80})")
 FILE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,120}")
 RESULT_KINDS = ("taskbench", "routebench")
@@ -601,6 +601,18 @@ def list_results(results_dirs: dict[str, Path], jobs: list[dict[str, Any]]) -> l
     return sorted(rows, key=lambda r: r["modified"], reverse=True)
 
 
+def model_groups(
+    ollama_names: list[str], policy: serving_policy.ServingPolicy | None = None
+) -> dict[str, str]:
+    """The role of every runner spec the New run form offers, for its All / Coding / Workhorse /
+    System 1 buttons: ``rules`` is the ``baseline``; a System One model is ``system1`` whichever API
+    serves it; the rest follow the serving policy's ``role`` or their names."""
+    specs = [f"systemone:{m}" for m in SYSTEMONE_MODELS] + [f"ollama:{n}" for n in ollama_names]
+    groups = {"rules": "baseline"}
+    groups.update({s: serving_policy.role_of(s.split(":", 1)[1], policy) for s in specs})
+    return groups
+
+
 class BenchApp:
     def __init__(self, state: Path, results_dir: Path):
         self.state = state
@@ -683,7 +695,15 @@ class BenchApp:
                 names = sorted(m["name"] for m in json.load(resp).get("models", []))
         except (OSError, ValueError, KeyError):
             pass
-        return {"systemone": list(SYSTEMONE_MODELS), "ollama": names}
+        try:
+            policy = serving_policy.load_policy()
+        except serving_policy.PolicyError:
+            policy = None  # roles then come from the model names alone
+        return {
+            "systemone": list(SYSTEMONE_MODELS),
+            "ollama": names,
+            "groups": model_groups(names, policy),
+        }
 
 
 class Handler(BaseHTTPRequestHandler):

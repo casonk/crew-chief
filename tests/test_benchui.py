@@ -209,6 +209,31 @@ class SpecTests(unittest.TestCase):
             self.assertEqual(step.count("--threshold"), 3)
 
 
+class ModelGroupTests(unittest.TestCase):
+    def test_every_runner_spec_gets_a_role(self):
+        groups = benchui.model_groups(
+            ["qwen2.5-coder:7b", "qwen3:14b", "clef:latest", "codellama:latest", "mistral:latest"]
+        )
+        self.assertEqual(groups["rules"], "baseline")
+        self.assertEqual(groups["systemone:tev1"], "system1")
+        self.assertEqual(
+            groups["ollama:clef:latest"], "system1"
+        )  # a System One model as a chat runner
+        self.assertEqual(groups["ollama:qwen2.5-coder:7b"], "coding")
+        self.assertEqual(groups["ollama:codellama:latest"], "coding")
+        self.assertEqual(groups["ollama:qwen3:14b"], "workhorse")
+        self.assertEqual(groups["ollama:mistral:latest"], "workhorse")
+
+    def test_the_policys_role_wins_over_the_name(self):
+        from crew_chief import serving_policy
+
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "policy.toml"
+            path.write_text('[models."qwen3:32b"]\nrole = "coding"\n')
+            policy = serving_policy.load_policy(path)
+        self.assertEqual(benchui.model_groups(["qwen3:32b"], policy)["ollama:qwen3:32b"], "coding")
+
+
 class RoutersTests(unittest.TestCase):
     def route(self, **over):
         spec = {"kind": "routebench", "suites": ["mail-triage"], "runners": ["systemone:tev1"]}
@@ -295,6 +320,24 @@ class AppTests(AppCase):
         self.assertEqual(
             {p["name"] for p in json.loads(body)["profiles"]}, {"interactive", "batch"}
         )
+
+    def test_models_carry_a_group_for_the_category_buttons(self):
+        models = json.loads(self.call("/api/models")[1])
+        self.assertEqual(models["groups"]["rules"], "baseline")
+        for m in benchui.SYSTEMONE_MODELS:
+            self.assertEqual(models["groups"][f"systemone:{m}"], "system1")
+        for spec in (f"ollama:{n}" for n in models["ollama"]):
+            self.assertIn(models["groups"][spec], ("coding", "workhorse", "system1"))
+
+    def test_the_form_has_category_buttons_for_candidates_and_routing_models(self):
+        from crew_chief.benchui_page import PAGE
+
+        for part in ('id="r-runners-cats"', 'id="r-routers-cats"', 'data-group="${group('):
+            self.assertIn(part, PAGE)
+        self.assertIn('categoryButtons("r-runners"', PAGE)
+        self.assertIn('categoryButtons("r-routers"', PAGE)
+        for label in ("Coding", "Workhorse", "System 1"):
+            self.assertIn(label, PAGE)
 
     def test_save_profile_then_rescore_a_result_under_it(self):
         (self.root / "results" / "taskbench-demo-1.json").write_text(json.dumps(RESULT))
