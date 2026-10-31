@@ -373,6 +373,31 @@ class AppTests(AppCase):
             )
         )
 
+    def test_a_cancel_that_lands_while_the_process_is_starting_is_not_lost(self):
+        from unittest import mock
+
+        self.app.jobs.build = lambda *a, **k: [
+            [sys.executable, "-c", "import time; time.sleep(60)"]
+        ]
+        real_popen = benchui.subprocess.Popen
+
+        def cancel_then_start(argv, **kwargs):
+            # the job is "running" but has no process yet, exactly when a fast click arrives
+            running = [j for j in self.app.jobs.list() if j["status"] == "running"]
+            self.app.jobs.cancel(running[0]["id"])
+            return real_popen(argv, **kwargs)
+
+        spec = {"kind": "taskbench", "suites": ["mail-triage"], "runners": ["rules"]}
+        started = time.time()
+        with mock.patch.object(benchui.subprocess, "Popen", cancel_then_start):
+            job_id = json.loads(self.call("/api/jobs", "POST", spec)[1])["id"]
+            self.assertTrue(
+                wait_for(
+                    lambda: json.loads(self.call(f"/api/jobs/{job_id}")[1])["status"] == "cancelled"
+                )
+            )
+        self.assertLess(time.time() - started, 20)  # not the 60 s the process would have run
+
     def test_private_jobs_write_outside_the_shared_results_folder(self):
         spec = {
             "kind": "taskbench",

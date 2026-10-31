@@ -531,6 +531,9 @@ class JobManager:
                     codes.append(127)
                     break
                 self._procs[job_id] = proc
+                if job_id in self._cancel:  # cancelled while the process was starting
+                    with contextlib.suppress(OSError):
+                        os.killpg(proc.pid, signal.SIGTERM)
                 while proc.poll() is None:
                     self._progress(job_id, log)
                     time.sleep(0.5)

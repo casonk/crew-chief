@@ -8,6 +8,7 @@ beside it by the generator that made it (``report.py`` for ``bench-*``,
 
     python3 scripts/rerender_reports.py --check     # list reports that are out of date
     python3 scripts/rerender_reports.py             # rebuild them
+    python3 scripts/rerender_reports.py --force     # rebuild every report (the generators changed)
     python3 scripts/rerender_reports.py results/bench-20260621.json   # just these
 """
 
@@ -77,10 +78,12 @@ def main() -> int:
     parser.add_argument(
         "--check", action="store_true", help="only list out-of-date reports; exit 1 if any"
     )
+    parser.add_argument(
+        "--force", action="store_true", help="rebuild reports even if their theme is current"
+    )
     args = parser.parse_args()
-    todo = [
-        p for p in (args.json or reports(args.results)) if not is_current(p.with_suffix(".html"))
-    ]
+    found = args.json or reports(args.results)
+    todo = [p for p in found if args.force or not is_current(p.with_suffix(".html"))]
     for data in todo:
         print(("stale   " if args.check else "render  ") + str(data.with_suffix(".html")))
         if not args.check:

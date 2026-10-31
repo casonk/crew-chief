@@ -486,13 +486,15 @@ def render_html(report: dict) -> str:
             + "</tbody></table>"
         )
     return (
-        """<!doctype html><html lang="en"><meta charset="utf-8">
+        """<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Test-based model benchmark</title>"""
         + theme.HEAD
         + """<style>"""
         + theme.SWITCHER_CSS
+        + theme.REPORT_CSS
         + """
-body{font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:1200px;margin:2rem auto;padding:0 1rem;background:var(--bg);color:var(--text)}
+p{margin:0 0 .8rem}h2{margin:1.4rem 0 .6rem}
 .trial-scroll{max-width:100%;overflow-x:auto;margin:1rem 0}
 table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border:1px solid var(--border);padding:.55rem;text-align:left}
 .trial-table{width:100%;min-width:1500px;table-layout:fixed}
@@ -500,14 +502,9 @@ table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border:1px solid
 th{background:var(--surface2)}.passed{background:var(--green-dim);color:var(--green)}.failed{background:var(--yellow-dim);color:var(--yellow)}.error{background:var(--red-dim);color:var(--red)}.timeout{background:var(--purple-dim);color:var(--purple)}
 code{background:var(--surface2);padding:.1rem .3rem}small{color:var(--muted)}
 a{color:var(--accent)}
-nav{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.3rem;align-items:center}
-nav a{padding:.45rem .8rem;border:1px solid var(--border);border-radius:6px;color:var(--accent);text-decoration:none;background:var(--surface)}
-nav a[aria-current="page"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-nav .theme-switch{margin-left:auto}
-</style><nav aria-label="Benchmark reports"><a href="latest.html">Inference speed</a>
-<a href="test-bench-latest.html" aria-current="page">Test outcomes</a>"""
-        + theme.SWITCHER
-        + """</nav>
+</style></head><body><div class="page">"""
+        + theme.report_nav("tests")
+        + """
 <h1>Test-based model benchmark</h1>
 <p>Each attempt used a fresh checkout with a known failing test. A pass requires
 the fixed test command to pass after an allowed code edit.</p>
@@ -534,7 +531,7 @@ the fixed test command to pass after an allowed code edit.</p>
 <th>Trial seconds</th><th>Route + trial seconds</th><th>Note</th></tr></thead>
 <tbody>"""
         + "\n".join(rows)
-        + "</tbody></table></div></html>"
+        + "</tbody></table></div></div></body></html>"
     )
 
 
