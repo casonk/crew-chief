@@ -7,6 +7,8 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- Answer `/_portfolio/*` itself from a vendored portfolio site seam (`crew_chief/portfolio/`), which replaces the old `theme/` copy, so the theme and top bar work with no Caddy in front: the owner-only site store first, then a pinned fallback copy. Add `/.portfolio` (ignored) and `config/portfolio-site.example.toml`. See traction-control `docs/portfolio-sites.md`.
+
 ### Added
 
 - Seven synthetic Clockwork list-sorting suites for `crew-chief taskbench`
