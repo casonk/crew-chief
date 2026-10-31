@@ -506,9 +506,11 @@ def render_svg(result: dict[str, Any]) -> str:
 
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
-        'font-family="sans-serif" font-size="11" fill="currentColor">',
+        'font-family="sans-serif" font-size="11" fill="currentColor" '
+        'style="color:var(--text,#e2e4f0)">',
+        f'<rect width="{width}" height="{height}" style="fill:var(--surface,#1a1d27)"/>',
         f'<rect x="{left}" y="{top}" width="{width - left - right}" height="{height - top - bottom}" '
-        'fill="none" stroke="currentColor" stroke-opacity="0.3"/>',
+        'fill="none" style="stroke:var(--border,#2e3250)"/>',
         f'<text x="{left + (width - left - right) / 2}" y="{height - 10}" text-anchor="middle">'
         "mean ms per item (log scale; lower is faster)</text>",
         f'<text x="14" y="{top + (height - top - bottom) / 2}" text-anchor="middle" '
@@ -520,7 +522,7 @@ def render_svg(result: dict[str, Any]) -> str:
         out.append(f'<text x="{left - 6}" y="{py(acc) + 4}" text-anchor="end">{acc:.2f}</text>')
         out.append(
             f'<line x1="{left}" x2="{width - right}" y1="{py(acc)}" y2="{py(acc)}" '
-            'stroke="currentColor" stroke-opacity="0.1"/>'
+            'style="stroke:var(--border,#2e3250);stroke-opacity:0.5"/>'
         )
     for tick in (10, 20, 50, 100, 200, 500, 1000, 2000, 5000):
         if lo <= math.log10(tick) <= hi:
@@ -530,11 +532,12 @@ def render_svg(result: dict[str, Any]) -> str:
     for name, s in strategies.items():
         x, y = px(s["ms_mean"]), py(s["accuracy"])
         dash = ' stroke-dasharray="2 2"' if name == "oracle" else ""
-        fill = "currentColor" if name in front else "none"
+        colour = "var(--purple,#a06fff)" if name == "oracle" else "var(--accent,#5b7fff)"
+        fill = colour if name in front else "none"
         radius = 5 if name in front else 4
         out.append(
-            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius}" fill="{fill}" '
-            f'stroke="currentColor" stroke-width="1.5"{dash}/>'
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius}" '
+            f'style="fill:{fill};stroke:{colour}" stroke-width="1.5"{dash}/>'
         )
         out.append(
             f'<text x="{x + 8:.1f}" y="{y + 4:.1f}">{name.replace("route:", "route ")}</text>'

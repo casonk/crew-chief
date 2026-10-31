@@ -103,6 +103,19 @@ sensitivity table decide whether a ranking means anything. See
 partly relative to the fastest and slowest performer in the same report. Tune
 profiles and start runs from the browser with `crew-chief benchui`.
 
+## Theme
+
+The reports (`latest.html`, `test-bench-latest.html`), the routebench chart and the
+bench interface use the portfolio system themes. They follow the system light or
+dark setting until you pick one in the switcher (Midnight, Daylight, Ember, High
+contrast), or add `?theme=ember` to a URL. The colours are defined in
+traction-control (`docs/system-theme.md`). Generator CSS must use `var(--token)`
+names, never literal colours; `tests/test_theme.py` enforces it and checks the
+vendored copy in `src/crew_chief/theme/` against the source. Refresh it with
+`python3 ../traction-control/scripts/render_portfolio_theme.py --install src/crew_chief/theme`.
+A standalone chart SVG cannot read the page's theme and falls back to Midnight; it
+follows the theme when inlined in a page.
+
 ## Confusion matrices
 
 Each result file also carries, for every runner and question, a confusion matrix:

@@ -27,6 +27,8 @@ crew-chief/
 │   ├── gguf_sources.py                    # llama.cpp-native GGUF copies: fetch + SHA-256 check
 │   ├── taskbench.py                       # Task-based decision benchmarks (choice/score/noul)
 │   ├── scoring.py                         # Scoring profiles: accuracy + latency -> one gated, tie-aware score
+│   ├── theme.py                           # Shared system theme (vendored from traction-control) for pages and reports
+│   ├── theme/                             # portfolio-theme.css / .js, rendered by traction-control
 │   ├── benchui.py                         # `benchui`: local web interface for profiles, jobs and results
 │   ├── benchui_page.py                    # The interface's single inline page
 │   ├── routerbench.py                     # `routebench`: model selection scored on quality against latency

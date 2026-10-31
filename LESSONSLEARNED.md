@@ -24,10 +24,11 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
   tied; a curve relative to the fastest and slowest performer separates them but
   means nothing across runs. Blend both with one weight, leave rule baselines
   (0 ms) out of the range, and keep gates absolute so the least-bad model cannot pass.
-- **New web surfaces use the portfolio palette, not a fresh one.** The Clockwork pages define it
-  (dark: bg `#0f1117`, surface `#1a1d27`, border `#2e3250`, accent `#5b7fff`, text `#e2e4f0`,
-  muted `#8890b0`, system sans 14px); a page or generated report in another palette reads
-  as a different product and has to be restyled later.
+- **Style web surfaces with the system theme tokens, never literal colours.** traction-control
+  owns the themes (`themes/themes.toml`, `docs/system-theme.md`); a page inlines the vendored
+  `src/crew_chief/theme/portfolio-theme.{css,js}` and writes `var(--surface)`. A literal colour
+  silently ignores the theme switcher. `tests/test_theme.py` fails on a literal colour in the
+  generators and on a vendored copy that drifted from the source.
 - **Test a proxied service with the proxy's Host header, through the CLI entry point.**
   The server unit tests built the server directly and passed while the CLI never
   forwarded the allowed hostname, so the live service answered 403 behind Caddy. When

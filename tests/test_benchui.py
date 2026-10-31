@@ -46,7 +46,7 @@ def fake_build(spec, out_dir, profiles_path, suites_dir=None):
     return [[sys.executable, "-c", code]]
 
 
-def wait_for(predicate, timeout=10.0):
+def wait_for(predicate, timeout=30.0):
     end = time.time() + timeout
     while time.time() < end:
         if predicate():

@@ -1,18 +1,18 @@
 """The bench interface's single page. Everything is inline; nothing loads from a network."""
 
-PAGE = r"""<!doctype html>
+_TEMPLATE = r"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crew Chief bench</title>
+__THEME__
 <style>
 :root {
-  /* The portfolio palette, shared with the Clockwork pages. */
-  color-scheme: dark;
-  --bg: #0f1117; --panel: #1a1d27; --panel2: #22263a; --ink: #e2e4f0; --muted: #8890b0;
-  --line: #2e3250; --accent: #5b7fff; --accent-dim: #2d3f8a; --accent-ink: #ffffff;
-  --acc: #5b7fff; --spd: #a06fff; --ok: #3ecf6e; --bad: #e05252; --warn: #e0b832;
+  /* Page names for the shared theme tokens (src/crew_chief/theme). */
+  --panel: var(--surface); --ink: var(--text); --line: var(--border);
+  --acc: var(--accent); --spd: var(--purple); --ok: var(--green); --bad: var(--red);
+  --warn: var(--yellow);
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink);
@@ -90,6 +90,7 @@ a { color: var(--accent); }
     <button role="tab" data-tab="results" aria-selected="false">Results</button>
   </nav>
   <span id="badge"></span>
+  __SWITCHER__
   <a href="/latest.html" style="font-size:13px">Weekly report</a>
   <a href="/test-bench-latest.html" style="font-size:13px">Test bench</a>
   <a href="/results/" style="font-size:13px">All files</a>
@@ -496,3 +497,9 @@ async function refreshJobs() {
 </body>
 </html>
 """
+
+from crew_chief import theme  # noqa: E402
+
+PAGE = _TEMPLATE.replace("__THEME__", theme.HEAD + f"<style>{theme.SWITCHER_CSS}</style>").replace(
+    "__SWITCHER__", theme.SWITCHER
+)
