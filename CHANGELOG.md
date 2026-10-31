@@ -21,6 +21,8 @@ uses [Semantic Versioning](https://semver.org/).
   weight sensitivity table, added to `taskbench` and `routebench` reports.
   Speed credit blends an absolute latency curve with one normalised against every
   performer in the same report (`relative_weight`).
+- The bench interface and the report pages it serves load the portfolio top bar
+  (`/_portfolio/chrome.js`, served by the shared Caddy).
 - The bench interface, `scripts/report.py`, `scripts/test_benchmark.py` and the routebench
   chart use the portfolio system themes (Midnight, Daylight, Ember, High contrast; a
   switcher on every page, following the system by default). Colours live in

@@ -72,6 +72,16 @@ class GeneratorStyleTests(unittest.TestCase):
         self.assertIn("var(--purple,#a06fff)", svg)
         self.assertNotIn('stroke-opacity="0.3"', svg)
 
+    def test_pages_load_the_portfolio_top_bar_from_the_shared_caddy(self):
+        from crew_chief.benchui_page import PAGE
+
+        tag = '<script src="/_portfolio/chrome.js" defer></script>'
+        self.assertEqual(PAGE.count(tag), 1)
+        report = benchui.with_home_link(b"<html><head><title>r</title></head><body>x</body></html>")
+        self.assertEqual(report.decode().count(tag), 1)
+        self.assertLess(report.decode().index(tag), report.decode().index("</head>"))
+        self.assertEqual(benchui.with_home_link(report).decode().count(tag), 1)
+
     def test_bench_pages_use_tokens(self):
         from crew_chief.benchui_page import PAGE
 

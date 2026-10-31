@@ -6,6 +6,7 @@ _TEMPLATE = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crew Chief bench</title>
+<script src="/_portfolio/chrome.js" defer></script>
 __THEME__
 <style>
 :root {
