@@ -92,6 +92,11 @@ Metrics: accuracy and invalid answers per question, median and p90 latency per
 item, and the multi-class Brier score where probabilities exist (lower is
 better; it rewards being confident only when right).
 
+## Backlog triage
+
+`backlog-triage.json` has two questions per entry, `group` and `repo`, each with an `unknown` option, and
+models Clockwork's To Code auto-sorting. See [decision-model-selection.md](decision-model-selection.md#backlog-triage-sorting-an-entry-into-a-group-and-a-repository).
+
 ## Aggregate score
 
 `taskbench` and `routebench` add a `score: <profile>` column that combines

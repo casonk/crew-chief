@@ -77,6 +77,31 @@ class ClockworkSuiteTests(unittest.TestCase):
                     )
 
 
+class BacklogTriageSuiteTests(unittest.TestCase):
+    PATH = TASK_FILE.parent / "backlog-triage.json"
+
+    def test_both_questions_have_unknown_and_both_splits_cover_every_label(self):
+        task = tb.load_task(self.PATH)
+        self.assertEqual(set(task.questions), {"group", "repo"})
+        for qid in ("group", "repo"):
+            labels = set(task.questions[qid].labels)
+            self.assertIn("unknown", labels)
+            for split in tb.SPLITS:
+                chosen = task.select(split)
+                self.assertEqual({i["expected"][qid] for i in chosen.items}, labels, (qid, split))
+
+    def test_the_suite_is_synthetic_and_unknown_items_are_unknown_for_both_questions(self):
+        task = tb.load_task(self.PATH)
+        for item in task.items:
+            expected = item["expected"]
+            if expected["repo"] == "unknown":
+                self.assertEqual(expected["group"], "unknown", item["state"])
+        # repository names are descriptive stand-ins, never a real repository's name
+        text = self.PATH.read_text(encoding="utf-8")
+        for real in ("clockwork", "crew-chief", "tachometer", "magneto", "locility", "career"):
+            self.assertNotIn(real, text)
+
+
 class LoadTests(unittest.TestCase):
     def test_shipped_task_loads(self):
         task = tb.load_task(TASK_FILE)
