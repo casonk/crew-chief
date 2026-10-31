@@ -130,56 +130,56 @@
       "expected": {
         "category": "Books"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "The Left Hand of Darkness",
       "expected": {
         "category": "Books"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Essay on the decline of third places",
       "expected": {
         "category": "Articles"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Magazine feature on deep-sea mining",
       "expected": {
         "category": "Articles"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "The Google File System",
       "expected": {
         "category": "Papers"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Dynamo: Amazon's highly available key-value store",
       "expected": {
         "category": "Papers"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Watchmen graphic novel",
       "expected": {
         "category": "Comics"
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Monster manga vol. 2",
       "expected": {
         "category": "Comics"
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }

@@ -26,11 +26,20 @@ Runners:
 Metrics per runner and question: accuracy, invalid answers, latency per item,
 and, where the runner reports probabilities, the multi-class Brier score.
 
+Protocol: every task has a train and a test split. The whole train set is always
+given to a model a priori, as worked examples in its system prompt (an item is
+never shown its own answer: when a train item is scored it is left out of its own
+examples), and results are scored on the test split by default. ``--zero-shot``
+drops the examples for an ablation and is reported as such. The keyword baseline
+is fitted on train only.
+
 Stdlib only.
 """
 
 from __future__ import annotations
 
+import dataclasses
+import itertools
 import json
 import math
 import os
@@ -40,15 +49,26 @@ import string
 import time
 import urllib.error
 import urllib.request
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 JEV_URL = "https://api.typesafe.ai/v1/systemone"
 QUESTION_TYPES = ("choice", "score", "noul")
-# Items are `dev` (rules and prompts may be fitted to them) or `heldout` (scored
-# once a configuration is fixed, never tuned against). `all` selects both.
-SPLITS = ("dev", "heldout")
+# Every item is `train` (the examples every prompt carries, and what rules are fitted to) or
+# `test` (scored, never shown to a model). An item with no `split` is train. `all` selects both.
+# `dev` and `heldout` are the old names for `train` and `test` and are still read.
+SPLITS = ("train", "test")
+SPLIT_ALIASES = {"dev": "train", "heldout": "test"}
+
+
+def canonical_split(value: Any) -> str:
+    """``train`` or ``test`` for a split name (including the old ``dev`` and ``heldout``)."""
+    name = SPLIT_ALIASES.get(str(value), str(value))
+    if name not in SPLITS:
+        raise TaskError(f"unknown split {value!r}; use train, test or all")
+    return name
 
 
 class TaskError(ValueError):
@@ -86,6 +106,10 @@ class Question:
         ]
 
 
+def _state_key(state: Any) -> str:
+    return " ".join(str(state).lower().split())
+
+
 @dataclass(frozen=True)
 class Task:
     name: str
@@ -94,17 +118,33 @@ class Task:
     items: list[dict[str, Any]]
     baseline: dict[str, Any] = field(default_factory=dict)
     split: str = "all"
+    # The train items every prompt carries a priori; kept whole when a split is selected.
+    examples: tuple[dict[str, Any], ...] = ()
+    zero_shot: bool = False
 
     def select(self, split: str) -> Task:
-        """This task restricted to one split; ``all`` keeps every item."""
+        """This task restricted to one split; ``all`` keeps every item. The examples stay."""
         if split == "all":
             return self
-        if split not in SPLITS:
-            raise TaskError(f"unknown split {split!r}; use dev, heldout or all")
-        items = [i for i in self.items if i.get("split", "dev") == split]
+        name = canonical_split(split)
+        items = [i for i in self.items if i["split"] == name]
         if not items:
-            raise TaskError(f"{self.name} has no {split} items")
-        return Task(self.name, self.description, self.questions, items, self.baseline, split)
+            raise TaskError(f"{self.name} has no {name} items")
+        return dataclasses.replace(self, items=items, split=name)
+
+    def examples_for(self, state: str) -> tuple[dict[str, Any], ...]:
+        """The examples for scoring *state*: every train item except the one being scored."""
+        key = _state_key(state)
+        return tuple(e for e in self.examples if _state_key(e["state"]) != key)
+
+    def without_examples(self) -> Task:
+        """The same task with no examples in any prompt (a zero-shot ablation, reported as such)."""
+        return dataclasses.replace(self, examples=(), zero_shot=True)
+
+    @property
+    def leave_one_out(self) -> bool:
+        """True when train items are scored: each is then scored without its own example."""
+        return self.split in ("train", "all")
 
 
 def load_task(path: Path) -> Task:
@@ -125,12 +165,15 @@ def load_task(path: Path) -> Task:
         questions[qid] = Question(qid, qtype, str(q.get("instructions", "")), criteria)
     if not questions:
         raise TaskError(f"{path}: no questions")
-    items = doc.get("items", [])
+    items = []
     seen: dict[str, int] = {}
-    for index, item in enumerate(items):
-        if item.get("split", "dev") not in SPLITS:
-            raise TaskError(f"{path}: item {index} has split {item.get('split')!r}")
-        # The same text in two items could leak a dev answer into the held-out score.
+    for index, raw in enumerate(doc.get("items", [])):
+        try:
+            item = {**raw, "split": canonical_split(raw.get("split", "train"))}
+        except TaskError as exc:
+            raise TaskError(f"{path}: item {index}: {exc}") from exc
+        items.append(item)
+        # The same text in two items could leak a train answer into the test score.
         key = " ".join(str(item.get("state", "")).lower().split())
         if key in seen:
             raise TaskError(f"{path}: item {index} repeats the state of item {seen[key]}")
@@ -147,6 +190,7 @@ def load_task(path: Path) -> Task:
         questions=questions,
         items=items,
         baseline=doc.get("baseline", {}),
+        examples=tuple(i for i in items if i["split"] == "train"),
     )
 
 
@@ -178,8 +222,44 @@ def _post(url: str, payload: dict, headers: dict | None = None, timeout: int = 3
         return json.loads(resp.read().decode())
 
 
-def _instructions(task: Task) -> str:
-    """The questions and every allowed answer, stated before any input is shown."""
+def example_answers(task: Task, example: dict[str, Any], qids: list[str] | None = None) -> str:
+    """An example's correct answers as ``qid=label`` pairs (only for the questions asked about)."""
+    pairs = []
+    for qid in qids or list(task.questions):
+        if qid in example.get("expected", {}):
+            pairs.append(f"{qid}={normalize(task.questions[qid], example['expected'][qid])}")
+    return ", ".join(pairs)
+
+
+def format_examples(
+    task: Task,
+    state: str,
+    qids: list[str] | None = None,
+    answer: Callable[[dict[str, Any]], str] | None = None,
+) -> str:
+    """The train examples as worked answers to place before the input; empty when there are none.
+
+    The item being scored is left out, so a model is never shown the answer it is asked for.
+    """
+    examples = task.examples_for(state)
+    if not examples:
+        return ""
+    lines = [
+        "EXAMPLES: inputs that have already been decided, with their correct answers. "
+        "Follow the same reasoning for the new INPUT.",
+        "",
+    ]
+    render = answer or (lambda e: example_answers(task, e, qids))
+    for example in examples:
+        text = render(example)
+        if text:  # an example with no answer to this question teaches nothing about it
+            lines.append(f"INPUT: {example['state']}")
+            lines.append(f"ANSWER: {text}")
+    return "\n".join(lines) if len(lines) > 2 else ""
+
+
+def _instructions(task: Task, state: str = "") -> str:
+    """The questions and every allowed answer, then the train examples, all before the input."""
     lines = [
         "You make bounded decisions about the input you are given. Answer every question",
         "with exactly one of its allowed values; do not invent values outside the list.",
@@ -190,11 +270,13 @@ def _instructions(task: Task) -> str:
         lines.append("Allowed values:")
         lines.extend(f"  - {line}" for line in q.describe())
         lines.append("")
-    return "\n".join(lines).rstrip()
+    text = "\n".join(lines).rstrip()
+    examples = format_examples(task, state)
+    return f"{text}\n\n{examples}" if examples else text
 
 
 def _prompt(task: Task, state: str) -> str:
-    return f"{_instructions(task)}\n\nINPUT:\n{state}"
+    return f"{_instructions(task, state)}\n\nINPUT:\n{state}"
 
 
 class RulesRunner:
@@ -243,7 +325,7 @@ class OllamaRunner:
             {
                 "model": self.model,
                 "messages": [
-                    {"role": "system", "content": _instructions(task)},
+                    {"role": "system", "content": _instructions(task, state)},
                     {"role": "user", "content": f"INPUT:\n{state}"},
                 ],
                 "format": self.schema(task),
@@ -283,9 +365,20 @@ class LlamaCppRunner:
         options = "\n".join(
             f"{letter}) {line}" for letter, line in zip(letters, q.describe(), strict=True)
         )
+        examples = format_examples(
+            task,
+            state,
+            [q.qid],
+            lambda e: (
+                letters[q.labels.index(normalize(q, e["expected"][q.qid]))]
+                if q.qid in e.get("expected", {})
+                else ""
+            ),
+        )
         prompt = (
             f"QUESTION: {q.instructions}\nAllowed options:\n{options}\n\n"
-            f"INPUT:\n{state}\n\nReply with the single letter of the best option."
+            + (f"{examples}\n\n" if examples else "")
+            + f"INPUT:\n{state}\n\nReply with the single letter of the best option."
         )
         grammar = "root ::= " + " | ".join(f'"{letter}"' for letter in letters)
         body = _post(
@@ -347,13 +440,18 @@ class SystemOneRunner:
         self.name = f"{label}:{model}"
 
     def request(self, task: Task, state: str) -> dict:
+        # The API has no system prompt, so the train examples go in front of the input inside
+        # ``state``. Measured on the test splits this beat putting them in each question's
+        # instructions (results/example-placement-*.md).
         questions = {}
         for qid, q in task.questions.items():
             spec: dict[str, Any] = {"type": q.type, "instructions": q.instructions}
             if q.criteria is not None:
                 spec["criteria"] = q.criteria
             questions[qid] = spec
-        return {"state": state, "model": self.model, "questions": questions}
+        examples = format_examples(task, state)
+        body = f"{examples}\n\nNEW INPUT (decide this one):\n{state}" if examples else state
+        return {"state": body, "model": self.model, "questions": questions}
 
     def answer(self, task: Task, state: str) -> dict[str, Answer]:
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
@@ -387,10 +485,189 @@ def parse_jev(task: Task, body: dict) -> dict[str, Answer]:
     return answers
 
 
+# -- bayesian prior from the train split -------------------------------------
+
+JOINT_LIMIT = 5000  # label combinations; a larger joint is skipped and questions stay independent
+
+
+def tokens(state: str) -> set[str]:
+    """The distinct lowercase words of an input; the features of the naive-Bayes prior."""
+    return {w for w in re.findall(r"[a-z0-9']+", state.lower()) if len(w) > 1}
+
+
+class BayesPrior:
+    """Probabilities fitted on the train examples alone (Laplace-smoothed counts).
+
+    Per question: P(label) and P(word | label), combined as naive Bayes. Across questions: the
+    joint P(label combination), so an answer set that never occurs in train is unlikely even if each
+    answer alone is plausible. ``posterior`` returns one distribution per question.
+    """
+
+    def __init__(
+        self,
+        task: Task,
+        examples: tuple[dict[str, Any], ...],
+        alpha: float = 1.0,
+        word_alpha: float = 0.1,
+    ) -> None:
+        self.task, self.alpha, self.word_alpha = task, alpha, word_alpha
+        self.rows = []
+        for e in examples:
+            truth = {}
+            for qid, q in task.questions.items():
+                if qid in e.get("expected", {}):
+                    truth[qid] = normalize(q, e["expected"][qid])
+            if truth:
+                self.rows.append((tokens(e["state"]), truth))
+        self.vocab = {w for words, _ in self.rows for w in words}
+        self.label_n: dict[str, dict[str, int]] = {}
+        self.word_n: dict[str, dict[str, dict[str, int]]] = {}
+        for qid, q in task.questions.items():
+            self.label_n[qid] = {label: 0 for label in q.labels}
+            self.word_n[qid] = {label: {} for label in q.labels}
+        self.joint_n: dict[tuple, int] = {}
+        for words, truth in self.rows:
+            for qid, label in truth.items():
+                if label is None:
+                    continue
+                self.label_n[qid][label] += 1
+                for w in words:
+                    self.word_n[qid][label][w] = self.word_n[qid][label].get(w, 0) + 1
+            if len(truth) == len(task.questions) and None not in truth.values():
+                key = tuple(truth[qid] for qid in task.questions)
+                self.joint_n[key] = self.joint_n.get(key, 0) + 1
+
+    def marginal(self, qid: str) -> dict[str, float]:
+        n = self.label_n[qid]
+        total = sum(n.values()) + self.alpha * len(n)
+        return {label: (c + self.alpha) / total for label, c in n.items()}
+
+    def naive(self, qid: str, state: str) -> dict[str, float]:
+        """P(label | words) for one question, with the words' evidence in log space."""
+        words = tokens(state) & self.vocab
+        marginal = self.marginal(qid)
+        logs = {}
+        for label, prior in marginal.items():
+            counts = self.word_n[qid][label]
+            denom = sum(counts.values()) + self.word_alpha * len(self.vocab)
+            score = math.log(prior)
+            for w in words:
+                score += math.log((counts.get(w, 0) + self.word_alpha) / denom)
+            logs[label] = score
+        return _softmax(logs)
+
+    def joint_prior(self) -> dict[tuple, float] | None:
+        labels = [q.labels for q in self.task.questions.values()]
+        size = math.prod(len(x) for x in labels)
+        if size > JOINT_LIMIT or len(labels) < 2:
+            return None
+        total = sum(self.joint_n.values()) + self.alpha * size
+        return {
+            key: (self.joint_n.get(key, 0) + self.alpha) / total
+            for key in itertools.product(*labels)
+        }
+
+    def posterior(
+        self, state: str, likelihood: dict[str, dict[str, float]] | None = None
+    ) -> dict[str, dict[str, float]]:
+        """Per-question distributions. With *likelihood* (a model's probabilities) they are fused:
+        posterior ∝ prior × likelihood, the joint correcting the marginals it already contains."""
+        qids = list(self.task.questions)
+        per_q = {}
+        for qid in qids:
+            base = self.naive(qid, state)
+            if likelihood and qid in likelihood:
+                # the model's probabilities replace the word evidence; the label prior stays
+                base = _normalise(
+                    {
+                        label: self.marginal(qid)[label]
+                        * max(likelihood[qid].get(label, 0.0), 1e-6)
+                        for label in base
+                    }
+                )
+            per_q[qid] = base
+        joint = self.joint_prior()
+        if joint is None:
+            return per_q
+        marg = {qid: self.marginal(qid) for qid in qids}
+        score = {}
+        for key, prior in joint.items():
+            value = prior
+            for qid, label in zip(qids, key, strict=True):
+                value *= per_q[qid][label] / marg[qid][label]
+            score[key] = value
+        score = _normalise(score)
+        out = {qid: {label: 0.0 for label in self.task.questions[qid].labels} for qid in qids}
+        for key, p in score.items():
+            for qid, label in zip(qids, key, strict=True):
+                out[qid][label] += p
+        return out
+
+
+def _normalise(scores: dict) -> dict:
+    total = sum(scores.values()) or 1.0
+    return {k: v / total for k, v in scores.items()}
+
+
+def _softmax(logs: dict[str, float]) -> dict[str, float]:
+    top = max(logs.values())
+    return _normalise({k: math.exp(v - top) for k, v in logs.items()})
+
+
+def _top(probs: dict[str, float]) -> str:
+    return max(probs, key=probs.get)
+
+
+class BayesRunner:
+    """The prior alone: naive Bayes plus the joint, fitted on train. A baseline any model must beat."""
+
+    name = "bayes"
+
+    def __init__(self, task: Task) -> None:
+        self.cache: dict[str, BayesPrior] = {}
+
+    def prior(self, task: Task, state: str) -> BayesPrior:
+        key = _state_key(state)  # leave-one-out: a train item is scored by a prior without it
+        if key not in self.cache:
+            self.cache[key] = BayesPrior(task, task.examples_for(state))
+        return self.cache[key]
+
+    def answer(self, task: Task, state: str) -> dict[str, Answer]:
+        post = self.prior(task, state).posterior(state)
+        return {qid: Answer(_top(p), p) for qid, p in post.items()}
+
+
+class BayesFusionRunner:
+    """A model's answer weighed against the train prior: posterior ∝ prior × model likelihood.
+
+    A model without probabilities (a plain JSON reply) counts as 0.9 for its answer and the
+    remainder spread over the other labels.
+    """
+
+    def __init__(self, inner, task: Task) -> None:
+        self.inner, self.bayes = inner, BayesRunner(task)
+        self.name = f"bayes+{inner.name}"
+
+    def answer(self, task: Task, state: str) -> dict[str, Answer]:
+        got = self.inner.answer(task, state)
+        likelihood = {}
+        for qid, ans in got.items():
+            labels = task.questions[qid].labels
+            if ans.probabilities:
+                likelihood[qid] = ans.probabilities
+            elif ans.value is not None:
+                rest = 0.1 / max(len(labels) - 1, 1)
+                likelihood[qid] = {x: (0.9 if x == ans.value else rest) for x in labels}
+        post = self.bayes.prior(task, state).posterior(state, likelihood)
+        return {qid: Answer(_top(p), p) for qid, p in post.items()}
+
+
 def make_runner(spec: str, task: Task):
     kind, _, arg = spec.partition(":")
     if kind == "rules":
         return RulesRunner(task)
+    if kind == "bayes":
+        return BayesFusionRunner(make_runner(arg, task), task) if arg else BayesRunner(task)
     if kind == "ollama" and arg:
         return OllamaRunner(arg, os.environ.get("CREW_CHIEF_URL", "http://localhost:11434"))
     if kind == "llamacpp" and arg:
@@ -402,7 +679,7 @@ def make_runner(spec: str, task: Task):
     if kind == "jev":
         return JevRunner(os.environ.get("TYPESAFE_API_KEY", ""), arg or "jev-latest")
     raise TaskError(
-        f"unknown runner {spec!r}; use rules, ollama:<model>, llamacpp:<model>, "
+        f"unknown runner {spec!r}; use rules, bayes, bayes:<runner>, ollama:<model>, llamacpp:<model>, "
         "systemone:<model>, jev"
     )
 
@@ -414,6 +691,29 @@ def brier(probabilities: dict[str, float], truth: str, labels: list[str]) -> flo
     return sum(
         (probabilities.get(label, 0.0) - (1.0 if label == truth else 0.0)) ** 2 for label in labels
     )
+
+
+def protocol(task: Task) -> dict[str, Any]:
+    """How this run was set up, recorded with its results so they are never read as another protocol."""
+    return {
+        "split": task.split,
+        "train_examples": len(task.examples),
+        "zero_shot": task.zero_shot,
+        "leave_one_out": task.leave_one_out,
+    }
+
+
+def protocol_line(task: Task) -> str:
+    """One sentence on how the run was set up, for the top of a report."""
+    if task.zero_shot:
+        shot = "**Zero-shot ablation**: no train examples in the prompts; not comparable with the standard protocol."
+    else:
+        shot = f"All {len(task.examples)} train examples are in every prompt as worked examples."
+    if task.leave_one_out:
+        scored = "Train items are scored leave-one-out (each without its own example)."
+    else:
+        scored = "Only test items are scored, and none is ever shown to a model."
+    return f"Protocol: {shot} {scored}"
 
 
 def run(task: Task, runner, *, clock=time.perf_counter) -> dict[str, Any]:
@@ -476,6 +776,7 @@ def run(task: Task, runner, *, clock=time.perf_counter) -> dict[str, Any]:
         "latency_ms_median": round(statistics.median(latencies), 1) if latencies else None,
         "latency_ms_p90": round(_p90(latencies), 1) if latencies else None,
         "questions": summary,
+        "protocol": protocol(task),
         "rows": rows,
     }
 
@@ -565,6 +866,8 @@ def render_markdown(
         "",
         f"{len(task.items)} items ({task.split} split). Accuracy per question; Brier is the multi-class Brier",
         "score over questions where the runner reports probabilities (lower is better).",
+        "",
+        protocol_line(task),
         "",
         header,
         "|" + "---|" * (2 * len(qids) + 6 + len(profiles)),

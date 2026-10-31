@@ -172,7 +172,8 @@ class SpecTests(unittest.TestCase):
 
     def test_accepts_a_valid_spec_with_defaults(self):
         got = benchui.validate_spec(self.good(), SUITES)
-        self.assertEqual((got["split"], got["private"]), ("dev", False))
+        self.assertEqual((got["split"], got["private"]), ("test", False))
+        self.assertFalse(got["zero_shot"])
         self.assertEqual(got["thresholds"], [0.6, 0.8, 0.95])
 
     def test_rejects_unknown_suites_paths_and_shell_shaped_runners(self):
@@ -190,6 +191,34 @@ class SpecTests(unittest.TestCase):
         ):
             with self.assertRaises(benchui.BenchError, msg=str(bad)):
                 benchui.validate_spec(bad, SUITES)
+
+    def test_split_names_default_to_test_and_the_old_names_are_translated(self):
+        for given, expected in (
+            (None, "test"), ("test", "test"), ("train", "train"), ("all", "all"),
+            ("heldout", "test"), ("dev", "train"),
+        ):  # fmt: skip
+            spec = self.good() if given is None else self.good(split=given)
+            self.assertEqual(benchui.validate_spec(spec, SUITES)["split"], expected, given)
+        with self.assertRaises(benchui.BenchError):
+            benchui.validate_spec(self.good(split="validation"), SUITES)
+
+    def test_zero_shot_is_an_explicit_flag_passed_to_the_cli(self):
+        standard = benchui.validate_spec(self.good(), SUITES)
+        self.assertFalse(standard["zero_shot"])
+        (step,) = benchui.build_steps(standard, Path("/out"), None)
+        self.assertNotIn("--zero-shot", step)
+        self.assertEqual(step[step.index("--split") + 1], "test")
+        ablation = benchui.validate_spec(self.good(zero_shot=True), SUITES)
+        (step,) = benchui.build_steps(ablation, Path("/out"), None)
+        self.assertIn("--zero-shot", step)
+
+    def test_the_form_states_the_protocol_and_offers_zero_shot_only_as_an_ablation(self):
+        from crew_chief.benchui_page import PAGE
+
+        self.assertIn("always in every prompt", PAGE)
+        self.assertIn('id="r-zeroshot"', PAGE)
+        self.assertIn("Zero-shot ablation", PAGE)
+        self.assertNotIn("<option>heldout</option>", PAGE)
 
     def test_build_steps_pass_arguments_as_a_list_and_use_saved_profiles(self):
         with TemporaryDirectory() as tmp:

@@ -157,7 +157,10 @@ a { color: var(--accent); }
     <textarea id="r-extra" rows="2"></textarea>
     <div id="r-taskonly">
       <label for="r-split" style="margin-top:8px">Split</label>
-      <select id="r-split"><option>dev</option><option>heldout</option><option>all</option></select>
+      <select id="r-split"><option value="test">test (the standard)</option><option value="train">train (leave-one-out)</option><option value="all">all (test and leave-one-out train)</option></select>
+      <label style="margin-top:8px;display:flex;gap:6px;align-items:center"><input type="checkbox" id="r-zeroshot">
+        Zero-shot ablation: leave the train examples out of the prompts (not comparable with the standard)</label>
+      <p class="muted">The whole train split is always in every prompt as worked examples; only test items are scored by default.</p>
     </div>
     <div id="r-routeonly" hidden>
       <h2 style="margin-top:14px">Routing models</h2>
@@ -424,7 +427,7 @@ $("start").addEventListener("click", async () => {
   const extra = $("r-extra").value.split("\n").map((s) => s.trim()).filter(Boolean);
   const spec = {
     kind: $("r-kind").value, suites: checked("suite"), runners: [...checked("runner"), ...extra],
-    split: $("r-split").value,
+    split: $("r-split").value, zero_shot: $("r-zeroshot").checked,
     routers: [...checked("router"), ...$("r-routers-extra").value.split("\n").map((s) => s.trim()).filter(Boolean)],
     thresholds: $("r-thr").value.split(/[ ,]+/).filter(Boolean).map(Number),
     private: $("r-private").checked,

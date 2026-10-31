@@ -239,7 +239,7 @@
         "currency": "usd",
         "due_date": true
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Proof of payment: £230.00 received on 2026-10-10 for order 4410. Paid in full.",
@@ -248,7 +248,7 @@
         "currency": "gbp",
         "due_date": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Account statement. Closing balance €5,640.20. Payment due 2026-11-02.",
@@ -257,7 +257,7 @@
         "currency": "eur",
         "due_date": true
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Price estimate for a bathroom remodel: $6,400. This is a quote, not an invoice.",
@@ -266,7 +266,7 @@
         "currency": "usd",
         "due_date": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Quote 12: translation services, £340, valid 14 days from issue.",
@@ -275,7 +275,7 @@
         "currency": "gbp",
         "due_date": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Please pay the attached invoice of €75.50 by 2026-12-12.",
@@ -284,7 +284,7 @@
         "currency": "eur",
         "due_date": true
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Your donation has been received with thanks. No goods or services were provided in exchange.",
@@ -293,7 +293,7 @@
         "currency": "none",
         "due_date": false
       },
-      "split": "heldout"
+      "split": "test"
     },
     {
       "state": "Statement of fees for the year. Balance $0.00. Nothing is owed.",
@@ -302,7 +302,7 @@
         "currency": "usd",
         "due_date": false
       },
-      "split": "heldout"
+      "split": "test"
     }
   ]
 }

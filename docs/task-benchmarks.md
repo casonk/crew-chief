@@ -27,22 +27,42 @@ crew-chief taskbench benchmarks/decisions/message-routing.json \
   --runner rules --runner ollama:qwen3:14b --runner llamacpp:qwen3:32b
 ```
 
-## Dev and held-out splits
+## Train and test splits, with the train set in every prompt
 
-Each item may carry `"split": "heldout"`; items without one are `dev`. Fit
-keyword rules, prompts and thresholds against `dev` only, then score the fixed
-configuration once on `heldout`. `crew-chief taskbench` runs `dev` by default
-(`--split heldout` or `--split all` otherwise) and names held-out result files
-`taskbench-<task>-heldout-<stamp>`. A state that appears twice in a task file is
-rejected, so a dev answer cannot leak into the held-out score.
+Every suite has a **train** split and a **test** split (`"split": "train"` or `"test"` on an item; an item with
+no `split` is train). The protocol is fixed:
+
+- **The whole train set is always given to the model a priori**, as worked examples in its system prompt
+  (`INPUT: ... ANSWER: ...`), whichever runner it is. A model is never asked a question cold unless you
+  ask for the ablation below.
+- **Results are scored on the test split by default**, and no test item appears in any prompt. A state that
+  appears twice in a task file is rejected, so a train answer cannot leak into the test score.
+- **Scoring train items is leave-one-out**: an item is left out of its own examples, so a model is never shown
+  the answer it is asked for. `--split train` and `--split all` do this, and the report says so; the test split
+  is the number to quote.
+- **Keyword rules are fitted on train only**, then scored on test.
+- **`--zero-shot` is an ablation, not the benchmark.** It leaves the examples out, is recorded in the result
+  (`protocol.zero_shot`), named in the file (`-zeroshot-`) and stated at the top of the report, and is never
+  comparable with a standard run.
+
+Where the examples go depends on the runner: in the system message for `ollama:`, before the input for
+`llamacpp:` (with the answer as its option letter), and in each question's `instructions` for `systemone:` and
+`jev` (the System One API has no separate system prompt; only that question's answers are shown). Every result
+JSON carries a `protocol` block (split, train examples in the prompt, zero-shot, leave-one-out), and the report
+states it.
+
+`crew-chief taskbench` runs `test` by default and names result files
+`taskbench-<task>-<split>-<stamp>`. `dev` and `heldout` are the old names for `train` and `test` and are still
+accepted. **Results from before 2026-10-31 were scored zero-shot on `dev` or `heldout` and are not comparable
+with the standard protocol.**
 
 Suites: `message-routing`, `mail-triage`, `receipt-category` and
 `schema-extraction`. The first one's keyword rules were fitted to all of its
-original 30 items, so those are `dev` and its 10 newer items are the held-out
-split; the other three have 16 dev and 8 held-out items each, with rules written
-from the dev items. The gap between a runner's dev and held-out accuracy is the
-overfit: the keyword baseline on `receipt-category` scores 1.00 on dev and 0.38 on
-held-out category.
+original 30 items, so those are train and its 10 newer items are the test
+split; the other three have 16 train and 8 test items each, with rules written
+from the train items. The gap between a runner's train and test accuracy is the
+overfit: the keyword baseline on `receipt-category` scores 1.00 on train and 0.38 on
+test category.
 
 ## Clockwork list sorting
 
@@ -61,7 +81,7 @@ question whose options are the list's real categories:
 | `clockwork-todo-category` | Tasks, Projects, Errands, Goals, Hardware |
 | `clockwork-invest-category` | Stocks, ETFs, Crypto, Bonds, REITs, Themes |
 
-Every label has dev and held-out items. Items are generic names or well-known
+Every label has train and test items. Items are generic names or well-known
 public titles, never entries from a real list; keep it that way. If a Clockwork
 list gains a category or type, add it to the matching suite so the benchmark
 keeps testing what the list uses.
@@ -77,6 +97,8 @@ done
 | Runner | How it answers | Probabilities |
 |---|---|---|
 | `rules` | keyword rules from the task file | no |
+| `bayes` | a Bayesian prior fitted on the train split: naive Bayes per question plus the joint over answer combinations | no |
+| `bayes:<runner>` | that runner's answer weighed against the prior (posterior ∝ prior × the runner's probabilities; a runner without probabilities counts as 0.9 for its answer) | as the runner |
 | `ollama:<model>` | one call per item, reply constrained to a JSON schema | no |
 | `llamacpp:<model>` | one call per question, reply constrained to one option letter | yes, from token log-probs |
 | `systemone:<model>` | local decision model via Ollama's `/v1/systemone` (Nimble, Tev1, Clef) | yes, from the model |
@@ -156,8 +178,8 @@ mean, median and p90 latency per item:
 | Strategy | What it does |
 |---|---|
 | `single:<m>` | always ask one candidate: the baselines a router must beat |
-| `lookup` | the candidate with the best dev accuracy for the task; no extra call |
-| `route:<router>` | a router model picks a candidate; the options carry each candidate's dev accuracy and median latency, so it chooses from evidence, not names. Cost: router call + chosen call |
+| `lookup` | the candidate with the best train accuracy for the task; no extra call |
+| `route:<router>` | a router model picks a candidate; the options carry each candidate's train accuracy and median latency, so it chooses from evidence, not names. Cost: router call + chosen call |
 | `cascade@<t>` | ask the fastest candidate; if its top probability is under `t`, ask the next fastest. The candidate's own probabilities are the prior that decides whether to escalate |
 | `oracle` | the fastest candidate that was right; an unreachable bound |
 
@@ -167,7 +189,7 @@ latency (the Pareto front), an SVG scatter of accuracy against log latency, the
 per-task accuracy, the router's confusion matrix against the *fastest correct*
 candidate, and the routed answers' per-task confusion matrices. A strategy's
 latency is composed from the measured per-call times, never re-run. Profiles shown
-to the router come from dev items only. A router must beat both `lookup` and the
+to the router come from train items only. A router must beat both `lookup` and the
 best `single:` on the Pareto front to be worth its extra call.
 
 ## Decision models and Jev

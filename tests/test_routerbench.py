@@ -17,10 +17,10 @@ TASK = tb.Task(
     [
         {"state": "d1", "expected": {"kind": "a"}},
         {"state": "d2", "expected": {"kind": "b"}},
-        {"state": "h1", "expected": {"kind": "a"}, "split": "heldout"},
-        {"state": "h2", "expected": {"kind": "b"}, "split": "heldout"},
-        {"state": "h3", "expected": {"kind": "a"}, "split": "heldout"},
-        {"state": "h4", "expected": {"kind": "b"}, "split": "heldout"},
+        {"state": "h1", "expected": {"kind": "a"}, "split": "test"},
+        {"state": "h2", "expected": {"kind": "b"}, "split": "test"},
+        {"state": "h3", "expected": {"kind": "a"}, "split": "test"},
+        {"state": "h4", "expected": {"kind": "b"}, "split": "test"},
     ],
 )
 TRUTH = ["a", "b", "a", "b", "a", "b"]
@@ -33,7 +33,7 @@ def calls(values, confidence, ms):
     }
 
 
-# `fast` is right on dev and on h1/h2 but unsure and wrong on h3/h4; `slow` is always right.
+# `fast` is right on train and on h1/h2 but unsure and wrong on h3/h4; `slow` is always right.
 MEASURED = {
     "systemone:fast": calls(["a", "b", "a", "b", "b", "a"], [0.9, 0.9, 0.9, 0.9, 0.5, 0.5], 10.0),
     "systemone:slow": calls(TRUTH, [0.99] * 6, 100.0),
@@ -83,7 +83,7 @@ class StrategyTests(unittest.TestCase):
         s = benchmark()["strategies"]
         self.assertEqual((s["single:fast"]["accuracy"], s["single:fast"]["ms_mean"]), (0.5, 10.0))
         self.assertEqual((s["single:slow"]["accuracy"], s["single:slow"]["ms_mean"]), (1.0, 100.0))
-        self.assertEqual(s["lookup"]["accuracy"], 0.5)  # dev tie goes to the faster model
+        self.assertEqual(s["lookup"]["accuracy"], 0.5)  # a train tie goes to the faster model
         self.assertEqual((s["oracle"]["accuracy"], s["oracle"]["ms_mean"]), (1.0, 55.0))
         # Confident h1/h2 stop at the fast model; unsure h3/h4 pay for both calls.
         self.assertEqual((s["cascade@0.8"]["accuracy"], s["cascade@0.8"]["ms_mean"]), (1.0, 60.0))
