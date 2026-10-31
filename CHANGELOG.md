@@ -21,6 +21,7 @@ uses [Semantic Versioning](https://semver.org/).
   weight sensitivity table, added to `taskbench` and `routebench` reports.
   Speed credit blends an absolute latency curve with one normalised against every
   performer in the same report (`relative_weight`).
+- The bench interface uses the portfolio (Clockwork) dark palette.
 - Report pages served by `benchui` (latest.html, test-bench-latest.html, ...) carry a link back to the interface.
 - `crew-chief benchui`: a web interface (loopback listener, reached through the shared
   Caddy at bench.crew-chief.internal; user unit via `scripts/install_benchui_systemd.sh`) with profile sliders and a

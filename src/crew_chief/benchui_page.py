@@ -8,20 +8,15 @@ PAGE = r"""<!doctype html>
 <title>Crew Chief bench</title>
 <style>
 :root {
-  --bg: #f6f7f9; --panel: #ffffff; --ink: #1c2230; --muted: #64707f; --line: #dde2ea;
-  --accent: #2b6cb0; --accent-ink: #ffffff; --acc: #2b6cb0; --spd: #d9822b;
-  --ok: #2f855a; --bad: #c53030; --warn: #b7791f;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #12151b; --panel: #1b2029; --ink: #e6e9ef; --muted: #8c97a7; --line: #2c3340;
-    --accent: #63a4e8; --accent-ink: #0d1117; --acc: #63a4e8; --spd: #e8a257;
-    --ok: #5fc48a; --bad: #ef7676; --warn: #e0b45a;
-  }
+  /* The portfolio palette, shared with the Clockwork pages. */
+  color-scheme: dark;
+  --bg: #0f1117; --panel: #1a1d27; --panel2: #22263a; --ink: #e2e4f0; --muted: #8890b0;
+  --line: #2e3250; --accent: #5b7fff; --accent-dim: #2d3f8a; --accent-ink: #ffffff;
+  --acc: #5b7fff; --spd: #a06fff; --ok: #3ecf6e; --bad: #e05252; --warn: #e0b832;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink);
-  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 header { display: flex; align-items: center; gap: 16px; padding: 12px 16px;
   background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
 header h1 { font-size: 17px; margin: 0; }

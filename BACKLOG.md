@@ -10,6 +10,15 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
+- [ ] [manual:2026-10-30] **Restyle the generated bench reports to the portfolio theme.**
+  `scripts/report.py` (latest.html), `scripts/test_benchmark.py`
+  (test-bench-latest.html) and the routebench SVG use a light, Bootstrap-style
+  palette; the bench interface and the Clockwork pages use the dark palette
+  (bg `#0f1117`, surface `#1a1d27`, border `#2e3250`, accent `#5b7fff`, text
+  `#e2e4f0`, muted `#8890b0`, system sans 14px). Move the report CSS and chart
+  colours onto those tokens, share one palette definition between the reports
+  and `benchui_page.py`, and keep contrast readable in the tables.
+
 - [ ] [manual:2026-10-30] **Grow the Clockwork sorting suites and repeat the runs.**
   The held-out split has 88 items across seven suites, so differences of a few
   points are single items, and a repeated run moved some scores by up to 5

@@ -64,7 +64,7 @@ TERMINAL = ("done", "failed", "cancelled", "interrupted")
 
 HOME_LINK = (
     '<a href="/" style="position:fixed;top:8px;right:12px;z-index:2147483647;padding:4px 10px;'
-    "background:#1b2029;color:#e6e9ef;border:1px solid #64707f;border-radius:6px;"
+    "background:#1a1d27;color:#e2e4f0;border:1px solid #2e3250;border-radius:6px;"
     'font:13px system-ui,sans-serif;text-decoration:none">&larr; Bench home</a>'
 )
 
