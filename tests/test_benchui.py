@@ -510,6 +510,38 @@ class ProxyTests(AppCase):
             sorted(r["source"] for r in runs), ["taskbench-a.json", "taskbench-b.json"]
         )
 
+    def test_an_svg_opens_in_the_viewer_inline_and_sanitised(self):
+        (self.root / "results" / "chart.svg").write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4">'
+            '<script>alert(1)</script><rect onclick="x()" style="fill:var(--surface,#000)"/></svg>'
+        )
+        status, body = self.call("/view/results/chart.svg")
+        page = body.decode()
+        self.assertEqual(status, 200)
+        self.assertIn("<rect", page)
+        self.assertNotIn("alert(1)", page)
+        self.assertNotIn("onclick", page)
+        self.assertIn("/_portfolio/chrome.js", page)
+        self.assertIn("Bench home", page)
+        self.assertEqual(self.call("/files/results/chart.svg")[0], 200)  # raw is unchanged
+        listing = self.call("/results/")[1].decode()
+        self.assertIn('href="/view/results/chart.svg"', listing)
+        self.assertIn('href="/chart.svg"', listing)
+
+    def test_the_svg_of_a_stored_result_links_to_its_renderings(self):
+        self._stored_result("taskbench-demo.json")
+        (self.root / "results" / "taskbench-demo.svg").write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 4"><rect/></svg>'
+        )
+        page = self.call("/view/results/taskbench-demo.svg")[1].decode()
+        self.assertIn("/scatter.svg", page)
+        self.assertIn("/table.csv", page)
+
+    def test_the_results_tab_opens_svgs_in_the_viewer(self):
+        from crew_chief.benchui_page import PAGE
+
+        self.assertIn('["md", "json", "svg"].includes(ext)', PAGE)
+
     def test_the_json_viewer_offers_the_renderings_of_a_stored_result_only(self):
         self._stored_result()
         (self.root / "results" / "other.json").write_text('{"k": 1}')

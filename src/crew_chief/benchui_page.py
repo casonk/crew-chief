@@ -419,7 +419,7 @@ const when = (t) => (t ? new Date(t * 1000).toLocaleString() : "—");
 const dur = (a, b) => (a ? Math.round((b || Date.now() / 1000) - a) + " s" : "—");
 const fileLink = (ref) => {
   const ext = ref.split("/")[1].split(".").pop();
-  const base = ext === "md" || ext === "json" ? "/view/" : "/files/";
+  const base = ["md", "json", "svg"].includes(ext) ? "/view/" : "/files/";
   return `<a href="${base}${esc(ref)}" target="_blank" rel="noopener">${esc(ext)}</a>`;
 };
 function openResult(ref) {

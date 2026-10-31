@@ -10,6 +10,7 @@ from __future__ import annotations
 import html
 import json
 import re
+import xml.etree.ElementTree as ET
 from pathlib import PurePosixPath
 
 from crew_chief import theme
@@ -257,6 +258,87 @@ def json_body(text: str, raw_url: str) -> str:
     )
 
 
+# -- SVG ---------------------------------------------------------------------
+
+SVG_NS = "http://www.w3.org/2000/svg"
+MAX_SVG_BYTES = 2 * 1024 * 1024
+# Drawing elements only: no script, style, foreignObject, image or anything that loads a resource.
+SVG_ELEMENTS = frozenset(
+    [
+        "svg",
+        "g",
+        "defs",
+        "title",
+        "desc",
+        "rect",
+        "circle",
+        "ellipse",
+        "line",
+        "polyline",
+        "polygon",
+        "path",
+        "text",
+        "tspan",
+        "linearGradient",
+        "radialGradient",
+        "stop",
+        "clipPath",
+        "mask",
+        "marker",
+        "symbol",
+        "use",
+    ]
+)
+_UNSAFE_STYLE = re.compile(r"url\((?!\s*['\"]?#)|expression|javascript|@import", re.I)
+
+
+def _clean_style(value: str) -> str:
+    return ";".join(d for d in value.split(";") if d.strip() and not _UNSAFE_STYLE.search(d))
+
+
+def _clean_svg(node: ET.Element) -> None:
+    for child in list(node):
+        name = child.tag.rsplit("}", 1)[-1] if isinstance(child.tag, str) else ""
+        if name not in SVG_ELEMENTS:
+            node.remove(child)
+            continue
+        _clean_svg(child)
+    for attr in list(node.attrib):
+        local = attr.rsplit("}", 1)[-1].lower()
+        value = node.attrib[attr]
+        if local.startswith("on") or (local == "href" and not value.startswith("#")):
+            del node.attrib[attr]
+        elif local == "style":
+            node.attrib[attr] = _clean_style(value)
+
+
+def clean_svg(text: str) -> str | None:
+    """The drawing in *text* with everything but plain shapes and text removed, or None if it is
+    not a usable SVG. Its colours stay ``var(--token)``, so inline it follows the page's theme."""
+    if len(text.encode("utf-8")) > MAX_SVG_BYTES:
+        return None
+    try:
+        root = ET.fromstring(text)
+    except ET.ParseError:
+        return None
+    if root.tag != f"{{{SVG_NS}}}svg":
+        return None
+    _clean_svg(root)
+    ET.register_namespace("", SVG_NS)
+    root.set("style", (root.get("style", "") + ";max-width:100%;height:auto").lstrip(";"))
+    for attr in ("width", "height"):
+        root.attrib.pop(attr, None)  # scale to the page; the viewBox keeps the proportions
+    return ET.tostring(root, encoding="unicode")
+
+
+def svg_body(text: str, raw_url: str) -> str:
+    drawing = clean_svg(text)
+    if drawing is None:
+        raw = f'<a href="{html.escape(raw_url, quote=True)}">raw</a>'
+        return f'<p class="muted">Not a usable SVG, or too large to show here ({raw}).</p>'
+    return f'<div class="doc" style="text-align:center">{drawing}</div>'
+
+
 # -- page --------------------------------------------------------------------
 
 
@@ -272,10 +354,12 @@ def page(title: str, body: str, raw_url: str, extra: str = "") -> str:
 
 
 def render(name: str, text: str, raw_url: str, extra: str = "") -> str | None:
-    """The themed page for a ``.md`` or ``.json`` file, or None for any other kind."""
+    """The themed page for a ``.md``, ``.json`` or ``.svg`` file, or None for any other kind."""
     suffix = PurePosixPath(name).suffix
     if suffix == ".md":
         return page(name, f'<div class="doc">{markdown_to_html(text)}</div>', raw_url)
     if suffix == ".json":
         return page(name, json_body(text, raw_url), raw_url, extra)
+    if suffix == ".svg":
+        return page(name, svg_body(text, raw_url), raw_url, extra)
     return None
