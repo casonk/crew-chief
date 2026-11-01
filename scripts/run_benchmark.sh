@@ -50,6 +50,12 @@ python3 "${REPO_ROOT}/scripts/report.py" "${JSON_OUT}" --out "${HTML_OUT}"
 
 ln -sf "$(basename "${HTML_OUT}")" "${RESULTS_DIR}/latest.html"
 
+# The decision suites (standard train/test protocol): the keyword and Bayesian baselines every
+# time, and each decision model on its storage tier's cadence, slow ones included.
+echo "[run_benchmark] Running the decision benchmarks"
+PYTHONPATH="${REPO_ROOT}/src" python3 -m crew_chief storage decision-bench ||
+    echo "[run_benchmark] warning: decision benchmark failed"
+
 # Retired models on warm and cold storage are benchmarked less often, on their
 # tier's cadence. Skipped quietly until storage tiers are configured.
 if [[ -f "${CREW_CHIEF_STORAGE_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/crew-chief/storage.toml}" ]]; then

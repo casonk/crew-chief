@@ -195,6 +195,10 @@ crew-chief storage bench-due     # llama.cpp benchmark of warm/cold models due o
   ECU lease when `ecu` is installed (`CREW_CHIEF_NO_LEASE=1` skips it), so the
   numbers are taken on an idle GPU; it then runs `storage bench-due` after the
   hot-tier benchmark once storage tiers are configured.
+- The same script runs `crew-chief storage decision-bench`: every decision suite under the
+  standard train/test protocol for the `rules` and `bayes` baselines and the System One decision
+  models. Those models follow the tiers above (hot every week, warm every 30 days, cold every 90),
+  and slow ones such as `clef` are spaced out, never skipped, so the picture stays holistic.
 - A model taken back out of retirement (`beta` or `default` again) is reported
   by `storage plan` until it is restored to hot storage.
 - Models Ollama cannot hand to llama.cpp (some multimodal or very new

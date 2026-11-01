@@ -408,6 +408,28 @@ def due(policy: ServingPolicy, state: dict[str, dict], today: date) -> list[tupl
     return result
 
 
+def decisions_due(
+    names: list[str], policy: ServingPolicy, state: dict[str, dict], today: date
+) -> list[str]:
+    """The decision models whose decision benchmark is due, on the same tiers as the speed one.
+
+    A model on hot storage (or not tracked) runs every time the weekly timer fires; warm and cold
+    models wait for their tier's cadence. Slow models are never skipped, only spaced out.
+    """
+    result = []
+    for name in names:
+        entry = state.get(name)
+        tier = entry["tier"] if entry else "hot"
+        last = entry.get("last_decisions") if entry else None
+        if (
+            tier == "hot"
+            or last is None
+            or _days(last, today) >= policy.rotation[tier].bench_every_days
+        ):
+            result.append(name)
+    return result
+
+
 def unload(ollama_url: str, name: str) -> None:
     """Ask Ollama to drop a model from memory before its files move (best effort)."""
     body = json.dumps({"model": name, "keep_alive": 0}).encode()

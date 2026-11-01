@@ -248,6 +248,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Benchmark warm and cold models whose tier cadence has come round (llama.cpp).",
     )
     bench_p.add_argument("--dry-run", action="store_true", help="List them without running.")
+    decide_p = storage_sub.add_parser(
+        "decision-bench",
+        help="Run every decision suite (standard train/test protocol) for the baselines and the "
+        "decision models due on their storage tier's cadence, slow ones included.",
+    )
+    decide_p.add_argument(
+        "--dry-run", action="store_true", help="List the runners without running."
+    )
 
     gguf_p = sub.add_parser(
         "gguf",
@@ -871,6 +879,31 @@ def _storage(args: argparse.Namespace) -> None:
             model = policy.get(name)
             if model and model.status == "retired":
                 print("note: still retired in the serving policy; change it in a pull request")
+        elif args.storage_command == "decision-bench":
+            from crew_chief.serving_policy import role_of
+
+            names = [
+                n
+                for n, m in sorted(policy.models.items())
+                if m.status != "retired" and role_of(n, policy) == "system1"
+            ]
+            due_models = ms.decisions_due(names, policy, state, today)
+            runners = ["rules", "bayes", *(f"systemone:{n}" for n in due_models)]
+            print("decision benchmark runners: " + ", ".join(runners))
+            if not args.dry_run:
+                failed = False
+                for suite in sorted((REPO_ROOT / "benchmarks" / "decisions").glob("*.json")):
+                    argv = [sys.executable, "-m", "crew_chief", "taskbench", str(suite)]
+                    for runner in runners:
+                        argv += ["--runner", runner]
+                    env = {**os.environ, "PYTHONPATH": str(REPO_ROOT / "src")}
+                    if subprocess.run(argv, env=env, check=False).returncode != 0:
+                        failed = True
+                        print(f"  {suite.name} failed", file=sys.stderr)
+                if not failed:
+                    for name in due_models:
+                        if name in state:  # a model not tracked on any tier has no state to keep
+                            state[name]["last_decisions"] = today.isoformat()
         elif args.storage_command == "bench-due":
             pending = ms.due(policy, state, today)
             if not pending:
