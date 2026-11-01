@@ -10,6 +10,14 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
+- [ ] [manual:2026-11-01] **Calibrate the Bayesian fusion.** `bayes:<runner>` multiplies a model's probabilities
+  by the train prior and was neutral to slightly worse. Check each model's calibration (Brier, reliability) before
+  weighing it; try tempering the model's likelihood or the prior (a weight on each) and fit the weights on train only.
+
+- [ ] [manual:2026-11-01] **Wire the decision benchmark into the live timer and check its first run.** `storage
+  decision-bench` is called from `scripts/run_benchmark.sh` but has only been dry-run; confirm the first Sunday run
+  finishes inside the unit's 2 h limit with the ECU lease, and that `last_decisions` is written for each model.
+
 - [ ] [manual:2026-10-31] **Archive the result store as zstd JSON Lines.** The store (`resultstore.py`) is SQLite,
   so a diff-friendly, compact text archive of its rows (Python 3.14 has `compression.zstd` in the standard
   library) would make a result set easy to commit, share and rebuild from. Add `store export` / `import`.
