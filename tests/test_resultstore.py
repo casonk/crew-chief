@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import contextlib
 import copy
 import json
+import os
 import sqlite3
 import tempfile
+import time
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -218,6 +221,52 @@ class ImportTests(StoreCase):
         self.assertNotEqual(before, added)
         self.write("a.json", {"x": 2, "y": 3})
         self.assertNotEqual(added, resultstore.signature(self.dir))
+
+    @contextlib.contextmanager
+    def local_time_zone(self, name):
+        """Run with the process's local time zone set to *name* (POSIX only)."""
+        previous = os.environ.get("TZ")
+        os.environ["TZ"] = name
+        time.tzset()
+        try:
+            yield
+        finally:
+            if previous is None:
+                os.environ.pop("TZ", None)
+            else:
+                os.environ["TZ"] = previous
+            time.tzset()
+
+    def test_a_run_is_stamped_with_its_files_modification_time_in_utc(self):
+        path = self.write("taskbench-mail.json", [taskbench_result()])
+        os.utime(path, (1_700_000_000, 1_700_000_000))
+        resultstore.import_dir(self.conn, self.dir)
+        (run,) = resultstore.runs(self.conn)
+        self.assertEqual(run["created"], "2023-11-14T22:13:20+00:00")
+
+    @unittest.skipUnless(hasattr(time, "tzset"), "needs time.tzset")
+    def test_the_stamp_is_the_same_whatever_the_local_time_zone(self):
+        stamps = set()
+        for zone in ("UTC", "America/New_York", "Asia/Kolkata", "Pacific/Auckland"):
+            with self.local_time_zone(zone):
+                conn = resultstore.connect()
+                self.addCleanup(conn.close)
+                path = self.write("taskbench-mail.json", [taskbench_result()])
+                os.utime(path, (1_700_000_000, 1_700_000_000))
+                resultstore.import_dir(conn, self.dir)
+                stamps.add(resultstore.runs(conn)[0]["created"])
+        self.assertEqual(stamps, {"2023-11-14T22:13:20+00:00"})
+
+    def test_newer_runs_sort_first_by_that_stamp(self):
+        old = self.write("taskbench-old.json", [taskbench_result()])
+        new = self.write("taskbench-new.json", [taskbench_result(runner="other")])
+        os.utime(old, (1_700_000_000, 1_700_000_000))
+        os.utime(new, (1_700_086_400, 1_700_086_400))
+        resultstore.import_dir(self.conn, self.dir)
+        self.assertEqual(
+            [r["source"] for r in resultstore.runs(self.conn)],
+            ["taskbench-new.json", "taskbench-old.json"],
+        )
 
     def test_the_schema_is_plain_sql_in_one_file(self):
         path = self.dir / "store.sqlite"

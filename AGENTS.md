@@ -52,6 +52,7 @@ crew-chief/
 │   ├── test_tools.py                      # Unit tests for ShellTool / ReadFileTool / WriteFileTool
 │   ├── test_test_benchmark.py             # Test-outcome benchmark isolation and scoring
 │   ├── test_test_benchmark_lease.py       # GPU lease launcher behavior
+│   ├── test_python_floor.py               # Static check: nothing needs a newer Python than requires-python
 │   └── test_model_router.py                # Routing fallback and pre-run data boundary
 ├── scripts/
 │   ├── start.sh                           # Build image (if absent) + start container
