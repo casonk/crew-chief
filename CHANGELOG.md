@@ -7,6 +7,7 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- Re-vendor the portfolio theme fallback: the top bar's theme menu offers This site / Everywhere and "Follow the global theme".
 - The result store labels every decision benchmark with its protocol: `standard` (train examples in every prompt, scored on test), `zero-shot` (ablation) or `earlier` (dev/heldout results from before the train/test protocol). The label is in `/api/store/runs` and shown at the top of the rendered page, so older numbers are never read as comparable with new ones.
 - The bench UI accepts the `bayes` runner (and `bayes:<runner>`) and lists it with the baselines.
 - The weekly benchmark timer also runs the decision suites (`storage decision-bench`): the `rules` and `bayes` baselines every week and each System One decision model on its storage tier's cadence (hot weekly, warm 30 days, cold 90), slow models included. Its last run is kept per model as `last_decisions`.
