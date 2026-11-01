@@ -283,5 +283,18 @@ class PolicyRotationTests(unittest.TestCase):
         self.assertEqual(cadence, sorted(cadence))
 
 
+class DecisionDueTests(unittest.TestCase):
+    def test_hot_and_untracked_models_run_every_time_and_the_rest_wait_for_their_tier(self):
+        policy = _policy(a="beta", b="beta", c="beta", d="beta", e="beta")
+        state = {
+            "a": {"tier": "hot", "last_decisions": TODAY.isoformat()},
+            "b": {"tier": "warm", "last_decisions": "2026-10-10"},  # 12 days: not due
+            "c": {"tier": "warm", "last_decisions": "2026-09-01"},  # 51 days: due
+            "d": {"tier": "cold"},  # never run: due
+        }
+        due = ms.decisions_due(["a", "b", "c", "d", "e"], policy, state, TODAY)
+        self.assertEqual(due, ["a", "c", "d", "e"])
+
+
 if __name__ == "__main__":
     unittest.main()
