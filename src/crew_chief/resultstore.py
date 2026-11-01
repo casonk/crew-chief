@@ -18,7 +18,7 @@ import math
 import sqlite3
 import statistics
 from collections import Counter
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -269,7 +269,7 @@ def import_file(conn: sqlite3.Connection, path: Path) -> str:
     if row:
         conn.execute("DELETE FROM runs WHERE id = ?", (row["id"],))
     tasks = _task_names(kind, data)
-    created = datetime.fromtimestamp(path.stat().st_mtime, UTC).isoformat(timespec="seconds")
+    created = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc).isoformat(timespec="seconds")
     meta = (
         {"router": data.get("router"), "pareto": data.get("pareto")} if kind == "routebench" else {}
     )
