@@ -232,6 +232,24 @@ class ImportTests(StoreCase):
         self.assertTrue({"runs", "measures", "answers"} <= names)
 
 
+class ProtocolLabelTests(StoreCase):
+    def label(self, name, results):
+        self.write(name, results)
+        resultstore.import_dir(self.conn, self.dir)
+        return {r["source"]: r["protocol"] for r in resultstore.runs(self.conn)}[name]
+
+    def test_runs_are_labelled_by_protocol_and_the_page_says_so(self):
+        old = taskbench_result("a")
+        std = {**taskbench_result("b"), "protocol": {"split": "test", "zero_shot": False}}
+        zero = {**taskbench_result("c"), "protocol": {"split": "test", "zero_shot": True}}
+        self.assertEqual(self.label("taskbench-old.json", [old]), "earlier")
+        self.assertEqual(self.label("taskbench-std.json", [std]), "standard")
+        self.assertEqual(self.label("taskbench-zero.json", [zero]), "zero-shot")
+        run_id = resultstore.run_for_source(self.conn, "taskbench-old.json")
+        page = render.render(self.conn, run_id, "table", "html")[0].decode()
+        self.assertIn("Earlier protocol", page)
+
+
 class MoreKindsTests(StoreCase):
     def imported(self, name, data):
         self.write(name, data)

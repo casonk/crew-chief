@@ -7,6 +7,7 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- The result store labels every decision benchmark with its protocol: `standard` (train examples in every prompt, scored on test), `zero-shot` (ablation) or `earlier` (dev/heldout results from before the train/test protocol). The label is in `/api/store/runs` and shown at the top of the rendered page, so older numbers are never read as comparable with new ones.
 - The bench UI accepts the `bayes` runner (and `bayes:<runner>`) and lists it with the baselines.
 - The weekly benchmark timer also runs the decision suites (`storage decision-bench`): the `rules` and `bayes` baselines every week and each System One decision model on its storage tier's cadence (hot weekly, warm 30 days, cold 90), slow models included. Its last run is kept per model as `last_decisions`.
 - Add a Bayesian runner. `bayes` fits a prior on the train split alone (Laplace-smoothed label counts, multinomial naive Bayes over the input's words, and the joint over answer combinations so a combination train never shows is unlikely) and scores test; train items are scored leave-one-out. `bayes:<runner>` fuses a model's answer with that prior (posterior ∝ prior × the model's probabilities). On the test splits the prior alone is weak on a 27-way task (0.19 on backlog-triage) and fusing it with `clef-flash`, `tev1` and `nimble` is neutral on message-routing and slightly worse on backlog-triage, so it is a baseline to beat, not a default.
