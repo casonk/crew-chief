@@ -153,7 +153,7 @@ a { color: var(--accent); }
     <div class="checks" id="r-runners"></div>
     <div class="actions" id="r-runners-cats" style="margin-top:6px"></div>
     <label for="r-extra" style="margin-top:8px">More runner specs, one per line
-      (rules, ollama:&lt;model&gt;, llamacpp:&lt;model&gt;, systemone:&lt;model&gt;)</label>
+      (rules, bayes, ollama:&lt;model&gt;, llamacpp:&lt;model&gt;, systemone:&lt;model&gt;)</label>
     <textarea id="r-extra" rows="2"></textarea>
     <div id="r-taskonly">
       <label for="r-split" style="margin-top:8px">Split</label>
@@ -384,7 +384,7 @@ async function loadRunForm() {
   const [suites, models] = await Promise.all([api("/api/suites"), api("/api/models")]);
   $("r-suites").innerHTML = suites.suites.map((s) =>
     `<label><input type="checkbox" name="suite" value="${esc(s)}"> ${esc(s)}</label>`).join("");
-  const runners = ["rules", ...models.systemone.map((m) => "systemone:" + m), ...models.ollama.map((m) => "ollama:" + m)];
+  const runners = ["rules", "bayes", ...models.systemone.map((m) => "systemone:" + m), ...models.ollama.map((m) => "ollama:" + m)];
   const groups = models.groups || {};
   const group = (spec) => esc(groups[spec] || "other");
   $("r-runners").innerHTML = runners.map((r) =>

@@ -49,7 +49,9 @@ DEFAULT_STATE = Path(
 )
 DEFAULT_PORT = 8766
 SYSTEMONE_MODELS = serving_policy.SYSTEM1_MODELS
-RUNNER = re.compile(r"(rules|jev|(ollama|llamacpp|systemone):[A-Za-z0-9][A-Za-z0-9._:/-]{0,80})")
+RUNNER = re.compile(
+    r"(rules|bayes|jev|(bayes:)?(ollama|llamacpp|systemone):[A-Za-z0-9][A-Za-z0-9._:/-]{0,80})"
+)
 FILE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,120}")
 RESULT_KINDS = ("taskbench", "routebench")
 SERVED_SUFFIXES = {
@@ -620,7 +622,7 @@ def model_groups(
     System 1 buttons: ``rules`` is the ``baseline``; a System One model is ``system1`` whichever API
     serves it; the rest follow the serving policy's ``role`` or their names."""
     specs = [f"systemone:{m}" for m in SYSTEMONE_MODELS] + [f"ollama:{n}" for n in ollama_names]
-    groups = {"rules": "baseline"}
+    groups = {"rules": "baseline", "bayes": "baseline"}
     groups.update({s: serving_policy.role_of(s.split(":", 1)[1], policy) for s in specs})
     return groups
 
