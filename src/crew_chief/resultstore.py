@@ -24,9 +24,7 @@ from typing import Any
 
 from crew_chief import taskbench
 
-SCHEMA_VERSION = (
-    2  # 2 added measures.tps and measures.extra; the store is derived, so a bump rebuilds it
-)
+SCHEMA_VERSION = 3  # 3 added the protocol to runs.meta; 2 added measures.tps and measures.extra; the store is derived, so a bump rebuilds it
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS runs (
@@ -233,6 +231,27 @@ def _task_names(kind: str, data: Any) -> list[str]:
     return []
 
 
+PROTOCOLS = {
+    "standard": "Standard protocol: all train examples in every prompt, scored on test.",
+    "zero-shot": "Zero-shot ablation: no train examples in the prompts. Not comparable with the standard protocol.",
+    "earlier": "Earlier protocol: dev/heldout scoring splits, no train examples in the prompts "
+    "(or examples only inside category descriptions). Not comparable with the standard protocol.",
+}
+
+
+def protocol_of(kind: str, data: Any) -> str | None:
+    """``standard``, ``zero-shot`` or ``earlier`` for a decision benchmark; None for other kinds."""
+    if kind == "taskbench":
+        blocks = [r.get("protocol") for r in data if isinstance(r, dict)]
+    elif kind == "routebench":
+        blocks = [data.get("protocol")]
+    else:
+        return None
+    if not blocks or any(b is None for b in blocks):
+        return "earlier"
+    return "zero-shot" if any(b.get("zero_shot") for b in blocks) else "standard"
+
+
 def import_file(conn: sqlite3.Connection, path: Path) -> str:
     """Import one result file: ``new``, ``updated``, ``same`` or ``skipped`` (not a benchmark result)."""
     raw = path.read_bytes()
@@ -254,6 +273,8 @@ def import_file(conn: sqlite3.Connection, path: Path) -> str:
     meta = (
         {"router": data.get("router"), "pareto": data.get("pareto")} if kind == "routebench" else {}
     )
+    if protocol := protocol_of(kind, data):
+        meta["protocol"] = protocol
     cur = conn.execute(
         "INSERT INTO runs (source, kind, task, created, sha256, meta) VALUES (?,?,?,?,?,?)",
         (path.name, kind, ",".join(tasks), created, digest, json.dumps(meta)),
@@ -280,9 +301,14 @@ def import_dir(conn: sqlite3.Connection, directory: Path) -> dict[str, int]:
 
 def runs(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     cur = conn.execute(
-        "SELECT id, source, kind, task, created FROM runs ORDER BY created DESC, id DESC"
+        "SELECT id, source, kind, task, created, meta FROM runs ORDER BY created DESC, id DESC"
     )
-    return [dict(r) for r in cur]
+    out = []
+    for r in cur:
+        row = dict(r)
+        row["protocol"] = json.loads(row.pop("meta") or "{}").get("protocol")
+        out.append(row)
+    return out
 
 
 def run_for_source(conn: sqlite3.Connection, source: str) -> int | None:

@@ -323,6 +323,11 @@ def _page(conn: sqlite3.Connection, run_id: int, name: str, source: str, extra: 
     """The run as one themed page: both charts inline, then the tables."""
     perf = resultstore.performers(conn, run_id)
     parts: list[str] = []
+    meta = conn.execute("SELECT meta FROM runs WHERE id = ?", (run_id,)).fetchone()
+    label = json.loads(meta["meta"] or "{}").get("protocol") if meta else None
+    if label:
+        note = html.escape(resultstore.PROTOCOLS[label])
+        parts.append(f'<p class="protocol protocol-{label}"><strong>Protocol.</strong> {note}</p>')
     for chart in (scatter_svg, bars_svg):
         with contextlib.suppress(RenderError):  # a run with no latency has no scatter
             parts.append(chart(perf, standalone=False))
