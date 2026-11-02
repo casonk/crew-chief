@@ -23,6 +23,26 @@ from crew_chief.providers.base import ToolParam
 log = logging.getLogger(__name__)
 
 
+def _path_error(path: str, allowed_paths: list[str]) -> str | None:
+    """Return an error string unless *path* lies inside one of *allowed_paths*.
+
+    The check is on resolved paths, by whole components: ``..`` segments and symlinks
+    are followed before comparing, and ``/srv/data`` does not admit ``/srv/data-other``.
+    An empty *allowed_paths* means no restriction.
+    """
+    if not allowed_paths:
+        return None
+    denied = f"Access denied: {path!r} is outside the allowed paths."
+    try:
+        target = Path(path).resolve()
+        roots = [Path(prefix).resolve() for prefix in allowed_paths]
+    except (OSError, RuntimeError, ValueError):
+        return denied
+    if any(target == root or root in target.parents for root in roots):
+        return None
+    return denied
+
+
 class Tool:
     """Base class for all agent tools.
 
@@ -119,9 +139,7 @@ class ReadFileTool(Tool):
 
     def _check_path(self, path: str) -> str | None:
         """Return an error string if *path* is not permitted, else None."""
-        if self.allowed_paths and not any(path.startswith(p) for p in self.allowed_paths):
-            return f"Access denied: {path!r} is outside the allowed paths."
-        return None
+        return _path_error(path, self.allowed_paths)
 
     def execute(self, arguments: dict[str, Any]) -> str:
         path = str(arguments.get("path", "")).strip()
@@ -135,7 +153,7 @@ class ReadFileTool(Tool):
             return f"File not found: {path}"
         except PermissionError:
             return f"Permission denied: {path}"
-        except OSError as exc:
+        except (OSError, ValueError) as exc:
             return f"Error reading {path}: {exc}"
 
 
@@ -167,9 +185,7 @@ class WriteFileTool(Tool):
         self.allowed_paths = allowed_paths or []
 
     def _check_path(self, path: str) -> str | None:
-        if self.allowed_paths and not any(path.startswith(p) for p in self.allowed_paths):
-            return f"Access denied: {path!r} is outside the allowed paths."
-        return None
+        return _path_error(path, self.allowed_paths)
 
     def execute(self, arguments: dict[str, Any]) -> str:
         path = str(arguments.get("path", "")).strip()
@@ -185,7 +201,7 @@ class WriteFileTool(Tool):
             return f"Wrote {len(content)} character(s) to {path}."
         except PermissionError:
             return f"Permission denied: {path}"
-        except OSError as exc:
+        except (OSError, ValueError) as exc:
             return f"Error writing {path}: {exc}"
 
 
