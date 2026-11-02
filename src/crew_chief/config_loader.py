@@ -260,7 +260,8 @@ def _str(value: Any, key: str) -> str:
 
 
 def _int(value: Any, key: str) -> int:
-    if not isinstance(value, int):
+    # bool is an int subclass; "true" is not a poll interval or a token budget
+    if isinstance(value, bool) or not isinstance(value, int):
         raise ConfigError(f"Config key '{key}' must be an integer, got {type(value).__name__}.")
     return value
 
@@ -272,7 +273,7 @@ def _bool(value: Any, key: str) -> bool:
 
 
 def _float(value: Any, key: str) -> float:
-    if not isinstance(value, float | int):
+    if isinstance(value, bool) or not isinstance(value, float | int):
         raise ConfigError(f"Config key '{key}' must be a number, got {type(value).__name__}.")
     return float(value)
 
@@ -281,6 +282,15 @@ def _str_list(value: Any, key: str) -> list[str]:
     if not isinstance(value, list) or not all(isinstance(v, str) for v in value):
         raise ConfigError(f"Config key '{key}' must be a list of strings.")
     return list(value)
+
+
+def _table(raw: dict[str, Any], name: str) -> dict[str, Any]:
+    value = raw.get(name, {})
+    if not isinstance(value, dict):
+        raise ConfigError(
+            f"Config section '[{name}]' must be a TOML table, got {type(value).__name__}."
+        )
+    return value
 
 
 def load(path: str | Path) -> ListenerConfig:
@@ -299,7 +309,7 @@ def load(path: str | Path) -> ListenerConfig:
 
     cfg = ListenerConfig()
 
-    top = raw.get("listener", {})
+    top = _table(raw, "listener")
     if "poll_interval_seconds" in top:
         cfg.poll_interval_seconds = _int(
             top["poll_interval_seconds"], "listener.poll_interval_seconds"
@@ -309,7 +319,7 @@ def load(path: str | Path) -> ListenerConfig:
             top["max_replies_per_cycle"], "listener.max_replies_per_cycle"
         )
 
-    llm = raw.get("llm", {})
+    llm = _table(raw, "llm")
     if "model" in llm:
         cfg.llm.model = _str(llm["model"], "llm.model")
     if "natural_language" in llm:
@@ -366,7 +376,7 @@ def load(path: str | Path) -> ListenerConfig:
     if "openai_model" in llm:
         cfg.llm.openai_model = _str(llm["openai_model"], "llm.openai_model")
 
-    agt = raw.get("agent", {})
+    agt = _table(raw, "agent")
     if "enabled" in agt:
         cfg.agent.enabled = _bool(agt["enabled"], "agent.enabled")
     if "max_iterations" in agt:
@@ -388,7 +398,7 @@ def load(path: str | Path) -> ListenerConfig:
     if "timeout_seconds" in agt:
         cfg.agent.timeout_seconds = _int(agt["timeout_seconds"], "agent.timeout_seconds")
 
-    sig = raw.get("signal", {})
+    sig = _table(raw, "signal")
     if "enabled" in sig:
         cfg.signal.enabled = _bool(sig["enabled"], "signal.enabled")
     if "shock_relay_dir" in sig:
@@ -400,7 +410,7 @@ def load(path: str | Path) -> ListenerConfig:
     if "reply_to" in sig:
         cfg.signal.reply_to = _str(sig["reply_to"], "signal.reply_to")
 
-    gm = raw.get("gmail", {})
+    gm = _table(raw, "gmail")
     if "enabled" in gm:
         cfg.gmail.enabled = _bool(gm["enabled"], "gmail.enabled")
     if "shock_relay_dir" in gm:
@@ -424,7 +434,7 @@ def load(path: str | Path) -> ListenerConfig:
             gm["service_reply_subject_prefixes"], "gmail.service_reply_subject_prefixes"
         )
 
-    dis = raw.get("dispatch", {})
+    dis = _table(raw, "dispatch")
     if "timeout_seconds" in dis:
         cfg.dispatch.timeout_seconds = _int(dis["timeout_seconds"], "dispatch.timeout_seconds")
     if "output_max_bytes" in dis:
