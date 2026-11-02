@@ -302,7 +302,8 @@ def load_tiers(path: Path = DEFAULT_CONFIG_PATH, hot: Callable[[], Path] = hot_d
     if missing:
         raise StorageError(f"{path}: [tiers] needs {', '.join(missing)}")
     tiers = {t: Path(table[t]).expanduser() for t in TIERS if t in table}
-    tiers.setdefault("hot", hot())
+    if "hot" not in tiers:  # asking Podman is only needed when the config does not say
+        tiers["hot"] = hot()
     return {t: tiers[t] for t in TIERS}
 
 
