@@ -7,6 +7,7 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+- The listener config is stricter about its shape: a section that is not a table (`llm = 5`, `listener = "x"`) is a `ConfigError` naming the section (it was a raw `TypeError`, or silently ignored), and an integer or number key no longer accepts a boolean (`poll_interval_seconds = true` was read as 1).
 - Security: `read_file` and `write_file` now confine the model to `agent.allowed_paths`. The check compared the raw path text with `startswith`, so `<allowed>/../elsewhere` and a sibling such as `<allowed>-other` passed, for writes as well as reads. Paths are now resolved (`..` and symlinks followed) and must lie inside an allowed directory, by whole components; a path with an embedded NUL is refused instead of raising. An `allowed_paths` entry is a directory, not a text prefix: `/srv/dat` no longer admits `/srv/data`. Deployments that rely on the old behaviour to reach outside the listed directories must list those directories.
 - Re-vendor the portfolio theme fallback: the top bar's theme menu offers This site / Everywhere and "Follow the global theme".
 - The result store labels every decision benchmark with its protocol: `standard` (train examples in every prompt, scored on test), `zero-shot` (ablation) or `earlier` (dev/heldout results from before the train/test protocol). The label is in `/api/store/runs` and shown at the top of the rendered page, so older numbers are never read as comparable with new ones.
