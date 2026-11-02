@@ -159,8 +159,8 @@ CLI providers (tiers 2) convert the full message history to a single prompt stri
 | Tool | Class | Safety |
 |---|---|---|
 | `shell` | `ShellTool` | Dispatcher allowlist — only matched fnmatch patterns are run |
-| `read_file` | `ReadFileTool` | Optional `allowed_paths` prefix list |
-| `write_file` | `WriteFileTool` | Optional `allowed_paths` prefix list |
+| `read_file` | `ReadFileTool` | Optional `allowed_paths` directory list (resolved, so `..` and symlinks cannot leave it) |
+| `write_file` | `WriteFileTool` | Optional `allowed_paths` directory list (resolved, so `..` and symlinks cannot leave it) |
 
 `build_tools(cfg)` instantiates tools from `cfg.agent.tools` and wires the `Dispatcher` from `cfg.dispatch`.
 
