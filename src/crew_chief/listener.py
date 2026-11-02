@@ -188,6 +188,25 @@ def _parse_signal_json_lines(raw_output: str) -> list[dict[str, Any]]:
     return envelopes
 
 
+OTP_MARKER_NAME = "portfolio-signal-otp.json"
+
+
+def signal_otp_in_progress(now: float | None = None) -> bool:
+    """True while a downloader is waiting on Signal for a one-time code.
+
+    `signal-cli receive` hands each message to whichever process asks first, so reading Signal
+    while a downloader waits for its 2FA reply would eat the reply. The downloader (personal-finance
+    `scripts/shared/signal_otp_marker.py`) writes `$XDG_RUNTIME_DIR/portfolio-signal-otp.json`
+    with an `expires_epoch`; until then this listener leaves Signal alone.
+    """
+    base = os.environ.get("XDG_RUNTIME_DIR") or "/tmp"
+    try:
+        data = json.loads((Path(base) / OTP_MARKER_NAME).read_text(encoding="utf-8"))
+        return float(data.get("expires_epoch", 0)) > (time.time() if now is None else now)
+    except (OSError, ValueError, TypeError, AttributeError):
+        return False
+
+
 def poll_signal(cfg: SignalConfig) -> list[IncomingMessage]:
     """Receive pending Signal messages and return those from trusted senders.
 
@@ -196,6 +215,9 @@ def poll_signal(cfg: SignalConfig) -> list[IncomingMessage]:
     or the receive command fails.
     """
     if not cfg.enabled:
+        return []
+    if signal_otp_in_progress():
+        log.info("A 2FA reply is being awaited; leaving Signal unread this cycle.")
         return []
     if not cfg.config_path or not cfg.shock_relay_dir:
         log.warning("Signal enabled but shock_relay_dir / config_path not set — skipping.")
