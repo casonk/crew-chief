@@ -304,6 +304,42 @@ class RoutersTests(unittest.TestCase):
         self.assertNotIn('id="r-router"', PAGE)
 
 
+class SignalGroupTests(unittest.TestCase):
+    """``os.killpg(1, ...)`` is ``kill(-1, ...)`` and ends the user's whole session."""
+
+    def test_a_real_group_is_signalled(self):
+        from unittest import mock
+
+        with mock.patch.object(benchui.os, "killpg") as killpg:
+            benchui.signal_group(4242, benchui.signal.SIGTERM)
+        killpg.assert_called_once_with(4242, benchui.signal.SIGTERM)
+
+    def test_nothing_that_could_broadcast_reaches_killpg(self):
+        from unittest import mock
+
+        own_group = benchui.os.getpgrp()
+        for pid in (1, 0, -1, True, own_group, "4242", None, mock.MagicMock(), mock.Mock()):
+            with self.subTest(pid=pid), mock.patch.object(benchui.os, "killpg") as killpg:
+                benchui.signal_group(pid, benchui.signal.SIGTERM)
+                killpg.assert_not_called()
+
+    def test_cancel_and_shutdown_never_broadcast_for_a_mocked_process(self):
+        from unittest import mock
+
+        with TemporaryDirectory() as tmp:
+            state = Path(tmp)
+            profiles = benchui.ProfileStore(state / "profiles.toml")
+            jobs = benchui.JobManager(state, {"results": state}, profiles)
+            job_id = "0123456789ab"
+            record = {"id": job_id, "status": "running", "created": 1, "out": "results"}
+            (jobs.dir / f"{job_id}.json").write_text(json.dumps(record))
+            jobs._procs[job_id] = mock.MagicMock()  # int(MagicMock()) == 1
+            with mock.patch.object(benchui.os, "killpg") as killpg:
+                jobs.cancel(job_id)
+                jobs.shutdown()
+            killpg.assert_not_called()
+
+
 class AppCase(unittest.TestCase):
     def setUp(self):
         self.tmp = TemporaryDirectory()

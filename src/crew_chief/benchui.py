@@ -170,6 +170,19 @@ def served(file: Path, tabs: str = "") -> bytes:
     return with_home_link(data, tabs) if file.suffix == ".html" else data
 
 
+def signal_group(pid: object, sig: int) -> None:
+    """Signal one benchmark process group, never anything broader.
+
+    ``os.killpg(1, sig)`` is ``kill(-1, sig)``: it signals every process the user owns,
+    which ends the whole login session. An integer-like object (a ``MagicMock`` converts
+    to 1) or a stale pid of 0/1 must therefore never reach ``killpg``. Only a real
+    ``int`` greater than 1 that is not this server's own group is signalled.
+    """
+    if type(pid) is not int or pid <= 1 or pid == os.getpgrp():
+        return
+    os.killpg(pid, sig)
+
+
 class BenchError(ValueError):
     """A request the interface refuses; the message is shown to the user."""
 
@@ -497,7 +510,7 @@ class JobManager:
         proc = self._procs.get(job_id)
         if proc is not None:
             with contextlib.suppress(OSError):
-                os.killpg(proc.pid, signal.SIGTERM)
+                signal_group(proc.pid, signal.SIGTERM)
         elif record["status"] == "queued":
             return self._update(job_id, status="cancelled", finished=time.time())
         return record
@@ -507,7 +520,7 @@ class JobManager:
         for job_id, proc in list(self._procs.items()):
             self._cancel.add(job_id)
             with contextlib.suppress(OSError):
-                os.killpg(proc.pid, signal.SIGTERM)
+                signal_group(proc.pid, signal.SIGTERM)
 
     def _worker(self) -> None:
         while True:
@@ -547,7 +560,7 @@ class JobManager:
                 self._procs[job_id] = proc
                 if job_id in self._cancel:  # cancelled while the process was starting
                     with contextlib.suppress(OSError):
-                        os.killpg(proc.pid, signal.SIGTERM)
+                        signal_group(proc.pid, signal.SIGTERM)
                 while proc.poll() is None:
                     self._progress(job_id, log)
                     time.sleep(0.5)
