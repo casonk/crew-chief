@@ -1143,3 +1143,20 @@ class TestRunGmailDeduplication(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_the_listener_leaves_signal_alone_while_a_2fa_reply_is_awaited(tmp_path, monkeypatch):
+    import json
+    import time
+
+    from crew_chief import listener
+
+    monkeypatch.setenv("XDG_RUNTIME_DIR", str(tmp_path))
+    assert listener.signal_otp_in_progress() is False
+    marker = tmp_path / listener.OTP_MARKER_NAME
+    marker.write_text(json.dumps({"expires_epoch": time.time() + 60}))
+    assert listener.signal_otp_in_progress() is True
+    marker.write_text(json.dumps({"expires_epoch": time.time() - 1}))
+    assert listener.signal_otp_in_progress() is False
+    marker.write_text("not json")
+    assert listener.signal_otp_in_progress() is False
