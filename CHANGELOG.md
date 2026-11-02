@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- The Signal listener skips `signal-cli receive` while a downloader is waiting for a 2FA reply (a marker file in `$XDG_RUNTIME_DIR`); reading Signal at the same time consumed the reply and made the download time out.
 
 - Storage tiers: a `hot` directory set in `storage.toml` is used as it is. The Podman volume was looked up anyway, so a configured hot tier still failed on a machine without that volume.
 - Security: the bench UI no longer lets a cancel or shutdown signal more than one benchmark process group. `os.killpg(1, sig)` is `kill(-1, sig)`, which signals every process the user owns and ends the whole login session. `cancel`, `shutdown` and the cancel-while-starting path now go through `signal_group`, which refuses any pid that is not a real `int` greater than 1 or is the server's own group (a `MagicMock` converts to 1, so a test that left a mocked process in the job table could do this).
