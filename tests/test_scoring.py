@@ -116,7 +116,9 @@ class ReportTests(unittest.TestCase):
             [{"state": "x", "expected": {"k": "a"}}],
             {"k": {"default": "a"}},
         )
-        result = tb.run(task, tb.RulesRunner(task))
+        # A constant clock makes every latency exactly zero. The real clock measured a few
+        # microseconds, which rounds to 0.0 until something (coverage tracing) slows it.
+        result = tb.run(task, tb.RulesRunner(task), clock=lambda: 0.0)
         md = tb.render_markdown([result], task, "now", [PROFILE])
         self.assertIn("score: p |", md)
         self.assertIn("| 0.0 | 0.0 | 1.000 |", md)  # zero latency earns full speed credit
