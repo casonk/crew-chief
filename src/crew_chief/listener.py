@@ -63,6 +63,8 @@ from crew_chief.tools import build_tools
 
 log = logging.getLogger(__name__)
 
+# Subject tag of the 2FA prompt emails personal-finance sends (scripts/shared/otp_email.py).
+OTP_EMAIL_SUBJECT_TAG = "[pf-2fa]"
 _SIGNAL_PROTOCOL_KEYS = frozenset({"cc-service", "cc-intent", "cc-target"})
 _SIGNAL_PROTOCOL_LINE_RE = re.compile(r"\s*(cc-[a-z0-9-]+)\s*:\s*(.+?)\s*$", re.IGNORECASE)
 _SIGNAL_SERVICE_KEY = "cc-service"
@@ -446,6 +448,12 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
             continue
 
         subject = msg.get("subject", "")
+
+        # Replies to personal-finance two-factor prompts belong to the downloader waiting
+        # for the code, not to the command dispatcher.
+        if OTP_EMAIL_SUBJECT_TAG in subject.lower():
+            log.debug("Gmail: leaving 2FA email %r to the downloader.", subject)
+            continue
 
         # Subject exclusion filter: drop emails from pipelines that share the inbox.
         if _subject_is_excluded(subject, cfg.subject_exclude_patterns):
