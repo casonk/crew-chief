@@ -1160,3 +1160,33 @@ def test_the_listener_leaves_signal_alone_while_a_2fa_reply_is_awaited(tmp_path,
     assert listener.signal_otp_in_progress() is False
     marker.write_text("not json")
     assert listener.signal_otp_in_progress() is False
+
+
+def test_the_listener_ignores_2fa_reply_emails():
+    import json
+    from unittest.mock import patch
+
+    from crew_chief.config_loader import GmailConfig
+    from crew_chief.listener import poll_gmail
+
+    cfg = GmailConfig(
+        enabled=True,
+        shock_relay_dir="/x",
+        config_path="/y",
+        trusted_senders=["me@example.com"],
+        reply_to="bot@example.com",
+    )
+
+    def msg(subject):
+        return {
+            "from": "me@example.com",
+            "subject": subject,
+            "text": "482913",
+            "message_id": subject,
+        }
+
+    payload = json.dumps({"messages": [msg("Re: [pf-2fa] 2FA code needed"), msg("hello")]})
+    done = type("P", (), {"returncode": 0, "stdout": payload, "stderr": ""})()
+    with patch("crew_chief.listener.subprocess.run", return_value=done):
+        subjects = [m.subject for m in poll_gmail(cfg)]
+    assert subjects == ["hello"]
