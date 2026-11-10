@@ -349,6 +349,14 @@ repeatable baseline, but promotion for receipt OCR still requires a separately
 controlled evaluation on consented, redacted real scans because generated text
 does not reproduce every camera, paper, handwriting, or printer artifact.
 
+First live result (2026-11-10, six synthetic cases): `ollama:qwen3.5:27b` passed
+6/6 (99.9% character, 100% field accuracy); Tesseract passed 3/6 (84.4%
+character, 77.5% field accuracy), missing the rotated date, the faded numeric
+fields and the Japanese text. The vision model is far slower: a median of 42 s
+per image against about 0.2 s for Tesseract. The GPU was checked idle before the
+run but not sampled during it, and each first call may include model load, so
+treat the vision latency as an upper bound until a leased rerun.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
