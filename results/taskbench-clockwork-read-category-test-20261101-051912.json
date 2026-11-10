@@ -1,0 +1,1276 @@
+[
+  {
+    "runner": "rules",
+    "task": "clockwork-read-category",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 0.0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "category": {
+        "accuracy": 0.25,
+        "invalid": 0,
+        "n": 8,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "Books",
+            "Articles",
+            "Papers",
+            "Comics"
+          ],
+          "counts": {
+            "Books": {
+              "Books": 2,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Articles": {
+              "Books": 2,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Papers": {
+              "Books": 2,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Comics": {
+              "Books": 2,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 0
+            }
+          },
+          "invalid": {
+            "Books": 0,
+            "Articles": 0,
+            "Papers": 0,
+            "Comics": 0
+          },
+          "per_label": {
+            "Books": {
+              "support": 2,
+              "precision": 0.25,
+              "recall": 1.0,
+              "f1": 0.4
+            },
+            "Articles": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Papers": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Comics": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Articles",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Articles",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Papers",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Papers",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Comics",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Comics",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "bayes",
+    "task": "clockwork-read-category",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 0.1,
+    "latency_ms_median": 0.1,
+    "latency_ms_p90": 0.2,
+    "questions": {
+      "category": {
+        "accuracy": 0.5,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.711,
+        "confusion": {
+          "labels": [
+            "Books",
+            "Articles",
+            "Papers",
+            "Comics"
+          ],
+          "counts": {
+            "Books": {
+              "Books": 1,
+              "Articles": 1,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Articles": {
+              "Books": 0,
+              "Articles": 2,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Papers": {
+              "Books": 2,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Comics": {
+              "Books": 1,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 1
+            }
+          },
+          "invalid": {
+            "Books": 0,
+            "Articles": 0,
+            "Papers": 0,
+            "Comics": 0
+          },
+          "per_label": {
+            "Books": {
+              "support": 2,
+              "precision": 0.25,
+              "recall": 0.5,
+              "f1": 0.333
+            },
+            "Articles": {
+              "support": 2,
+              "precision": 0.667,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "Papers": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Comics": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": {
+              "Books": 0.25,
+              "Articles": 0.25,
+              "Papers": 0.25,
+              "Comics": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.11,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Books",
+            "p": {
+              "Books": 0.024487742790498365,
+              "Articles": 0.9699363142327052,
+              "Papers": 0.0005046897978074203,
+              "Comics": 0.00507125317898896
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Books": 0.024487742790498365,
+              "Articles": 0.9699363142327052,
+              "Papers": 0.0005046897978074203,
+              "Comics": 0.00507125317898896
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Books": 0.11066039522697135,
+              "Articles": 0.676257970831492,
+              "Papers": 0.06747585074815327,
+              "Comics": 0.1456057831933834
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Papers",
+            "p": {
+              "Books": 0.5778325566061769,
+              "Articles": 0.3210180870034315,
+              "Papers": 0.03203062952362397,
+              "Comics": 0.06911872686676754
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Papers",
+            "p": {
+              "Books": 0.25,
+              "Articles": 0.25,
+              "Papers": 0.25,
+              "Comics": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Comics",
+            "p": {
+              "Books": 0.25,
+              "Articles": 0.25,
+              "Papers": 0.25,
+              "Comics": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Comics",
+            "expected": "Comics",
+            "p": {
+              "Books": 0.06009978055136467,
+              "Articles": 0.033388766972980384,
+              "Papers": 0.03664620765327114,
+              "Comics": 0.8698652448223838
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef",
+    "task": "clockwork-read-category",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 2876.3,
+    "latency_ms_median": 740.3,
+    "latency_ms_p90": 17822.8,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.002,
+        "confusion": {
+          "labels": [
+            "Books",
+            "Articles",
+            "Papers",
+            "Comics"
+          ],
+          "counts": {
+            "Books": {
+              "Books": 2,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Articles": {
+              "Books": 0,
+              "Articles": 2,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Papers": {
+              "Books": 0,
+              "Articles": 0,
+              "Papers": 2,
+              "Comics": 0
+            },
+            "Comics": {
+              "Books": 0,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 2
+            }
+          },
+          "invalid": {
+            "Books": 0,
+            "Articles": 0,
+            "Papers": 0,
+            "Comics": 0
+          },
+          "per_label": {
+            "Books": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Articles": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Papers": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Comics": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 17822.78,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": {
+              "Articles": 0.003912650702916355,
+              "Books": 0.9872870403207681,
+              "Comics": 0.004891928388268497,
+              "Papers": 0.003908380588047075
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 747.92,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": {
+              "Articles": 0.003974799983542956,
+              "Books": 0.9840231551436712,
+              "Comics": 0.008759095495711083,
+              "Papers": 0.003242949377074456
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 740.76,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Articles": 0.9147909771986235,
+              "Books": 0.02879395676461227,
+              "Comics": 0.0077087768092290445,
+              "Papers": 0.048706289227535206
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 739.96,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Articles": 0.981564339688067,
+              "Books": 0.0067328766753461874,
+              "Comics": 0.005068059429345568,
+              "Papers": 0.006634724207241001
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 738.99,
+        "answers": {
+          "category": {
+            "value": "Papers",
+            "expected": "Papers",
+            "p": {
+              "Articles": 0.008624761129499678,
+              "Books": 0.003002995406451351,
+              "Comics": 0.0020950945460611377,
+              "Papers": 0.9862771489179879
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 740.32,
+        "answers": {
+          "category": {
+            "value": "Papers",
+            "expected": "Papers",
+            "p": {
+              "Articles": 0.014178541030267723,
+              "Books": 0.004168797422315788,
+              "Comics": 0.002450280743187636,
+              "Papers": 0.979202380804229
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 740.22,
+        "answers": {
+          "category": {
+            "value": "Comics",
+            "expected": "Comics",
+            "p": {
+              "Articles": 0.0017985258751860352,
+              "Books": 0.006135837986837955,
+              "Comics": 0.9901296288663929,
+              "Papers": 0.0019360072715831997
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 739.18,
+        "answers": {
+          "category": {
+            "value": "Comics",
+            "expected": "Comics",
+            "p": {
+              "Articles": 0.0026671952106237786,
+              "Books": 0.004675402789914291,
+              "Comics": 0.9902225749599001,
+              "Papers": 0.002434827039561616
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "clockwork-read-category",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 1484.1,
+    "latency_ms_median": 134.8,
+    "latency_ms_p90": 10926.6,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.009,
+        "confusion": {
+          "labels": [
+            "Books",
+            "Articles",
+            "Papers",
+            "Comics"
+          ],
+          "counts": {
+            "Books": {
+              "Books": 2,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Articles": {
+              "Books": 0,
+              "Articles": 2,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Papers": {
+              "Books": 0,
+              "Articles": 0,
+              "Papers": 2,
+              "Comics": 0
+            },
+            "Comics": {
+              "Books": 0,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 2
+            }
+          },
+          "invalid": {
+            "Books": 0,
+            "Articles": 0,
+            "Papers": 0,
+            "Comics": 0
+          },
+          "per_label": {
+            "Books": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Articles": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Papers": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Comics": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 10926.62,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": {
+              "Articles": 0.007667640303466977,
+              "Books": 0.970848821365715,
+              "Comics": 0.014206255344773645,
+              "Papers": 0.007277282986044135
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 162.24,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": {
+              "Articles": 0.00968493411018643,
+              "Books": 0.9571324775974461,
+              "Comics": 0.025644771939072154,
+              "Papers": 0.007537816353295232
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 126.7,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Articles": 0.7975706194613355,
+              "Books": 0.04641500785075453,
+              "Comics": 0.015623622571388501,
+              "Papers": 0.14039075011652166
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 136.74,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Articles": 0.9662310373550584,
+              "Books": 0.0120927366137215,
+              "Comics": 0.009179875285304267,
+              "Papers": 0.01249635074591573
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 121.93,
+        "answers": {
+          "category": {
+            "value": "Papers",
+            "expected": "Papers",
+            "p": {
+              "Articles": 0.005239287649563501,
+              "Books": 0.003872376502353844,
+              "Comics": 0.003958804744832104,
+              "Papers": 0.9869295311032507
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 127.38,
+        "answers": {
+          "category": {
+            "value": "Papers",
+            "expected": "Papers",
+            "p": {
+              "Articles": 0.012127604946596081,
+              "Books": 0.005160205124836775,
+              "Comics": 0.005103996492784719,
+              "Papers": 0.9776081934357824
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 138.63,
+        "answers": {
+          "category": {
+            "value": "Comics",
+            "expected": "Comics",
+            "p": {
+              "Articles": 0.002800810832577943,
+              "Books": 0.007369547002177828,
+              "Comics": 0.9868197357559293,
+              "Papers": 0.003009906409314877
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 132.76,
+        "answers": {
+          "category": {
+            "value": "Comics",
+            "expected": "Comics",
+            "p": {
+              "Articles": 0.003736521159994406,
+              "Books": 0.005442203434745358,
+              "Comics": 0.9872304502654135,
+              "Papers": 0.003590825139846928
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "clockwork-read-category",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 1342.8,
+    "latency_ms_median": 134.5,
+    "latency_ms_p90": 9780.0,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.001,
+        "confusion": {
+          "labels": [
+            "Books",
+            "Articles",
+            "Papers",
+            "Comics"
+          ],
+          "counts": {
+            "Books": {
+              "Books": 2,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Articles": {
+              "Books": 0,
+              "Articles": 2,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Papers": {
+              "Books": 0,
+              "Articles": 0,
+              "Papers": 2,
+              "Comics": 0
+            },
+            "Comics": {
+              "Books": 0,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 2
+            }
+          },
+          "invalid": {
+            "Books": 0,
+            "Articles": 0,
+            "Papers": 0,
+            "Comics": 0
+          },
+          "per_label": {
+            "Books": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Articles": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Papers": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Comics": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 9779.99,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": {
+              "Books": 0.9971879144258872,
+              "Articles": 0.0007970745549823633,
+              "Papers": 0.0008332845137439886,
+              "Comics": 0.0011817265053863796
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 134.47,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": {
+              "Books": 0.9953948265320792,
+              "Articles": 0.00043948328352162936,
+              "Papers": 0.00019722955356862181,
+              "Comics": 0.003968460630830454
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 133.95,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Books": 0.0015480925895920295,
+              "Articles": 0.9571806688391025,
+              "Papers": 0.039559895304495024,
+              "Comics": 0.0017113432668104695
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 134.2,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Books": 0.000284217558081405,
+              "Articles": 0.9985066756800525,
+              "Papers": 0.00038230628504709835,
+              "Comics": 0.0008268004768189754
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 134.82,
+        "answers": {
+          "category": {
+            "value": "Papers",
+            "expected": "Papers",
+            "p": {
+              "Books": 0.00029275748411560447,
+              "Articles": 0.004198813831051325,
+              "Papers": 0.994704593393258,
+              "Comics": 0.0008038352915751001
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 134.13,
+        "answers": {
+          "category": {
+            "value": "Papers",
+            "expected": "Papers",
+            "p": {
+              "Books": 0.002267937304938359,
+              "Articles": 0.05447993648519048,
+              "Papers": 0.9399245854778553,
+              "Comics": 0.0033275407320158146
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 156.31,
+        "answers": {
+          "category": {
+            "value": "Comics",
+            "expected": "Comics",
+            "p": {
+              "Books": 0.00015966567781372284,
+              "Articles": 8.50737718235585e-05,
+              "Papers": 3.907808489737494e-05,
+              "Comics": 0.9997161824654652
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 134.51,
+        "answers": {
+          "category": {
+            "value": "Comics",
+            "expected": "Comics",
+            "p": {
+              "Books": 0.0003450099347479346,
+              "Articles": 0.00016505268249545618,
+              "Papers": 7.92997792774769e-05,
+              "Comics": 0.9994106376034791
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:tev1",
+    "task": "clockwork-read-category",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 500.4,
+    "latency_ms_median": 81.4,
+    "latency_ms_p90": 3436.0,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.021,
+        "confusion": {
+          "labels": [
+            "Books",
+            "Articles",
+            "Papers",
+            "Comics"
+          ],
+          "counts": {
+            "Books": {
+              "Books": 2,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Articles": {
+              "Books": 0,
+              "Articles": 2,
+              "Papers": 0,
+              "Comics": 0
+            },
+            "Papers": {
+              "Books": 0,
+              "Articles": 0,
+              "Papers": 2,
+              "Comics": 0
+            },
+            "Comics": {
+              "Books": 0,
+              "Articles": 0,
+              "Papers": 0,
+              "Comics": 2
+            }
+          },
+          "invalid": {
+            "Books": 0,
+            "Articles": 0,
+            "Papers": 0,
+            "Comics": 0
+          },
+          "per_label": {
+            "Books": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Articles": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Papers": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Comics": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 3436.0,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": {
+              "Books": 0.9990309156236121,
+              "Articles": 0.00040924844702912235,
+              "Papers": 0.0003410169587856118,
+              "Comics": 0.0002188189705730388
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 76.23,
+        "answers": {
+          "category": {
+            "value": "Books",
+            "expected": "Books",
+            "p": {
+              "Books": 0.9969801190622426,
+              "Articles": 0.00044258803000250954,
+              "Papers": 9.465936334765488e-05,
+              "Comics": 0.0024826335444073444
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 76.08,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Books": 0.05303516696678333,
+              "Articles": 0.8970047412360911,
+              "Papers": 0.049783742108237654,
+              "Comics": 0.00017634968888786859
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 76.22,
+        "answers": {
+          "category": {
+            "value": "Articles",
+            "expected": "Articles",
+            "p": {
+              "Books": 8.392066906162488e-05,
+              "Articles": 0.9998327366885028,
+              "Papers": 5.007635031647355e-05,
+              "Comics": 3.3266292119171236e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 77.37,
+        "answers": {
+          "category": {
+            "value": "Papers",
+            "expected": "Papers",
+            "p": {
+              "Books": 0.027932035381139843,
+              "Articles": 0.03759885135796571,
+              "Papers": 0.9339470207996899,
+              "Comics": 0.0005220924612045742
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 85.45,
+        "answers": {
+          "category": {
+            "value": "Papers",
+            "expected": "Papers",
+            "p": {
+              "Books": 0.12190574681349338,
+              "Articles": 0.18914328454872908,
+              "Papers": 0.6876435511840308,
+              "Comics": 0.0013074174537467866
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 88.1,
+        "answers": {
+          "category": {
+            "value": "Comics",
+            "expected": "Comics",
+            "p": {
+              "Books": 0.0007128146602724655,
+              "Articles": 6.711973173946459e-05,
+              "Papers": 1.974007243319696e-05,
+              "Comics": 0.9992003255355549
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 87.95,
+        "answers": {
+          "category": {
+            "value": "Comics",
+            "expected": "Comics",
+            "p": {
+              "Books": 0.0001763768996658456,
+              "Articles": 5.796789598388361e-05,
+              "Papers": 4.24442065412506e-05,
+              "Comics": 0.9997232109978089
+            }
+          }
+        }
+      }
+    ]
+  }
+]

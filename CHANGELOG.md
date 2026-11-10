@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- Add a pixel-first OCR benchmark with a six-case reviewed synthetic receipt
+  suite, Tesseract and Ollama vision runners, CER/WER plus field scoring, and
+  separate infrastructure-error reporting.
+- Expand the five Clockwork To-* category benchmarks to 30 held-out sorting
+  items each, adding 102 synthetic or public-title cases without changing the
+  train examples or keyword rules. To Code repository sorting already has 78.
+- Expand the reviewed public historical-repair benchmark from four to nine cases. The
+  new crew-chief cases cover file-tool path confinement, strict listener TOML types,
+  configured hot storage, Signal one-time-code marker handling, and Gmail reply filtering.
 - The Signal listener skips `signal-cli receive` while a downloader is waiting for a 2FA reply (a marker file in `$XDG_RUNTIME_DIR`); reading Signal at the same time consumed the reply and made the download time out.
 
 - Storage tiers: a `hot` directory set in `storage.toml` is used as it is. The Podman volume was looked up anyway, so a configured hot tier still failed on a machine without that volume.

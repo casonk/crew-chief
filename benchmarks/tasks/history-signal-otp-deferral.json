@@ -1,0 +1,11 @@
+{
+  "name": "Signal one-time-code markers report active waits",
+  "prompt": "New listener tests were added to an older crew-chief checkout. Add a bounded coordination check for the portfolio Signal one-time-code marker in the runtime directory. It must report a future expiry as active and treat missing, expired, malformed, or unusable markers as inactive. Make the full test suite pass. You may edit only src/crew_chief/listener.py.",
+  "evolution": {
+    "before": "42dc1d8fdac8a39da871808bb3d03b7b3d9edd16",
+    "after": "c56755ad44f75a2ea10491367ac3a4b25d3d914e",
+    "test_paths": ["tests/test_listener.py"]
+  },
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/crew_chief/listener.py"]
+}

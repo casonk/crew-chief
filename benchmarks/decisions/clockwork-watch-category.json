@@ -172,6 +172,160 @@
         "category": "Documentaries"
       },
       "split": "test"
+    },
+    {
+      "state": "Moonlight",
+      "expected": {
+        "category": "Movies"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Oppenheimer",
+      "expected": {
+        "category": "Movies"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Grand Budapest Hotel",
+      "expected": {
+        "category": "Movies"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Everything Everywhere All at Once",
+      "expected": {
+        "category": "Movies"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Casablanca",
+      "expected": {
+        "category": "Movies"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Iron Giant",
+      "expected": {
+        "category": "Movies"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Wire",
+      "expected": {
+        "category": "TV Shows"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Fleabag",
+      "expected": {
+        "category": "TV Shows"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Bear",
+      "expected": {
+        "category": "TV Shows"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Better Call Saul",
+      "expected": {
+        "category": "TV Shows"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Avatar: The Last Airbender",
+      "expected": {
+        "category": "TV Shows"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Good Place",
+      "expected": {
+        "category": "TV Shows"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Fullmetal Alchemist: Brotherhood",
+      "expected": {
+        "category": "Anime"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Princess Mononoke",
+      "expected": {
+        "category": "Anime"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Neon Genesis Evangelion",
+      "expected": {
+        "category": "Anime"
+      },
+      "split": "test"
+    },
+    {
+      "state": "One-Punch Man",
+      "expected": {
+        "category": "Anime"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Akira",
+      "expected": {
+        "category": "Anime"
+      },
+      "split": "test"
+    },
+    {
+      "state": "13th",
+      "expected": {
+        "category": "Documentaries"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Last Dance",
+      "expected": {
+        "category": "Documentaries"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Jiro Dreams of Sushi",
+      "expected": {
+        "category": "Documentaries"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Icarus",
+      "expected": {
+        "category": "Documentaries"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Act of Killing",
+      "expected": {
+        "category": "Documentaries"
+      },
+      "split": "test"
     }
   ]
 }

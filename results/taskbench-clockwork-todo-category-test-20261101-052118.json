@@ -1,0 +1,1622 @@
+[
+  {
+    "runner": "rules",
+    "task": "clockwork-todo-category",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_mean": 0.0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "category": {
+        "accuracy": 0.3,
+        "invalid": 0,
+        "n": 10,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "Tasks",
+            "Projects",
+            "Errands",
+            "Goals",
+            "Hardware"
+          ],
+          "counts": {
+            "Tasks": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Projects": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Errands": {
+              "Tasks": 1,
+              "Projects": 0,
+              "Errands": 1,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Goals": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Hardware": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            }
+          },
+          "invalid": {
+            "Tasks": 0,
+            "Projects": 0,
+            "Errands": 0,
+            "Goals": 0,
+            "Hardware": 0
+          },
+          "per_label": {
+            "Tasks": {
+              "support": 2,
+              "precision": 0.222,
+              "recall": 1.0,
+              "f1": 0.364
+            },
+            "Projects": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Errands": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667
+            },
+            "Goals": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Hardware": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Projects",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Projects",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Errands",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Goals",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Goals",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Hardware",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Hardware",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "bayes",
+    "task": "clockwork-todo-category",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_mean": 0.2,
+    "latency_ms_median": 0.1,
+    "latency_ms_p90": 0.2,
+    "questions": {
+      "category": {
+        "accuracy": 0.4,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.811,
+        "confusion": {
+          "labels": [
+            "Tasks",
+            "Projects",
+            "Errands",
+            "Goals",
+            "Hardware"
+          ],
+          "counts": {
+            "Tasks": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Projects": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Errands": {
+              "Tasks": 1,
+              "Projects": 0,
+              "Errands": 1,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Goals": {
+              "Tasks": 1,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 1
+            },
+            "Hardware": {
+              "Tasks": 1,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 1
+            }
+          },
+          "invalid": {
+            "Tasks": 0,
+            "Projects": 0,
+            "Errands": 0,
+            "Goals": 0,
+            "Hardware": 0
+          },
+          "per_label": {
+            "Tasks": {
+              "support": 2,
+              "precision": 0.286,
+              "recall": 1.0,
+              "f1": 0.444
+            },
+            "Projects": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Errands": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667
+            },
+            "Goals": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Hardware": {
+              "support": 2,
+              "precision": 0.5,
+              "recall": 0.5,
+              "f1": 0.5
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.26,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Tasks": 0.3036922418507335,
+              "Projects": 0.29001241113673654,
+              "Errands": 0.11898694690791507,
+              "Goals": 0.009796523930668823,
+              "Hardware": 0.2775118761739461
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.17,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Tasks": 0.3036922418507335,
+              "Projects": 0.29001241113673654,
+              "Errands": 0.11898694690791507,
+              "Goals": 0.009796523930668823,
+              "Hardware": 0.2775118761739461
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.14,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Projects",
+            "p": {
+              "Tasks": 0.3036922418507335,
+              "Projects": 0.29001241113673654,
+              "Errands": 0.11898694690791507,
+              "Goals": 0.009796523930668823,
+              "Hardware": 0.2775118761739461
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.14,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Projects",
+            "p": {
+              "Tasks": 0.5295038269113554,
+              "Projects": 0.0419203671373515,
+              "Errands": 0.022993829466484685,
+              "Goals": 0.0015527971463676097,
+              "Hardware": 0.4040291793384408
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.14,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Errands",
+            "p": {
+              "Tasks": 0.8325872497735209,
+              "Projects": 0.06902443233249425,
+              "Errands": 0.032744421827590416,
+              "Goals": 0.002441604838045513,
+              "Hardware": 0.06320229122834882
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.14,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": {
+              "Tasks": 0.1561055504440684,
+              "Projects": 0.012358743514594515,
+              "Errands": 0.8202493938921236,
+              "Goals": 0.0004577875379591444,
+              "Hardware": 0.010828524611254291
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.14,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Goals",
+            "p": {
+              "Tasks": 0.2,
+              "Projects": 0.2,
+              "Errands": 0.2,
+              "Goals": 0.2,
+              "Hardware": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.14,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Goals",
+            "p": {
+              "Tasks": 0.07086747435553445,
+              "Projects": 0.06767524578096083,
+              "Errands": 0.07824950293423595,
+              "Goals": 0.07086747435553445,
+              "Hardware": 0.7123403025737343
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.13,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Hardware",
+            "p": {
+              "Tasks": 0.2,
+              "Projects": 0.2,
+              "Errands": 0.2,
+              "Goals": 0.2,
+              "Hardware": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.15,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Hardware",
+            "p": {
+              "Tasks": 0.08649017489288104,
+              "Projects": 0.0788737606603694,
+              "Errands": 0.0374168334735541,
+              "Goals": 0.0027900056417058373,
+              "Hardware": 0.7944292253314896
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef",
+    "task": "clockwork-todo-category",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_mean": 2606.9,
+    "latency_ms_median": 840.1,
+    "latency_ms_p90": 848.2,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.024,
+        "confusion": {
+          "labels": [
+            "Tasks",
+            "Projects",
+            "Errands",
+            "Goals",
+            "Hardware"
+          ],
+          "counts": {
+            "Tasks": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Projects": {
+              "Tasks": 0,
+              "Projects": 2,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Errands": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 2,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Goals": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 2,
+              "Hardware": 0
+            },
+            "Hardware": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 2
+            }
+          },
+          "invalid": {
+            "Tasks": 0,
+            "Projects": 0,
+            "Errands": 0,
+            "Goals": 0,
+            "Hardware": 0
+          },
+          "per_label": {
+            "Tasks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Projects": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Errands": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Goals": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Hardware": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 18499.75,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Errands": 0.006414273368035816,
+              "Goals": 0.0052035623506332725,
+              "Hardware": 0.0036442406184888196,
+              "Projects": 0.0032815373653848523,
+              "Tasks": 0.9814563862974572
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 848.16,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Errands": 0.015329267336478788,
+              "Goals": 0.008472682562171078,
+              "Hardware": 0.006054841339669072,
+              "Projects": 0.006207517105759203,
+              "Tasks": 0.9639356916559219
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 840.48,
+        "answers": {
+          "category": {
+            "value": "Projects",
+            "expected": "Projects",
+            "p": {
+              "Errands": 0.009651714222290197,
+              "Goals": 0.022134830101942785,
+              "Hardware": 0.14357192557363407,
+              "Projects": 0.7946034552292507,
+              "Tasks": 0.030038074872882233
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 836.56,
+        "answers": {
+          "category": {
+            "value": "Projects",
+            "expected": "Projects",
+            "p": {
+              "Errands": 0.012264420462728963,
+              "Goals": 0.04170998503293031,
+              "Hardware": 0.03204873587482096,
+              "Projects": 0.7048853722686553,
+              "Tasks": 0.20909148636086428
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 843.96,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": {
+              "Errands": 0.8963049006090616,
+              "Goals": 0.009289052772969507,
+              "Hardware": 0.008244121965595794,
+              "Projects": 0.007410389534411944,
+              "Tasks": 0.07875153511796104
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 835.28,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": {
+              "Errands": 0.9684955648183017,
+              "Goals": 0.004510106969814617,
+              "Hardware": 0.004090269003819413,
+              "Projects": 0.003292873073237408,
+              "Tasks": 0.019611186134827114
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 838.85,
+        "answers": {
+          "category": {
+            "value": "Goals",
+            "expected": "Goals",
+            "p": {
+              "Errands": 0.00691293968999937,
+              "Goals": 0.9529659275489021,
+              "Hardware": 0.006896878797843772,
+              "Projects": 0.022294720810511946,
+              "Tasks": 0.0109295331527428
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 838.44,
+        "answers": {
+          "category": {
+            "value": "Goals",
+            "expected": "Goals",
+            "p": {
+              "Errands": 0.004437740193350272,
+              "Goals": 0.9752755715547918,
+              "Hardware": 0.004579319892034384,
+              "Projects": 0.0052471377224474185,
+              "Tasks": 0.010460230637376033
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 839.7,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Hardware",
+            "p": {
+              "Errands": 0.00738194091536966,
+              "Goals": 0.007106774007887333,
+              "Hardware": 0.9021645977612668,
+              "Projects": 0.012904320309138925,
+              "Tasks": 0.07044236700633724
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 847.46,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Hardware",
+            "p": {
+              "Errands": 0.006815508589316631,
+              "Goals": 0.005554879052170315,
+              "Hardware": 0.9611608207368507,
+              "Projects": 0.0050455573932879656,
+              "Tasks": 0.021423234228374194
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "clockwork-todo-category",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_mean": 1207.2,
+    "latency_ms_median": 144.4,
+    "latency_ms_p90": 151.9,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.04,
+        "confusion": {
+          "labels": [
+            "Tasks",
+            "Projects",
+            "Errands",
+            "Goals",
+            "Hardware"
+          ],
+          "counts": {
+            "Tasks": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Projects": {
+              "Tasks": 0,
+              "Projects": 2,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Errands": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 2,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Goals": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 2,
+              "Hardware": 0
+            },
+            "Hardware": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 2
+            }
+          },
+          "invalid": {
+            "Tasks": 0,
+            "Projects": 0,
+            "Errands": 0,
+            "Goals": 0,
+            "Hardware": 0
+          },
+          "per_label": {
+            "Tasks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Projects": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Errands": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Goals": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Hardware": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 10775.2,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Errands": 0.045856324735079515,
+              "Goals": 0.032622353974054136,
+              "Hardware": 0.02396572737521764,
+              "Projects": 0.025308339011348557,
+              "Tasks": 0.8722472549043001
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 151.9,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Errands": 0.040221024864794064,
+              "Goals": 0.03637600336408426,
+              "Hardware": 0.03506320593376283,
+              "Projects": 0.04012118865803675,
+              "Tasks": 0.8482185771793221
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 141.15,
+        "answers": {
+          "category": {
+            "value": "Projects",
+            "expected": "Projects",
+            "p": {
+              "Errands": 0.008580477633975198,
+              "Goals": 0.020819445272057212,
+              "Hardware": 0.12461041023673872,
+              "Projects": 0.8365430860839018,
+              "Tasks": 0.009446580773327098
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 141.53,
+        "answers": {
+          "category": {
+            "value": "Projects",
+            "expected": "Projects",
+            "p": {
+              "Errands": 0.01619030416038398,
+              "Goals": 0.06351469365177882,
+              "Hardware": 0.0801605474023965,
+              "Projects": 0.7468483277730716,
+              "Tasks": 0.09328612701236906
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 144.47,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": {
+              "Errands": 0.6707395938502058,
+              "Goals": 0.037182860322926795,
+              "Hardware": 0.04119101213901612,
+              "Projects": 0.04541848795967047,
+              "Tasks": 0.2054680457281809
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 144.38,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": {
+              "Errands": 0.8501713951742026,
+              "Goals": 0.0260395641910604,
+              "Hardware": 0.02774338192221962,
+              "Projects": 0.02628722953723624,
+              "Tasks": 0.06975842917528104
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 146.3,
+        "answers": {
+          "category": {
+            "value": "Goals",
+            "expected": "Goals",
+            "p": {
+              "Errands": 0.014464375253778947,
+              "Goals": 0.8819481200202834,
+              "Hardware": 0.017022618197211875,
+              "Projects": 0.06998505151842528,
+              "Tasks": 0.016579835010300515
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 141.88,
+        "answers": {
+          "category": {
+            "value": "Goals",
+            "expected": "Goals",
+            "p": {
+              "Errands": 0.012761831009918394,
+              "Goals": 0.9343682333250275,
+              "Hardware": 0.014691859605231746,
+              "Projects": 0.02020374535037525,
+              "Tasks": 0.017974330709447123
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 141.06,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Hardware",
+            "p": {
+              "Errands": 0.011436272789450343,
+              "Goals": 0.01461085493171603,
+              "Hardware": 0.9099621177794796,
+              "Projects": 0.034502013015995855,
+              "Tasks": 0.029488741483357988
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 144.32,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Hardware",
+            "p": {
+              "Errands": 0.010219536142686636,
+              "Goals": 0.010954268126999926,
+              "Hardware": 0.9427994067402439,
+              "Projects": 0.015973532039809522,
+              "Tasks": 0.02005325695026008
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "clockwork-todo-category",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_mean": 1127.2,
+    "latency_ms_median": 164.7,
+    "latency_ms_p90": 176.1,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.002,
+        "confusion": {
+          "labels": [
+            "Tasks",
+            "Projects",
+            "Errands",
+            "Goals",
+            "Hardware"
+          ],
+          "counts": {
+            "Tasks": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Projects": {
+              "Tasks": 0,
+              "Projects": 2,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Errands": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 2,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Goals": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 2,
+              "Hardware": 0
+            },
+            "Hardware": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 2
+            }
+          },
+          "invalid": {
+            "Tasks": 0,
+            "Projects": 0,
+            "Errands": 0,
+            "Goals": 0,
+            "Hardware": 0
+          },
+          "per_label": {
+            "Tasks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Projects": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Errands": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Goals": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Hardware": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 9774.76,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Tasks": 0.9819975641437828,
+              "Projects": 0.004720666384862396,
+              "Errands": 0.010959707490847641,
+              "Goals": 0.0018195729179335748,
+              "Hardware": 0.0005024890625737285
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 168.72,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Tasks": 0.9736303546755105,
+              "Projects": 0.021616490946178065,
+              "Errands": 0.002256043616111944,
+              "Goals": 0.0017873992643498197,
+              "Hardware": 0.0007097114978498782
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 162.83,
+        "answers": {
+          "category": {
+            "value": "Projects",
+            "expected": "Projects",
+            "p": {
+              "Tasks": 0.0010444521387772945,
+              "Projects": 0.9766000802211715,
+              "Errands": 0.0003225115173148191,
+              "Goals": 0.0007761117083358382,
+              "Hardware": 0.021256844414400494
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 164.52,
+        "answers": {
+          "category": {
+            "value": "Projects",
+            "expected": "Projects",
+            "p": {
+              "Tasks": 0.0758832346594663,
+              "Projects": 0.9164380293116895,
+              "Errands": 0.000977993469564347,
+              "Goals": 0.0024057341032582154,
+              "Hardware": 0.0042950084560213955
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 176.07,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": {
+              "Tasks": 0.03124471967124274,
+              "Projects": 0.0008190891542542611,
+              "Errands": 0.9672897575802206,
+              "Goals": 0.0004307015937607681,
+              "Hardware": 0.00021573200052153786
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 175.27,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": {
+              "Tasks": 0.006524316727553165,
+              "Projects": 0.00030378427397037837,
+              "Errands": 0.9928482293618174,
+              "Goals": 0.00022219906822295972,
+              "Hardware": 0.00010147056843613347
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 161.13,
+        "answers": {
+          "category": {
+            "value": "Goals",
+            "expected": "Goals",
+            "p": {
+              "Tasks": 0.0026144434253216908,
+              "Projects": 0.02608935325435428,
+              "Errands": 0.0003914567400169512,
+              "Goals": 0.9706011586726437,
+              "Hardware": 0.0003035879076634728
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 163.92,
+        "answers": {
+          "category": {
+            "value": "Goals",
+            "expected": "Goals",
+            "p": {
+              "Tasks": 0.0029086217014904626,
+              "Projects": 0.0007666468385465387,
+              "Errands": 0.00016500683507380146,
+              "Goals": 0.9960163695341385,
+              "Hardware": 0.00014335509075058395
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 159.46,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Hardware",
+            "p": {
+              "Tasks": 0.018668582923470678,
+              "Projects": 0.0153237338680848,
+              "Errands": 0.00020423354280988667,
+              "Goals": 0.000415248840744494,
+              "Hardware": 0.9653882008248901
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 164.88,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Hardware",
+            "p": {
+              "Tasks": 0.030164306577583656,
+              "Projects": 0.007248967177870578,
+              "Errands": 0.0006864542234538632,
+              "Goals": 0.0004693620544926021,
+              "Hardware": 0.9614309099665993
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:tev1",
+    "task": "clockwork-todo-category",
+    "items": 10,
+    "errors": 0,
+    "latency_ms_mean": 444.5,
+    "latency_ms_median": 108.3,
+    "latency_ms_p90": 123.9,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 10,
+        "brier": 0.027,
+        "confusion": {
+          "labels": [
+            "Tasks",
+            "Projects",
+            "Errands",
+            "Goals",
+            "Hardware"
+          ],
+          "counts": {
+            "Tasks": {
+              "Tasks": 2,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Projects": {
+              "Tasks": 0,
+              "Projects": 2,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Errands": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 2,
+              "Goals": 0,
+              "Hardware": 0
+            },
+            "Goals": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 2,
+              "Hardware": 0
+            },
+            "Hardware": {
+              "Tasks": 0,
+              "Projects": 0,
+              "Errands": 0,
+              "Goals": 0,
+              "Hardware": 2
+            }
+          },
+          "invalid": {
+            "Tasks": 0,
+            "Projects": 0,
+            "Errands": 0,
+            "Goals": 0,
+            "Hardware": 0
+          },
+          "per_label": {
+            "Tasks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Projects": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Errands": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Goals": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Hardware": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 3451.77,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Tasks": 0.9720150333716778,
+              "Projects": 0.0066982578289975225,
+              "Errands": 0.01940254296607059,
+              "Goals": 0.0016304233921186928,
+              "Hardware": 0.00025374244113532846
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 123.9,
+        "answers": {
+          "category": {
+            "value": "Tasks",
+            "expected": "Tasks",
+            "p": {
+              "Tasks": 0.9418816682287644,
+              "Projects": 0.05631754375979674,
+              "Errands": 0.00046506636198494976,
+              "Goals": 0.0003020161088584489,
+              "Hardware": 0.0010337055405953784
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 109.17,
+        "answers": {
+          "category": {
+            "value": "Projects",
+            "expected": "Projects",
+            "p": {
+              "Tasks": 0.019389631042086772,
+              "Projects": 0.936103360337023,
+              "Errands": 7.607185593250625e-05,
+              "Goals": 0.0001997460155530271,
+              "Hardware": 0.04423119074940462
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 104.29,
+        "answers": {
+          "category": {
+            "value": "Projects",
+            "expected": "Projects",
+            "p": {
+              "Tasks": 0.19636206265039108,
+              "Projects": 0.7991338721768835,
+              "Errands": 7.757786036481209e-05,
+              "Goals": 0.0002847021208279538,
+              "Hardware": 0.004141785191532834
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 114.3,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": {
+              "Tasks": 0.013210950287475825,
+              "Projects": 0.00033280269471940054,
+              "Errands": 0.986391572047796,
+              "Goals": 2.93856332879051e-05,
+              "Hardware": 3.5289336720718433e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 105.08,
+        "answers": {
+          "category": {
+            "value": "Errands",
+            "expected": "Errands",
+            "p": {
+              "Tasks": 0.0021707260584380044,
+              "Projects": 4.737897727981974e-05,
+              "Errands": 0.9977525241121855,
+              "Goals": 2.0140039791127587e-05,
+              "Hardware": 9.230812305469306e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 107.38,
+        "answers": {
+          "category": {
+            "value": "Goals",
+            "expected": "Goals",
+            "p": {
+              "Tasks": 0.019899406521392316,
+              "Projects": 0.03246384509606083,
+              "Errands": 0.00023830533263708673,
+              "Goals": 0.9473673842361162,
+              "Hardware": 3.105881379362296e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 106.23,
+        "answers": {
+          "category": {
+            "value": "Goals",
+            "expected": "Goals",
+            "p": {
+              "Tasks": 0.01920734057460519,
+              "Projects": 0.002928433050245127,
+              "Errands": 0.00017742975228809185,
+              "Goals": 0.9776723340336267,
+              "Hardware": 1.4462589235035711e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 107.24,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Hardware",
+            "p": {
+              "Tasks": 0.20506471870408638,
+              "Projects": 0.06530166542058732,
+              "Errands": 4.9255836575430154e-05,
+              "Goals": 7.20602057314826e-05,
+              "Hardware": 0.7295122998330194
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 115.37,
+        "answers": {
+          "category": {
+            "value": "Hardware",
+            "expected": "Hardware",
+            "p": {
+              "Tasks": 0.15529729638105016,
+              "Projects": 0.008466811606607665,
+              "Errands": 0.00020972892609790524,
+              "Goals": 7.61151245311664e-05,
+              "Hardware": 0.835950047961713
+            }
+          }
+        }
+      }
+    ]
+  }
+]

@@ -254,6 +254,132 @@
         "category": "Themes"
       },
       "split": "test"
+    },
+    {
+      "state": "Adobe Inc.",
+      "expected": {
+        "category": "Stocks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Toyota Motor Corporation",
+      "expected": {
+        "category": "Stocks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "MercadoLibre",
+      "expected": {
+        "category": "Stocks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Vanguard Total World Stock ETF",
+      "expected": {
+        "category": "ETFs"
+      },
+      "split": "test"
+    },
+    {
+      "state": "iShares Core MSCI Emerging Markets ETF",
+      "expected": {
+        "category": "ETFs"
+      },
+      "split": "test"
+    },
+    {
+      "state": "ARK Innovation ETF",
+      "expected": {
+        "category": "ETFs"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Cardano (ADA)",
+      "expected": {
+        "category": "Crypto"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Dogecoin",
+      "expected": {
+        "category": "Crypto"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Polkadot (DOT)",
+      "expected": {
+        "category": "Crypto"
+      },
+      "split": "test"
+    },
+    {
+      "state": "5-year Treasury inflation-protected security",
+      "expected": {
+        "category": "Bonds"
+      },
+      "split": "test"
+    },
+    {
+      "state": "California general obligation municipal bond",
+      "expected": {
+        "category": "Bonds"
+      },
+      "split": "test"
+    },
+    {
+      "state": "AAA corporate bond maturing in 2030",
+      "expected": {
+        "category": "Bonds"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Simon Property Group",
+      "expected": {
+        "category": "REITs"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Digital Realty Trust",
+      "expected": {
+        "category": "REITs"
+      },
+      "split": "test"
+    },
+    {
+      "state": "AvalonBay Communities",
+      "expected": {
+        "category": "REITs"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Cybersecurity spending growth",
+      "expected": {
+        "category": "Themes"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Electrification of transport",
+      "expected": {
+        "category": "Themes"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Emerging-market middle-class growth",
+      "expected": {
+        "category": "Themes"
+      },
+      "split": "test"
     }
   ]
 }

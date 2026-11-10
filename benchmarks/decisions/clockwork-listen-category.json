@@ -213,6 +213,146 @@
         "category": "Artists"
       },
       "split": "test"
+    },
+    {
+      "state": "Purple Rain (album)",
+      "expected": {
+        "category": "Albums"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Songs in the Key of Life",
+      "expected": {
+        "category": "Albums"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Discovery by Daft Punk",
+      "expected": {
+        "category": "Albums"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Blue by Joni Mitchell",
+      "expected": {
+        "category": "Albums"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Serial podcast",
+      "expected": {
+        "category": "Podcasts"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Daily podcast",
+      "expected": {
+        "category": "Podcasts"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Song Exploder podcast",
+      "expected": {
+        "category": "Podcasts"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Reply All podcast",
+      "expected": {
+        "category": "Podcasts"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Hobbit narrated by Andy Serkis",
+      "expected": {
+        "category": "Audiobooks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Born a Crime audiobook",
+      "expected": {
+        "category": "Audiobooks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Martian unabridged audiobook",
+      "expected": {
+        "category": "Audiobooks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Becoming audiobook",
+      "expected": {
+        "category": "Audiobooks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "WNYC live stream",
+      "expected": {
+        "category": "Radio"
+      },
+      "split": "test"
+    },
+    {
+      "state": "BBC World Service",
+      "expected": {
+        "category": "Radio"
+      },
+      "split": "test"
+    },
+    {
+      "state": "College radio 88.5 FM",
+      "expected": {
+        "category": "Radio"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Internet classical radio station",
+      "expected": {
+        "category": "Radio"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Explore Bjork",
+      "expected": {
+        "category": "Artists"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Miles Davis",
+      "expected": {
+        "category": "Artists"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Japanese Breakfast",
+      "expected": {
+        "category": "Artists"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Aphex Twin",
+      "expected": {
+        "category": "Artists"
+      },
+      "split": "test"
     }
   ]
 }

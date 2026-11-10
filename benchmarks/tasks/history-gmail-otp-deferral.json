@@ -1,0 +1,11 @@
+{
+  "name": "Gmail polling leaves one-time-code replies for their consumer",
+  "prompt": "New listener tests were added to an older crew-chief checkout. Ensure Gmail polling ignores replies to the portfolio's personal-finance two-factor prompt while continuing to return ordinary trusted messages. Match the subject tag case-insensitively and do not consume the ignored reply. Make the full test suite pass. You may edit only src/crew_chief/listener.py.",
+  "evolution": {
+    "before": "c56755ad44f75a2ea10491367ac3a4b25d3d914e",
+    "after": "bdd9fe85f55aecc45e1cdfec7d7b7bda299f7e54",
+    "test_paths": ["tests/test_listener.py"]
+  },
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/crew_chief/listener.py"]
+}

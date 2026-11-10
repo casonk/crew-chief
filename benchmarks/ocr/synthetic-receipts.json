@@ -1,0 +1,112 @@
+{
+  "name": "synthetic-receipts-v1",
+  "prompt": "Transcribe every visible character in this receipt exactly. Preserve reading order and line breaks. Return only the transcription, with no explanation or Markdown fences.",
+  "cases": [
+    {
+      "id": "clean-grocery-total",
+      "text": "NORTHSTAR MARKET\n1840 LAKE AVENUE\n2026-11-08  14:32\n\nAPPLES             4.29\nBREAD              3.49\nMILK               5.19\nTAX                0.78\nTOTAL             13.75\nVISA  **** 5653",
+      "fields": {
+        "merchant": "NORTHSTAR MARKET",
+        "date": "2026-11-08",
+        "total": "13.75",
+        "card_last4": "5653"
+      },
+      "render": {
+        "font": "mono",
+        "font_size": 30,
+        "spacing": 10
+      }
+    },
+    {
+      "id": "rotated-restaurant-tip",
+      "text": "CEDAR TABLE\nCHECK 204   SERVER MAYA\n11/07/2026  8:41 PM\n\nSUBTOTAL          $42.60\nTIP                $8.52\nTOTAL             $51.12\nMASTERCARD XXXX 7875",
+      "fields": {
+        "merchant": "CEDAR TABLE",
+        "date": "11/07/2026",
+        "total": "51.12",
+        "card_last4": "7875"
+      },
+      "render": {
+        "font": "mono",
+        "font_size": 29,
+        "rotation": 3.0,
+        "blur": 0.25,
+        "spacing": 11
+      }
+    },
+    {
+      "id": "faded-fuel-decimals",
+      "text": "HARBOR FUEL #18\nPUMP 07   REGULAR\nDATE 2026-10-31  06:18\n\n12.438 GAL @ 3.499\nFUEL SALE          43.52\nDISCOVER **** 0123\nAPPROVED",
+      "fields": {
+        "merchant": "HARBOR FUEL #18",
+        "date": "2026-10-31",
+        "gallons": "12.438",
+        "total": "43.52",
+        "card_last4": "0123"
+      },
+      "render": {
+        "font": "mono",
+        "font_size": 25,
+        "background": 232,
+        "foreground": 95,
+        "contrast": 0.78,
+        "blur": 0.55,
+        "noise": 0.018,
+        "scale": 0.82
+      }
+    },
+    {
+      "id": "dense-service-invoice",
+      "text": "BLUE RIVER AUTO SERVICE\nINVOICE BR-10482\nCUSTOMER: JORDAN AVERY\nSERVICE DATE: OCT 29, 2026\n\nOIL FILTER                 12.95\nSYNTHETIC OIL 5W-30        38.00\nSHOP SUPPLIES               4.75\nLABOR                       45.00\nSUBTOTAL                   100.70\nSALES TAX                    6.04\nAMOUNT DUE                 106.74\nPAID - VISA ENDING 9369",
+      "fields": {
+        "merchant": "BLUE RIVER AUTO SERVICE",
+        "invoice": "BR-10482",
+        "date": "OCT 29, 2026",
+        "total": "106.74",
+        "card_last4": "9369"
+      },
+      "render": {
+        "font": "sans",
+        "font_size": 24,
+        "spacing": 7,
+        "rotation": -1.2,
+        "blur": 0.2
+      }
+    },
+    {
+      "id": "japanese-cash-tender",
+      "text": "青空スーパー\n東京都千代田区 1-2-3\n2026年11月3日 18:05\n\nりんご              ¥480\n牛乳                ¥238\n小計                ¥718\n消費税               ¥57\n合計                ¥775\nお預り             ¥1,000\nお釣り               ¥225",
+      "fields": {
+        "merchant": "青空スーパー",
+        "date": "2026年11月3日",
+        "total": "¥775",
+        "cash_tendered": "¥1,000"
+      },
+      "render": {
+        "font": "cjk",
+        "font_size": 31,
+        "spacing": 12,
+        "rotation": 1.0
+      }
+    },
+    {
+      "id": "email-order-screenshot",
+      "text": "ORDER CONFIRMATION\n\nOrbit Software\nOrder: OS-88219\nPurchased: November 5, 2026\n\nDeveloper Tools Annual Plan     $79.00\nSales tax                        $4.74\nTOTAL CHARGED                   $83.74\n\nPayment method: Visa ending 5653\nThank you for your purchase.",
+      "fields": {
+        "merchant": "Orbit Software",
+        "order": "OS-88219",
+        "date": "November 5, 2026",
+        "total": "$83.74",
+        "card_last4": "5653"
+      },
+      "render": {
+        "font": "sans",
+        "font_size": 27,
+        "background": 246,
+        "foreground": 28,
+        "padding": 64,
+        "spacing": 12
+      }
+    }
+  ]
+}

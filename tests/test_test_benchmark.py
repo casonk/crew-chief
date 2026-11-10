@@ -207,3 +207,19 @@ def test_suite_resolves_cases_and_rejects_path_escape(tmp_path, broken_task):
     suite.write_text(json.dumps({"cases": [{"repo": "../outside", "task": "task.json"}]}))
     with pytest.raises(ValueError, match="relative to portfolio root"):
         benchmark.load_suite(suite, portfolio)
+
+
+def test_tracked_public_suite_references_valid_unique_tasks():
+    suite_path = SCRIPT.parents[1] / "benchmarks" / "public-history-suite.json"
+    cases = json.loads(suite_path.read_text())["cases"]
+    assert cases
+
+    tasks = []
+    for case in cases:
+        assert set(case) == {"repo", "task"}
+        task_path = (suite_path.parent / case["task"]).resolve()
+        assert task_path.is_relative_to(suite_path.parent)
+        tasks.append(benchmark.load_task(task_path))
+
+    assert len({task["name"] for task in tasks}) == len(tasks)
+    assert all("evolution" in task for task in tasks)

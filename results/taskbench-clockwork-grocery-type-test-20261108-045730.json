@@ -1,0 +1,4940 @@
+[
+  {
+    "runner": "rules",
+    "task": "clockwork-grocery-type",
+    "items": 24,
+    "errors": 0,
+    "latency_ms_mean": 0.0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "category": {
+        "accuracy": 0.417,
+        "invalid": 0,
+        "n": 24,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "Meat",
+            "Seafood",
+            "Produce",
+            "Dairy",
+            "Bakery",
+            "Beverages",
+            "Spirits",
+            "Spices",
+            "Condiments",
+            "Pantry",
+            "Snacks",
+            "Frozen"
+          ],
+          "counts": {
+            "Meat": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Seafood": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Produce": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Dairy": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 2,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Bakery": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 1,
+              "Dairy": 0,
+              "Bakery": 1,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Beverages": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 1,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 1,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spirits": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spices": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Condiments": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Pantry": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Snacks": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Frozen": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 2
+            }
+          },
+          "invalid": {
+            "Meat": 0,
+            "Seafood": 0,
+            "Produce": 0,
+            "Dairy": 0,
+            "Bakery": 0,
+            "Beverages": 0,
+            "Spirits": 0,
+            "Spices": 0,
+            "Condiments": 0,
+            "Pantry": 0,
+            "Snacks": 0,
+            "Frozen": 0
+          },
+          "per_label": {
+            "Meat": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Seafood": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Produce": {
+              "support": 2,
+              "precision": 0.125,
+              "recall": 1.0,
+              "f1": 0.222
+            },
+            "Dairy": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bakery": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667
+            },
+            "Beverages": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667
+            },
+            "Spirits": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Spices": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Condiments": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Pantry": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Snacks": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Frozen": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 36,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Seafood",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Seafood",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Bakery",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Bakery",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Beverages",
+            "expected": "Beverages",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Beverages",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Spirits",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Spirits",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Spices",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Spices",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Condiments",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Condiments",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Pantry",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Pantry",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Snacks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Snacks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "bayes",
+    "task": "clockwork-grocery-type",
+    "items": 24,
+    "errors": 0,
+    "latency_ms_mean": 0.2,
+    "latency_ms_median": 0.2,
+    "latency_ms_p90": 0.3,
+    "questions": {
+      "category": {
+        "accuracy": 0.167,
+        "invalid": 0,
+        "n": 24,
+        "brier": 0.861,
+        "confusion": {
+          "labels": [
+            "Meat",
+            "Seafood",
+            "Produce",
+            "Dairy",
+            "Bakery",
+            "Beverages",
+            "Spirits",
+            "Spices",
+            "Condiments",
+            "Pantry",
+            "Snacks",
+            "Frozen"
+          ],
+          "counts": {
+            "Meat": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Seafood": {
+              "Meat": 1,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 1,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Produce": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Dairy": {
+              "Meat": 1,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 1,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Bakery": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Beverages": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spirits": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spices": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Condiments": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Pantry": {
+              "Meat": 1,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 1,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Snacks": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Frozen": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 2
+            }
+          },
+          "invalid": {
+            "Meat": 0,
+            "Seafood": 0,
+            "Produce": 0,
+            "Dairy": 0,
+            "Bakery": 0,
+            "Beverages": 0,
+            "Spirits": 0,
+            "Spices": 0,
+            "Condiments": 0,
+            "Pantry": 0,
+            "Snacks": 0,
+            "Frozen": 0
+          },
+          "per_label": {
+            "Meat": {
+              "support": 2,
+              "precision": 0.105,
+              "recall": 1.0,
+              "f1": 0.19
+            },
+            "Seafood": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Produce": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Dairy": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Bakery": {
+              "support": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "Beverages": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Spirits": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Spices": {
+              "support": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "Condiments": {
+              "support": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "Pantry": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Snacks": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Frozen": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 36,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.27,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.21,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Meat": 0.4970089485703047,
+              "Seafood": 0.04518263168820951,
+              "Produce": 0.04897949149394138,
+              "Dairy": 0.04193208264589232,
+              "Bakery": 0.04897949149394138,
+              "Beverages": 0.04193208264589232,
+              "Spirits": 0.04518263168820951,
+              "Spices": 0.04897949149394138,
+              "Condiments": 0.04897949149394138,
+              "Pantry": 0.04897949149394138,
+              "Snacks": 0.04193208264589232,
+              "Frozen": 0.04193208264589232
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Seafood",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Spices",
+            "expected": "Seafood",
+            "p": {
+              "Meat": 0.3336089709975395,
+              "Seafood": 0.030328088272503585,
+              "Produce": 0.032876667118932446,
+              "Dairy": 0.02814621141836666,
+              "Bakery": 0.032876667118932446,
+              "Beverages": 0.02814621141836666,
+              "Spirits": 0.030328088272503585,
+              "Spices": 0.3616433383082569,
+              "Condiments": 0.032876667118932446,
+              "Pantry": 0.032876667118932446,
+              "Snacks": 0.02814621141836666,
+              "Frozen": 0.02814621141836666
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Produce",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Produce",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.33,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Dairy",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Condiments",
+            "expected": "Dairy",
+            "p": {
+              "Meat": 0.04352986378660604,
+              "Seafood": 0.04352986378660604,
+              "Produce": 0.047187835533379636,
+              "Dairy": 0.04039821890987182,
+              "Bakery": 0.047187835533379636,
+              "Beverages": 0.04039821890987182,
+              "Spirits": 0.04352986378660604,
+              "Spices": 0.047187835533379636,
+              "Condiments": 0.519066190867176,
+              "Pantry": 0.047187835533379636,
+              "Snacks": 0.04039821890987182,
+              "Frozen": 0.04039821890987182
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Bakery",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.17,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Bakery",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Beverages",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Beverages",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 0.17,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Spirits",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Spirits",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Spices",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 0.17,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Spices",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Condiments",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 0.17,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Condiments",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 0.17,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Pantry",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Pantry",
+            "p": {
+              "Meat": 0.04352986378660604,
+              "Seafood": 0.04352986378660604,
+              "Produce": 0.047187835533379636,
+              "Dairy": 0.04039821890987182,
+              "Bakery": 0.519066190867176,
+              "Beverages": 0.04039821890987182,
+              "Spirits": 0.04352986378660604,
+              "Spices": 0.047187835533379636,
+              "Condiments": 0.047187835533379636,
+              "Pantry": 0.047187835533379636,
+              "Snacks": 0.04039821890987182,
+              "Frozen": 0.04039821890987182
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 0.26,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Snacks",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Snacks",
+            "p": {
+              "Meat": 0.08333333333333333,
+              "Seafood": 0.08333333333333333,
+              "Produce": 0.08333333333333333,
+              "Dairy": 0.08333333333333333,
+              "Bakery": 0.08333333333333333,
+              "Beverages": 0.08333333333333333,
+              "Spirits": 0.08333333333333333,
+              "Spices": 0.08333333333333333,
+              "Condiments": 0.08333333333333333,
+              "Pantry": 0.08333333333333333,
+              "Snacks": 0.08333333333333333,
+              "Frozen": 0.08333333333333333
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Meat": 0.03258013559135082,
+              "Seafood": 0.03258013559135082,
+              "Produce": 0.035317962111632385,
+              "Dairy": 0.030236240944491077,
+              "Bakery": 0.035317962111632385,
+              "Beverages": 0.030236240944491077,
+              "Spirits": 0.03258013559135082,
+              "Spices": 0.035317962111632385,
+              "Condiments": 0.035317962111632385,
+              "Pantry": 0.035317962111632385,
+              "Snacks": 0.030236240944491077,
+              "Frozen": 0.6349610598343124
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Meat": 0.03258013559135082,
+              "Seafood": 0.03258013559135082,
+              "Produce": 0.035317962111632385,
+              "Dairy": 0.030236240944491077,
+              "Bakery": 0.035317962111632385,
+              "Beverages": 0.030236240944491077,
+              "Spirits": 0.03258013559135082,
+              "Spices": 0.035317962111632385,
+              "Condiments": 0.035317962111632385,
+              "Pantry": 0.035317962111632385,
+              "Snacks": 0.030236240944491077,
+              "Frozen": 0.6349610598343124
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef",
+    "task": "clockwork-grocery-type",
+    "items": 24,
+    "errors": 0,
+    "latency_ms_mean": 2071.6,
+    "latency_ms_median": 1162.1,
+    "latency_ms_p90": 1179.0,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 24,
+        "brier": 0.003,
+        "confusion": {
+          "labels": [
+            "Meat",
+            "Seafood",
+            "Produce",
+            "Dairy",
+            "Bakery",
+            "Beverages",
+            "Spirits",
+            "Spices",
+            "Condiments",
+            "Pantry",
+            "Snacks",
+            "Frozen"
+          ],
+          "counts": {
+            "Meat": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Seafood": {
+              "Meat": 0,
+              "Seafood": 2,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Produce": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Dairy": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 2,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Bakery": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 2,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Beverages": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 2,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spirits": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 2,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spices": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 2,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Condiments": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 2,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Pantry": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 2,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Snacks": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 2,
+              "Frozen": 0
+            },
+            "Frozen": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 2
+            }
+          },
+          "invalid": {
+            "Meat": 0,
+            "Seafood": 0,
+            "Produce": 0,
+            "Dairy": 0,
+            "Bakery": 0,
+            "Beverages": 0,
+            "Spirits": 0,
+            "Spices": 0,
+            "Condiments": 0,
+            "Pantry": 0,
+            "Snacks": 0,
+            "Frozen": 0
+          },
+          "per_label": {
+            "Meat": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Seafood": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Produce": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Dairy": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bakery": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Beverages": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Spirits": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Spices": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Condiments": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Pantry": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Snacks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Frozen": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 36,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 22970.51,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Bakery": 0.0019387846635794087,
+              "Beverages": 0.0014217496770078258,
+              "Condiments": 0.001771311483837421,
+              "Dairy": 0.0022030624781045126,
+              "Frozen": 0.003216376545088744,
+              "Meat": 0.9771693625465767,
+              "Pantry": 0.002269374768697988,
+              "Produce": 0.0022051907721285353,
+              "Seafood": 0.0024874482038095233,
+              "Snacks": 0.0015915834629764026,
+              "Spices": 0.0016791308609036212,
+              "Spirits": 0.0020466245372890665
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 1179.0,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Bakery": 0.0034625698754265247,
+              "Beverages": 0.0014977179255726604,
+              "Condiments": 0.0027976038303084254,
+              "Dairy": 0.0023097782149766547,
+              "Frozen": 0.003934222545385121,
+              "Meat": 0.9743726600370698,
+              "Pantry": 0.0021914449897380847,
+              "Produce": 0.0020086273396455216,
+              "Seafood": 0.0020504954686895115,
+              "Snacks": 0.0017251060803741866,
+              "Spices": 0.0018229511453859315,
+              "Spirits": 0.0018268225474277013
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 1155.79,
+        "answers": {
+          "category": {
+            "value": "Seafood",
+            "expected": "Seafood",
+            "p": {
+              "Bakery": 0.0010420690348271649,
+              "Beverages": 0.0009900688900154372,
+              "Condiments": 0.001203222872353236,
+              "Dairy": 0.0011360260177691879,
+              "Frozen": 0.003731956415702887,
+              "Meat": 0.0020192810840539512,
+              "Pantry": 0.0014082798650113324,
+              "Produce": 0.0015269583972089176,
+              "Seafood": 0.9832004720984678,
+              "Snacks": 0.0011817917170442384,
+              "Spices": 0.0012002848930899566,
+              "Spirits": 0.0013595887144558219
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 1154.38,
+        "answers": {
+          "category": {
+            "value": "Seafood",
+            "expected": "Seafood",
+            "p": {
+              "Bakery": 0.001637186922867833,
+              "Beverages": 0.0017695105469863995,
+              "Condiments": 0.0021172533048039255,
+              "Dairy": 0.001709422599306239,
+              "Frozen": 0.006679935698089765,
+              "Meat": 0.008936365771289477,
+              "Pantry": 0.0030873808256239197,
+              "Produce": 0.0019865915717896536,
+              "Seafood": 0.9656636262344132,
+              "Snacks": 0.0017796554566857348,
+              "Spices": 0.001969379642670248,
+              "Spirits": 0.002663691425473361
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 1180.19,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": {
+              "Bakery": 0.0011908337872914944,
+              "Beverages": 0.0010483960568433111,
+              "Condiments": 0.0017593567780146222,
+              "Dairy": 0.0011788659085039807,
+              "Frozen": 0.0029304211593665997,
+              "Meat": 0.001124490751178934,
+              "Pantry": 0.0013072372215175547,
+              "Produce": 0.981542956368815,
+              "Seafood": 0.0011142607790113595,
+              "Snacks": 0.0010446010944627723,
+              "Spices": 0.004797220796443468,
+              "Spirits": 0.0009613592985507167
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 1153.36,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": {
+              "Bakery": 0.0014966199755424396,
+              "Beverages": 0.001304099119947955,
+              "Condiments": 0.002070595275133742,
+              "Dairy": 0.001445467109121507,
+              "Frozen": 0.003891490753769668,
+              "Meat": 0.0015035798649740474,
+              "Pantry": 0.0020209168586048667,
+              "Produce": 0.9803853007466596,
+              "Seafood": 0.001435035190348729,
+              "Snacks": 0.0014317905957280362,
+              "Spices": 0.0017268953711597993,
+              "Spirits": 0.0012882091390097055
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 1163.15,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": {
+              "Bakery": 0.007539291353829702,
+              "Beverages": 0.004047816363979115,
+              "Condiments": 0.00720111728533213,
+              "Dairy": 0.9417079305593593,
+              "Frozen": 0.004952442436182683,
+              "Meat": 0.008865701983991225,
+              "Pantry": 0.004844139863819358,
+              "Produce": 0.005722649600905481,
+              "Seafood": 0.003240472666049019,
+              "Snacks": 0.0035695376747903683,
+              "Spices": 0.004937192905895447,
+              "Spirits": 0.003371707305866383
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 1159.04,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": {
+              "Bakery": 0.0020963869149899276,
+              "Beverages": 0.0014030184517223958,
+              "Condiments": 0.002676882954161968,
+              "Dairy": 0.9797383201155393,
+              "Frozen": 0.002397526010938487,
+              "Meat": 0.0018435357312383935,
+              "Pantry": 0.002153957503460376,
+              "Produce": 0.0013710855853772312,
+              "Seafood": 0.0011975729207982595,
+              "Snacks": 0.0013416286978989301,
+              "Spices": 0.0020687025082357737,
+              "Spirits": 0.0017113826056387128
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 1163.75,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Bakery",
+            "p": {
+              "Bakery": 0.9384009130928334,
+              "Beverages": 0.005666559877264184,
+              "Condiments": 0.00394105346425358,
+              "Dairy": 0.004282224279555156,
+              "Frozen": 0.013515163022435384,
+              "Meat": 0.003440511134977081,
+              "Pantry": 0.0047218090383705025,
+              "Produce": 0.00345442492367336,
+              "Seafood": 0.002226583769900537,
+              "Snacks": 0.013488772685152552,
+              "Spices": 0.002794116377150392,
+              "Spirits": 0.004067868334434033
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 1164.7,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Bakery",
+            "p": {
+              "Bakery": 0.9559121114861677,
+              "Beverages": 0.004432953069704075,
+              "Condiments": 0.0034391491206668093,
+              "Dairy": 0.0038776034760220034,
+              "Frozen": 0.004037358442822843,
+              "Meat": 0.003851117033053295,
+              "Pantry": 0.007684632554060582,
+              "Produce": 0.003454717518618275,
+              "Seafood": 0.0024850042027202905,
+              "Snacks": 0.004524432896130357,
+              "Spices": 0.0028671850896064164,
+              "Spirits": 0.0034337351104275506
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 1169.2,
+        "answers": {
+          "category": {
+            "value": "Beverages",
+            "expected": "Beverages",
+            "p": {
+              "Bakery": 0.010272935196814277,
+              "Beverages": 0.921778964658206,
+              "Condiments": 0.009177480568793956,
+              "Dairy": 0.00336448821530636,
+              "Frozen": 0.006641055561430594,
+              "Meat": 0.0031719390220257045,
+              "Pantry": 0.018860887784364382,
+              "Produce": 0.003914960238181268,
+              "Seafood": 0.0022783455947048394,
+              "Snacks": 0.004487177982849566,
+              "Spices": 0.007322358065242081,
+              "Spirits": 0.008729407112080817
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 1159.26,
+        "answers": {
+          "category": {
+            "value": "Beverages",
+            "expected": "Beverages",
+            "p": {
+              "Bakery": 0.005471093058501059,
+              "Beverages": 0.9658865987090175,
+              "Condiments": 0.0026174790120321216,
+              "Dairy": 0.0023630112301497915,
+              "Frozen": 0.0032571946170322514,
+              "Meat": 0.002263157706524567,
+              "Pantry": 0.002958511634857,
+              "Produce": 0.0021093440614143007,
+              "Seafood": 0.0016110771591686666,
+              "Snacks": 0.0021535199911052417,
+              "Spices": 0.00231706005870129,
+              "Spirits": 0.006991952761496212
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 1159.56,
+        "answers": {
+          "category": {
+            "value": "Spirits",
+            "expected": "Spirits",
+            "p": {
+              "Bakery": 0.004075627980533169,
+              "Beverages": 0.04562759133794693,
+              "Condiments": 0.004729330876319714,
+              "Dairy": 0.003364158955538061,
+              "Frozen": 0.004107336951403072,
+              "Meat": 0.0038976964699645846,
+              "Pantry": 0.005207754181879135,
+              "Produce": 0.003127745654236825,
+              "Seafood": 0.0029776130378872507,
+              "Snacks": 0.004979929111053053,
+              "Spices": 0.0038737760784620426,
+              "Spirits": 0.9140314393647762
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 1161.76,
+        "answers": {
+          "category": {
+            "value": "Spirits",
+            "expected": "Spirits",
+            "p": {
+              "Bakery": 0.0021496419780349966,
+              "Beverages": 0.003869767066188597,
+              "Condiments": 0.0025277573333818463,
+              "Dairy": 0.0023838294627356225,
+              "Frozen": 0.001906645260954679,
+              "Meat": 0.0023066317160125257,
+              "Pantry": 0.0024208117073987374,
+              "Produce": 0.0016349645077502009,
+              "Seafood": 0.0016051329674923276,
+              "Snacks": 0.002344846959512796,
+              "Spices": 0.0026148494260973404,
+              "Spirits": 0.9742351216144403
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 1159.85,
+        "answers": {
+          "category": {
+            "value": "Spices",
+            "expected": "Spices",
+            "p": {
+              "Bakery": 0.001529588338484839,
+              "Beverages": 0.0012386393214052704,
+              "Condiments": 0.0036387558718324804,
+              "Dairy": 0.0017892516842575124,
+              "Frozen": 0.0015032563582492453,
+              "Meat": 0.001598611058158854,
+              "Pantry": 0.00546608946495581,
+              "Produce": 0.0017741910749957573,
+              "Seafood": 0.0011470572593358917,
+              "Snacks": 0.001647527309394261,
+              "Spices": 0.9769299101901071,
+              "Spirits": 0.0017371220688230018
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 1162.48,
+        "answers": {
+          "category": {
+            "value": "Spices",
+            "expected": "Spices",
+            "p": {
+              "Bakery": 0.002127533431021299,
+              "Beverages": 0.0016339338887429375,
+              "Condiments": 0.006993375559353587,
+              "Dairy": 0.002232877735574114,
+              "Frozen": 0.0020901322406244307,
+              "Meat": 0.0023490465570303065,
+              "Pantry": 0.006045313849676783,
+              "Produce": 0.0024076692069301474,
+              "Seafood": 0.001737577738162392,
+              "Snacks": 0.002719021767008289,
+              "Spices": 0.9666551165830898,
+              "Spirits": 0.0030084014427859238
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 1159.66,
+        "answers": {
+          "category": {
+            "value": "Condiments",
+            "expected": "Condiments",
+            "p": {
+              "Bakery": 0.004515108718865967,
+              "Beverages": 0.004613100956821819,
+              "Condiments": 0.9344786053612693,
+              "Dairy": 0.005373239361955771,
+              "Frozen": 0.005545816350974775,
+              "Meat": 0.005108633733779875,
+              "Pantry": 0.01117383182439638,
+              "Produce": 0.004733503891133624,
+              "Seafood": 0.0037472336907507916,
+              "Snacks": 0.0042258036654337465,
+              "Spices": 0.010943995366635883,
+              "Spirits": 0.005541127077982128
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 1165.4,
+        "answers": {
+          "category": {
+            "value": "Condiments",
+            "expected": "Condiments",
+            "p": {
+              "Bakery": 0.0042148667537938245,
+              "Beverages": 0.0048747906194849255,
+              "Condiments": 0.9202009662287115,
+              "Dairy": 0.004018068140988524,
+              "Frozen": 0.005677871079867332,
+              "Meat": 0.0045145409531074775,
+              "Pantry": 0.011847097337668689,
+              "Produce": 0.004994613770859554,
+              "Seafood": 0.0038963230766011674,
+              "Snacks": 0.004112559590722536,
+              "Spices": 0.0260003397020732,
+              "Spirits": 0.005647962746121404
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 1168.59,
+        "answers": {
+          "category": {
+            "value": "Pantry",
+            "expected": "Pantry",
+            "p": {
+              "Bakery": 0.004402113343461146,
+              "Beverages": 0.003217696933933332,
+              "Condiments": 0.008571160584548959,
+              "Dairy": 0.002702849384533333,
+              "Frozen": 0.006999279382291148,
+              "Meat": 0.004120529808455549,
+              "Pantry": 0.9516212902583294,
+              "Produce": 0.004071363073008408,
+              "Seafood": 0.00321932832681894,
+              "Snacks": 0.00537315649591222,
+              "Spices": 0.0028759844518746283,
+              "Spirits": 0.002825247956832525
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 1157.63,
+        "answers": {
+          "category": {
+            "value": "Pantry",
+            "expected": "Pantry",
+            "p": {
+              "Bakery": 0.015357460420790022,
+              "Beverages": 0.002013054154828522,
+              "Condiments": 0.0039594069005874965,
+              "Dairy": 0.0020773525293189764,
+              "Frozen": 0.002368773471397332,
+              "Meat": 0.0022386880078840766,
+              "Pantry": 0.9608475430896588,
+              "Produce": 0.002100960927001797,
+              "Seafood": 0.0018972528768197753,
+              "Snacks": 0.0026590884468917064,
+              "Spices": 0.0027039771211637667,
+              "Spirits": 0.001776442053657705
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 1161.45,
+        "answers": {
+          "category": {
+            "value": "Snacks",
+            "expected": "Snacks",
+            "p": {
+              "Bakery": 0.007552310120422376,
+              "Beverages": 0.004340365217335522,
+              "Condiments": 0.006697027866266149,
+              "Dairy": 0.004218599658988515,
+              "Frozen": 0.00865435981661701,
+              "Meat": 0.004713522893150031,
+              "Pantry": 0.013827240613332414,
+              "Produce": 0.0044514989359361575,
+              "Seafood": 0.00448078967336801,
+              "Snacks": 0.927052276566434,
+              "Spices": 0.005551914621373833,
+              "Spirits": 0.008460094016776002
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 1163.29,
+        "answers": {
+          "category": {
+            "value": "Snacks",
+            "expected": "Snacks",
+            "p": {
+              "Bakery": 0.004219608058366501,
+              "Beverages": 0.0022818290077319748,
+              "Condiments": 0.0039615749869382376,
+              "Dairy": 0.002161202136933068,
+              "Frozen": 0.00468847124718229,
+              "Meat": 0.0020998652670983315,
+              "Pantry": 0.006207015444848653,
+              "Produce": 0.0022025232390968717,
+              "Seafood": 0.0018580822412706424,
+              "Snacks": 0.9650885318611568,
+              "Spices": 0.0021986072104772914,
+              "Spirits": 0.0030326892988992767
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 1167.18,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Bakery": 0.01050992903820439,
+              "Beverages": 0.0024377578695331486,
+              "Condiments": 0.0030440169707216676,
+              "Dairy": 0.0023604868356349507,
+              "Frozen": 0.9510857869551546,
+              "Meat": 0.005835642914627826,
+              "Pantry": 0.00586635487444277,
+              "Produce": 0.0037590689425262016,
+              "Seafood": 0.0034371421654333734,
+              "Snacks": 0.0062658155621035435,
+              "Spices": 0.002553131056302772,
+              "Spirits": 0.0028448668153147434
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 1159.66,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Bakery": 0.0008492848403830583,
+              "Beverages": 0.0007785690475463724,
+              "Condiments": 0.0009044168812548021,
+              "Dairy": 0.000825466689312519,
+              "Frozen": 0.9870881676646416,
+              "Meat": 0.00097724216032663,
+              "Pantry": 0.0010276602024180943,
+              "Produce": 0.003820088410660717,
+              "Seafood": 0.0010595220219596175,
+              "Snacks": 0.0010295092640979766,
+              "Spices": 0.0008721992365888485,
+              "Spirits": 0.0007678735808098025
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "clockwork-grocery-type",
+    "items": 24,
+    "errors": 0,
+    "latency_ms_mean": 721.6,
+    "latency_ms_median": 284.5,
+    "latency_ms_p90": 297.8,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 24,
+        "brier": 0.018,
+        "confusion": {
+          "labels": [
+            "Meat",
+            "Seafood",
+            "Produce",
+            "Dairy",
+            "Bakery",
+            "Beverages",
+            "Spirits",
+            "Spices",
+            "Condiments",
+            "Pantry",
+            "Snacks",
+            "Frozen"
+          ],
+          "counts": {
+            "Meat": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Seafood": {
+              "Meat": 0,
+              "Seafood": 2,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Produce": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Dairy": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 2,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Bakery": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 2,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Beverages": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 2,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spirits": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 2,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spices": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 2,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Condiments": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 2,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Pantry": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 2,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Snacks": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 2,
+              "Frozen": 0
+            },
+            "Frozen": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 2
+            }
+          },
+          "invalid": {
+            "Meat": 0,
+            "Seafood": 0,
+            "Produce": 0,
+            "Dairy": 0,
+            "Bakery": 0,
+            "Beverages": 0,
+            "Spirits": 0,
+            "Spices": 0,
+            "Condiments": 0,
+            "Pantry": 0,
+            "Snacks": 0,
+            "Frozen": 0
+          },
+          "per_label": {
+            "Meat": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Seafood": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Produce": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Dairy": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bakery": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Beverages": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Spirits": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Spices": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Condiments": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Pantry": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Snacks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Frozen": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 36,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 10741.92,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Bakery": 0.0034649102159818824,
+              "Beverages": 0.0034218968012536934,
+              "Condiments": 0.002803662719674581,
+              "Dairy": 0.0036361900435041544,
+              "Frozen": 0.003863462888277916,
+              "Meat": 0.9619685431758319,
+              "Pantry": 0.004816944048221205,
+              "Produce": 0.002883040574103093,
+              "Seafood": 0.004440567719412805,
+              "Snacks": 0.0026166152929899284,
+              "Spices": 0.002760256502292369,
+              "Spirits": 0.003323910018456462
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 284.4,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Bakery": 0.0022012401907573332,
+              "Beverages": 0.002534770781455585,
+              "Condiments": 0.002756314516784611,
+              "Dairy": 0.004276438845902506,
+              "Frozen": 0.0027805260535805365,
+              "Meat": 0.9696410717806514,
+              "Pantry": 0.004448060980604439,
+              "Produce": 0.0019609394635152805,
+              "Seafood": 0.0024086223200829823,
+              "Snacks": 0.0021801580999338353,
+              "Spices": 0.0023125210302562117,
+              "Spirits": 0.0024993359364751844
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 304.46,
+        "answers": {
+          "category": {
+            "value": "Seafood",
+            "expected": "Seafood",
+            "p": {
+              "Bakery": 0.0013012702457351594,
+              "Beverages": 0.0011721712191555664,
+              "Condiments": 0.0012780488445403018,
+              "Dairy": 0.0012278726442762947,
+              "Frozen": 0.002555039957690987,
+              "Meat": 0.0030824838267034527,
+              "Pantry": 0.002208298808827264,
+              "Produce": 0.0018391042425643666,
+              "Seafood": 0.981784019354857,
+              "Snacks": 0.001187066780017813,
+              "Spices": 0.0012045667789544736,
+              "Spirits": 0.001160057296677051
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 287.66,
+        "answers": {
+          "category": {
+            "value": "Seafood",
+            "expected": "Seafood",
+            "p": {
+              "Bakery": 0.0023100457201345095,
+              "Beverages": 0.002153389325792015,
+              "Condiments": 0.0023836688096547216,
+              "Dairy": 0.0023974491113438858,
+              "Frozen": 0.0047853780400657075,
+              "Meat": 0.00910553081894138,
+              "Pantry": 0.005035184794701041,
+              "Produce": 0.002538524090652376,
+              "Seafood": 0.962303000380945,
+              "Snacks": 0.0022643977295546047,
+              "Spices": 0.002510761332646443,
+              "Spirits": 0.0022126698455682916
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 288.6,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": {
+              "Bakery": 0.0019039737726907749,
+              "Beverages": 0.001929030527716314,
+              "Condiments": 0.0021890645292680293,
+              "Dairy": 0.0023956662352593878,
+              "Frozen": 0.004707960248177559,
+              "Meat": 0.0018121754866803675,
+              "Pantry": 0.003202638785440304,
+              "Produce": 0.9712814711255635,
+              "Seafood": 0.0017938664634270134,
+              "Snacks": 0.0016171032774138635,
+              "Spices": 0.0053602684488846565,
+              "Spirits": 0.0018067810994782084
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 276.3,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": {
+              "Bakery": 0.00254780067421212,
+              "Beverages": 0.002553571834869302,
+              "Condiments": 0.002915857597269673,
+              "Dairy": 0.003455702522309608,
+              "Frozen": 0.006990187453244554,
+              "Meat": 0.002448106686146616,
+              "Pantry": 0.005428910014693826,
+              "Produce": 0.9624071443576832,
+              "Seafood": 0.002389801598836146,
+              "Snacks": 0.0023910029824083822,
+              "Spices": 0.0038893490693330947,
+              "Spirits": 0.002582565208993509
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 284.59,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": {
+              "Bakery": 0.0072610822784199575,
+              "Beverages": 0.007662662555939112,
+              "Condiments": 0.006284949827873183,
+              "Dairy": 0.9014268410927769,
+              "Frozen": 0.0073520809942725,
+              "Meat": 0.011399343982987637,
+              "Pantry": 0.016869526015674034,
+              "Produce": 0.010035202318731434,
+              "Seafood": 0.0068220500607758024,
+              "Snacks": 0.006926591115091609,
+              "Spices": 0.009728752289103504,
+              "Spirits": 0.008230917468354304
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 279.17,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": {
+              "Bakery": 0.0038401208212640466,
+              "Beverages": 0.002830631155976675,
+              "Condiments": 0.004137272753886064,
+              "Dairy": 0.9611836713276855,
+              "Frozen": 0.0034147950920020436,
+              "Meat": 0.0031535884551792174,
+              "Pantry": 0.007772485995960652,
+              "Produce": 0.0023785336588889624,
+              "Seafood": 0.002159295668781505,
+              "Snacks": 0.0026992496510852416,
+              "Spices": 0.003404831426619039,
+              "Spirits": 0.0030255239926713336
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 278.49,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Bakery",
+            "p": {
+              "Bakery": 0.8624721597259521,
+              "Beverages": 0.011954211977631423,
+              "Condiments": 0.006330810568702744,
+              "Dairy": 0.012278502674301294,
+              "Frozen": 0.013519684985934899,
+              "Meat": 0.008760016397467991,
+              "Pantry": 0.02502015728311908,
+              "Produce": 0.0076543479194331795,
+              "Seafood": 0.004918668654524109,
+              "Snacks": 0.037478660549372114,
+              "Spices": 0.004987245811351069,
+              "Spirits": 0.0046255334522097855
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 278.11,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Bakery",
+            "p": {
+              "Bakery": 0.8665912456831971,
+              "Beverages": 0.008737872210226072,
+              "Condiments": 0.006253373596018246,
+              "Dairy": 0.009772821165762521,
+              "Frozen": 0.006770374764206292,
+              "Meat": 0.009173294274879219,
+              "Pantry": 0.04858233773841754,
+              "Produce": 0.0063182015600497495,
+              "Seafood": 0.005178642543402647,
+              "Snacks": 0.021928233866623136,
+              "Spices": 0.0057654917717408286,
+              "Spirits": 0.00492811082547664
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 289.81,
+        "answers": {
+          "category": {
+            "value": "Beverages",
+            "expected": "Beverages",
+            "p": {
+              "Bakery": 0.01746851555340985,
+              "Beverages": 0.7528606097083607,
+              "Condiments": 0.017448011699435842,
+              "Dairy": 0.011795013146443913,
+              "Frozen": 0.011832496676122595,
+              "Meat": 0.012617478117806481,
+              "Pantry": 0.08598819268047964,
+              "Produce": 0.018138987171258183,
+              "Seafood": 0.00785891875147192,
+              "Snacks": 0.012596239780226375,
+              "Spices": 0.033767837226294006,
+              "Spirits": 0.017627699488690328
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 279.03,
+        "answers": {
+          "category": {
+            "value": "Beverages",
+            "expected": "Beverages",
+            "p": {
+              "Bakery": 0.009421871013924998,
+              "Beverages": 0.9143228194765181,
+              "Condiments": 0.007028738489594904,
+              "Dairy": 0.007184123807027231,
+              "Frozen": 0.007423717637757554,
+              "Meat": 0.007626869915717473,
+              "Pantry": 0.010810911097213641,
+              "Produce": 0.00639280661697697,
+              "Seafood": 0.005619875893483777,
+              "Snacks": 0.005570903419609415,
+              "Spices": 0.006409670832588658,
+              "Spirits": 0.012187691799587702
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 278.44,
+        "answers": {
+          "category": {
+            "value": "Spirits",
+            "expected": "Spirits",
+            "p": {
+              "Bakery": 0.008059204430378374,
+              "Beverages": 0.22292784578092273,
+              "Condiments": 0.008174229373326304,
+              "Dairy": 0.006859338335272945,
+              "Frozen": 0.005909778976346519,
+              "Meat": 0.006822201316501216,
+              "Pantry": 0.01759276737141128,
+              "Produce": 0.007064568359408067,
+              "Seafood": 0.005484880671899646,
+              "Snacks": 0.007196275758817756,
+              "Spices": 0.00769114773174402,
+              "Spirits": 0.696217761893971
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 286.66,
+        "answers": {
+          "category": {
+            "value": "Spirits",
+            "expected": "Spirits",
+            "p": {
+              "Bakery": 0.00313883178520792,
+              "Beverages": 0.004426209025794295,
+              "Condiments": 0.002962348029496585,
+              "Dairy": 0.003248879860674934,
+              "Frozen": 0.0031937312922856124,
+              "Meat": 0.002998379381070615,
+              "Pantry": 0.004279759788136446,
+              "Produce": 0.0031041884203482314,
+              "Seafood": 0.002654644146797431,
+              "Snacks": 0.0031964096549239296,
+              "Spices": 0.0038249137938418045,
+              "Spirits": 0.9629717048214222
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 297.36,
+        "answers": {
+          "category": {
+            "value": "Spices",
+            "expected": "Spices",
+            "p": {
+              "Bakery": 0.0011610177051084025,
+              "Beverages": 0.001087036081060011,
+              "Condiments": 0.00226416081795553,
+              "Dairy": 0.0015727500923441433,
+              "Frozen": 0.001128312284373421,
+              "Meat": 0.001134702094952184,
+              "Pantry": 0.00572253642049141,
+              "Produce": 0.0017323893988314843,
+              "Seafood": 0.0012439448491766865,
+              "Snacks": 0.001265121509000669,
+              "Spices": 0.9807352231816346,
+              "Spirits": 0.0009528055650713206
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 288.19,
+        "answers": {
+          "category": {
+            "value": "Spices",
+            "expected": "Spices",
+            "p": {
+              "Bakery": 0.0016848562580717664,
+              "Beverages": 0.0012687271064940535,
+              "Condiments": 0.004798990227515315,
+              "Dairy": 0.0019885741657801733,
+              "Frozen": 0.0013760480691101028,
+              "Meat": 0.001412786205478799,
+              "Pantry": 0.006207918096244386,
+              "Produce": 0.0020283706806844873,
+              "Seafood": 0.0015050107235129204,
+              "Snacks": 0.0018975134391743655,
+              "Spices": 0.9746226910211485,
+              "Spirits": 0.0012085140067850948
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 281.99,
+        "answers": {
+          "category": {
+            "value": "Condiments",
+            "expected": "Condiments",
+            "p": {
+              "Bakery": 0.01192130279949415,
+              "Beverages": 0.011860271385807301,
+              "Condiments": 0.776750332617962,
+              "Dairy": 0.017603897861390765,
+              "Frozen": 0.011879135881028858,
+              "Meat": 0.012307170466521184,
+              "Pantry": 0.049676798700008816,
+              "Produce": 0.012891132719981827,
+              "Seafood": 0.010794673223886922,
+              "Snacks": 0.012921288093661484,
+              "Spices": 0.05983838242131288,
+              "Spirits": 0.011555613828943883
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 281.89,
+        "answers": {
+          "category": {
+            "value": "Condiments",
+            "expected": "Condiments",
+            "p": {
+              "Bakery": 0.010360282029604866,
+              "Beverages": 0.01259293014410307,
+              "Condiments": 0.8000489995047677,
+              "Dairy": 0.012059377312943933,
+              "Frozen": 0.011177506147038396,
+              "Meat": 0.01072503949988911,
+              "Pantry": 0.038751232842610256,
+              "Produce": 0.01257093586107463,
+              "Seafood": 0.009982550443576176,
+              "Snacks": 0.012676818839890325,
+              "Spices": 0.05911179517245376,
+              "Spirits": 0.009942532202047629
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 293.93,
+        "answers": {
+          "category": {
+            "value": "Pantry",
+            "expected": "Pantry",
+            "p": {
+              "Bakery": 0.004494292576366585,
+              "Beverages": 0.0040383956709451226,
+              "Condiments": 0.011231323305807357,
+              "Dairy": 0.004161024858858842,
+              "Frozen": 0.007182979011860861,
+              "Meat": 0.009073695901209575,
+              "Pantry": 0.9331987694200862,
+              "Produce": 0.004795077837319963,
+              "Seafood": 0.007968345081917119,
+              "Snacks": 0.005398816804604494,
+              "Spices": 0.004689546820582379,
+              "Spirits": 0.0037677327104416866
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 279.62,
+        "answers": {
+          "category": {
+            "value": "Pantry",
+            "expected": "Pantry",
+            "p": {
+              "Bakery": 0.009523785632363462,
+              "Beverages": 0.0029353752241325025,
+              "Condiments": 0.002717434625306642,
+              "Dairy": 0.0030410744329896437,
+              "Frozen": 0.003169015777641106,
+              "Meat": 0.003907614534326653,
+              "Pantry": 0.9576200251630446,
+              "Produce": 0.0028637918520040308,
+              "Seafood": 0.003756228568354143,
+              "Snacks": 0.003300954329102984,
+              "Spices": 0.004251397019903739,
+              "Spirits": 0.0029133028408302023
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 290.97,
+        "answers": {
+          "category": {
+            "value": "Snacks",
+            "expected": "Snacks",
+            "p": {
+              "Bakery": 0.015057793772799574,
+              "Beverages": 0.0056115023352847565,
+              "Condiments": 0.00844325810275072,
+              "Dairy": 0.007684086036419538,
+              "Frozen": 0.0072329295240724754,
+              "Meat": 0.005988448509464876,
+              "Pantry": 0.021722309645464802,
+              "Produce": 0.006815238717999455,
+              "Seafood": 0.008657603730862065,
+              "Snacks": 0.8978101199560283,
+              "Spices": 0.008474174310802336,
+              "Spirits": 0.006502535358051025
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 297.78,
+        "answers": {
+          "category": {
+            "value": "Snacks",
+            "expected": "Snacks",
+            "p": {
+              "Bakery": 0.004703862326021427,
+              "Beverages": 0.002289457777535664,
+              "Condiments": 0.0027250426373565144,
+              "Dairy": 0.003122820119404608,
+              "Frozen": 0.002313046714517351,
+              "Meat": 0.0023425630097202435,
+              "Pantry": 0.00752132909568005,
+              "Produce": 0.002568270631281315,
+              "Seafood": 0.0029655997190817947,
+              "Snacks": 0.9641411898396756,
+              "Spices": 0.0026965203591940686,
+              "Spirits": 0.0026102977705313364
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 284.26,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Bakery": 0.01977091374953667,
+              "Beverages": 0.005239906096191024,
+              "Condiments": 0.00574328753718464,
+              "Dairy": 0.00638492780152728,
+              "Frozen": 0.9090045387968633,
+              "Meat": 0.005309153121590479,
+              "Pantry": 0.011723090233161555,
+              "Produce": 0.006620928360740275,
+              "Seafood": 0.0061024902077997725,
+              "Snacks": 0.013087696774855122,
+              "Spices": 0.006311669653069714,
+              "Spirits": 0.004701397667480108
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 284.3,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Bakery": 0.0017451789905171163,
+              "Beverages": 0.0015563535760195182,
+              "Condiments": 0.0017974878175508087,
+              "Dairy": 0.0019198370084870066,
+              "Frozen": 0.9772613085213451,
+              "Meat": 0.0016320162335143379,
+              "Pantry": 0.0026397747800801204,
+              "Produce": 0.003509776311594828,
+              "Seafood": 0.002259419308449567,
+              "Snacks": 0.0020152556768114147,
+              "Spices": 0.0019072034441046264,
+              "Spirits": 0.0017563883315255351
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "clockwork-grocery-type",
+    "items": 24,
+    "errors": 0,
+    "latency_ms_mean": 654.1,
+    "latency_ms_median": 276.5,
+    "latency_ms_p90": 286.9,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 24,
+        "brier": 0.0,
+        "confusion": {
+          "labels": [
+            "Meat",
+            "Seafood",
+            "Produce",
+            "Dairy",
+            "Bakery",
+            "Beverages",
+            "Spirits",
+            "Spices",
+            "Condiments",
+            "Pantry",
+            "Snacks",
+            "Frozen"
+          ],
+          "counts": {
+            "Meat": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Seafood": {
+              "Meat": 0,
+              "Seafood": 2,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Produce": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Dairy": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 2,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Bakery": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 2,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Beverages": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 2,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spirits": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 2,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spices": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 2,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Condiments": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 2,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Pantry": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 2,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Snacks": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 2,
+              "Frozen": 0
+            },
+            "Frozen": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 2
+            }
+          },
+          "invalid": {
+            "Meat": 0,
+            "Seafood": 0,
+            "Produce": 0,
+            "Dairy": 0,
+            "Bakery": 0,
+            "Beverages": 0,
+            "Spirits": 0,
+            "Spices": 0,
+            "Condiments": 0,
+            "Pantry": 0,
+            "Snacks": 0,
+            "Frozen": 0
+          },
+          "per_label": {
+            "Meat": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Seafood": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Produce": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Dairy": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bakery": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Beverages": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Spirits": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Spices": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Condiments": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Pantry": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Snacks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Frozen": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 36,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 9316.41,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Meat": 0.9989160516604388,
+              "Seafood": 0.0003375523726763694,
+              "Produce": 6.271286251840048e-05,
+              "Dairy": 8.559431717672962e-05,
+              "Bakery": 1.7854288111589723e-05,
+              "Beverages": 9.585921076785163e-06,
+              "Spirits": 8.629316244707116e-06,
+              "Spices": 8.06633711175581e-06,
+              "Condiments": 2.0078423613485374e-05,
+              "Pantry": 1.1559851018211202e-05,
+              "Snacks": 1.4992322014361861e-05,
+              "Frozen": 0.0005073223279988738
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 280.11,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Meat": 0.9989155826775247,
+              "Seafood": 0.00026571549134408226,
+              "Produce": 7.222045031919042e-05,
+              "Dairy": 0.00017776101446773343,
+              "Bakery": 3.2522921628953606e-05,
+              "Beverages": 1.2667500471732196e-05,
+              "Spirits": 1.1905952287321785e-05,
+              "Spices": 8.878968466067933e-06,
+              "Condiments": 4.557554629603587e-05,
+              "Pantry": 7.145336219556837e-05,
+              "Snacks": 3.2402059224864134e-05,
+              "Frozen": 0.00035331405577399846
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 294.14,
+        "answers": {
+          "category": {
+            "value": "Seafood",
+            "expected": "Seafood",
+            "p": {
+              "Meat": 0.00036469320719974957,
+              "Seafood": 0.9973135289347176,
+              "Produce": 0.00010854204843113152,
+              "Dairy": 9.493080966607277e-05,
+              "Bakery": 1.855554702003541e-05,
+              "Beverages": 1.0960925679139254e-05,
+              "Spirits": 1.2546501613044958e-05,
+              "Spices": 1.0851301323387228e-05,
+              "Condiments": 2.5165437714834763e-05,
+              "Pantry": 1.3345953944719255e-05,
+              "Snacks": 1.2345921041913329e-05,
+              "Frozen": 0.002014533411648311
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 286.88,
+        "answers": {
+          "category": {
+            "value": "Seafood",
+            "expected": "Seafood",
+            "p": {
+              "Meat": 0.0010472829448315577,
+              "Seafood": 0.9982095636572156,
+              "Produce": 7.142799150123095e-05,
+              "Dairy": 7.836238731179023e-05,
+              "Bakery": 1.2645214587529124e-05,
+              "Beverages": 1.0352978669796621e-05,
+              "Spirits": 2.2917536781392712e-05,
+              "Spices": 8.459578957100695e-06,
+              "Condiments": 1.6063950637216344e-05,
+              "Pantry": 7.039665784281034e-06,
+              "Snacks": 8.562187909713076e-06,
+              "Frozen": 0.0005073219058131231
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 275.31,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": {
+              "Meat": 6.769701463862424e-05,
+              "Seafood": 5.551562278566195e-05,
+              "Produce": 0.997027215905997,
+              "Dairy": 5.7555110129959867e-05,
+              "Bakery": 1.0490234339385007e-05,
+              "Beverages": 8.720562250473892e-06,
+              "Spirits": 1.649805757386105e-05,
+              "Spices": 0.002641947133978495,
+              "Condiments": 2.351870057485793e-05,
+              "Pantry": 5.971064881607489e-06,
+              "Snacks": 9.453117054120165e-06,
+              "Frozen": 7.541747579594045e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 271.72,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": {
+              "Meat": 5.841885500404761e-05,
+              "Seafood": 4.958932135635194e-05,
+              "Produce": 0.9992330784304766,
+              "Dairy": 4.743652332646427e-05,
+              "Bakery": 1.2134227204827488e-05,
+              "Beverages": 7.123493604730788e-06,
+              "Spirits": 1.497067271016148e-05,
+              "Spices": 5.073514553287275e-05,
+              "Condiments": 3.1127556426369e-05,
+              "Pantry": 4.180649040050907e-05,
+              "Snacks": 1.0200878317774535e-05,
+              "Frozen": 0.00044337840563913315
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 275.62,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": {
+              "Meat": 0.00035119482297790326,
+              "Seafood": 9.082543679621427e-05,
+              "Produce": 5.2614128325314894e-05,
+              "Dairy": 0.9992533879770189,
+              "Bakery": 2.1282838137573326e-05,
+              "Beverages": 1.1320749646786314e-05,
+              "Spirits": 9.26982334920647e-06,
+              "Spices": 6.988026976437893e-06,
+              "Condiments": 5.109851922954405e-05,
+              "Pantry": 2.4522060993550586e-05,
+              "Snacks": 8.961652684298944e-06,
+              "Frozen": 0.00011853396386426543
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 277.71,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": {
+              "Meat": 4.9453148749377205e-05,
+              "Seafood": 4.090339517598988e-05,
+              "Produce": 2.277848168523192e-05,
+              "Dairy": 0.9983507025631878,
+              "Bakery": 2.3390241695629884e-05,
+              "Beverages": 7.361919378402088e-06,
+              "Spirits": 6.776654740297682e-06,
+              "Spices": 5.664110652043724e-06,
+              "Condiments": 0.0004466938037926796,
+              "Pantry": 0.0010143204313631505,
+              "Snacks": 7.270296194432306e-06,
+              "Frozen": 2.4684953384971545e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 273.88,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Bakery",
+            "p": {
+              "Meat": 8.71591618631414e-05,
+              "Seafood": 0.00015979218437247157,
+              "Produce": 9.45906173963883e-05,
+              "Dairy": 0.00014862159702272687,
+              "Bakery": 0.9950530120143238,
+              "Beverages": 3.3473728615704415e-05,
+              "Spirits": 1.9967633111619493e-05,
+              "Spices": 1.1820743501209564e-05,
+              "Condiments": 7.261732890295046e-05,
+              "Pantry": 4.113853600668778e-05,
+              "Snacks": 0.0032153817288289063,
+              "Frozen": 0.0010624247260540346
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 271.87,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Bakery",
+            "p": {
+              "Meat": 8.106464945196208e-05,
+              "Seafood": 0.00014525950304311998,
+              "Produce": 6.240179439156848e-05,
+              "Dairy": 9.224287322192312e-05,
+              "Bakery": 0.9984283375594847,
+              "Beverages": 3.257005107429102e-05,
+              "Spirits": 1.92951107909724e-05,
+              "Spices": 1.222443185844221e-05,
+              "Condiments": 4.5195756663048546e-05,
+              "Pantry": 0.0009335357316893915,
+              "Snacks": 0.00012798925934697728,
+              "Frozen": 1.9883278983828917e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 280.33,
+        "answers": {
+          "category": {
+            "value": "Beverages",
+            "expected": "Beverages",
+            "p": {
+              "Meat": 0.0004477671798581769,
+              "Seafood": 0.0014241986024516621,
+              "Produce": 0.0007064239573652046,
+              "Dairy": 0.00036562843663208737,
+              "Bakery": 0.00010167960467914469,
+              "Beverages": 0.9636385548176042,
+              "Spirits": 0.0001925376399179063,
+              "Spices": 0.0037281155673062256,
+              "Condiments": 0.0003616576500848538,
+              "Pantry": 0.028766489602398547,
+              "Snacks": 8.515717181652834e-05,
+              "Frozen": 0.00018178976988556027
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 280.61,
+        "answers": {
+          "category": {
+            "value": "Beverages",
+            "expected": "Beverages",
+            "p": {
+              "Meat": 0.00017063976199997477,
+              "Seafood": 0.0005689408104357149,
+              "Produce": 0.0001216107991865481,
+              "Dairy": 0.0001676467777241405,
+              "Bakery": 4.241431047504697e-05,
+              "Beverages": 0.9969518374711019,
+              "Spirits": 0.001522622645763499,
+              "Spices": 4.574251933043438e-05,
+              "Condiments": 0.00011725517003362889,
+              "Pantry": 0.00013394396473182457,
+              "Snacks": 1.9716963306442063e-05,
+              "Frozen": 0.0001376288059106966
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 272.96,
+        "answers": {
+          "category": {
+            "value": "Spirits",
+            "expected": "Spirits",
+            "p": {
+              "Meat": 0.00017713517700959164,
+              "Seafood": 0.00030276972485265683,
+              "Produce": 0.00016848426967306976,
+              "Dairy": 0.00017964123613373658,
+              "Bakery": 3.772443556995922e-05,
+              "Beverages": 0.020829510219442272,
+              "Spirits": 0.9781056790909022,
+              "Spices": 2.875556452580712e-05,
+              "Condiments": 6.302483341372331e-05,
+              "Pantry": 2.5041900169312347e-05,
+              "Snacks": 1.95806258836488e-05,
+              "Frozen": 6.265292242396162e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 273.52,
+        "answers": {
+          "category": {
+            "value": "Spirits",
+            "expected": "Spirits",
+            "p": {
+              "Meat": 7.674675644771741e-05,
+              "Seafood": 0.0001221804290855391,
+              "Produce": 5.970981515455778e-05,
+              "Dairy": 7.878118706285397e-05,
+              "Bakery": 1.5723363641929758e-05,
+              "Beverages": 0.0004675099750301385,
+              "Spirits": 0.9990553493539377,
+              "Spices": 1.385993596181231e-05,
+              "Condiments": 3.3329720341391075e-05,
+              "Pantry": 1.4705334066764732e-05,
+              "Snacks": 9.282404381916435e-06,
+              "Frozen": 5.282172488776694e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 277.3,
+        "answers": {
+          "category": {
+            "value": "Spices",
+            "expected": "Spices",
+            "p": {
+              "Meat": 4.926250641768081e-05,
+              "Seafood": 6.67857866969126e-05,
+              "Produce": 4.299916768607994e-05,
+              "Dairy": 2.46001131212115e-05,
+              "Bakery": 7.3601076441425525e-06,
+              "Beverages": 8.462711156366544e-06,
+              "Spirits": 1.382467706948761e-05,
+              "Spices": 0.998904901804228,
+              "Condiments": 0.0005938887004356344,
+              "Pantry": 0.0002634852473800527,
+              "Snacks": 1.15824762741703e-05,
+              "Frozen": 1.2846701890501692e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 276.4,
+        "answers": {
+          "category": {
+            "value": "Spices",
+            "expected": "Spices",
+            "p": {
+              "Meat": 0.00010941028830780199,
+              "Seafood": 0.00012150190582201244,
+              "Produce": 7.789221627625724e-05,
+              "Dairy": 4.929166494929699e-05,
+              "Bakery": 1.591907973441263e-05,
+              "Beverages": 1.6419300051117453e-05,
+              "Spirits": 1.9740174123403332e-05,
+              "Spices": 0.9912641453380078,
+              "Condiments": 0.008142391998035013,
+              "Pantry": 0.00014469868902120827,
+              "Snacks": 2.0344974434941516e-05,
+              "Frozen": 1.824437123663662e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 272.99,
+        "answers": {
+          "category": {
+            "value": "Condiments",
+            "expected": "Condiments",
+            "p": {
+              "Meat": 9.107405764643193e-05,
+              "Seafood": 7.117180100240128e-05,
+              "Produce": 5.0409871483283736e-05,
+              "Dairy": 0.00015325929373792533,
+              "Bakery": 2.2227511521189232e-05,
+              "Beverages": 1.3252555355474689e-05,
+              "Spirits": 1.3296496698559965e-05,
+              "Spices": 0.0009395578718437954,
+              "Condiments": 0.998461215179253,
+              "Pantry": 0.00014818277628979624,
+              "Snacks": 1.3520513014522103e-05,
+              "Frozen": 2.283207215376181e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 275.66,
+        "answers": {
+          "category": {
+            "value": "Condiments",
+            "expected": "Condiments",
+            "p": {
+              "Meat": 0.00011617701664663615,
+              "Seafood": 0.00010352231552832545,
+              "Produce": 6.204225745532957e-05,
+              "Dairy": 6.988689492320831e-05,
+              "Bakery": 2.544864218132075e-05,
+              "Beverages": 2.0599349468604287e-05,
+              "Spirits": 2.153276627751168e-05,
+              "Spices": 0.00300455139626997,
+              "Condiments": 0.9964108207217894,
+              "Pantry": 0.00011404398278322533,
+              "Snacks": 1.9304847628348143e-05,
+              "Frozen": 3.2069809047846805e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 280.72,
+        "answers": {
+          "category": {
+            "value": "Pantry",
+            "expected": "Pantry",
+            "p": {
+              "Meat": 0.0001734083293000042,
+              "Seafood": 0.0001424495786255852,
+              "Produce": 9.166430789777139e-05,
+              "Dairy": 9.738900606912864e-05,
+              "Bakery": 2.3266321871556098e-05,
+              "Beverages": 1.869451562642228e-05,
+              "Spirits": 1.0708566965792565e-05,
+              "Spices": 1.1351867154586878e-05,
+              "Condiments": 0.0005153234484549885,
+              "Pantry": 0.9987506191416876,
+              "Snacks": 2.3122939686636056e-05,
+              "Frozen": 0.0001420019766598339
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 277.38,
+        "answers": {
+          "category": {
+            "value": "Pantry",
+            "expected": "Pantry",
+            "p": {
+              "Meat": 5.9291701275803824e-05,
+              "Seafood": 8.285512841178292e-05,
+              "Produce": 3.675520627852875e-05,
+              "Dairy": 6.142713172143344e-05,
+              "Bakery": 0.00021881839359907173,
+              "Beverages": 1.186281910601738e-05,
+              "Spirits": 7.923485991343365e-06,
+              "Spices": 1.4928458679658283e-05,
+              "Condiments": 4.9798131792867824e-05,
+              "Pantry": 0.999420890557364,
+              "Snacks": 1.4937402122967792e-05,
+              "Frozen": 2.0511583656408317e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 273.92,
+        "answers": {
+          "category": {
+            "value": "Snacks",
+            "expected": "Snacks",
+            "p": {
+              "Meat": 0.00020644241786855675,
+              "Seafood": 0.00018198232030348523,
+              "Produce": 5.6457165550804414e-05,
+              "Dairy": 0.0001880629924270686,
+              "Bakery": 0.004388564756398403,
+              "Beverages": 3.734702401658346e-05,
+              "Spirits": 2.5902953712529632e-05,
+              "Spices": 2.0872903105253537e-05,
+              "Condiments": 0.0002420709286541613,
+              "Pantry": 0.0009652043779514512,
+              "Snacks": 0.9935358567550735,
+              "Frozen": 0.00015123540493815327
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 276.68,
+        "answers": {
+          "category": {
+            "value": "Snacks",
+            "expected": "Snacks",
+            "p": {
+              "Meat": 7.251089988360315e-05,
+              "Seafood": 7.50048839963762e-05,
+              "Produce": 2.6073917744763224e-05,
+              "Dairy": 9.010660233637889e-05,
+              "Bakery": 0.0009815942025210944,
+              "Beverages": 1.9368583030280364e-05,
+              "Spirits": 1.4309254601265473e-05,
+              "Spices": 9.969692765713646e-06,
+              "Condiments": 0.0002439004327498217,
+              "Pantry": 0.00019327574614705443,
+              "Snacks": 0.9981038910183033,
+              "Frozen": 0.00016999476592021926
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 281.82,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Meat": 0.00028062171270487184,
+              "Seafood": 0.0003719055661595286,
+              "Produce": 0.00016218865697423672,
+              "Dairy": 0.000520028278971582,
+              "Bakery": 0.02006986315534165,
+              "Beverages": 7.806247315191867e-05,
+              "Spirits": 3.837745988770396e-05,
+              "Spices": 2.289709133284568e-05,
+              "Condiments": 9.711372773541444e-05,
+              "Pantry": 5.303286472850589e-05,
+              "Snacks": 0.0006255509591205962,
+              "Frozen": 0.9776803580538912
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 275.45,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Meat": 6.621549344001189e-05,
+              "Seafood": 0.00011159078716996159,
+              "Produce": 0.0007090372682201131,
+              "Dairy": 7.859985532149486e-05,
+              "Bakery": 2.2574711926175196e-05,
+              "Beverages": 2.8239254502707224e-05,
+              "Spirits": 9.573221496189779e-06,
+              "Spices": 7.092529604888114e-06,
+              "Condiments": 9.693705594448567e-05,
+              "Pantry": 5.128823382319528e-05,
+              "Snacks": 9.149178340052323e-05,
+              "Frozen": 0.9987273598051501
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:tev1",
+    "task": "clockwork-grocery-type",
+    "items": 24,
+    "errors": 0,
+    "latency_ms_mean": 309.8,
+    "latency_ms_median": 161.7,
+    "latency_ms_p90": 169.4,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 24,
+        "brier": 0.001,
+        "confusion": {
+          "labels": [
+            "Meat",
+            "Seafood",
+            "Produce",
+            "Dairy",
+            "Bakery",
+            "Beverages",
+            "Spirits",
+            "Spices",
+            "Condiments",
+            "Pantry",
+            "Snacks",
+            "Frozen"
+          ],
+          "counts": {
+            "Meat": {
+              "Meat": 2,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Seafood": {
+              "Meat": 0,
+              "Seafood": 2,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Produce": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 2,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Dairy": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 2,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Bakery": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 2,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Beverages": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 2,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spirits": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 2,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Spices": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 2,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Condiments": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 2,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Pantry": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 2,
+              "Snacks": 0,
+              "Frozen": 0
+            },
+            "Snacks": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 2,
+              "Frozen": 0
+            },
+            "Frozen": {
+              "Meat": 0,
+              "Seafood": 0,
+              "Produce": 0,
+              "Dairy": 0,
+              "Bakery": 0,
+              "Beverages": 0,
+              "Spirits": 0,
+              "Spices": 0,
+              "Condiments": 0,
+              "Pantry": 0,
+              "Snacks": 0,
+              "Frozen": 2
+            }
+          },
+          "invalid": {
+            "Meat": 0,
+            "Seafood": 0,
+            "Produce": 0,
+            "Dairy": 0,
+            "Bakery": 0,
+            "Beverages": 0,
+            "Spirits": 0,
+            "Spices": 0,
+            "Condiments": 0,
+            "Pantry": 0,
+            "Snacks": 0,
+            "Frozen": 0
+          },
+          "per_label": {
+            "Meat": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Seafood": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Produce": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Dairy": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bakery": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Beverages": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Spirits": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Spices": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Condiments": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Pantry": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Snacks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Frozen": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 36,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 3687.79,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Meat": 0.999993502737285,
+              "Seafood": 5.1902799189806375e-06,
+              "Produce": 4.881900189696541e-07,
+              "Dairy": 1.1570608479295035e-07,
+              "Bakery": 3.6293717497719173e-08,
+              "Beverages": 1.270636667975256e-08,
+              "Spirits": 2.1412129956651817e-08,
+              "Spices": 2.7451432475764527e-08,
+              "Condiments": 1.3657342013592582e-08,
+              "Pantry": 3.153902437948408e-08,
+              "Snacks": 1.8122015388919145e-08,
+              "Frozen": 5.419046639378237e-07
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 177.68,
+        "answers": {
+          "category": {
+            "value": "Meat",
+            "expected": "Meat",
+            "p": {
+              "Meat": 0.9999547517965978,
+              "Seafood": 2.19987499974017e-05,
+              "Produce": 3.268313344577733e-06,
+              "Dairy": 1.065995295229097e-06,
+              "Bakery": 7.870676872886892e-06,
+              "Beverages": 2.501474690285483e-07,
+              "Spirits": 2.9112689079567187e-07,
+              "Spices": 4.975137026905658e-07,
+              "Condiments": 4.2720748671433455e-07,
+              "Pantry": 8.191611547894583e-06,
+              "Snacks": 1.9557305292624104e-07,
+              "Frozen": 1.191287742151347e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 168.56,
+        "answers": {
+          "category": {
+            "value": "Seafood",
+            "expected": "Seafood",
+            "p": {
+              "Meat": 4.513661817823348e-06,
+              "Seafood": 0.9999859555558309,
+              "Produce": 3.8147345088157574e-06,
+              "Dairy": 6.471687687076125e-07,
+              "Bakery": 1.230520284118703e-07,
+              "Beverages": 6.295860740589978e-08,
+              "Spirits": 1.3370859361123475e-07,
+              "Spices": 1.919441617317357e-07,
+              "Condiments": 9.567339335630095e-08,
+              "Pantry": 1.1864133280945643e-06,
+              "Snacks": 9.883209356546424e-08,
+              "Frozen": 3.1762968673435444e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 160.21,
+        "answers": {
+          "category": {
+            "value": "Seafood",
+            "expected": "Seafood",
+            "p": {
+              "Meat": 3.917326885320595e-05,
+              "Seafood": 0.9999430709828178,
+              "Produce": 6.067306199838912e-06,
+              "Dairy": 1.0894400987984155e-06,
+              "Bakery": 2.3016589625214132e-07,
+              "Beverages": 1.2475771534352195e-07,
+              "Spirits": 4.2418612416167695e-07,
+              "Spices": 3.9853083167531354e-07,
+              "Condiments": 1.498018032277689e-07,
+              "Pantry": 1.1231182767255836e-06,
+              "Snacks": 1.493217002842392e-07,
+              "Frozen": 7.9991196828311e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 164.68,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": {
+              "Meat": 2.1662148994122924e-05,
+              "Seafood": 0.00010095787373683813,
+              "Produce": 0.9904617055640947,
+              "Dairy": 1.261434957950186e-05,
+              "Bakery": 2.2437456543209522e-06,
+              "Beverages": 1.3219138205909973e-06,
+              "Spirits": 3.2916415198591577e-06,
+              "Spices": 0.009370806373950135,
+              "Condiments": 7.566195638082504e-06,
+              "Pantry": 1.1019022273649873e-05,
+              "Snacks": 1.0993510448623506e-06,
+              "Frozen": 5.711819693003923e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 169.37,
+        "answers": {
+          "category": {
+            "value": "Produce",
+            "expected": "Produce",
+            "p": {
+              "Meat": 2.268959631974304e-05,
+              "Seafood": 5.433118334513871e-05,
+              "Produce": 0.9994140808729047,
+              "Dairy": 1.1159815341512233e-05,
+              "Bakery": 5.737463041202663e-06,
+              "Beverages": 7.672929337570576e-07,
+              "Spirits": 2.928934173985996e-06,
+              "Spices": 0.00035394948437571927,
+              "Condiments": 1.2625747967287711e-05,
+              "Pantry": 0.0001112343938608864,
+              "Snacks": 1.7712407611028967e-06,
+              "Frozen": 8.723974975027446e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 162.65,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": {
+              "Meat": 3.2534251932913113e-05,
+              "Seafood": 2.4491016937578903e-05,
+              "Produce": 4.8292246005148975e-05,
+              "Dairy": 0.9998822541978221,
+              "Bakery": 3.3580942991189034e-06,
+              "Beverages": 3.8602046792905783e-07,
+              "Spirits": 6.092852182157065e-07,
+              "Spices": 6.526547802962791e-07,
+              "Condiments": 1.1309474911087873e-06,
+              "Pantry": 5.151477111223822e-06,
+              "Snacks": 2.302823114729039e-07,
+              "Frozen": 9.095256225245134e-07
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 159.09,
+        "answers": {
+          "category": {
+            "value": "Dairy",
+            "expected": "Dairy",
+            "p": {
+              "Meat": 5.6244375537029375e-06,
+              "Seafood": 1.604568258472764e-05,
+              "Produce": 8.929166243872984e-06,
+              "Dairy": 0.9999072892307183,
+              "Bakery": 2.5200538615539823e-05,
+              "Beverages": 4.7222493285800703e-07,
+              "Spirits": 6.84344493770302e-07,
+              "Spices": 1.239289428343841e-06,
+              "Condiments": 8.532564664218897e-06,
+              "Pantry": 2.4907228486725807e-05,
+              "Snacks": 1.896796341522743e-07,
+              "Frozen": 8.856126441114464e-07
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 160.13,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Bakery",
+            "p": {
+              "Meat": 4.352920481645864e-06,
+              "Seafood": 1.113900271733414e-05,
+              "Produce": 0.00010473514799245257,
+              "Dairy": 1.1163824369235306e-05,
+              "Bakery": 0.999837945449473,
+              "Beverages": 1.1630475484459421e-06,
+              "Spirits": 7.247454168886729e-07,
+              "Spices": 8.478434894414329e-07,
+              "Condiments": 7.370014453016534e-07,
+              "Pantry": 2.768795685621109e-06,
+              "Snacks": 2.2537226126890712e-05,
+              "Frozen": 1.884995253812837e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 160.49,
+        "answers": {
+          "category": {
+            "value": "Bakery",
+            "expected": "Bakery",
+            "p": {
+              "Meat": 4.219483603096779e-06,
+              "Seafood": 1.0964105980760348e-05,
+              "Produce": 2.91055255582996e-05,
+              "Dairy": 5.301874991338164e-06,
+              "Bakery": 0.9999231743959859,
+              "Beverages": 1.0708095115924814e-06,
+              "Spirits": 7.822175285042957e-07,
+              "Spices": 1.0177065846574881e-06,
+              "Condiments": 9.286742287963732e-07,
+              "Pantry": 1.7790323879050807e-05,
+              "Snacks": 4.851078114232774e-06,
+              "Frozen": 7.938040337585977e-07
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 162.3,
+        "answers": {
+          "category": {
+            "value": "Beverages",
+            "expected": "Beverages",
+            "p": {
+              "Meat": 3.376162982917185e-05,
+              "Seafood": 0.00016975677517041548,
+              "Produce": 0.0001578033374276378,
+              "Dairy": 2.730519827264751e-05,
+              "Bakery": 0.00025111308886934945,
+              "Beverages": 0.9920371023873251,
+              "Spirits": 0.00012371038910178537,
+              "Spices": 0.0019208511536108397,
+              "Condiments": 0.00010311598371752109,
+              "Pantry": 0.005113415982802974,
+              "Snacks": 8.334034443072736e-06,
+              "Frozen": 5.373003942939881e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 165.44,
+        "answers": {
+          "category": {
+            "value": "Beverages",
+            "expected": "Beverages",
+            "p": {
+              "Meat": 6.129054306336068e-06,
+              "Seafood": 2.5048082318239547e-05,
+              "Produce": 1.4183554059507786e-05,
+              "Dairy": 9.526329804091004e-06,
+              "Bakery": 1.1554022142835595e-05,
+              "Beverages": 0.9997500920949423,
+              "Spirits": 9.07059041609067e-05,
+              "Spices": 1.2720459336648579e-05,
+              "Condiments": 5.276085322015369e-05,
+              "Pantry": 2.4840550426635307e-05,
+              "Snacks": 8.129808448497242e-07,
+              "Frozen": 1.6261144378041582e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 162.16,
+        "answers": {
+          "category": {
+            "value": "Spirits",
+            "expected": "Spirits",
+            "p": {
+              "Meat": 5.948379442795222e-05,
+              "Seafood": 8.940737974476758e-05,
+              "Produce": 4.971583509952819e-05,
+              "Dairy": 0.00011273560149134895,
+              "Bakery": 0.00022493824703623377,
+              "Beverages": 0.0021996878308008084,
+              "Spirits": 0.9971718490144477,
+              "Spices": 3.376747072535979e-05,
+              "Condiments": 1.6426782221499042e-05,
+              "Pantry": 3.152340818678942e-05,
+              "Snacks": 2.509154339809807e-06,
+              "Frozen": 7.955481478597945e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 161.91,
+        "answers": {
+          "category": {
+            "value": "Spirits",
+            "expected": "Spirits",
+            "p": {
+              "Meat": 2.022375514881037e-05,
+              "Seafood": 0.00012380851216470034,
+              "Produce": 9.953280010644763e-06,
+              "Dairy": 8.547122151171905e-06,
+              "Bakery": 4.538459268225752e-06,
+              "Beverages": 2.881170443390071e-05,
+              "Spirits": 0.9997618405583495,
+              "Spices": 2.2119454608273002e-05,
+              "Condiments": 8.77355846347656e-06,
+              "Pantry": 8.807410021690127e-06,
+              "Snacks": 7.922255331275851e-07,
+              "Frozen": 1.7839598464087252e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 160.76,
+        "answers": {
+          "category": {
+            "value": "Spices",
+            "expected": "Spices",
+            "p": {
+              "Meat": 1.0060916573167679e-05,
+              "Seafood": 1.3924733724445404e-05,
+              "Produce": 7.69915954240151e-05,
+              "Dairy": 3.864362687625238e-06,
+              "Bakery": 9.126173289349315e-07,
+              "Beverages": 4.447139360384648e-07,
+              "Spirits": 6.062057768260735e-06,
+              "Spices": 0.9998234490116505,
+              "Condiments": 2.6774513914784922e-05,
+              "Pantry": 3.618041006838496e-05,
+              "Snacks": 7.420304729727516e-07,
+              "Frozen": 5.930364509518404e-07
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 161.69,
+        "answers": {
+          "category": {
+            "value": "Spices",
+            "expected": "Spices",
+            "p": {
+              "Meat": 6.631866301767349e-05,
+              "Seafood": 3.733211563572957e-05,
+              "Produce": 8.502468766654379e-05,
+              "Dairy": 7.277774581222926e-06,
+              "Bakery": 2.7473355554792214e-06,
+              "Beverages": 1.929820176759952e-06,
+              "Spirits": 2.1760683224664444e-05,
+              "Spices": 0.9991717838384251,
+              "Condiments": 0.0005193057879522444,
+              "Pantry": 7.59694886217684e-05,
+              "Snacks": 6.793718604667263e-06,
+              "Frozen": 3.7560865381596174e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 160.51,
+        "answers": {
+          "category": {
+            "value": "Condiments",
+            "expected": "Condiments",
+            "p": {
+              "Meat": 6.93798041270971e-06,
+              "Seafood": 1.560652673815255e-05,
+              "Produce": 2.7692938222719014e-05,
+              "Dairy": 4.530279623293954e-05,
+              "Bakery": 8.040096979747091e-06,
+              "Beverages": 9.399538832476338e-06,
+              "Spirits": 8.096420425887441e-06,
+              "Spices": 0.00020859248922109374,
+              "Condiments": 0.9995520255725975,
+              "Pantry": 0.00010743464445347232,
+              "Snacks": 5.382434144016323e-06,
+              "Frozen": 5.488561739313278e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 160.4,
+        "answers": {
+          "category": {
+            "value": "Condiments",
+            "expected": "Condiments",
+            "p": {
+              "Meat": 0.00023544934260681552,
+              "Seafood": 0.0002137062640111554,
+              "Produce": 0.0004261209265333212,
+              "Dairy": 3.837671257302924e-05,
+              "Bakery": 1.2423452222124432e-05,
+              "Beverages": 2.9472582665054773e-05,
+              "Spirits": 9.623277393569795e-05,
+              "Spices": 0.027039052859110735,
+              "Condiments": 0.9715344126036463,
+              "Pantry": 0.00030681627825687036,
+              "Snacks": 2.9047603092269394e-05,
+              "Frozen": 3.888860134654618e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 161.3,
+        "answers": {
+          "category": {
+            "value": "Pantry",
+            "expected": "Pantry",
+            "p": {
+              "Meat": 9.018094280628016e-05,
+              "Seafood": 5.382157068035851e-05,
+              "Produce": 5.434466744917565e-05,
+              "Dairy": 1.9349267010745044e-05,
+              "Bakery": 7.350669924715007e-06,
+              "Beverages": 6.166305355358189e-06,
+              "Spirits": 6.242467559719762e-06,
+              "Spices": 2.7539906701769677e-05,
+              "Condiments": 0.00048485401798058865,
+              "Pantry": 0.999156970039319,
+              "Snacks": 6.88118909474448e-06,
+              "Frozen": 8.62989561175831e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 160.59,
+        "answers": {
+          "category": {
+            "value": "Pantry",
+            "expected": "Pantry",
+            "p": {
+              "Meat": 6.515354180543551e-06,
+              "Seafood": 1.344679019533859e-05,
+              "Produce": 1.3215107327140839e-05,
+              "Dairy": 1.720513732161794e-05,
+              "Bakery": 0.000164585881180384,
+              "Beverages": 1.0368655659788337e-06,
+              "Spirits": 2.0563544293283943e-06,
+              "Spices": 1.1950519283722075e-05,
+              "Condiments": 4.373119620756873e-05,
+              "Pantry": 0.9997235172118762,
+              "Snacks": 1.4052946652016637e-06,
+              "Frozen": 1.334287767084034e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 161.64,
+        "answers": {
+          "category": {
+            "value": "Snacks",
+            "expected": "Snacks",
+            "p": {
+              "Meat": 0.00018349102515742815,
+              "Seafood": 6.075130477750834e-05,
+              "Produce": 1.8249201460478092e-05,
+              "Dairy": 2.064854869119553e-05,
+              "Bakery": 0.05288592760855884,
+              "Beverages": 1.0934937402688134e-05,
+              "Spirits": 6.683991560827105e-06,
+              "Spices": 3.946382565269965e-05,
+              "Condiments": 0.0003681523257691646,
+              "Pantry": 0.005319547108470058,
+              "Snacks": 0.9410244743648869,
+              "Frozen": 6.167575761222868e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 161.39,
+        "answers": {
+          "category": {
+            "value": "Snacks",
+            "expected": "Snacks",
+            "p": {
+              "Meat": 3.814370802191102e-05,
+              "Seafood": 2.4671058508218078e-05,
+              "Produce": 9.02868389200296e-06,
+              "Dairy": 1.4837339602497498e-05,
+              "Bakery": 0.008263151636459165,
+              "Beverages": 6.633251763389739e-06,
+              "Spirits": 5.954656661636775e-06,
+              "Spices": 1.1712791035031895e-05,
+              "Condiments": 8.609633160699684e-05,
+              "Pantry": 0.0010196660137667152,
+              "Snacks": 0.990496081570322,
+              "Frozen": 2.402295836041051e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 164.88,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Meat": 4.928175862003028e-05,
+              "Seafood": 5.3423059651465415e-05,
+              "Produce": 2.8232525213620503e-05,
+              "Dairy": 6.349641310154671e-05,
+              "Bakery": 0.0663231661495596,
+              "Beverages": 1.864533245898384e-05,
+              "Spirits": 5.499788373773749e-06,
+              "Spices": 1.3618807065936097e-05,
+              "Condiments": 4.4414895355370525e-05,
+              "Pantry": 0.00019764451148471693,
+              "Snacks": 0.0015721697228305257,
+              "Frozen": 0.9316304070362845
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 159.61,
+        "answers": {
+          "category": {
+            "value": "Frozen",
+            "expected": "Frozen",
+            "p": {
+              "Meat": 2.7973158194554178e-05,
+              "Seafood": 0.00019352664123006985,
+              "Produce": 0.003177440639770368,
+              "Dairy": 1.3868334480667034e-05,
+              "Bakery": 2.584513448960413e-06,
+              "Beverages": 5.876300641510882e-06,
+              "Spirits": 2.852113816296667e-06,
+              "Spices": 6.240155416449205e-06,
+              "Condiments": 2.552592461913489e-05,
+              "Pantry": 0.00038461830481467956,
+              "Snacks": 2.469215891519216e-05,
+              "Frozen": 0.9961348017546521
+            }
+          }
+        }
+      }
+    ]
+  }
+]

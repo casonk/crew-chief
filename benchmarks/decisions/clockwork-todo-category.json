@@ -221,6 +221,146 @@
         "category": "Hardware"
       },
       "split": "test"
+    },
+    {
+      "state": "Export last month's bank statement",
+      "expected": {
+        "category": "Tasks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Change the voicemail greeting",
+      "expected": {
+        "category": "Tasks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Unsubscribe from the unused newsletter",
+      "expected": {
+        "category": "Tasks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Send the wedding RSVP",
+      "expected": {
+        "category": "Tasks"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Digitize the family photo albums",
+      "expected": {
+        "category": "Projects"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Renovate the spare bedroom",
+      "expected": {
+        "category": "Projects"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Create a disaster recovery plan for the home server",
+      "expected": {
+        "category": "Projects"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Organize a neighborhood block party",
+      "expected": {
+        "category": "Projects"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Take the recycling to the drop-off center",
+      "expected": {
+        "category": "Errands"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Collect the repaired bicycle from the shop",
+      "expected": {
+        "category": "Errands"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Mail the passport renewal at the post office",
+      "expected": {
+        "category": "Errands"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Buy potting soil at the garden center",
+      "expected": {
+        "category": "Errands"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Learn to play twelve piano songs this year",
+      "expected": {
+        "category": "Goals"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Reduce household energy use by fifteen percent",
+      "expected": {
+        "category": "Goals"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Meditate every morning for ninety days",
+      "expected": {
+        "category": "Goals"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Complete a century bicycle ride next summer",
+      "expected": {
+        "category": "Goals"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Reseat the loose RAM module",
+      "expected": {
+        "category": "Hardware"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Set up the label printer",
+      "expected": {
+        "category": "Hardware"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Replace the cracked laptop screen",
+      "expected": {
+        "category": "Hardware"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Install the smart thermostat",
+      "expected": {
+        "category": "Hardware"
+      },
+      "split": "test"
     }
   ]
 }

@@ -26,9 +26,11 @@ no router.
 
 One suite per use case, in `benchmarks/decisions/`. Today the use cases are the
 seven Clockwork lists (`clockwork-*.json`: groceries, shopping, watch, listen,
-read, todo, invest) plus `message-routing`, `mail-triage`, `receipt-category` and
-`schema-extraction`. Each suite is one or more typed questions (`choice`,
-`score`, `noul`) and items with expected answers.
+read, todo, invest), To Code repository sorting (`backlog-triage`), plus
+`message-routing`, `mail-triage`, `receipt-category` and `schema-extraction`.
+Each suite is one or more typed questions (`choice`, `score`, `noul`) and items
+with expected answers. Every To-* sorting suite has at least 30 held-out items;
+To Code has 78.
 
 - **Synthetic only.** Items are generic names or well-known public titles, never
   entries from a real list, message or receipt.
