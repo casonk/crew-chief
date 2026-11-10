@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- Record the first live coding and OCR results for `qwen3.5:27b`. The nine-case repair sweep
+  passed 1/9 at a 120 s agent cap (six timeouts) and 2/9 at 300 s with no timeouts; the 300 s
+  run is marked contaminated because `ecu` saw other GPU processes in 416 of 1,080 samples
+  (the first three cases started with an external compute process), so its latencies are not
+  clean timing evidence. On the six-case synthetic OCR suite the vision model passed 6/6 and
+  Tesseract 3/6.
 - Add a pixel-first OCR benchmark with a six-case reviewed synthetic receipt
   suite, Tesseract and Ollama vision runners, CER/WER plus field scoring, and
   separate infrastructure-error reporting.

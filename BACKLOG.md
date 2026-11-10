@@ -10,6 +10,17 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
+- [ ] [manual:2026-11-10] **Rerun the 300 s coding sweep on an idle GPU.**
+  `results/test-bench-300s-20261110.json` removed every timeout (2/9 passed) but
+  `ecu` reported contention in 416 of 1,080 samples. Rerun with `--runs 3` while
+  nothing else uses the GPU, then diagnose the failures that never edited
+  (service reply loop guard, Signal one-time-code) and the invalid edit attempts
+  (Gmail one-time-code, Archility shell tokens).
+
+- [ ] [manual:2026-11-10] **Time the vision OCR run under an ecu lease.** The first
+  `qwen3.5:27b` run took a median 42 s per image with no GPU sampling during it. Run
+  it through the lease with a warm-up call, and compare smaller vision models.
+
 - [ ] [manual:2026-11-10] **Calibrate OCR on consented real scans.** The
   synthetic receipt suite is reproducible and safe to publish, but does not
   reproduce every camera, thermal-paper, handwriting, perspective, or printer
