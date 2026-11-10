@@ -180,6 +180,160 @@
         "category": "Comics"
       },
       "split": "test"
+    },
+    {
+      "state": "The Dispossessed by Ursula K. Le Guin",
+      "expected": {
+        "category": "Books"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Beloved by Toni Morrison",
+      "expected": {
+        "category": "Books"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Design of Everyday Things",
+      "expected": {
+        "category": "Books"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Fifth Season by N. K. Jemisin",
+      "expected": {
+        "category": "Books"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Invisible Cities by Italo Calvino",
+      "expected": {
+        "category": "Books"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Warmth of Other Suns",
+      "expected": {
+        "category": "Books"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Newspaper investigation into municipal water systems",
+      "expected": {
+        "category": "Articles"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Magazine profile of an urban planner",
+      "expected": {
+        "category": "Articles"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Blog tutorial on CSS container queries",
+      "expected": {
+        "category": "Articles"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Editorial about public transit funding",
+      "expected": {
+        "category": "Articles"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Web essay on maintaining open-source projects",
+      "expected": {
+        "category": "Articles"
+      },
+      "split": "test"
+    },
+    {
+      "state": "News analysis of global shipping routes",
+      "expected": {
+        "category": "Articles"
+      },
+      "split": "test"
+    },
+    {
+      "state": "MapReduce: Simplified Data Processing on Large Clusters",
+      "expected": {
+        "category": "Papers"
+      },
+      "split": "test"
+    },
+    {
+      "state": "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding",
+      "expected": {
+        "category": "Papers"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Paxos Made Simple",
+      "expected": {
+        "category": "Papers"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Deep Residual Learning for Image Recognition",
+      "expected": {
+        "category": "Papers"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Bitcoin: A Peer-to-Peer Electronic Cash System",
+      "expected": {
+        "category": "Papers"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Persepolis graphic novel",
+      "expected": {
+        "category": "Comics"
+      },
+      "split": "test"
+    },
+    {
+      "state": "The Sandman volume 1",
+      "expected": {
+        "category": "Comics"
+      },
+      "split": "test"
+    },
+    {
+      "state": "One Piece volume 1",
+      "expected": {
+        "category": "Comics"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Batman: Year One",
+      "expected": {
+        "category": "Comics"
+      },
+      "split": "test"
+    },
+    {
+      "state": "Fun Home graphic memoir",
+      "expected": {
+        "category": "Comics"
+      },
+      "split": "test"
     }
   ]
 }

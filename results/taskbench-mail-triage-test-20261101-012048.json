@@ -1,0 +1,2760 @@
+[
+  {
+    "runner": "rules",
+    "task": "mail-triage",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 0.0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "category": {
+        "accuracy": 0.625,
+        "invalid": 0,
+        "n": 8,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "personal",
+            "billing",
+            "work",
+            "promo",
+            "security"
+          ],
+          "counts": {
+            "personal": {
+              "personal": 2,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "billing": {
+              "personal": 0,
+              "billing": 1,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "work": {
+              "personal": 2,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "promo": {
+              "personal": 1,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "security": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 2
+            }
+          },
+          "invalid": {
+            "personal": 0,
+            "billing": 0,
+            "work": 0,
+            "promo": 0,
+            "security": 0
+          },
+          "per_label": {
+            "personal": {
+              "support": 2,
+              "precision": 0.4,
+              "recall": 1.0,
+              "f1": 0.571
+            },
+            "billing": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "work": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "promo": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "security": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "action": {
+        "accuracy": 0.5,
+        "invalid": 0,
+        "n": 8,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "0",
+            "1",
+            "2"
+          ],
+          "counts": {
+            "0": {
+              "0": 0,
+              "1": 3,
+              "2": 0
+            },
+            "1": {
+              "0": 0,
+              "1": 2,
+              "2": 0
+            },
+            "2": {
+              "0": 0,
+              "1": 1,
+              "2": 2
+            }
+          },
+          "invalid": {
+            "0": 0,
+            "1": 0,
+            "2": 0
+          },
+          "per_label": {
+            "0": {
+              "support": 3,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "1": {
+              "support": 2,
+              "precision": 0.333,
+              "recall": 1.0,
+              "f1": 0.5
+            },
+            "2": {
+              "support": 3,
+              "precision": 1.0,
+              "recall": 0.667,
+              "f1": 0.8
+            }
+          }
+        }
+      },
+      "phishing": {
+        "accuracy": 0.75,
+        "invalid": 0,
+        "n": 8,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "true",
+            "false"
+          ],
+          "counts": {
+            "true": {
+              "true": 0,
+              "false": 1
+            },
+            "false": {
+              "true": 1,
+              "false": 6
+            }
+          },
+          "invalid": {
+            "true": 0,
+            "false": 0
+          },
+          "per_label": {
+            "true": {
+              "support": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "false": {
+              "support": 7,
+              "precision": 0.857,
+              "recall": 0.857,
+              "f1": 0.857
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 16,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.04,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": null
+          },
+          "action": {
+            "value": "1",
+            "expected": "2",
+            "p": null
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.02,
+        "answers": {
+          "category": {
+            "value": "billing",
+            "expected": "billing",
+            "p": null
+          },
+          "action": {
+            "value": "1",
+            "expected": "0",
+            "p": null
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.02,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "work",
+            "p": null
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": null
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.02,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "promo",
+            "p": null
+          },
+          "action": {
+            "value": "1",
+            "expected": "0",
+            "p": null
+          },
+          "phishing": {
+            "value": "true",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.02,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": null
+          },
+          "action": {
+            "value": "1",
+            "expected": "0",
+            "p": null
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "true",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": null
+          },
+          "action": {
+            "value": "1",
+            "expected": "1",
+            "p": null
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.02,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": null
+          },
+          "action": {
+            "value": "1",
+            "expected": "1",
+            "p": null
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.03,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "work",
+            "p": null
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": null
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "bayes",
+    "task": "mail-triage",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 0.9,
+    "latency_ms_median": 0.9,
+    "latency_ms_p90": 1.1,
+    "questions": {
+      "category": {
+        "accuracy": 0.625,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.507,
+        "confusion": {
+          "labels": [
+            "personal",
+            "billing",
+            "work",
+            "promo",
+            "security"
+          ],
+          "counts": {
+            "personal": {
+              "personal": 0,
+              "billing": 0,
+              "work": 2,
+              "promo": 0,
+              "security": 0
+            },
+            "billing": {
+              "personal": 0,
+              "billing": 1,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "work": {
+              "personal": 0,
+              "billing": 0,
+              "work": 2,
+              "promo": 0,
+              "security": 0
+            },
+            "promo": {
+              "personal": 1,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "security": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 2
+            }
+          },
+          "invalid": {
+            "personal": 0,
+            "billing": 0,
+            "work": 0,
+            "promo": 0,
+            "security": 0
+          },
+          "per_label": {
+            "personal": {
+              "support": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "billing": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "work": {
+              "support": 2,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667
+            },
+            "promo": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "security": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "action": {
+        "accuracy": 0.5,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.858,
+        "confusion": {
+          "labels": [
+            "0",
+            "1",
+            "2"
+          ],
+          "counts": {
+            "0": {
+              "0": 0,
+              "1": 3,
+              "2": 0
+            },
+            "1": {
+              "0": 0,
+              "1": 1,
+              "2": 1
+            },
+            "2": {
+              "0": 0,
+              "1": 0,
+              "2": 3
+            }
+          },
+          "invalid": {
+            "0": 0,
+            "1": 0,
+            "2": 0
+          },
+          "per_label": {
+            "0": {
+              "support": 3,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "1": {
+              "support": 2,
+              "precision": 0.25,
+              "recall": 0.5,
+              "f1": 0.333
+            },
+            "2": {
+              "support": 3,
+              "precision": 0.75,
+              "recall": 1.0,
+              "f1": 0.857
+            }
+          }
+        }
+      },
+      "phishing": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.0,
+        "confusion": {
+          "labels": [
+            "true",
+            "false"
+          ],
+          "counts": {
+            "true": {
+              "true": 1,
+              "false": 0
+            },
+            "false": {
+              "true": 0,
+              "false": 7
+            }
+          },
+          "invalid": {
+            "true": 0,
+            "false": 0
+          },
+          "per_label": {
+            "true": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "false": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 16,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 1.06,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "personal",
+            "p": {
+              "personal": 0.005969438824439539,
+              "billing": 0.0009991517674498537,
+              "work": 0.9852469648706879,
+              "promo": 0.0014571851284626808,
+              "security": 0.006327259408960071
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.050462876556967205,
+              "1": 0.10736562644292372,
+              "2": 0.842171497000109
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 3.161090020336687e-05,
+              "false": 0.9999683890997965
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.99,
+        "answers": {
+          "category": {
+            "value": "billing",
+            "expected": "billing",
+            "p": {
+              "personal": 5.355150892743843e-05,
+              "billing": 0.8271003549139954,
+              "work": 0.017344258058460602,
+              "promo": 4.533649603509906e-06,
+              "security": 0.15549730186901312
+            }
+          },
+          "action": {
+            "value": "1",
+            "expected": "0",
+            "p": {
+              "0": 2.451741367094383e-07,
+              "1": 0.9998043581983198,
+              "2": 0.00019539662754334685
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 3.8169070737060306e-07,
+              "false": 0.9999996183092925
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.88,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "personal": 0.05402617113016981,
+              "billing": 0.00046910998785778163,
+              "work": 0.9443018873889524,
+              "promo": 0.0011540267527163919,
+              "security": 4.880474030370095e-05
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.0075280009960555045,
+              "1": 0.00025014724707350357,
+              "2": 0.992221851756871
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0021596317151786814,
+              "false": 0.9978403682848215
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.82,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "promo",
+            "p": {
+              "personal": 0.36019005986167474,
+              "billing": 0.25151912089425854,
+              "work": 0.2860818161670805,
+              "promo": 0.09179847483582661,
+              "security": 0.010410528241159619
+            }
+          },
+          "action": {
+            "value": "1",
+            "expected": "0",
+            "p": {
+              "0": 0.10641765092560498,
+              "1": 0.8541287147648199,
+              "2": 0.0394536343095752
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0012120772366742232,
+              "false": 0.9987879227633258
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.86,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "personal": 2.150324605391162e-09,
+              "billing": 0.00014752566882847347,
+              "work": 9.781228080789387e-11,
+              "promo": 5.08086239039954e-09,
+              "security": 0.9998524670021725
+            }
+          },
+          "action": {
+            "value": "1",
+            "expected": "0",
+            "p": {
+              "0": 0.1724441431402397,
+              "1": 0.8253201668135912,
+              "2": 0.00223569004616917
+            }
+          },
+          "phishing": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9984198572011034,
+              "false": 0.0015801427988967676
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.85,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "personal": 0.0006864082794416613,
+              "billing": 0.030626403650153396,
+              "work": 1.4068558094618027e-06,
+              "promo": 5.774367219599928e-05,
+              "security": 0.9686280375423996
+            }
+          },
+          "action": {
+            "value": "1",
+            "expected": "1",
+            "p": {
+              "0": 6.116723061114759e-06,
+              "1": 0.9870100676727569,
+              "2": 0.012983815604182086
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 2.892836202533272e-05,
+              "false": 0.9999710716379748
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.83,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "personal",
+            "p": {
+              "personal": 0.4796769604382844,
+              "billing": 0.00036146268481583273,
+              "work": 0.4924102639177319,
+              "promo": 0.01803545966504358,
+              "security": 0.009515853294124386
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "1",
+            "p": {
+              "0": 0.009431892648024194,
+              "1": 0.013334555514203988,
+              "2": 0.9772335518377719
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0080457794326249,
+              "false": 0.9919542205673751
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.88,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "personal": 0.4560914251595474,
+              "billing": 0.0004238499715922923,
+              "work": 0.541237844945293,
+              "promo": 0.0004205874338814258,
+              "security": 0.0018262924896857017
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 6.948948606330221e-05,
+              "1": 6.400878846222695e-05,
+              "2": 0.9998665017254744
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 1.7309567803704028e-05,
+              "false": 0.9999826904321962
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "mail-triage",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 1848.5,
+    "latency_ms_median": 317.2,
+    "latency_ms_p90": 12566.8,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.007,
+        "confusion": {
+          "labels": [
+            "personal",
+            "billing",
+            "work",
+            "promo",
+            "security"
+          ],
+          "counts": {
+            "personal": {
+              "personal": 2,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "billing": {
+              "personal": 0,
+              "billing": 1,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "work": {
+              "personal": 0,
+              "billing": 0,
+              "work": 2,
+              "promo": 0,
+              "security": 0
+            },
+            "promo": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 1,
+              "security": 0
+            },
+            "security": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 2
+            }
+          },
+          "invalid": {
+            "personal": 0,
+            "billing": 0,
+            "work": 0,
+            "promo": 0,
+            "security": 0
+          },
+          "per_label": {
+            "personal": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "billing": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "work": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "promo": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "security": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "action": {
+        "accuracy": 0.875,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.214,
+        "confusion": {
+          "labels": [
+            "0",
+            "1",
+            "2"
+          ],
+          "counts": {
+            "0": {
+              "0": 3,
+              "1": 0,
+              "2": 0
+            },
+            "1": {
+              "0": 0,
+              "1": 1,
+              "2": 1
+            },
+            "2": {
+              "0": 0,
+              "1": 0,
+              "2": 3
+            }
+          },
+          "invalid": {
+            "0": 0,
+            "1": 0,
+            "2": 0
+          },
+          "per_label": {
+            "0": {
+              "support": 3,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "1": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667
+            },
+            "2": {
+              "support": 3,
+              "precision": 0.75,
+              "recall": 1.0,
+              "f1": 0.857
+            }
+          }
+        }
+      },
+      "phishing": {
+        "accuracy": 0.875,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.076,
+        "confusion": {
+          "labels": [
+            "true",
+            "false"
+          ],
+          "counts": {
+            "true": {
+              "true": 1,
+              "false": 0
+            },
+            "false": {
+              "true": 1,
+              "false": 6
+            }
+          },
+          "invalid": {
+            "true": 0,
+            "false": 0
+          },
+          "per_label": {
+            "true": {
+              "support": 1,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667
+            },
+            "false": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 0.857,
+              "f1": 0.923
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 16,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 12566.83,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": {
+              "billing": 0.004769337228932069,
+              "personal": 0.893477650161199,
+              "promo": 0.00940930289407027,
+              "security": 0.005913780033713894,
+              "work": 0.08642992968208492
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.013334258304235824,
+              "1": 0.0803526723576199,
+              "2": 0.9063130693381444
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.012053603486840056,
+              "false": 0.98794639651316
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 315.91,
+        "answers": {
+          "category": {
+            "value": "billing",
+            "expected": "billing",
+            "p": {
+              "billing": 0.9574110492464726,
+              "personal": 0.005750967553268181,
+              "promo": 0.012334427648229448,
+              "security": 0.013189165420172615,
+              "work": 0.011314390131857326
+            }
+          },
+          "action": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.8275197113752291,
+              "1": 0.1569368221601187,
+              "2": 0.015543466464652269
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.05882958461905362,
+              "false": 0.9411704153809464
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 326.66,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "billing": 0.0029056460603755926,
+              "personal": 0.005121927036222239,
+              "promo": 0.003833865743119473,
+              "security": 0.004046894599020937,
+              "work": 0.9840916665612618
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.01182014143938737,
+              "1": 0.03539408610473513,
+              "2": 0.9527857724558775
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.010085715317578483,
+              "false": 0.9899142846824215
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 321.46,
+        "answers": {
+          "category": {
+            "value": "promo",
+            "expected": "promo",
+            "p": {
+              "billing": 0.008207518592361105,
+              "personal": 0.005644281266944484,
+              "promo": 0.9702630729158528,
+              "security": 0.007243803979489713,
+              "work": 0.008641323245351953
+            }
+          },
+          "action": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.518101340586373,
+              "1": 0.3471391671720088,
+              "2": 0.13475949224161812
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.11341865864579853,
+              "false": 0.8865813413542014
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 314.5,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "billing": 0.028772469930025194,
+              "personal": 0.01492671875783617,
+              "promo": 0.06118413614577502,
+              "security": 0.8471095018353526,
+              "work": 0.04800717333101111
+            }
+          },
+          "action": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9821708799955641,
+              "1": 0.006340477181914445,
+              "2": 0.011488642822521536
+            }
+          },
+          "phishing": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9692010305380931,
+              "false": 0.030798969461906855
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 313.35,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "billing": 0.004613608814838051,
+              "personal": 0.0022650438745978273,
+              "promo": 0.007445408431807329,
+              "security": 0.977584824186845,
+              "work": 0.008091114691911826
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "1",
+            "p": {
+              "0": 0.27395092759053746,
+              "1": 0.1744015229726233,
+              "2": 0.5516475494368392
+            }
+          },
+          "phishing": {
+            "value": "true",
+            "expected": "false",
+            "p": {
+              "true": 0.5336607108359774,
+              "false": 0.46633928916402256
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 318.42,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": {
+              "billing": 0.003570353227341516,
+              "personal": 0.9708639374510863,
+              "promo": 0.0058866043246896885,
+              "security": 0.008425085732675718,
+              "work": 0.01125401926420673
+            }
+          },
+          "action": {
+            "value": "1",
+            "expected": "1",
+            "p": {
+              "0": 0.1731385840581597,
+              "1": 0.6327157649688361,
+              "2": 0.19414565097300407
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.015201942969961833,
+              "false": 0.9847980570300382
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 310.73,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "billing": 0.006784662135110424,
+              "personal": 0.009438913230520372,
+              "promo": 0.0059250964590263685,
+              "security": 0.01087871520027628,
+              "work": 0.9669726129750666
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.015281152734851451,
+              "1": 0.051390196634406665,
+              "2": 0.9333286506307418
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.013960950910719304,
+              "false": 0.9860390490892808
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef",
+    "task": "mail-triage",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 3925.1,
+    "latency_ms_median": 1897.5,
+    "latency_ms_p90": 18127.7,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.002,
+        "confusion": {
+          "labels": [
+            "personal",
+            "billing",
+            "work",
+            "promo",
+            "security"
+          ],
+          "counts": {
+            "personal": {
+              "personal": 2,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "billing": {
+              "personal": 0,
+              "billing": 1,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "work": {
+              "personal": 0,
+              "billing": 0,
+              "work": 2,
+              "promo": 0,
+              "security": 0
+            },
+            "promo": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 1,
+              "security": 0
+            },
+            "security": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 2
+            }
+          },
+          "invalid": {
+            "personal": 0,
+            "billing": 0,
+            "work": 0,
+            "promo": 0,
+            "security": 0
+          },
+          "per_label": {
+            "personal": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "billing": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "work": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "promo": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "security": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "action": {
+        "accuracy": 0.875,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.194,
+        "confusion": {
+          "labels": [
+            "0",
+            "1",
+            "2"
+          ],
+          "counts": {
+            "0": {
+              "0": 3,
+              "1": 0,
+              "2": 0
+            },
+            "1": {
+              "0": 0,
+              "1": 1,
+              "2": 1
+            },
+            "2": {
+              "0": 0,
+              "1": 0,
+              "2": 3
+            }
+          },
+          "invalid": {
+            "0": 0,
+            "1": 0,
+            "2": 0
+          },
+          "per_label": {
+            "0": {
+              "support": 3,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "1": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667
+            },
+            "2": {
+              "support": 3,
+              "precision": 0.75,
+              "recall": 1.0,
+              "f1": 0.857
+            }
+          }
+        }
+      },
+      "phishing": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.025,
+        "confusion": {
+          "labels": [
+            "true",
+            "false"
+          ],
+          "counts": {
+            "true": {
+              "true": 1,
+              "false": 0
+            },
+            "false": {
+              "true": 0,
+              "false": 7
+            }
+          },
+          "invalid": {
+            "true": 0,
+            "false": 0
+          },
+          "per_label": {
+            "true": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "false": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 16,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 18127.66,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": {
+              "billing": 0.005754578940280187,
+              "personal": 0.9650418895415377,
+              "promo": 0.007607847016286512,
+              "security": 0.005733190912343608,
+              "work": 0.015862493589552107
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.02166739237173154,
+              "1": 0.07230874037883743,
+              "2": 0.9060238672494311
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.01756211860547141,
+              "false": 0.9824378813945286
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 1902.61,
+        "answers": {
+          "category": {
+            "value": "billing",
+            "expected": "billing",
+            "p": {
+              "billing": 0.989517615087119,
+              "personal": 0.0016985089186914225,
+              "promo": 0.004083956630048403,
+              "security": 0.0025843272182766233,
+              "work": 0.002115592145864312
+            }
+          },
+          "action": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.745080051106772,
+              "1": 0.2429576211258194,
+              "2": 0.011962327767408555
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.04163632682982712,
+              "false": 0.9583636731701729
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 1895.04,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "billing": 0.003812205843801489,
+              "personal": 0.005230507843568878,
+              "promo": 0.004633909040550568,
+              "security": 0.003913929247878789,
+              "work": 0.9824094480242003
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.01032498322437839,
+              "1": 0.02098552550207435,
+              "2": 0.9686894912735473
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.024482620433830576,
+              "false": 0.9755173795661695
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 1889.79,
+        "answers": {
+          "category": {
+            "value": "promo",
+            "expected": "promo",
+            "p": {
+              "billing": 0.004178469445775985,
+              "personal": 0.004852229236078843,
+              "promo": 0.9823323355431702,
+              "security": 0.004282003765372843,
+              "work": 0.004354962009602064
+            }
+          },
+          "action": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.8828549022750155,
+              "1": 0.08098764519046417,
+              "2": 0.03615745253452029
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.09277639856256088,
+              "false": 0.9072236014374391
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 1900.79,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "billing": 0.022765456133849057,
+              "personal": 0.01591588169839293,
+              "promo": 0.027646455041021006,
+              "security": 0.9105355634286811,
+              "work": 0.023136643698055806
+            }
+          },
+          "action": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.9291264081537022,
+              "1": 0.028652929072314287,
+              "2": 0.04222066277398353
+            }
+          },
+          "phishing": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9868427030054328,
+              "false": 0.013157296994567247
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 1893.85,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "billing": 0.006506995505159502,
+              "personal": 0.004248917849463963,
+              "promo": 0.0055005707483604255,
+              "security": 0.9781140801337925,
+              "work": 0.005629435763223509
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "1",
+            "p": {
+              "0": 0.1282482887702065,
+              "1": 0.18591300550193582,
+              "2": 0.6858387057278577
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.29271936462857895,
+              "false": 0.707280635371421
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 1891.55,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": {
+              "billing": 0.0036702053344340544,
+              "personal": 0.9785029677299756,
+              "promo": 0.0069005178415099365,
+              "security": 0.004898843770710458,
+              "work": 0.006027465323369943
+            }
+          },
+          "action": {
+            "value": "1",
+            "expected": "1",
+            "p": {
+              "0": 0.2556964435181359,
+              "1": 0.6184139538292128,
+              "2": 0.12588960265265137
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.029640161660871335,
+              "false": 0.9703598383391286
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 1899.91,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "billing": 0.007724796881739541,
+              "personal": 0.008003857856247588,
+              "promo": 0.0075156774549293755,
+              "security": 0.006880093810383408,
+              "work": 0.9698755739967001
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.016379919636963818,
+              "1": 0.031219936103327323,
+              "2": 0.9524001442597089
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.032274631953273646,
+              "false": 0.9677253680467264
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "mail-triage",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 1431.5,
+    "latency_ms_median": 396.8,
+    "latency_ms_p90": 8684.1,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.016,
+        "confusion": {
+          "labels": [
+            "personal",
+            "billing",
+            "work",
+            "promo",
+            "security"
+          ],
+          "counts": {
+            "personal": {
+              "personal": 2,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "billing": {
+              "personal": 0,
+              "billing": 1,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "work": {
+              "personal": 0,
+              "billing": 0,
+              "work": 2,
+              "promo": 0,
+              "security": 0
+            },
+            "promo": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 1,
+              "security": 0
+            },
+            "security": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 2
+            }
+          },
+          "invalid": {
+            "personal": 0,
+            "billing": 0,
+            "work": 0,
+            "promo": 0,
+            "security": 0
+          },
+          "per_label": {
+            "personal": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "billing": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "work": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "promo": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "security": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "action": {
+        "accuracy": 0.5,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.87,
+        "confusion": {
+          "labels": [
+            "0",
+            "1",
+            "2"
+          ],
+          "counts": {
+            "0": {
+              "0": 1,
+              "1": 1,
+              "2": 1
+            },
+            "1": {
+              "0": 0,
+              "1": 0,
+              "2": 2
+            },
+            "2": {
+              "0": 0,
+              "1": 0,
+              "2": 3
+            }
+          },
+          "invalid": {
+            "0": 0,
+            "1": 0,
+            "2": 0
+          },
+          "per_label": {
+            "0": {
+              "support": 3,
+              "precision": 1.0,
+              "recall": 0.333,
+              "f1": 0.5
+            },
+            "1": {
+              "support": 2,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "2": {
+              "support": 3,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667
+            }
+          }
+        }
+      },
+      "phishing": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.003,
+        "confusion": {
+          "labels": [
+            "true",
+            "false"
+          ],
+          "counts": {
+            "true": {
+              "true": 1,
+              "false": 0
+            },
+            "false": {
+              "true": 0,
+              "false": 7
+            }
+          },
+          "invalid": {
+            "true": 0,
+            "false": 0
+          },
+          "per_label": {
+            "true": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "false": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 16,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 8684.09,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": {
+              "personal": 0.8900716966642708,
+              "billing": 0.002770484675925235,
+              "work": 0.10662047580936362,
+              "promo": 0.00044537971717451306,
+              "security": 9.196313326593995e-05
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.008546567525124199,
+              "1": 0.00201113067026069,
+              "2": 0.989442301804615
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0035814322874768616,
+              "false": 0.9964185677125231
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 386.45,
+        "answers": {
+          "category": {
+            "value": "billing",
+            "expected": "billing",
+            "p": {
+              "personal": 0.011439354608282168,
+              "billing": 0.9866636858815111,
+              "work": 0.0010668117675624914,
+              "promo": 0.0005465911019895414,
+              "security": 0.000283556640654537
+            }
+          },
+          "action": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.5154147065883419,
+              "1": 0.4732337112488872,
+              "2": 0.011351582162770851
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.07460198130727692,
+              "false": 0.9253980186927231
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 417.48,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "personal": 0.0022594984238576868,
+              "billing": 0.0002913821206516711,
+              "work": 0.9972161320051984,
+              "promo": 0.00011307591606105127,
+              "security": 0.000119911534231315
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.002534165551594406,
+              "1": 0.0009111318685902382,
+              "2": 0.9965547025798154
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.002291497087712341,
+              "false": 0.9977085029122876
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 380.65,
+        "answers": {
+          "category": {
+            "value": "promo",
+            "expected": "promo",
+            "p": {
+              "personal": 0.006785307585884158,
+              "billing": 0.003945263194167722,
+              "work": 0.002814716522933791,
+              "promo": 0.9863991381470889,
+              "security": 5.557454992531407e-05
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "0",
+            "p": {
+              "0": 0.25843783777934826,
+              "1": 0.09331139140623153,
+              "2": 0.6482507708144203
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.04144128007634958,
+              "false": 0.9585587199236504
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 402.14,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "personal": 0.007077251046281431,
+              "billing": 0.2245160798059284,
+              "work": 0.0024073118242717915,
+              "promo": 0.0005711365054166173,
+              "security": 0.7654282208181018
+            }
+          },
+          "action": {
+            "value": "1",
+            "expected": "0",
+            "p": {
+              "0": 0.026090474701698063,
+              "1": 0.9299554953374636,
+              "2": 0.04395402996083847
+            }
+          },
+          "phishing": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9808663006255128,
+              "false": 0.019133699374487168
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 391.47,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "personal": 0.00737720677463907,
+              "billing": 0.0017249557821119694,
+              "work": 0.004638223547269492,
+              "promo": 0.00010302366953546522,
+              "security": 0.986156590226444
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "1",
+            "p": {
+              "0": 0.025451643293002674,
+              "1": 0.005324595371442694,
+              "2": 0.9692237613355545
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.04852038865147293,
+              "false": 0.9514796113485271
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 386.91,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": {
+              "personal": 0.9818501420388157,
+              "billing": 0.00394559083356793,
+              "work": 0.01381663952345026,
+              "promo": 0.00029040141002137094,
+              "security": 9.722619414493622e-05
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "1",
+            "p": {
+              "0": 0.09422485813383652,
+              "1": 0.013048675809099587,
+              "2": 0.892726466057064
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.004002374166479773,
+              "false": 0.9959976258335203
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 402.79,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "personal": 0.004565817088200357,
+              "billing": 0.0008839683271208894,
+              "work": 0.9937354485915487,
+              "promo": 8.788169323656763e-05,
+              "security": 0.0007268842998936249
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.012837067694032893,
+              "1": 0.00243097758043503,
+              "2": 0.984731954725532
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0034525356561416402,
+              "false": 0.9965474643438583
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:tev1",
+    "task": "mail-triage",
+    "items": 8,
+    "errors": 0,
+    "latency_ms_mean": 743.3,
+    "latency_ms_median": 239.7,
+    "latency_ms_p90": 4256.4,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.003,
+        "confusion": {
+          "labels": [
+            "personal",
+            "billing",
+            "work",
+            "promo",
+            "security"
+          ],
+          "counts": {
+            "personal": {
+              "personal": 2,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "billing": {
+              "personal": 0,
+              "billing": 1,
+              "work": 0,
+              "promo": 0,
+              "security": 0
+            },
+            "work": {
+              "personal": 0,
+              "billing": 0,
+              "work": 2,
+              "promo": 0,
+              "security": 0
+            },
+            "promo": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 1,
+              "security": 0
+            },
+            "security": {
+              "personal": 0,
+              "billing": 0,
+              "work": 0,
+              "promo": 0,
+              "security": 2
+            }
+          },
+          "invalid": {
+            "personal": 0,
+            "billing": 0,
+            "work": 0,
+            "promo": 0,
+            "security": 0
+          },
+          "per_label": {
+            "personal": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "billing": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "work": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "promo": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "security": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "action": {
+        "accuracy": 0.5,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.743,
+        "confusion": {
+          "labels": [
+            "0",
+            "1",
+            "2"
+          ],
+          "counts": {
+            "0": {
+              "0": 1,
+              "1": 0,
+              "2": 2
+            },
+            "1": {
+              "0": 0,
+              "1": 0,
+              "2": 2
+            },
+            "2": {
+              "0": 0,
+              "1": 0,
+              "2": 3
+            }
+          },
+          "invalid": {
+            "0": 0,
+            "1": 0,
+            "2": 0
+          },
+          "per_label": {
+            "0": {
+              "support": 3,
+              "precision": 1.0,
+              "recall": 0.333,
+              "f1": 0.5
+            },
+            "1": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "2": {
+              "support": 3,
+              "precision": 0.429,
+              "recall": 1.0,
+              "f1": 0.6
+            }
+          }
+        }
+      },
+      "phishing": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 8,
+        "brier": 0.021,
+        "confusion": {
+          "labels": [
+            "true",
+            "false"
+          ],
+          "counts": {
+            "true": {
+              "true": 1,
+              "false": 0
+            },
+            "false": {
+              "true": 0,
+              "false": 7
+            }
+          },
+          "invalid": {
+            "true": 0,
+            "false": 0
+          },
+          "per_label": {
+            "true": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "false": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 16,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 4256.4,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": {
+              "personal": 0.8822956468843377,
+              "billing": 0.0007377372725505404,
+              "work": 0.11671870499165161,
+              "promo": 0.00022782179657262705,
+              "security": 2.008905488743854e-05
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.003973689429713974,
+              "1": 0.059376900597027854,
+              "2": 0.9366494099732581
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.012593745527192267,
+              "false": 0.9874062544728077
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 239.72,
+        "answers": {
+          "category": {
+            "value": "billing",
+            "expected": "billing",
+            "p": {
+              "personal": 0.00010499745039062835,
+              "billing": 0.9988856496869923,
+              "work": 0.0006833412624350371,
+              "promo": 0.00014711273169717973,
+              "security": 0.00017889886848475436
+            }
+          },
+          "action": {
+            "value": "0",
+            "expected": "0",
+            "p": {
+              "0": 0.8642617317690442,
+              "1": 0.1333072783439817,
+              "2": 0.002430989886974194
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.03662261742317426,
+              "false": 0.9633773825768257
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 239.76,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "personal": 0.00017345172606460577,
+              "billing": 0.00011190173571373971,
+              "work": 0.9995837996934173,
+              "promo": 9.931810826604927e-05,
+              "security": 3.152873653845119e-05
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.000451185004693281,
+              "1": 0.013901354217039912,
+              "2": 0.9856474607782668
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.0073578808210188395,
+              "false": 0.9926421191789812
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 254.4,
+        "answers": {
+          "category": {
+            "value": "promo",
+            "expected": "promo",
+            "p": {
+              "personal": 7.38684896089728e-05,
+              "billing": 0.00045022141731905615,
+              "work": 0.00015539276112013246,
+              "promo": 0.999307307298077,
+              "security": 1.3210033874748512e-05
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "0",
+            "p": {
+              "0": 0.06554916856033172,
+              "1": 0.08643187583886155,
+              "2": 0.8480189556008066
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.2465772817054692,
+              "false": 0.7534227182945308
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 240.61,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "personal": 0.00015770725939241883,
+              "billing": 0.00030945739367493425,
+              "work": 0.001198097955382241,
+              "promo": 0.0012275608621392564,
+              "security": 0.9971071765294112
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "0",
+            "p": {
+              "0": 0.005439427635181687,
+              "1": 0.006611111125088609,
+              "2": 0.9879494612397297
+            }
+          },
+          "phishing": {
+            "value": "true",
+            "expected": "true",
+            "p": {
+              "true": 0.9870229212797835,
+              "false": 0.012977078720216473
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 238.4,
+        "answers": {
+          "category": {
+            "value": "security",
+            "expected": "security",
+            "p": {
+              "personal": 7.20692157696325e-05,
+              "billing": 0.0001928841453312651,
+              "work": 0.000227270897871903,
+              "promo": 0.0002816717252617311,
+              "security": 0.9992261040157654
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "1",
+            "p": {
+              "0": 0.022917218132372186,
+              "1": 0.1483898252975069,
+              "2": 0.828692956570121
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.14011319484133594,
+              "false": 0.8598868051586641
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 237.99,
+        "answers": {
+          "category": {
+            "value": "personal",
+            "expected": "personal",
+            "p": {
+              "personal": 0.9986956374282693,
+              "billing": 0.0007187673355987325,
+              "work": 0.0002671781314201644,
+              "promo": 0.00020923427040784513,
+              "security": 0.00010918283430378837
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "1",
+            "p": {
+              "0": 0.3602355072574411,
+              "1": 0.21995148993066632,
+              "2": 0.4198130028118925
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.03202588423997655,
+              "false": 0.9679741157600235
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 239.18,
+        "answers": {
+          "category": {
+            "value": "work",
+            "expected": "work",
+            "p": {
+              "personal": 0.0003230060192389413,
+              "billing": 0.0002345170310884636,
+              "work": 0.9982565875389454,
+              "promo": 0.0001750481528439453,
+              "security": 0.0010108412578832572
+            }
+          },
+          "action": {
+            "value": "2",
+            "expected": "2",
+            "p": {
+              "0": 0.005109255417953837,
+              "1": 0.04272634947173001,
+              "2": 0.9521643951103161
+            }
+          },
+          "phishing": {
+            "value": "false",
+            "expected": "false",
+            "p": {
+              "true": 0.02055680082650294,
+              "false": 0.9794431991734971
+            }
+          }
+        }
+      }
+    ]
+  }
+]

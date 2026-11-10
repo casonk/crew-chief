@@ -245,7 +245,7 @@ source, and the same suite passes at the after commit. It then gives the agent
 only the old source and selected new tests in a disposable checkout; the
 reference source fix is withheld. Changes to tests or other paths cannot pass.
 
-Run the two reviewed crew-chief cases together:
+Run selected reviewed crew-chief cases together:
 
 ```bash
 python3 scripts/test_benchmark.py \
@@ -262,6 +262,12 @@ from completed trials that leave tests failing, and records tool-call attempts.
 These are case-specific results, not a claim that a model can migrate every
 older repository. Use several reviewed cases and trials before drawing a
 broader conclusion.
+
+The tracked public suite currently covers nine historical repairs: seven from
+crew-chief and two from archility. The newer crew-chief cases exercise file-path
+confinement, strict TOML validation, storage configuration, Signal one-time-code
+marker handling, and Gmail reply filtering. They complement the original provider
+and notification-reply cases with security, configuration, and cross-process work.
 
 For a cross-repository sweep, use the reviewed public suite from the portfolio
 root. Each case resolves its checkout relative to `--portfolio-root`; task paths
@@ -314,6 +320,34 @@ command and identify only the source paths the agent may edit. The baseline
 suite must fail after the patch; a passing or timed-out baseline is invalid.
 Run several trials before comparing stochastic models. The existing
 `scripts/benchmark.py` continues to measure inference speed separately.
+
+## OCR benchmark
+
+`scripts/ocr_benchmark.py` measures recognition from rendered pixels, rather
+than scoring already-extracted text. The reviewed v1 suite covers clean,
+rotated, faded/noisy, dense invoice, Japanese cash-tender, and email screenshot
+cases. It reports character and word error rates, reviewed-field recall, latency,
+and infrastructure errors separately.
+
+Synthetic rendering requires Pillow; the local OCR baseline also requires the
+`tesseract` executable. These are benchmark-only requirements and do not add a
+dependency to the stdlib-only `crew_chief` package. Install the optional image
+dependency with `pip install -e '.[ocr]'` when it is not already available.
+
+```bash
+python3 scripts/ocr_benchmark.py \
+  --suite benchmarks/ocr/synthetic-receipts.json \
+  --runner tesseract \
+  --runner ollama:qwen3.5:27b \
+  --keep-images /tmp/crew-chief-ocr-fixtures
+```
+
+The command writes local `results/ocr-bench-*.{md,json}` reports. The default
+prompt asks vision models for transcription only; scoring never gives a model
+the expected text or reviewed field values. Synthetic results establish a
+repeatable baseline, but promotion for receipt OCR still requires a separately
+controlled evaluation on consented, redacted real scans because generated text
+does not reproduce every camera, paper, handwriting, or printer artifact.
 
 ## Contributing
 

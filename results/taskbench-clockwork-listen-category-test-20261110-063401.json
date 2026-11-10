@@ -1,0 +1,3542 @@
+[
+  {
+    "runner": "rules",
+    "task": "clockwork-listen-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 0.0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "category": {
+        "accuracy": 0.7,
+        "invalid": 0,
+        "n": 30,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "Albums",
+            "Podcasts",
+            "Audiobooks",
+            "Radio",
+            "Artists"
+          ],
+          "counts": {
+            "Albums": {
+              "Albums": 2,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 4
+            },
+            "Podcasts": {
+              "Albums": 0,
+              "Podcasts": 4,
+              "Audiobooks": 0,
+              "Radio": 1,
+              "Artists": 1
+            },
+            "Audiobooks": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 5,
+              "Radio": 0,
+              "Artists": 1
+            },
+            "Radio": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 4,
+              "Artists": 2
+            },
+            "Artists": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 6
+            }
+          },
+          "invalid": {
+            "Albums": 0,
+            "Podcasts": 0,
+            "Audiobooks": 0,
+            "Radio": 0,
+            "Artists": 0
+          },
+          "per_label": {
+            "Albums": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 0.333,
+              "f1": 0.5
+            },
+            "Podcasts": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 0.667,
+              "f1": 0.8
+            },
+            "Audiobooks": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 0.833,
+              "f1": 0.909
+            },
+            "Radio": {
+              "support": 6,
+              "precision": 0.8,
+              "recall": 0.667,
+              "f1": 0.727
+            },
+            "Artists": {
+              "support": 6,
+              "precision": 0.429,
+              "recall": 1.0,
+              "f1": 0.6
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Albums",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Albums",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Podcasts",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Podcasts",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Audiobooks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Radio",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Albums",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Albums",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Radio",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "bayes",
+    "task": "clockwork-listen-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 0.1,
+    "latency_ms_median": 0.1,
+    "latency_ms_p90": 0.1,
+    "questions": {
+      "category": {
+        "accuracy": 0.633,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.458,
+        "confusion": {
+          "labels": [
+            "Albums",
+            "Podcasts",
+            "Audiobooks",
+            "Radio",
+            "Artists"
+          ],
+          "counts": {
+            "Albums": {
+              "Albums": 5,
+              "Podcasts": 0,
+              "Audiobooks": 1,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Podcasts": {
+              "Albums": 1,
+              "Podcasts": 4,
+              "Audiobooks": 0,
+              "Radio": 1,
+              "Artists": 0
+            },
+            "Audiobooks": {
+              "Albums": 1,
+              "Podcasts": 0,
+              "Audiobooks": 5,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Radio": {
+              "Albums": 1,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 5,
+              "Artists": 0
+            },
+            "Artists": {
+              "Albums": 6,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 0
+            }
+          },
+          "invalid": {
+            "Albums": 0,
+            "Podcasts": 0,
+            "Audiobooks": 0,
+            "Radio": 0,
+            "Artists": 0
+          },
+          "per_label": {
+            "Albums": {
+              "support": 6,
+              "precision": 0.357,
+              "recall": 0.833,
+              "f1": 0.5
+            },
+            "Podcasts": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 0.667,
+              "f1": 0.8
+            },
+            "Audiobooks": {
+              "support": 6,
+              "precision": 0.833,
+              "recall": 0.833,
+              "f1": 0.833
+            },
+            "Radio": {
+              "support": 6,
+              "precision": 0.833,
+              "recall": 0.833,
+              "f1": 0.833
+            },
+            "Artists": {
+              "support": 6,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.2,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.11,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.07408060402670347,
+              "Podcasts": 0.08846518733285952,
+              "Audiobooks": 0.05590131469499712,
+              "Radio": 0.7009164842526565,
+              "Artists": 0.08063640969278343
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.7383833130567049,
+              "Podcasts": 0.08015988305911267,
+              "Audiobooks": 0.050653177638580404,
+              "Radio": 0.05773753814747278,
+              "Artists": 0.07306608809812923
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.08036373468804875,
+              "Podcasts": 0.0959683433653398,
+              "Audiobooks": 0.6670683008155216,
+              "Radio": 0.06912405151489513,
+              "Artists": 0.08747556961619468
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.07408060402670347,
+              "Podcasts": 0.08846518733285952,
+              "Audiobooks": 0.05590131469499712,
+              "Radio": 0.7009164842526565,
+              "Artists": 0.08063640969278343
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.7383833130567049,
+              "Podcasts": 0.08015988305911267,
+              "Audiobooks": 0.050653177638580404,
+              "Radio": 0.05773753814747278,
+              "Artists": 0.07306608809812923
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.7383833130567049,
+              "Podcasts": 0.08015988305911267,
+              "Audiobooks": 0.050653177638580404,
+              "Radio": 0.05773753814747278,
+              "Artists": 0.07306608809812923
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.08036373468804875,
+              "Podcasts": 0.0959683433653398,
+              "Audiobooks": 0.6670683008155216,
+              "Radio": 0.06912405151489513,
+              "Artists": 0.08747556961619468
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.5336083602101759,
+              "Podcasts": 0.06917763546919645,
+              "Audiobooks": 0.3038488795822108,
+              "Radio": 0.035889556197990405,
+              "Artists": 0.05747556854042641
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.05938538857244814,
+              "Podcasts": 0.7800818518303144,
+              "Audiobooks": 0.044812287082276844,
+              "Radio": 0.05107973982105684,
+              "Artists": 0.06464073269390375
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 0.25,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.05938538857244814,
+              "Podcasts": 0.7800818518303144,
+              "Audiobooks": 0.044812287082276844,
+              "Radio": 0.05107973982105684,
+              "Artists": 0.06464073269390375
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.05938538857244814,
+              "Podcasts": 0.7800818518303144,
+              "Audiobooks": 0.044812287082276844,
+              "Radio": 0.05107973982105684,
+              "Artists": 0.06464073269390375
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.05938538857244814,
+              "Podcasts": 0.7800818518303144,
+              "Audiobooks": 0.044812287082276844,
+              "Radio": 0.05107973982105684,
+              "Artists": 0.06464073269390375
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.013651709217517726,
+              "Podcasts": 0.01946806567554207,
+              "Audiobooks": 0.9406052828096998,
+              "Radio": 0.010100088451847327,
+              "Artists": 0.0161748538453932
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.08036373468804875,
+              "Podcasts": 0.0959683433653398,
+              "Audiobooks": 0.6670683008155216,
+              "Radio": 0.06912405151489513,
+              "Artists": 0.08747556961619468
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.08036373468804875,
+              "Podcasts": 0.0959683433653398,
+              "Audiobooks": 0.6670683008155216,
+              "Radio": 0.06912405151489513,
+              "Artists": 0.08747556961619468
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.08036373468804875,
+              "Podcasts": 0.0959683433653398,
+              "Audiobooks": 0.6670683008155216,
+              "Radio": 0.06912405151489513,
+              "Artists": 0.08747556961619468
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.010672243663695317,
+              "Podcasts": 0.01521918883853771,
+              "Audiobooks": 0.006077021129438304,
+              "Radio": 0.9553868306984996,
+              "Artists": 0.012644715669829
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.07408060402670347,
+              "Podcasts": 0.08846518733285952,
+              "Audiobooks": 0.05590131469499712,
+              "Radio": 0.7009164842526565,
+              "Artists": 0.08063640969278343
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.010672243663695317,
+              "Podcasts": 0.01521918883853771,
+              "Audiobooks": 0.006077021129438304,
+              "Radio": 0.9553868306984996,
+              "Artists": 0.012644715669829
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 0.11,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.07408060402670347,
+              "Podcasts": 0.08846518733285952,
+              "Audiobooks": 0.05590131469499712,
+              "Radio": 0.7009164842526565,
+              "Artists": 0.08063640969278343
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.2,
+              "Podcasts": 0.2,
+              "Audiobooks": 0.2,
+              "Radio": 0.2,
+              "Artists": 0.2
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "clockwork-listen-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 565.6,
+    "latency_ms_median": 133.3,
+    "latency_ms_p90": 136.1,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.003,
+        "confusion": {
+          "labels": [
+            "Albums",
+            "Podcasts",
+            "Audiobooks",
+            "Radio",
+            "Artists"
+          ],
+          "counts": {
+            "Albums": {
+              "Albums": 6,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Podcasts": {
+              "Albums": 0,
+              "Podcasts": 6,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Audiobooks": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 6,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Radio": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 6,
+              "Artists": 0
+            },
+            "Artists": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 6
+            }
+          },
+          "invalid": {
+            "Albums": 0,
+            "Podcasts": 0,
+            "Audiobooks": 0,
+            "Radio": 0,
+            "Artists": 0
+          },
+          "per_label": {
+            "Albums": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Podcasts": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Audiobooks": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Radio": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Artists": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 13080.48,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9319136513028877,
+              "Artists": 0.05198073031205076,
+              "Audiobooks": 0.005983233342486845,
+              "Podcasts": 0.005171064196522711,
+              "Radio": 0.004951320846051876
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 132.65,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9353559253922042,
+              "Artists": 0.04728114206641638,
+              "Audiobooks": 0.006339498179025342,
+              "Podcasts": 0.0055408924631624645,
+              "Radio": 0.005482541899191583
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 133.92,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.008502161098976942,
+              "Artists": 0.014249735687735493,
+              "Audiobooks": 0.01837270864244054,
+              "Podcasts": 0.9137773807492184,
+              "Radio": 0.04509801382162859
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 132.48,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.006459680252304343,
+              "Artists": 0.010380542428654998,
+              "Audiobooks": 0.011741653055999429,
+              "Podcasts": 0.8734207535921423,
+              "Radio": 0.09799737067089904
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 134.99,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.0050625978931163025,
+              "Artists": 0.004862217078495624,
+              "Audiobooks": 0.9782424842463672,
+              "Podcasts": 0.0070607745090610725,
+              "Radio": 0.004771926272959931
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 131.97,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.006460406089284268,
+              "Artists": 0.006225182941412876,
+              "Audiobooks": 0.9728708384384623,
+              "Podcasts": 0.008287995328293102,
+              "Radio": 0.006155577202547242
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 145.57,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.001464172701390534,
+              "Artists": 0.001757694362550773,
+              "Audiobooks": 0.0016083712950267228,
+              "Podcasts": 0.015381323238313316,
+              "Radio": 0.9797884384027188
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 133.03,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.0012209068886338574,
+              "Artists": 0.0019580326904035197,
+              "Audiobooks": 0.0015621431042290306,
+              "Podcasts": 0.0021075260739156516,
+              "Radio": 0.9931513912428179
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 133.33,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.00427850626984525,
+              "Artists": 0.9887293372522149,
+              "Audiobooks": 0.0020199336078655385,
+              "Podcasts": 0.0016716917017932994,
+              "Radio": 0.0033005311682810456
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 133.19,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.0025113691187511936,
+              "Artists": 0.9926975109205106,
+              "Audiobooks": 0.0014498003149635696,
+              "Podcasts": 0.0012616978565516627,
+              "Radio": 0.0020796217892229546
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 132.29,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9665721293831869,
+              "Artists": 0.02091562447119194,
+              "Audiobooks": 0.004472020316021748,
+              "Podcasts": 0.003779173435426687,
+              "Radio": 0.004261052394172951
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 133.32,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9440957996720081,
+              "Artists": 0.040698810291544776,
+              "Audiobooks": 0.005715590460797036,
+              "Podcasts": 0.004584847044031708,
+              "Radio": 0.004904952531618552
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 132.53,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9365534637622314,
+              "Artists": 0.048790271316884515,
+              "Audiobooks": 0.005220876341347627,
+              "Podcasts": 0.004583880662363657,
+              "Radio": 0.0048515079171728695
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 136.05,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9221252975339209,
+              "Artists": 0.06229316863897099,
+              "Audiobooks": 0.006611898375174719,
+              "Podcasts": 0.00420496729715557,
+              "Radio": 0.00476466815477778
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 134.64,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.0072782394313128706,
+              "Artists": 0.010067158119168137,
+              "Audiobooks": 0.011116914038331364,
+              "Podcasts": 0.9600183371024166,
+              "Radio": 0.011519351308771011
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 133.04,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.005715837626174629,
+              "Artists": 0.008747850411075704,
+              "Audiobooks": 0.007446934758425476,
+              "Podcasts": 0.9608323092100833,
+              "Radio": 0.017257067994240906
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 133.06,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.008802029020516019,
+              "Artists": 0.018758312824394364,
+              "Audiobooks": 0.008434465276732953,
+              "Podcasts": 0.945546178956756,
+              "Radio": 0.018459013921600664
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 132.44,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.005298847615829407,
+              "Artists": 0.00696151151888214,
+              "Audiobooks": 0.006577127927856446,
+              "Podcasts": 0.9701178708847759,
+              "Radio": 0.011044642052656093
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 133.47,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.0050242850846204294,
+              "Artists": 0.00472422922897286,
+              "Audiobooks": 0.9798274795453702,
+              "Podcasts": 0.005667764114694612,
+              "Radio": 0.004756242026342152
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 133.1,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.005687230304357059,
+              "Artists": 0.0055639745317272804,
+              "Audiobooks": 0.9766842626271665,
+              "Podcasts": 0.005984224067768077,
+              "Radio": 0.006080308468981101
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 133.38,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.006311456352748223,
+              "Artists": 0.0050442942583361185,
+              "Audiobooks": 0.9783607793125039,
+              "Podcasts": 0.00525510981022831,
+              "Radio": 0.0050283602661832585
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 133.5,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.008245569154511327,
+              "Artists": 0.009535536334064634,
+              "Audiobooks": 0.9642779609777784,
+              "Podcasts": 0.009858344528897769,
+              "Radio": 0.008082589004747927
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 136.13,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.0012205941329729228,
+              "Artists": 0.0016825310041802637,
+              "Audiobooks": 0.0012755773738856104,
+              "Podcasts": 0.004675485002550139,
+              "Radio": 0.9911458124864111
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 133.35,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.0011389886178341168,
+              "Artists": 0.0019048665442275019,
+              "Audiobooks": 0.0012349657880836955,
+              "Podcasts": 0.006761970876549126,
+              "Radio": 0.9889592081733056
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 134.87,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.0011885963447209223,
+              "Artists": 0.0018495409806685097,
+              "Audiobooks": 0.0014559341602689696,
+              "Podcasts": 0.002690328508779241,
+              "Radio": 0.9928156000055623
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 133.23,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.001158672361922263,
+              "Artists": 0.002055284952981905,
+              "Audiobooks": 0.0012963613801433382,
+              "Podcasts": 0.002340589205974212,
+              "Radio": 0.9931490920989783
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 132.52,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.002430899877281519,
+              "Artists": 0.9934626151494192,
+              "Audiobooks": 0.0012365506424525975,
+              "Podcasts": 0.001070775773056765,
+              "Radio": 0.0017991585577899064
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 137.11,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.0030497657513353614,
+              "Artists": 0.9914354805432443,
+              "Audiobooks": 0.0017472184165619215,
+              "Podcasts": 0.0013819908656274192,
+              "Radio": 0.002385544423231221
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 134.85,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.012734586852404363,
+              "Artists": 0.9785948988551261,
+              "Audiobooks": 0.0027844572952654173,
+              "Podcasts": 0.002237203600618505,
+              "Radio": 0.003648853396585747
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 133.55,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.0038193726048533815,
+              "Artists": 0.9888732464327622,
+              "Audiobooks": 0.002366132547402242,
+              "Podcasts": 0.001802086388250996,
+              "Radio": 0.003139162026731394
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef",
+    "task": "clockwork-listen-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 1422.8,
+    "latency_ms_median": 762.9,
+    "latency_ms_p90": 771.0,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.001,
+        "confusion": {
+          "labels": [
+            "Albums",
+            "Podcasts",
+            "Audiobooks",
+            "Radio",
+            "Artists"
+          ],
+          "counts": {
+            "Albums": {
+              "Albums": 6,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Podcasts": {
+              "Albums": 0,
+              "Podcasts": 6,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Audiobooks": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 6,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Radio": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 6,
+              "Artists": 0
+            },
+            "Artists": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 6
+            }
+          },
+          "invalid": {
+            "Albums": 0,
+            "Podcasts": 0,
+            "Audiobooks": 0,
+            "Radio": 0,
+            "Artists": 0
+          },
+          "per_label": {
+            "Albums": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Podcasts": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Audiobooks": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Radio": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Artists": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 20529.48,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9335782945700579,
+              "Artists": 0.05658051833699545,
+              "Audiobooks": 0.0030413855989486972,
+              "Podcasts": 0.003832925449883343,
+              "Radio": 0.002966876044114645
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 763.57,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9705572897336833,
+              "Artists": 0.019987687595971682,
+              "Audiobooks": 0.0028057805398260132,
+              "Podcasts": 0.003913483102406536,
+              "Radio": 0.0027357590281124663
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 761.33,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.00624909057915909,
+              "Artists": 0.007238455730981108,
+              "Audiobooks": 0.0052898881112853876,
+              "Podcasts": 0.9712653283093788,
+              "Radio": 0.009957237269195505
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 761.94,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.005486787991736725,
+              "Artists": 0.00823090230447166,
+              "Audiobooks": 0.006493368683792699,
+              "Podcasts": 0.9383985711420165,
+              "Radio": 0.04139036987798231
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 762.34,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.004104364665606309,
+              "Artists": 0.004113234088307521,
+              "Audiobooks": 0.981988669955107,
+              "Podcasts": 0.006625945746687784,
+              "Radio": 0.0031677855442914502
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 764.05,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.003601622247293799,
+              "Artists": 0.003741982318240476,
+              "Audiobooks": 0.9830874658124946,
+              "Podcasts": 0.006291588042461892,
+              "Radio": 0.0032773415795091295
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 781.83,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.002011706059595672,
+              "Artists": 0.0027488155349483846,
+              "Audiobooks": 0.0016095136888568983,
+              "Podcasts": 0.026661303666407468,
+              "Radio": 0.9669686610501916
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 762.72,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.0020616786713818793,
+              "Artists": 0.002670621008955146,
+              "Audiobooks": 0.0009989946403585347,
+              "Podcasts": 0.0023046861559726066,
+              "Radio": 0.9919640195233319
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 758.92,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.015400450917468625,
+              "Artists": 0.9734997959697359,
+              "Audiobooks": 0.002722609572457515,
+              "Podcasts": 0.004155456780296699,
+              "Radio": 0.004221686760041348
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 761.79,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.0051682355039154694,
+              "Artists": 0.9885615466446029,
+              "Audiobooks": 0.0018689345988095684,
+              "Podcasts": 0.0021983902516326003,
+              "Radio": 0.0022028930010394875
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 759.18,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9824501971580452,
+              "Artists": 0.010012037726534941,
+              "Audiobooks": 0.002494958327116725,
+              "Podcasts": 0.0027003276356040475,
+              "Radio": 0.002342479152699194
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 765.8,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9692456639020453,
+              "Artists": 0.020399483420054924,
+              "Audiobooks": 0.003230361475880148,
+              "Podcasts": 0.004004324293297019,
+              "Radio": 0.003120166908722562
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 761.96,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.940376022748437,
+              "Artists": 0.049357331497735975,
+              "Audiobooks": 0.0028814291058588456,
+              "Podcasts": 0.004098470007596857,
+              "Radio": 0.0032867466403710736
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 770.98,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9689418029710498,
+              "Artists": 0.02297915972138058,
+              "Audiobooks": 0.0028163119981655144,
+              "Podcasts": 0.002869769817111875,
+              "Radio": 0.002392955492292307
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 758.85,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.0034760519326209748,
+              "Artists": 0.005085598506868896,
+              "Audiobooks": 0.0033119283439243703,
+              "Podcasts": 0.9822801745856641,
+              "Radio": 0.005846246630921519
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 764.21,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.0031459119314580174,
+              "Artists": 0.004530545151662539,
+              "Audiobooks": 0.0030650436964317932,
+              "Podcasts": 0.9838624683917178,
+              "Radio": 0.005396030828729761
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 759.08,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.004539462190147704,
+              "Artists": 0.006274269083241929,
+              "Audiobooks": 0.00326134477659136,
+              "Podcasts": 0.9802285666462197,
+              "Radio": 0.0056963573037992045
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 761.51,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.0035240100049448143,
+              "Artists": 0.005188314556748152,
+              "Audiobooks": 0.0033065632654505125,
+              "Podcasts": 0.982337970441791,
+              "Radio": 0.005643141731065442
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 763.06,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.002892024389752249,
+              "Artists": 0.003417100157652453,
+              "Audiobooks": 0.986645500813163,
+              "Podcasts": 0.004418358175092774,
+              "Radio": 0.002627016464339403
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 764.59,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.0033811280818989414,
+              "Artists": 0.0034467694030201465,
+              "Audiobooks": 0.983538060175889,
+              "Podcasts": 0.006553650273893023,
+              "Radio": 0.0030803920652986744
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 764.31,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.0031747577521301722,
+              "Artists": 0.003671813705336352,
+              "Audiobooks": 0.9845391091263358,
+              "Podcasts": 0.005643593777328048,
+              "Radio": 0.0029707256388695645
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 760.65,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.004824778651441849,
+              "Artists": 0.004948891388714296,
+              "Audiobooks": 0.977389507125627,
+              "Podcasts": 0.008804525462454476,
+              "Radio": 0.004032297371762365
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 768.19,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.0011033715875119255,
+              "Artists": 0.0016471237905031917,
+              "Audiobooks": 0.00083913430993931,
+              "Podcasts": 0.004908845213621225,
+              "Radio": 0.9915015250984243
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 761.8,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.0016598102251903365,
+              "Artists": 0.0027044567954887695,
+              "Audiobooks": 0.001455588049702379,
+              "Podcasts": 0.008353585208092328,
+              "Radio": 0.9858265597215262
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 765.18,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.0015328009757139473,
+              "Artists": 0.002225562401837641,
+              "Audiobooks": 0.0009396835876325927,
+              "Podcasts": 0.0033982223475480106,
+              "Radio": 0.9919037306872679
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 765.03,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.002368324116250537,
+              "Artists": 0.004049300041771008,
+              "Audiobooks": 0.0013928203776867962,
+              "Podcasts": 0.0046747257058866185,
+              "Radio": 0.987514829758405
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 763.84,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.006348149800998853,
+              "Artists": 0.9885782560384552,
+              "Audiobooks": 0.0014071358759500906,
+              "Podcasts": 0.0017072042122255498,
+              "Radio": 0.001959254072370278
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 773.38,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.007325576956511542,
+              "Artists": 0.9830709690592436,
+              "Audiobooks": 0.00271364365744517,
+              "Podcasts": 0.0032273047862828095,
+              "Radio": 0.0036625055405168196
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 761.66,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.016718973172723042,
+              "Artists": 0.9731568542519013,
+              "Audiobooks": 0.0025851467335708056,
+              "Podcasts": 0.003965339629351181,
+              "Radio": 0.0035736862124536276
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 761.39,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.012090160876098674,
+              "Artists": 0.9776440936351949,
+              "Audiobooks": 0.002952813175046205,
+              "Podcasts": 0.003534711915422816,
+              "Radio": 0.0037782203982375385
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "clockwork-listen-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 463.7,
+    "latency_ms_median": 151.3,
+    "latency_ms_p90": 156.5,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.001,
+        "confusion": {
+          "labels": [
+            "Albums",
+            "Podcasts",
+            "Audiobooks",
+            "Radio",
+            "Artists"
+          ],
+          "counts": {
+            "Albums": {
+              "Albums": 6,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Podcasts": {
+              "Albums": 0,
+              "Podcasts": 6,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Audiobooks": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 6,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Radio": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 6,
+              "Artists": 0
+            },
+            "Artists": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 6
+            }
+          },
+          "invalid": {
+            "Albums": 0,
+            "Podcasts": 0,
+            "Audiobooks": 0,
+            "Radio": 0,
+            "Artists": 0
+          },
+          "per_label": {
+            "Albums": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Podcasts": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Audiobooks": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Radio": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Artists": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 9492.3,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9923480732030813,
+              "Podcasts": 0.00038916702944551856,
+              "Audiobooks": 0.00012742631757218717,
+              "Radio": 0.00027333575438841056,
+              "Artists": 0.00686199769551274
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 156.03,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9929970388934876,
+              "Podcasts": 0.00031695364127942027,
+              "Audiobooks": 9.206994066095443e-05,
+              "Radio": 0.00017802477924783004,
+              "Artists": 0.0064159127453244135
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 156.52,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.0010498690074446067,
+              "Podcasts": 0.9766775747749283,
+              "Audiobooks": 0.0012550891238019325,
+              "Radio": 0.01256095600606924,
+              "Artists": 0.008456511087755912
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 148.58,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.0009522224540300798,
+              "Podcasts": 0.8563818252289351,
+              "Audiobooks": 0.0008858379262322638,
+              "Radio": 0.13819364056942873,
+              "Artists": 0.003586473821373876
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 151.51,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.00019027294424537106,
+              "Podcasts": 0.00021978764327108146,
+              "Audiobooks": 0.9992030118804123,
+              "Radio": 0.00024102490021333866,
+              "Artists": 0.00014590263185803036
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 165.7,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 4.4373809004186386e-05,
+              "Podcasts": 9.80738881127348e-05,
+              "Audiobooks": 0.9996875744809751,
+              "Radio": 9.093433903167309e-05,
+              "Artists": 7.904348287632041e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 155.8,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.0002237636163233585,
+              "Podcasts": 0.007303093852586137,
+              "Audiobooks": 0.0001335115466435319,
+              "Radio": 0.9921131383637662,
+              "Artists": 0.00022649262068058105
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 150.58,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 5.8872925125574944e-05,
+              "Podcasts": 7.051806671427715e-05,
+              "Audiobooks": 3.6787351180568314e-05,
+              "Radio": 0.9990651053302302,
+              "Artists": 0.0007687163267491992
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 149.28,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.00013741989797965074,
+              "Podcasts": 6.720587399625847e-05,
+              "Audiobooks": 2.5104332084797167e-05,
+              "Radio": 8.48975464972134e-05,
+              "Artists": 0.9996853723494421
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 151.97,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 6.529736151710027e-05,
+              "Podcasts": 6.0382412808687745e-05,
+              "Audiobooks": 2.3356503271456046e-05,
+              "Radio": 6.87730834341774e-05,
+              "Artists": 0.9997821906389684
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 150.84,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.99782233531902,
+              "Podcasts": 0.00026186072750337155,
+              "Audiobooks": 8.426201910875165e-05,
+              "Radio": 0.00021645055103646323,
+              "Artists": 0.0016150913833314264
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 150.81,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9961264301510699,
+              "Podcasts": 0.00034831214300018974,
+              "Audiobooks": 0.00011710782283395329,
+              "Radio": 0.00020702432991656847,
+              "Artists": 0.003201125553179152
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 152.23,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9892472178033972,
+              "Podcasts": 0.0010356928687222172,
+              "Audiobooks": 0.0004636395197570352,
+              "Radio": 0.000829000840094348,
+              "Artists": 0.008424448968029151
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 155.0,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9694835681838062,
+              "Podcasts": 0.0021012029706705708,
+              "Audiobooks": 0.0006558192577960047,
+              "Radio": 0.000777022652407727,
+              "Artists": 0.02698238693531932
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 150.46,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.00025121285901839126,
+              "Podcasts": 0.9959877648904765,
+              "Audiobooks": 0.0008739105477673544,
+              "Radio": 0.0014810234756102297,
+              "Artists": 0.001406088227127647
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 154.76,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.001226192687644248,
+              "Podcasts": 0.9715050556421245,
+              "Audiobooks": 0.0021156342867890716,
+              "Radio": 0.01742798684606338,
+              "Artists": 0.007725130537378756
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 150.46,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.0001848570368151172,
+              "Podcasts": 0.9965207734941679,
+              "Audiobooks": 0.00019294342420999756,
+              "Radio": 0.0013873642768100368,
+              "Artists": 0.0017140617679969078
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 148.43,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.0001235876931972444,
+              "Podcasts": 0.9965692206647773,
+              "Audiobooks": 0.00022567828571707317,
+              "Radio": 0.0017282517511191346,
+              "Artists": 0.0013532616051893165
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 151.07,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.00014042803478881585,
+              "Podcasts": 0.00011610825099811247,
+              "Audiobooks": 0.9991781394288842,
+              "Radio": 0.0002625713721416985,
+              "Artists": 0.00030275291318717127
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 150.54,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 6.882662149699225e-05,
+              "Podcasts": 0.00015632370035274697,
+              "Audiobooks": 0.9994303963615376,
+              "Radio": 0.00014023153312505942,
+              "Artists": 0.00020422178348758076
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 157.39,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 6.464942557488064e-05,
+              "Podcasts": 9.597973102808984e-05,
+              "Audiobooks": 0.9995859581886224,
+              "Radio": 0.00015937000213505894,
+              "Artists": 9.404265263961213e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 151.17,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 7.303099760046445e-05,
+              "Podcasts": 0.00018715307703700323,
+              "Audiobooks": 0.9994614686643443,
+              "Radio": 0.00014635543738552762,
+              "Artists": 0.00013199182363283265
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 151.27,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.00010919949993192646,
+              "Podcasts": 0.002545298174545553,
+              "Audiobooks": 8.050453416329e-05,
+              "Radio": 0.9970550365205815,
+              "Artists": 0.00020996127077786247
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 149.62,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 0.00010856327305606262,
+              "Podcasts": 0.0019236218082175284,
+              "Audiobooks": 7.714060147200428e-05,
+              "Radio": 0.9968504652573124,
+              "Artists": 0.0010402090599419464
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 150.78,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 6.41394209375304e-05,
+              "Podcasts": 0.00014183372684720288,
+              "Audiobooks": 4.43006010822362e-05,
+              "Radio": 0.9991229828305922,
+              "Artists": 0.0006267434205408015
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 151.28,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 7.479601755614646e-05,
+              "Podcasts": 0.00013444460784265533,
+              "Audiobooks": 4.5670508452380894e-05,
+              "Radio": 0.9993210721488353,
+              "Artists": 0.0004240167173136203
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 151.24,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 5.0025250065091263e-05,
+              "Podcasts": 6.755963093823235e-05,
+              "Audiobooks": 2.0483111338545473e-05,
+              "Radio": 5.0708614315054436e-05,
+              "Artists": 0.9998112233933432
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 153.78,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 8.7046378832758e-05,
+              "Podcasts": 5.325272255224016e-05,
+              "Audiobooks": 2.589184609815839e-05,
+              "Radio": 7.972276750162907e-05,
+              "Artists": 0.9997540862850153
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 149.64,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.0012587007941792837,
+              "Podcasts": 0.00014730410643620752,
+              "Audiobooks": 4.5628810403659216e-05,
+              "Radio": 9.970203147398694e-05,
+              "Artists": 0.9984486642575069
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 151.47,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 8.237538769161917e-05,
+              "Podcasts": 3.829974766625398e-05,
+              "Audiobooks": 1.8416174618354374e-05,
+              "Radio": 5.299542834428883e-05,
+              "Artists": 0.9998079132616794
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:tev1",
+    "task": "clockwork-listen-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 257.3,
+    "latency_ms_median": 83.0,
+    "latency_ms_p90": 86.1,
+    "questions": {
+      "category": {
+        "accuracy": 0.967,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.026,
+        "confusion": {
+          "labels": [
+            "Albums",
+            "Podcasts",
+            "Audiobooks",
+            "Radio",
+            "Artists"
+          ],
+          "counts": {
+            "Albums": {
+              "Albums": 6,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Podcasts": {
+              "Albums": 0,
+              "Podcasts": 6,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Audiobooks": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 6,
+              "Radio": 0,
+              "Artists": 0
+            },
+            "Radio": {
+              "Albums": 0,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 6,
+              "Artists": 0
+            },
+            "Artists": {
+              "Albums": 1,
+              "Podcasts": 0,
+              "Audiobooks": 0,
+              "Radio": 0,
+              "Artists": 5
+            }
+          },
+          "invalid": {
+            "Albums": 0,
+            "Podcasts": 0,
+            "Audiobooks": 0,
+            "Radio": 0,
+            "Artists": 0
+          },
+          "per_label": {
+            "Albums": {
+              "support": 6,
+              "precision": 0.857,
+              "recall": 1.0,
+              "f1": 0.923
+            },
+            "Podcasts": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Audiobooks": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Radio": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Artists": {
+              "support": 6,
+              "precision": 1.0,
+              "recall": 0.833,
+              "f1": 0.909
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 15,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 5298.54,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9888879687054241,
+              "Podcasts": 0.00024170232742356225,
+              "Audiobooks": 2.9022138558551644e-05,
+              "Radio": 2.7781044920411226e-05,
+              "Artists": 0.010813525783673577
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 82.08,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.997360834116865,
+              "Podcasts": 0.0002228221150368854,
+              "Audiobooks": 4.732263356412347e-05,
+              "Radio": 9.697568330715562e-06,
+              "Artists": 0.002359323566203189
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 84.6,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.00025981042207667756,
+              "Podcasts": 0.9934295586455757,
+              "Audiobooks": 0.00036796577787032023,
+              "Radio": 0.004908381952356517,
+              "Artists": 0.0010342832021209211
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 82.29,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 0.00013630632841638655,
+              "Podcasts": 0.9858910945995067,
+              "Audiobooks": 0.0002942742958965853,
+              "Radio": 0.013270599895909951,
+              "Artists": 0.00040772488027026444
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 82.42,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.00029575280779888744,
+              "Podcasts": 0.0003631741611135656,
+              "Audiobooks": 0.9991568454768064,
+              "Radio": 9.927076326002622e-05,
+              "Artists": 8.495679102099292e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 82.23,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 2.0362684085938682e-05,
+              "Podcasts": 4.33765145905705e-05,
+              "Audiobooks": 0.9999035897939449,
+              "Radio": 1.0905722625820455e-05,
+              "Artists": 2.176528475279964e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 83.75,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 2.1536606916399802e-05,
+              "Podcasts": 0.0009247130932341815,
+              "Audiobooks": 6.737527056780954e-05,
+              "Radio": 0.9989436131024367,
+              "Artists": 4.276192684500401e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 82.88,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 2.9405072591536654e-05,
+              "Podcasts": 0.00017678885422473382,
+              "Audiobooks": 3.013456379566545e-05,
+              "Radio": 0.9996776866724951,
+              "Artists": 8.598483689294253e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 82.98,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.0009467965285472303,
+              "Podcasts": 0.0003167254488677014,
+              "Audiobooks": 5.764171644373971e-05,
+              "Radio": 0.0003817619179184018,
+              "Artists": 0.9982970743882228
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 86.06,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.0001262176029056343,
+              "Podcasts": 0.0003404341202601222,
+              "Audiobooks": 4.578925457293482e-05,
+              "Radio": 0.0003877326887445878,
+              "Artists": 0.9990998263335168
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 86.26,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9994258319235783,
+              "Podcasts": 9.101280585991904e-05,
+              "Audiobooks": 1.3193494918803728e-05,
+              "Radio": 9.335944971563874e-06,
+              "Artists": 0.00046062583067125307
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 85.77,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9937307831845469,
+              "Podcasts": 0.0014258916277843515,
+              "Audiobooks": 0.0001381965496421776,
+              "Radio": 9.651373421480376e-05,
+              "Artists": 0.004608614903811673
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 89.41,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9371447023114483,
+              "Podcasts": 0.0009295116788901061,
+              "Audiobooks": 6.361401030919873e-05,
+              "Radio": 5.891318142095864e-05,
+              "Artists": 0.061803258817931486
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 83.19,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Albums",
+            "p": {
+              "Albums": 0.9682510213524216,
+              "Podcasts": 0.0006402107201742426,
+              "Audiobooks": 0.00011056422590622644,
+              "Radio": 5.77863631840797e-05,
+              "Artists": 0.030940417338313805
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 82.64,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 4.380170145150476e-06,
+              "Podcasts": 0.999755676089867,
+              "Audiobooks": 1.5429172090979573e-05,
+              "Radio": 0.00020105604375093218,
+              "Artists": 2.345852414587186e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 83.7,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 1.0045818036213871e-05,
+              "Podcasts": 0.9988105835230079,
+              "Audiobooks": 3.639869185377709e-05,
+              "Radio": 0.001094711417913778,
+              "Artists": 4.8260549188454474e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 82.98,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 6.226334967829903e-06,
+              "Podcasts": 0.9998648476062202,
+              "Audiobooks": 1.908398967094642e-05,
+              "Radio": 6.736528367587973e-05,
+              "Artists": 4.247678546509463e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 82.56,
+        "answers": {
+          "category": {
+            "value": "Podcasts",
+            "expected": "Podcasts",
+            "p": {
+              "Albums": 5.9159656856947395e-05,
+              "Podcasts": 0.9982760706280426,
+              "Audiobooks": 9.872706570515786e-05,
+              "Radio": 0.0013889070193864265,
+              "Artists": 0.0001771356300087996
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 84.31,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 0.0001512464936666869,
+              "Podcasts": 9.51156308064431e-05,
+              "Audiobooks": 0.9994019695266699,
+              "Radio": 9.221965531664473e-05,
+              "Artists": 0.0002594486935401545
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 82.45,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 1.4970524127045673e-05,
+              "Podcasts": 3.03597089845989e-05,
+              "Audiobooks": 0.9999323951773079,
+              "Radio": 5.790042704765471e-06,
+              "Artists": 1.6484546875861673e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 83.92,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 6.893527685403276e-06,
+              "Podcasts": 1.9249629798340413e-05,
+              "Audiobooks": 0.9999505566095346,
+              "Radio": 9.94881884331131e-06,
+              "Artists": 1.3351414138303542e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 80.42,
+        "answers": {
+          "category": {
+            "value": "Audiobooks",
+            "expected": "Audiobooks",
+            "p": {
+              "Albums": 2.285060642822544e-05,
+              "Podcasts": 0.00010910213534237065,
+              "Audiobooks": 0.9998455894786762,
+              "Radio": 8.65056057872316e-06,
+              "Artists": 1.3807218974493062e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 80.91,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 2.923305177455091e-05,
+              "Podcasts": 0.0008556848582331792,
+              "Audiobooks": 6.807137483690898e-05,
+              "Radio": 0.9990065288591736,
+              "Artists": 4.04818559816548e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 83.06,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 5.9335913458899735e-05,
+              "Podcasts": 0.0014847651347935896,
+              "Audiobooks": 9.892851622336466e-05,
+              "Radio": 0.9979785270016271,
+              "Artists": 0.0003784434338970382
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 83.66,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 9.443390326488212e-06,
+              "Podcasts": 8.863942070703017e-05,
+              "Audiobooks": 2.0233795379086416e-05,
+              "Radio": 0.9998614273564811,
+              "Artists": 2.0256037106119718e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 83.61,
+        "answers": {
+          "category": {
+            "value": "Radio",
+            "expected": "Radio",
+            "p": {
+              "Albums": 4.17308766412929e-05,
+              "Podcasts": 0.0003739192691942299,
+              "Audiobooks": 5.393387246250198e-05,
+              "Radio": 0.9993262468307973,
+              "Artists": 0.00020416915090480455
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 82.41,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.00017623806682525846,
+              "Podcasts": 0.00036152669023183873,
+              "Audiobooks": 4.506561811341722e-05,
+              "Radio": 0.0002579307901615532,
+              "Artists": 0.999159238834668
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 83.8,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.0001966727261436358,
+              "Podcasts": 9.477514431805261e-05,
+              "Audiobooks": 3.4535164657562725e-05,
+              "Radio": 0.0002132713350678156,
+              "Artists": 0.999460745629813
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 82.83,
+        "answers": {
+          "category": {
+            "value": "Albums",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.6159387941214876,
+              "Podcasts": 0.0004239917139808331,
+              "Audiobooks": 2.8420875382605266e-05,
+              "Radio": 3.1369105068514216e-05,
+              "Artists": 0.3835774241840805
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 82.47,
+        "answers": {
+          "category": {
+            "value": "Artists",
+            "expected": "Artists",
+            "p": {
+              "Albums": 0.00043692602542762975,
+              "Podcasts": 7.538407806033907e-05,
+              "Audiobooks": 2.802914365865558e-05,
+              "Radio": 0.00017112031394059875,
+              "Artists": 0.9992885404389129
+            }
+          }
+        }
+      }
+    ]
+  }
+]

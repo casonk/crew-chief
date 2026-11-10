@@ -10,6 +10,18 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
+- [ ] [manual:2026-11-10] **Calibrate OCR on consented real scans.** The
+  synthetic receipt suite is reproducible and safe to publish, but does not
+  reproduce every camera, thermal-paper, handwriting, perspective, or printer
+  artifact. Build an ignored local manifest of redacted real receipts, keep its
+  images and reports private, compare Tesseract with the selected vision model,
+  and set promotion thresholds only after synthetic and real results agree.
+
+- [ ] [manual:2026-11-10] **Import OCR results into the result store and bench
+  UI.** `ocr-bench-*.json` is intentionally standalone in v1. Add the result
+  kind, per-case views, CER/WER/field measures, and a leased OCR job form after
+  the report schema has survived a live Tesseract/Ollama run.
+
 - [ ] [manual:2026-11-01] **Calibrate the Bayesian fusion.** `bayes:<runner>` multiplies a model's probabilities
   by the train prior and was neutral to slightly worse. Check each model's calibration (Brier, reliability) before
   weighing it; try tempering the model's likelihood or the prior (a weight on each) and fit the weights on train only.
@@ -42,11 +54,11 @@ Mark items `[x]` when complete and move them to Done.
   repositories (the hardest kind, best 0.83), re-run the four decision models, and check that the gate
   still covers `clef-flash` before Clockwork's default model changes.
 
-- [ ] [manual:2026-10-30] **Grow the Clockwork sorting suites and repeat the runs.**
-  The held-out split has 88 items across seven suites, so differences of a few
-  points are single items, and a repeated run moved some scores by up to 5
-  points. Add held-out items until each suite has at least 30, run each
-  configuration three times, and report the spread. See
+- [ ] [manual:2026-10-30] **Finish growing the Clockwork sorting suites and repeat the runs.**
+  The five To-* category suites now have 30 held-out items each and To Code has
+  78. Grocery still has 24 and Shopping 16, so grow those two to at least 30,
+  then run each configuration three times and report the spread. The previous
+  small splits let one item move a score by several points. See
   `docs/decision-model-selection.md`.
 
 - [ ] [manual:2026-10-30] **Try selection with a chat-model tier.** The 2026-10-30
