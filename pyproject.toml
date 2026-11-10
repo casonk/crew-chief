@@ -32,6 +32,7 @@ Changelog = "https://github.com/casonk/crew-chief/blob/main/CHANGELOG.md"
 # Required on Python 3.10 for TOML parsing in the listener feature.
 # Python 3.11+ ships tomllib in the standard library.
 listener = ["tomli>=2.0; python_version < '3.11'"]
+ocr = ["pillow>=9"]
 dev = [
     "pytest",
     "ruff",

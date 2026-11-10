@@ -2,6 +2,11 @@
   "cases": [
     {"repo": "util-repos/crew-chief", "task": "tasks/history-cli-cwd.json"},
     {"repo": "util-repos/crew-chief", "task": "tasks/history-service-reply.json"},
+    {"repo": "util-repos/crew-chief", "task": "tasks/history-tools-confinement.json"},
+    {"repo": "util-repos/crew-chief", "task": "tasks/history-config-validation.json"},
+    {"repo": "util-repos/crew-chief", "task": "tasks/history-storage-configured-hot.json"},
+    {"repo": "util-repos/crew-chief", "task": "tasks/history-signal-otp-deferral.json"},
+    {"repo": "util-repos/crew-chief", "task": "tasks/history-gmail-otp-deferral.json"},
     {"repo": "util-repos/archility", "task": "tasks/history-archility-shell-tools.json"},
     {"repo": "util-repos/archility", "task": "tasks/history-archility-scaffold-newline.json"}
   ]

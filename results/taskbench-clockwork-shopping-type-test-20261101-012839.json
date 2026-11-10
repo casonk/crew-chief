@@ -1,0 +1,5124 @@
+[
+  {
+    "runner": "rules",
+    "task": "clockwork-shopping-type",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_mean": 0.0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "category": {
+        "accuracy": 0.188,
+        "invalid": 0,
+        "n": 16,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "Tops",
+            "Bottoms",
+            "Outerwear",
+            "Footwear",
+            "Accessories",
+            "Underwear",
+            "Bedding",
+            "Bath",
+            "Cleaning",
+            "Lighting",
+            "Storage",
+            "Furniture",
+            "Fitness",
+            "Camping",
+            "Sports",
+            "Electronics"
+          ],
+          "counts": {
+            "Tops": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bottoms": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Outerwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Footwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Accessories": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Underwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Bedding": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Bath": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Cleaning": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Lighting": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 1,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Storage": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Furniture": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Fitness": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Camping": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Sports": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            },
+            "Electronics": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            }
+          },
+          "invalid": {
+            "Tops": 0,
+            "Bottoms": 0,
+            "Outerwear": 0,
+            "Footwear": 0,
+            "Accessories": 0,
+            "Underwear": 0,
+            "Bedding": 0,
+            "Bath": 0,
+            "Cleaning": 0,
+            "Lighting": 0,
+            "Storage": 0,
+            "Furniture": 0,
+            "Fitness": 0,
+            "Camping": 0,
+            "Sports": 0,
+            "Electronics": 0
+          },
+          "per_label": {
+            "Tops": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bottoms": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Outerwear": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Footwear": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Accessories": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Underwear": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Bedding": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Bath": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Cleaning": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Lighting": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Storage": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Furniture": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Fitness": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Camping": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Sports": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Electronics": {
+              "support": 1,
+              "precision": 0.071,
+              "recall": 1.0,
+              "f1": 0.133
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 32,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Tops",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.02,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Bottoms",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Outerwear",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Footwear",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Accessories",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Underwear",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Bedding",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Bath",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Cleaning",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Lighting",
+            "expected": "Lighting",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Storage",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Furniture",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Fitness",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Camping",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Sports",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Electronics",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "bayes",
+    "task": "clockwork-shopping-type",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_mean": 0.2,
+    "latency_ms_median": 0.2,
+    "latency_ms_p90": 0.3,
+    "questions": {
+      "category": {
+        "accuracy": 0.188,
+        "invalid": 0,
+        "n": 16,
+        "brier": 0.901,
+        "confusion": {
+          "labels": [
+            "Tops",
+            "Bottoms",
+            "Outerwear",
+            "Footwear",
+            "Accessories",
+            "Underwear",
+            "Bedding",
+            "Bath",
+            "Cleaning",
+            "Lighting",
+            "Storage",
+            "Furniture",
+            "Fitness",
+            "Camping",
+            "Sports",
+            "Electronics"
+          ],
+          "counts": {
+            "Tops": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bottoms": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Outerwear": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Footwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 1,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Accessories": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Underwear": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bedding": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bath": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 1,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Cleaning": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Lighting": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 1,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Storage": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Furniture": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Fitness": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Camping": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Sports": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Electronics": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            }
+          },
+          "invalid": {
+            "Tops": 0,
+            "Bottoms": 0,
+            "Outerwear": 0,
+            "Footwear": 0,
+            "Accessories": 0,
+            "Underwear": 0,
+            "Bedding": 0,
+            "Bath": 0,
+            "Cleaning": 0,
+            "Lighting": 0,
+            "Storage": 0,
+            "Furniture": 0,
+            "Fitness": 0,
+            "Camping": 0,
+            "Sports": 0,
+            "Electronics": 0
+          },
+          "per_label": {
+            "Tops": {
+              "support": 1,
+              "precision": 0.077,
+              "recall": 1.0,
+              "f1": 0.143
+            },
+            "Bottoms": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Outerwear": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Footwear": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Accessories": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Underwear": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Bedding": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Bath": {
+              "support": 1,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667
+            },
+            "Cleaning": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Lighting": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Storage": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Furniture": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Fitness": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Camping": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Sports": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Electronics": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 32,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.35,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Tops",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.24,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Bottoms",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.23,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Outerwear",
+            "p": {
+              "Tops": 0.40490741748739434,
+              "Bottoms": 0.040282384587082144,
+              "Outerwear": 0.040282384587082144,
+              "Footwear": 0.040282384587082144,
+              "Accessories": 0.040282384587082144,
+              "Underwear": 0.040282384587082144,
+              "Bedding": 0.03388835528754529,
+              "Bath": 0.040282384587082144,
+              "Cleaning": 0.040282384587082144,
+              "Lighting": 0.040282384587082144,
+              "Storage": 0.036809765226126785,
+              "Furniture": 0.040282384587082144,
+              "Fitness": 0.040282384587082144,
+              "Camping": 0.036809765226126785,
+              "Sports": 0.04447846631490316,
+              "Electronics": 0.040282384587082144
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Bath",
+            "expected": "Footwear",
+            "p": {
+              "Tops": 0.035574401666318194,
+              "Bottoms": 0.03893047729521614,
+              "Outerwear": 0.03893047729521614,
+              "Footwear": 0.03893047729521614,
+              "Accessories": 0.03893047729521614,
+              "Underwear": 0.03893047729521614,
+              "Bedding": 0.03275103645470563,
+              "Bath": 0.4282352502473772,
+              "Cleaning": 0.03893047729521614,
+              "Lighting": 0.03893047729521614,
+              "Storage": 0.035574401666318194,
+              "Furniture": 0.03893047729521614,
+              "Fitness": 0.03893047729521614,
+              "Camping": 0.035574401666318194,
+              "Sports": 0.04298573534680111,
+              "Electronics": 0.03893047729521614
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Accessories",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Underwear",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.21,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Bedding",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.43,
+        "answers": {
+          "category": {
+            "value": "Bath",
+            "expected": "Bath",
+            "p": {
+              "Tops": 0.023566789468169255,
+              "Bottoms": 0.028223097106059587,
+              "Outerwear": 0.028223097106059587,
+              "Footwear": 0.028223097106059587,
+              "Accessories": 0.028223097106059587,
+              "Underwear": 0.028223097106059587,
+              "Bedding": 0.019974472101517093,
+              "Bath": 0.31045406816665494,
+              "Cleaning": 0.028223097106059587,
+              "Lighting": 0.028223097106059587,
+              "Storage": 0.023566789468169255,
+              "Furniture": 0.028223097106059587,
+              "Fitness": 0.31045406816665494,
+              "Camping": 0.023566789468169255,
+              "Sports": 0.034409149206129,
+              "Electronics": 0.028223097106059587
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Cleaning",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Lighting",
+            "expected": "Lighting",
+            "p": {
+              "Tops": 0.035574401666318194,
+              "Bottoms": 0.03893047729521614,
+              "Outerwear": 0.03893047729521614,
+              "Footwear": 0.03893047729521614,
+              "Accessories": 0.03893047729521614,
+              "Underwear": 0.03893047729521614,
+              "Bedding": 0.03275103645470563,
+              "Bath": 0.03893047729521614,
+              "Cleaning": 0.03893047729521614,
+              "Lighting": 0.4282352502473772,
+              "Storage": 0.035574401666318194,
+              "Furniture": 0.03893047729521614,
+              "Fitness": 0.03893047729521614,
+              "Camping": 0.035574401666318194,
+              "Sports": 0.04298573534680111,
+              "Electronics": 0.03893047729521614
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Storage",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Furniture",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 0.21,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Fitness",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Camping",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 0.23,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Sports",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 0.22,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Electronics",
+            "p": {
+              "Tops": 0.0625,
+              "Bottoms": 0.0625,
+              "Outerwear": 0.0625,
+              "Footwear": 0.0625,
+              "Accessories": 0.0625,
+              "Underwear": 0.0625,
+              "Bedding": 0.0625,
+              "Bath": 0.0625,
+              "Cleaning": 0.0625,
+              "Lighting": 0.0625,
+              "Storage": 0.0625,
+              "Furniture": 0.0625,
+              "Fitness": 0.0625,
+              "Camping": 0.0625,
+              "Sports": 0.0625,
+              "Electronics": 0.0625
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "clockwork-shopping-type",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_mean": 906.6,
+    "latency_ms_median": 274.4,
+    "latency_ms_p90": 295.2,
+    "questions": {
+      "category": {
+        "accuracy": 0.938,
+        "invalid": 0,
+        "n": 16,
+        "brier": 0.046,
+        "confusion": {
+          "labels": [
+            "Tops",
+            "Bottoms",
+            "Outerwear",
+            "Footwear",
+            "Accessories",
+            "Underwear",
+            "Bedding",
+            "Bath",
+            "Cleaning",
+            "Lighting",
+            "Storage",
+            "Furniture",
+            "Fitness",
+            "Camping",
+            "Sports",
+            "Electronics"
+          ],
+          "counts": {
+            "Tops": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bottoms": {
+              "Tops": 0,
+              "Bottoms": 1,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Outerwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 1,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Footwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 1,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Accessories": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 1,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Underwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 1,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bedding": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 1,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bath": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 1,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Cleaning": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 1,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Lighting": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 1,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Storage": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 1,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Furniture": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 1,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Fitness": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 1,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Camping": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 1,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Sports": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 1,
+              "Electronics": 0
+            },
+            "Electronics": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            }
+          },
+          "invalid": {
+            "Tops": 0,
+            "Bottoms": 0,
+            "Outerwear": 0,
+            "Footwear": 0,
+            "Accessories": 0,
+            "Underwear": 0,
+            "Bedding": 0,
+            "Bath": 0,
+            "Cleaning": 0,
+            "Lighting": 0,
+            "Storage": 0,
+            "Furniture": 0,
+            "Fitness": 0,
+            "Camping": 0,
+            "Sports": 0,
+            "Electronics": 0
+          },
+          "per_label": {
+            "Tops": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bottoms": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Outerwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Footwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Accessories": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Underwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bedding": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bath": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Cleaning": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Lighting": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Storage": {
+              "support": 1,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667
+            },
+            "Furniture": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Fitness": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Camping": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Sports": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Electronics": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 32,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 10389.27,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Tops",
+            "p": {
+              "Accessories": 0.005011067511652697,
+              "Bath": 0.007346913333970784,
+              "Bedding": 0.0055422701060818215,
+              "Bottoms": 0.006994883251963722,
+              "Camping": 0.00748603676844742,
+              "Cleaning": 0.007228910339688821,
+              "Electronics": 0.005272268557012663,
+              "Fitness": 0.0050859068863079145,
+              "Footwear": 0.008304981815745812,
+              "Furniture": 0.005118925307103619,
+              "Lighting": 0.005821935994204137,
+              "Outerwear": 0.014518985986550086,
+              "Sports": 0.00546708550343435,
+              "Storage": 0.005113572786454272,
+              "Tops": 0.8996717360622025,
+              "Underwear": 0.006014519789179348
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 274.66,
+        "answers": {
+          "category": {
+            "value": "Bottoms",
+            "expected": "Bottoms",
+            "p": {
+              "Accessories": 0.004887644708493757,
+              "Bath": 0.005586946183872669,
+              "Bedding": 0.007303055146399192,
+              "Bottoms": 0.9218035873893524,
+              "Camping": 0.0056884007720202105,
+              "Cleaning": 0.005813112722764919,
+              "Electronics": 0.0048675148404493055,
+              "Fitness": 0.004426758675503998,
+              "Footwear": 0.0061300852675730075,
+              "Furniture": 0.0039048203767796524,
+              "Lighting": 0.003977207851068974,
+              "Outerwear": 0.0055362566232956874,
+              "Sports": 0.004297201613112837,
+              "Storage": 0.004556059541140865,
+              "Tops": 0.004304999225930643,
+              "Underwear": 0.006916349062242019
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 268.31,
+        "answers": {
+          "category": {
+            "value": "Outerwear",
+            "expected": "Outerwear",
+            "p": {
+              "Accessories": 0.003424843599648971,
+              "Bath": 0.0036811689656111144,
+              "Bedding": 0.002991400937386601,
+              "Bottoms": 0.0034460000693608463,
+              "Camping": 0.003904878059329202,
+              "Cleaning": 0.004396772695570976,
+              "Electronics": 0.0036506204858190263,
+              "Fitness": 0.003178004257058776,
+              "Footwear": 0.003779440887253165,
+              "Furniture": 0.0030474322997873695,
+              "Lighting": 0.0033601405277797827,
+              "Outerwear": 0.9455034546473874,
+              "Sports": 0.0030189843203723946,
+              "Storage": 0.002729849022864389,
+              "Tops": 0.0051801949694759266,
+              "Underwear": 0.004706814255294185
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 268.41,
+        "answers": {
+          "category": {
+            "value": "Footwear",
+            "expected": "Footwear",
+            "p": {
+              "Accessories": 0.010412546063060229,
+              "Bath": 0.02125346198081011,
+              "Bedding": 0.005785786381601232,
+              "Bottoms": 0.007817008090798109,
+              "Camping": 0.006833611855409585,
+              "Cleaning": 0.0055897080136591455,
+              "Electronics": 0.00643440785447914,
+              "Fitness": 0.007549175955058199,
+              "Footwear": 0.8752429412588821,
+              "Furniture": 0.006853056989756808,
+              "Lighting": 0.004440768175906653,
+              "Outerwear": 0.00745340591237667,
+              "Sports": 0.006308733677704579,
+              "Storage": 0.005647725856010803,
+              "Tops": 0.005978428576359423,
+              "Underwear": 0.016399233358126947
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 295.24,
+        "answers": {
+          "category": {
+            "value": "Accessories",
+            "expected": "Accessories",
+            "p": {
+              "Accessories": 0.9085061783345177,
+              "Bath": 0.0037235698965300654,
+              "Bedding": 0.005314032300264681,
+              "Bottoms": 0.0061767859035919016,
+              "Camping": 0.012100623049317813,
+              "Cleaning": 0.00430221166300848,
+              "Electronics": 0.006402306755161026,
+              "Fitness": 0.0037305738647493425,
+              "Footwear": 0.004469443059159822,
+              "Furniture": 0.0056956112552801535,
+              "Lighting": 0.002969240880081678,
+              "Outerwear": 0.005721631599894748,
+              "Sports": 0.005609821560150165,
+              "Storage": 0.01725774888891817,
+              "Tops": 0.0046269478639348015,
+              "Underwear": 0.0033932731254396127
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 266.13,
+        "answers": {
+          "category": {
+            "value": "Underwear",
+            "expected": "Underwear",
+            "p": {
+              "Accessories": 0.001371032470377791,
+              "Bath": 0.0012752442959149091,
+              "Bedding": 0.0014638047966800112,
+              "Bottoms": 0.0026229649265357277,
+              "Camping": 0.0015244441230589272,
+              "Cleaning": 0.0018750133597745155,
+              "Electronics": 0.0018401708881774028,
+              "Fitness": 0.0012385053168483045,
+              "Footwear": 0.0018588488076407303,
+              "Furniture": 0.0020784305956966904,
+              "Lighting": 0.0018171840182508805,
+              "Outerwear": 0.002401189148468045,
+              "Sports": 0.0012478494716865684,
+              "Storage": 0.0015670611545670328,
+              "Tops": 0.0024655295720309237,
+              "Underwear": 0.9733527270542917
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 267.86,
+        "answers": {
+          "category": {
+            "value": "Bedding",
+            "expected": "Bedding",
+            "p": {
+              "Accessories": 0.005187453789087369,
+              "Bath": 0.006795720162845247,
+              "Bedding": 0.9130089104241843,
+              "Bottoms": 0.004860949845431095,
+              "Camping": 0.008387139896658815,
+              "Cleaning": 0.004829121054130974,
+              "Electronics": 0.0053493988608754785,
+              "Fitness": 0.00879718830532233,
+              "Footwear": 0.00461639167340862,
+              "Furniture": 0.012371152981292656,
+              "Lighting": 0.00344500544133033,
+              "Outerwear": 0.004262133496752648,
+              "Sports": 0.004330336251584521,
+              "Storage": 0.004827357504685388,
+              "Tops": 0.0038259060937497454,
+              "Underwear": 0.00510583421866021
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 280.57,
+        "answers": {
+          "category": {
+            "value": "Bath",
+            "expected": "Bath",
+            "p": {
+              "Accessories": 0.004668097459708324,
+              "Bath": 0.9300896975576859,
+              "Bedding": 0.006918282328208667,
+              "Bottoms": 0.0037946007407729026,
+              "Camping": 0.006042078961256621,
+              "Cleaning": 0.0055608810145878025,
+              "Electronics": 0.004105235259818992,
+              "Fitness": 0.005116937404305739,
+              "Footwear": 0.003820408823953462,
+              "Furniture": 0.004828063149034943,
+              "Lighting": 0.003647989656922296,
+              "Outerwear": 0.003252679952816875,
+              "Sports": 0.0057196498408292025,
+              "Storage": 0.003806656022792901,
+              "Tops": 0.004582300646188942,
+              "Underwear": 0.004046441181115981
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 275.91,
+        "answers": {
+          "category": {
+            "value": "Cleaning",
+            "expected": "Cleaning",
+            "p": {
+              "Accessories": 0.004867389961464061,
+              "Bath": 0.01826284261239384,
+              "Bedding": 0.005494360338267479,
+              "Bottoms": 0.005255558062580138,
+              "Camping": 0.0060807049874453106,
+              "Cleaning": 0.9037654497371518,
+              "Electronics": 0.00611471526923057,
+              "Fitness": 0.005471911731663616,
+              "Footwear": 0.004211519330066911,
+              "Furniture": 0.004542638524415736,
+              "Lighting": 0.005246729170811334,
+              "Outerwear": 0.0038120637204717683,
+              "Sports": 0.005181074937795192,
+              "Storage": 0.011924228077136707,
+              "Tops": 0.003945668407061588,
+              "Underwear": 0.0058231451320440095
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 274.17,
+        "answers": {
+          "category": {
+            "value": "Lighting",
+            "expected": "Lighting",
+            "p": {
+              "Accessories": 0.0014635939118102597,
+              "Bath": 0.0012628048920016197,
+              "Bedding": 0.0013018932499643124,
+              "Bottoms": 0.0017552929309669213,
+              "Camping": 0.0013943333155739678,
+              "Cleaning": 0.0015398181476160208,
+              "Electronics": 0.0032464190453361757,
+              "Fitness": 0.001274872719244801,
+              "Footwear": 0.0014586263628465592,
+              "Furniture": 0.003515950039554768,
+              "Lighting": 0.9759314124600728,
+              "Outerwear": 0.0011077733381764318,
+              "Sports": 0.0012163887991347043,
+              "Storage": 0.0012220816289944918,
+              "Tops": 0.0010703195598028587,
+              "Underwear": 0.0012384195989034515
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 270.48,
+        "answers": {
+          "category": {
+            "value": "Storage",
+            "expected": "Storage",
+            "p": {
+              "Accessories": 0.00430131122352163,
+              "Bath": 0.004209644980472604,
+              "Bedding": 0.004074167102318108,
+              "Bottoms": 0.0032376075228850434,
+              "Camping": 0.004705992130157198,
+              "Cleaning": 0.005262794103827661,
+              "Electronics": 0.0037111282853771427,
+              "Fitness": 0.002753737041569244,
+              "Footwear": 0.004397554073267442,
+              "Furniture": 0.004469432460062451,
+              "Lighting": 0.0026508683909030953,
+              "Outerwear": 0.003123198857503041,
+              "Sports": 0.0036577657075555175,
+              "Storage": 0.9434691131164814,
+              "Tops": 0.0029866286455087453,
+              "Underwear": 0.0029890563585898114
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 274.56,
+        "answers": {
+          "category": {
+            "value": "Storage",
+            "expected": "Furniture",
+            "p": {
+              "Accessories": 0.005678635812440422,
+              "Bath": 0.005083545708374842,
+              "Bedding": 0.006710507673027366,
+              "Bottoms": 0.004575906800434171,
+              "Camping": 0.007640587133235456,
+              "Cleaning": 0.005329789346372726,
+              "Electronics": 0.006973872213037668,
+              "Fitness": 0.0085908543502253,
+              "Footwear": 0.00551604521338918,
+              "Furniture": 0.39180921033644983,
+              "Lighting": 0.00782670320853977,
+              "Outerwear": 0.0042973283350335395,
+              "Sports": 0.006925797085806125,
+              "Storage": 0.522604305491445,
+              "Tops": 0.005713853705218045,
+              "Underwear": 0.004723057586970626
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 278.32,
+        "answers": {
+          "category": {
+            "value": "Fitness",
+            "expected": "Fitness",
+            "p": {
+              "Accessories": 0.0031548148226152603,
+              "Bath": 0.0029897215012011052,
+              "Bedding": 0.0037397350036286903,
+              "Bottoms": 0.0033267395717315584,
+              "Camping": 0.0045772891076241795,
+              "Cleaning": 0.0043602613599969045,
+              "Electronics": 0.0038841113591887117,
+              "Fitness": 0.9341795502941065,
+              "Footwear": 0.003531185326638693,
+              "Furniture": 0.0038737922886287798,
+              "Lighting": 0.0033961312112174543,
+              "Outerwear": 0.0029253706963549993,
+              "Sports": 0.016684943664434085,
+              "Storage": 0.0033689921780137816,
+              "Tops": 0.0024179590294680546,
+              "Underwear": 0.003589402585151161
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 271.29,
+        "answers": {
+          "category": {
+            "value": "Camping",
+            "expected": "Camping",
+            "p": {
+              "Accessories": 0.0024032900206717896,
+              "Bath": 0.0023250130171024183,
+              "Bedding": 0.009008518398304407,
+              "Bottoms": 0.001975135175405858,
+              "Camping": 0.9556014029602126,
+              "Cleaning": 0.003059795483017548,
+              "Electronics": 0.0026595932894299245,
+              "Fitness": 0.003926632044823618,
+              "Footwear": 0.0019835919159718724,
+              "Furniture": 0.0030102900390521726,
+              "Lighting": 0.002172996884891412,
+              "Outerwear": 0.0029014822960380248,
+              "Sports": 0.0025882427984540144,
+              "Storage": 0.0021063416660669454,
+              "Tops": 0.0017440716271984046,
+              "Underwear": 0.0025336023833589477
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 273.32,
+        "answers": {
+          "category": {
+            "value": "Sports",
+            "expected": "Sports",
+            "p": {
+              "Accessories": 0.002833677214150771,
+              "Bath": 0.0028018179503174474,
+              "Bedding": 0.0027692352031769784,
+              "Bottoms": 0.001939657001444129,
+              "Camping": 0.0027337274966337676,
+              "Cleaning": 0.002633057326685481,
+              "Electronics": 0.002222955167212841,
+              "Fitness": 0.004093124912897027,
+              "Footwear": 0.0019083128664631297,
+              "Furniture": 0.0018891793644057785,
+              "Lighting": 0.0023022280440004946,
+              "Outerwear": 0.0017259186910316632,
+              "Sports": 0.964717004459415,
+              "Storage": 0.001942034526842658,
+              "Tops": 0.0016827131854137548,
+              "Underwear": 0.0018053565899091087
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 277.0,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Electronics",
+            "p": {
+              "Accessories": 0.004254948533001657,
+              "Bath": 0.004212843142532582,
+              "Bedding": 0.004006386065717753,
+              "Bottoms": 0.004308242392923595,
+              "Camping": 0.0034128472416969234,
+              "Cleaning": 0.004307330366925697,
+              "Electronics": 0.941724693520535,
+              "Fitness": 0.004340355622310877,
+              "Footwear": 0.004147218576840553,
+              "Furniture": 0.0032970753627917905,
+              "Lighting": 0.0035887026762283763,
+              "Outerwear": 0.003593067245242952,
+              "Sports": 0.0038163525234540226,
+              "Storage": 0.0036008042957784325,
+              "Tops": 0.0032530897154925565,
+              "Underwear": 0.004136042718527172
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef",
+    "task": "clockwork-shopping-type",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_mean": 2741.3,
+    "latency_ms_median": 1708.2,
+    "latency_ms_p90": 1735.6,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 16,
+        "brier": 0.016,
+        "confusion": {
+          "labels": [
+            "Tops",
+            "Bottoms",
+            "Outerwear",
+            "Footwear",
+            "Accessories",
+            "Underwear",
+            "Bedding",
+            "Bath",
+            "Cleaning",
+            "Lighting",
+            "Storage",
+            "Furniture",
+            "Fitness",
+            "Camping",
+            "Sports",
+            "Electronics"
+          ],
+          "counts": {
+            "Tops": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bottoms": {
+              "Tops": 0,
+              "Bottoms": 1,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Outerwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 1,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Footwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 1,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Accessories": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 1,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Underwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 1,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bedding": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 1,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bath": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 1,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Cleaning": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 1,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Lighting": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 1,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Storage": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 1,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Furniture": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 1,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Fitness": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 1,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Camping": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 1,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Sports": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 1,
+              "Electronics": 0
+            },
+            "Electronics": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            }
+          },
+          "invalid": {
+            "Tops": 0,
+            "Bottoms": 0,
+            "Outerwear": 0,
+            "Footwear": 0,
+            "Accessories": 0,
+            "Underwear": 0,
+            "Bedding": 0,
+            "Bath": 0,
+            "Cleaning": 0,
+            "Lighting": 0,
+            "Storage": 0,
+            "Furniture": 0,
+            "Fitness": 0,
+            "Camping": 0,
+            "Sports": 0,
+            "Electronics": 0
+          },
+          "per_label": {
+            "Tops": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bottoms": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Outerwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Footwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Accessories": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Underwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bedding": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bath": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Cleaning": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Lighting": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Storage": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Furniture": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Fitness": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Camping": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Sports": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Electronics": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 32,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 18210.84,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Tops",
+            "p": {
+              "Accessories": 0.002848779601760557,
+              "Bath": 0.0033071296624055256,
+              "Bedding": 0.002696787083041441,
+              "Bottoms": 0.00338752768839972,
+              "Camping": 0.004210885882378216,
+              "Cleaning": 0.0027769168927582553,
+              "Electronics": 0.0023968776771882776,
+              "Fitness": 0.0026416747540650644,
+              "Footwear": 0.0034647251225393945,
+              "Furniture": 0.002595410895570178,
+              "Lighting": 0.00233402271149071,
+              "Outerwear": 0.00804308213425658,
+              "Sports": 0.0029520179008977504,
+              "Storage": 0.0025242639885545027,
+              "Tops": 0.949512677622236,
+              "Underwear": 0.004307220382457787
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 1708.65,
+        "answers": {
+          "category": {
+            "value": "Bottoms",
+            "expected": "Bottoms",
+            "p": {
+              "Accessories": 0.0025037886829003173,
+              "Bath": 0.001844543960872908,
+              "Bedding": 0.0022873334781670727,
+              "Bottoms": 0.9670778553193327,
+              "Camping": 0.0034272084257283932,
+              "Cleaning": 0.0021127601901419486,
+              "Electronics": 0.0016868650969749887,
+              "Fitness": 0.002263022423178934,
+              "Footwear": 0.002452094306822272,
+              "Furniture": 0.0014613553887321145,
+              "Lighting": 0.001547978784183106,
+              "Outerwear": 0.002591484281796023,
+              "Sports": 0.0023436090323162282,
+              "Storage": 0.0020038018235222525,
+              "Tops": 0.0020949026014583485,
+              "Underwear": 0.002301396203872316
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 1701.75,
+        "answers": {
+          "category": {
+            "value": "Outerwear",
+            "expected": "Outerwear",
+            "p": {
+              "Accessories": 0.0027914163082198105,
+              "Bath": 0.0015768923166151131,
+              "Bedding": 0.001954763578434991,
+              "Bottoms": 0.0019801110273532756,
+              "Camping": 0.005065962016009621,
+              "Cleaning": 0.0017426073936077835,
+              "Electronics": 0.0020975392246386903,
+              "Fitness": 0.0021720237274374748,
+              "Footwear": 0.002313650132665833,
+              "Furniture": 0.0016595298535574776,
+              "Lighting": 0.0018478476755948124,
+              "Outerwear": 0.964585640886311,
+              "Sports": 0.0019560624305044053,
+              "Storage": 0.0018261558843076144,
+              "Tops": 0.0034376699609346972,
+              "Underwear": 0.0029921275838070897
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 1706.28,
+        "answers": {
+          "category": {
+            "value": "Footwear",
+            "expected": "Footwear",
+            "p": {
+              "Accessories": 0.005555309347712111,
+              "Bath": 0.010189594275135406,
+              "Bedding": 0.0018795658449258124,
+              "Bottoms": 0.00270162857259213,
+              "Camping": 0.004813209750852035,
+              "Cleaning": 0.0017392793400958124,
+              "Electronics": 0.0031243498179342887,
+              "Fitness": 0.003672025240575632,
+              "Footwear": 0.9519652194365814,
+              "Furniture": 0.0017899170883835718,
+              "Lighting": 0.001652429490338946,
+              "Outerwear": 0.0025495810844478294,
+              "Sports": 0.0021864532022518803,
+              "Storage": 0.0016366925296831412,
+              "Tops": 0.0018483094443497593,
+              "Underwear": 0.0026964355341401454
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 1724.86,
+        "answers": {
+          "category": {
+            "value": "Accessories",
+            "expected": "Accessories",
+            "p": {
+              "Accessories": 0.9088118332526989,
+              "Bath": 0.00455906033160363,
+              "Bedding": 0.004146521579634984,
+              "Bottoms": 0.004745544329398493,
+              "Camping": 0.015676962011198586,
+              "Cleaning": 0.004214970066891947,
+              "Electronics": 0.0061048902205645935,
+              "Fitness": 0.005915719624779121,
+              "Footwear": 0.004289425912196398,
+              "Furniture": 0.0037595251058495523,
+              "Lighting": 0.004102084244130673,
+              "Outerwear": 0.00620319010925119,
+              "Sports": 0.007217300195811009,
+              "Storage": 0.010307144867872611,
+              "Tops": 0.00578355588835059,
+              "Underwear": 0.004162272259767701
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 1699.39,
+        "answers": {
+          "category": {
+            "value": "Underwear",
+            "expected": "Underwear",
+            "p": {
+              "Accessories": 0.001152212918654408,
+              "Bath": 0.0007963464897590575,
+              "Bedding": 0.000888525121578489,
+              "Bottoms": 0.0015240020874165748,
+              "Camping": 0.0010573073207578569,
+              "Cleaning": 0.0006734072692792862,
+              "Electronics": 0.0007387958978851947,
+              "Fitness": 0.0011781967487920503,
+              "Footwear": 0.0009306487552284746,
+              "Furniture": 0.0007386866975020713,
+              "Lighting": 0.0008150804882539965,
+              "Outerwear": 0.0019644952618419055,
+              "Sports": 0.00077318964787381,
+              "Storage": 0.0006595122830772868,
+              "Tops": 0.018610073719219307,
+              "Underwear": 0.9674995192928803
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 1699.64,
+        "answers": {
+          "category": {
+            "value": "Bedding",
+            "expected": "Bedding",
+            "p": {
+              "Accessories": 0.003264644743125066,
+              "Bath": 0.0030210295290233236,
+              "Bedding": 0.9680803904876545,
+              "Bottoms": 0.0012844298115280211,
+              "Camping": 0.0030458084730136535,
+              "Cleaning": 0.001336738697090322,
+              "Electronics": 0.001478829344387126,
+              "Fitness": 0.005127929183384121,
+              "Footwear": 0.0014392245359650525,
+              "Furniture": 0.002132325773802805,
+              "Lighting": 0.0013867470387596563,
+              "Outerwear": 0.0015323636294188499,
+              "Sports": 0.0014058467244613365,
+              "Storage": 0.0014380151402582934,
+              "Tops": 0.0024081682026079352,
+              "Underwear": 0.0016175086855204283
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 1709.62,
+        "answers": {
+          "category": {
+            "value": "Bath",
+            "expected": "Bath",
+            "p": {
+              "Accessories": 0.003265569953314678,
+              "Bath": 0.9702955676029017,
+              "Bedding": 0.0025066269020283423,
+              "Bottoms": 0.0015172087940403737,
+              "Camping": 0.0018015564864388269,
+              "Cleaning": 0.0026644685334080978,
+              "Electronics": 0.0015910139332918616,
+              "Fitness": 0.002208217455969473,
+              "Footwear": 0.002219776464402957,
+              "Furniture": 0.001473169479805374,
+              "Lighting": 0.0016136201008454267,
+              "Outerwear": 0.0013877996594406903,
+              "Sports": 0.0027370340314156775,
+              "Storage": 0.001677329054627724,
+              "Tops": 0.0017808232972644385,
+              "Underwear": 0.001260218250804355
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 1711.76,
+        "answers": {
+          "category": {
+            "value": "Cleaning",
+            "expected": "Cleaning",
+            "p": {
+              "Accessories": 0.003380394070171581,
+              "Bath": 0.01251866774896925,
+              "Bedding": 0.002579819821136778,
+              "Bottoms": 0.002396916605619447,
+              "Camping": 0.004012351906532232,
+              "Cleaning": 0.9406483811442022,
+              "Electronics": 0.0036063845817071623,
+              "Fitness": 0.0041768457463134175,
+              "Footwear": 0.0020918792911713757,
+              "Furniture": 0.002419762420796777,
+              "Lighting": 0.002615490145807249,
+              "Outerwear": 0.0026611943084444024,
+              "Sports": 0.003985669078480372,
+              "Storage": 0.006680781661508008,
+              "Tops": 0.0036653871663538083,
+              "Underwear": 0.0025600743027858943
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 1705.16,
+        "answers": {
+          "category": {
+            "value": "Lighting",
+            "expected": "Lighting",
+            "p": {
+              "Accessories": 0.001280250776188564,
+              "Bath": 0.0011499451105526361,
+              "Bedding": 0.001213170614357968,
+              "Bottoms": 0.0009957793567171279,
+              "Camping": 0.0012970119795447223,
+              "Cleaning": 0.0013777913519460536,
+              "Electronics": 0.002341242454740818,
+              "Fitness": 0.001198719471946158,
+              "Footwear": 0.0012494398375337426,
+              "Furniture": 0.005452151609147119,
+              "Lighting": 0.9763354234036368,
+              "Outerwear": 0.0013678106710867481,
+              "Sports": 0.001057191509082621,
+              "Storage": 0.0013455937867511657,
+              "Tops": 0.001280450415816042,
+              "Underwear": 0.0010580276509513712
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 1701.69,
+        "answers": {
+          "category": {
+            "value": "Storage",
+            "expected": "Storage",
+            "p": {
+              "Accessories": 0.0035053607000908086,
+              "Bath": 0.0021297148650914616,
+              "Bedding": 0.0016492315479121461,
+              "Bottoms": 0.0014735666569521584,
+              "Camping": 0.002307397145041998,
+              "Cleaning": 0.002926454106198501,
+              "Electronics": 0.0017137964478704472,
+              "Fitness": 0.0020921067257350006,
+              "Footwear": 0.0029724384177464633,
+              "Furniture": 0.004265419463041938,
+              "Lighting": 0.0015841827928666655,
+              "Outerwear": 0.0016647429347667576,
+              "Sports": 0.0015908488063892735,
+              "Storage": 0.9662419431534047,
+              "Tops": 0.0021635985807634196,
+              "Underwear": 0.001719197656128086
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 1735.64,
+        "answers": {
+          "category": {
+            "value": "Furniture",
+            "expected": "Furniture",
+            "p": {
+              "Accessories": 0.006576336983060226,
+              "Bath": 0.004252502335215106,
+              "Bedding": 0.005048705016778898,
+              "Bottoms": 0.0038008214409481662,
+              "Camping": 0.006843504829784046,
+              "Cleaning": 0.004485722288277657,
+              "Electronics": 0.005463803318331262,
+              "Fitness": 0.007337938470163057,
+              "Footwear": 0.005267244405825095,
+              "Furniture": 0.6267469752215257,
+              "Lighting": 0.006225828198791179,
+              "Outerwear": 0.004276758265682141,
+              "Sports": 0.0049702614571957736,
+              "Storage": 0.2946541557118778,
+              "Tops": 0.010060509453051654,
+              "Underwear": 0.00398893260349236
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 1720.2,
+        "answers": {
+          "category": {
+            "value": "Fitness",
+            "expected": "Fitness",
+            "p": {
+              "Accessories": 0.001996437252205179,
+              "Bath": 0.0011537705770828081,
+              "Bedding": 0.0012382319169536333,
+              "Bottoms": 0.0014686478145280039,
+              "Camping": 0.004032306471137779,
+              "Cleaning": 0.0016121121138202047,
+              "Electronics": 0.0018492627229927732,
+              "Fitness": 0.9545135244022509,
+              "Footwear": 0.0015712182875099252,
+              "Furniture": 0.0014966933680107466,
+              "Lighting": 0.0013628977855510965,
+              "Outerwear": 0.0014610865352500573,
+              "Sports": 0.02144572793283772,
+              "Storage": 0.0012949262915077147,
+              "Tops": 0.0018157643806273778,
+              "Underwear": 0.0016873921477340685
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 1711.02,
+        "answers": {
+          "category": {
+            "value": "Camping",
+            "expected": "Camping",
+            "p": {
+              "Accessories": 0.0019073086315746282,
+              "Bath": 0.0012397749984723247,
+              "Bedding": 0.01162354824621397,
+              "Bottoms": 0.0011930738870023754,
+              "Camping": 0.9667733113087347,
+              "Cleaning": 0.001556625708515771,
+              "Electronics": 0.001481878292462161,
+              "Fitness": 0.0020268845427692077,
+              "Footwear": 0.0012348414706452448,
+              "Furniture": 0.0011949857900695488,
+              "Lighting": 0.0011959702635057077,
+              "Outerwear": 0.0023808151701297958,
+              "Sports": 0.0017267370111195706,
+              "Storage": 0.0012051187701858502,
+              "Tops": 0.0016464780356074764,
+              "Underwear": 0.0016126478729917933
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 1706.3,
+        "answers": {
+          "category": {
+            "value": "Sports",
+            "expected": "Sports",
+            "p": {
+              "Accessories": 0.0022145086580272508,
+              "Bath": 0.000934957815476363,
+              "Bedding": 0.0010586652768370633,
+              "Bottoms": 0.0009334165409748185,
+              "Camping": 0.0022434424450824505,
+              "Cleaning": 0.001251176237762054,
+              "Electronics": 0.0013443018319897182,
+              "Fitness": 0.004677784991038173,
+              "Footwear": 0.0011876117289129936,
+              "Furniture": 0.0008471014287563333,
+              "Lighting": 0.0009661257283745207,
+              "Outerwear": 0.0011103862375029278,
+              "Sports": 0.9772588088056899,
+              "Storage": 0.001077293763604622,
+              "Tops": 0.0015057160681377062,
+              "Underwear": 0.0013887024418330785
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 1707.66,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Electronics",
+            "p": {
+              "Accessories": 0.002618539336105239,
+              "Bath": 0.0010469737878372547,
+              "Bedding": 0.0013875805123179355,
+              "Bottoms": 0.0012531621465575052,
+              "Camping": 0.0015858912752342224,
+              "Cleaning": 0.0014275567223128187,
+              "Electronics": 0.9769403686870965,
+              "Fitness": 0.0020360771167591027,
+              "Footwear": 0.0015982602211626175,
+              "Furniture": 0.001223255088655444,
+              "Lighting": 0.0013807157285108166,
+              "Outerwear": 0.001533472533773949,
+              "Sports": 0.0016255632355770726,
+              "Storage": 0.0012569329980761956,
+              "Tops": 0.0016760401023533057,
+              "Underwear": 0.0014096105076698796
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "clockwork-shopping-type",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_mean": 806.3,
+    "latency_ms_median": 288.4,
+    "latency_ms_p90": 299.1,
+    "questions": {
+      "category": {
+        "accuracy": 0.938,
+        "invalid": 0,
+        "n": 16,
+        "brier": 0.042,
+        "confusion": {
+          "labels": [
+            "Tops",
+            "Bottoms",
+            "Outerwear",
+            "Footwear",
+            "Accessories",
+            "Underwear",
+            "Bedding",
+            "Bath",
+            "Cleaning",
+            "Lighting",
+            "Storage",
+            "Furniture",
+            "Fitness",
+            "Camping",
+            "Sports",
+            "Electronics"
+          ],
+          "counts": {
+            "Tops": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bottoms": {
+              "Tops": 0,
+              "Bottoms": 1,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Outerwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 1,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Footwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 1,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Accessories": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 1,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Underwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 1,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bedding": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 1,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bath": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 1,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Cleaning": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 1,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Lighting": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 1,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Storage": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 1,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Furniture": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 1,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Fitness": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 1,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Camping": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 1,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Sports": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 1,
+              "Electronics": 0
+            },
+            "Electronics": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            }
+          },
+          "invalid": {
+            "Tops": 0,
+            "Bottoms": 0,
+            "Outerwear": 0,
+            "Footwear": 0,
+            "Accessories": 0,
+            "Underwear": 0,
+            "Bedding": 0,
+            "Bath": 0,
+            "Cleaning": 0,
+            "Lighting": 0,
+            "Storage": 0,
+            "Furniture": 0,
+            "Fitness": 0,
+            "Camping": 0,
+            "Sports": 0,
+            "Electronics": 0
+          },
+          "per_label": {
+            "Tops": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bottoms": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Outerwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Footwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Accessories": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Underwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bedding": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bath": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Cleaning": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Lighting": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Storage": {
+              "support": 1,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667
+            },
+            "Furniture": {
+              "support": 1,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Fitness": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Camping": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Sports": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Electronics": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 32,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 8565.23,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Tops",
+            "p": {
+              "Tops": 0.9991066622694794,
+              "Bottoms": 0.00021578787227674424,
+              "Outerwear": 0.0004462334028362998,
+              "Footwear": 6.687882706446926e-05,
+              "Accessories": 2.2564469898854825e-05,
+              "Underwear": 3.257984157529918e-05,
+              "Bedding": 1.2958154491570522e-05,
+              "Bath": 4.502245836383648e-06,
+              "Cleaning": 1.012547532410217e-05,
+              "Lighting": 4.539669627345205e-06,
+              "Storage": 8.445230180577101e-06,
+              "Furniture": 1.9333960901011113e-05,
+              "Fitness": 6.695026545698235e-06,
+              "Camping": 5.178407286724097e-06,
+              "Sports": 6.141499082452384e-06,
+              "Electronics": 3.1373647592991404e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 284.89,
+        "answers": {
+          "category": {
+            "value": "Bottoms",
+            "expected": "Bottoms",
+            "p": {
+              "Tops": 8.56848558946623e-05,
+              "Bottoms": 0.9996189297041674,
+              "Outerwear": 9.54615534410143e-05,
+              "Footwear": 5.940086325764311e-05,
+              "Accessories": 3.075161631350175e-05,
+              "Underwear": 1.3370580572907211e-05,
+              "Bedding": 8.707358674446704e-06,
+              "Bath": 5.117928116710047e-06,
+              "Cleaning": 1.4354665807223231e-05,
+              "Lighting": 3.134045251056973e-06,
+              "Storage": 1.0489555824954287e-05,
+              "Furniture": 9.257247716892844e-06,
+              "Fitness": 5.8066331645866136e-06,
+              "Camping": 4.379303726690846e-06,
+              "Sports": 5.671392435923512e-06,
+              "Electronics": 2.948269563428771e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 299.1,
+        "answers": {
+          "category": {
+            "value": "Outerwear",
+            "expected": "Outerwear",
+            "p": {
+              "Tops": 9.517578470578091e-05,
+              "Bottoms": 3.74536283794204e-05,
+              "Outerwear": 0.9997231604049509,
+              "Footwear": 4.785875923872831e-05,
+              "Accessories": 1.4434207873563944e-05,
+              "Underwear": 1.9042037728047867e-05,
+              "Bedding": 9.859800639861777e-06,
+              "Bath": 3.872094213146393e-06,
+              "Cleaning": 6.846933706004134e-06,
+              "Lighting": 1.750231640847045e-06,
+              "Storage": 4.683215106354437e-06,
+              "Furniture": 4.535203156342861e-06,
+              "Fitness": 3.833803000151964e-06,
+              "Camping": 3.4784681755677222e-06,
+              "Sports": 1.4235248253100485e-05,
+              "Electronics": 9.780179232312241e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 291.54,
+        "answers": {
+          "category": {
+            "value": "Footwear",
+            "expected": "Footwear",
+            "p": {
+              "Tops": 0.00013470447833527967,
+              "Bottoms": 0.00039236790076226596,
+              "Outerwear": 7.682787434415508e-05,
+              "Footwear": 0.9931425801371351,
+              "Accessories": 0.0001685311332874093,
+              "Underwear": 0.0002750443609732819,
+              "Bedding": 3.0970950483396426e-05,
+              "Bath": 0.005657983822250749,
+              "Cleaning": 3.605406414219457e-05,
+              "Lighting": 7.4782988099794855e-06,
+              "Storage": 1.1046434660859193e-05,
+              "Furniture": 1.2227067001691669e-05,
+              "Fitness": 1.2765993567342863e-05,
+              "Camping": 7.723783819702237e-06,
+              "Sports": 1.34330841190839e-05,
+              "Electronics": 2.0260616307689354e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 291.79,
+        "answers": {
+          "category": {
+            "value": "Accessories",
+            "expected": "Accessories",
+            "p": {
+              "Tops": 4.155176265358382e-05,
+              "Bottoms": 4.06613571008716e-05,
+              "Outerwear": 4.1960089617546516e-05,
+              "Footwear": 3.6300758069541766e-05,
+              "Accessories": 0.9987181100620656,
+              "Underwear": 1.8018399843875423e-05,
+              "Bedding": 8.702200406247287e-06,
+              "Bath": 5.849522715019677e-06,
+              "Cleaning": 1.3278423444478273e-05,
+              "Lighting": 3.4788440696237438e-06,
+              "Storage": 0.001038126630920076,
+              "Furniture": 8.246608574372545e-06,
+              "Fitness": 4.6220916340345455e-06,
+              "Camping": 5.3059951154470876e-06,
+              "Sports": 6.892625932137801e-06,
+              "Electronics": 8.894627837379497e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 283.04,
+        "answers": {
+          "category": {
+            "value": "Underwear",
+            "expected": "Underwear",
+            "p": {
+              "Tops": 0.00036841757597838544,
+              "Bottoms": 0.00015114348477896443,
+              "Outerwear": 5.08739489639632e-05,
+              "Footwear": 3.1254656315442365e-05,
+              "Accessories": 1.643085695668725e-05,
+              "Underwear": 0.9993310677155778,
+              "Bedding": 9.132032694634264e-06,
+              "Bath": 5.523613082578186e-06,
+              "Cleaning": 6.463364700970177e-06,
+              "Lighting": 1.925413997336003e-06,
+              "Storage": 2.580777434339453e-06,
+              "Furniture": 3.848986715820578e-06,
+              "Fitness": 5.748306635618246e-06,
+              "Camping": 2.664092030878841e-06,
+              "Sports": 2.7157817129511202e-06,
+              "Electronics": 1.0209392423523955e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 289.89,
+        "answers": {
+          "category": {
+            "value": "Bedding",
+            "expected": "Bedding",
+            "p": {
+              "Tops": 4.61611554140986e-05,
+              "Bottoms": 5.4164462105884345e-05,
+              "Outerwear": 5.532174582381311e-05,
+              "Footwear": 5.720383605040725e-05,
+              "Accessories": 1.3363040099424509e-05,
+              "Underwear": 2.96129522401678e-05,
+              "Bedding": 0.9988027315332421,
+              "Bath": 2.108877646687672e-05,
+              "Cleaning": 9.152264114649632e-06,
+              "Lighting": 6.06887746405895e-06,
+              "Storage": 1.303772253753626e-05,
+              "Furniture": 0.0005833617142040255,
+              "Fitness": 9.648881815194596e-05,
+              "Camping": 0.0001912792162885248,
+              "Sports": 5.620142937750044e-06,
+              "Electronics": 1.5343742858746856e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 288.21,
+        "answers": {
+          "category": {
+            "value": "Bath",
+            "expected": "Bath",
+            "p": {
+              "Tops": 2.002865011152647e-05,
+              "Bottoms": 0.00010414283587204132,
+              "Outerwear": 1.774822541792517e-05,
+              "Footwear": 3.3059347275177964e-05,
+              "Accessories": 6.06532113963364e-06,
+              "Underwear": 9.162458840155102e-06,
+              "Bedding": 1.9374148933041323e-05,
+              "Bath": 0.9997150653236229,
+              "Cleaning": 4.820949404829604e-05,
+              "Lighting": 2.979742569795899e-06,
+              "Storage": 6.593381997133518e-06,
+              "Furniture": 5.320807719587385e-06,
+              "Fitness": 3.0744675552579555e-06,
+              "Camping": 3.7958162732184695e-06,
+              "Sports": 1.5659938054201745e-06,
+              "Electronics": 3.813984818784114e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 287.82,
+        "answers": {
+          "category": {
+            "value": "Cleaning",
+            "expected": "Cleaning",
+            "p": {
+              "Tops": 0.00016336602768449686,
+              "Bottoms": 0.0003668493618030211,
+              "Outerwear": 0.00012478623982284934,
+              "Footwear": 0.00016461937614561175,
+              "Accessories": 6.797359234422545e-05,
+              "Underwear": 6.840024038756709e-05,
+              "Bedding": 3.8794174442117274e-05,
+              "Bath": 0.008009415071740172,
+              "Cleaning": 0.990772570180601,
+              "Lighting": 4.736830250603148e-05,
+              "Storage": 4.108531541069746e-05,
+              "Furniture": 4.7735218576599375e-05,
+              "Fitness": 2.0171770256850422e-05,
+              "Camping": 2.1543153840647947e-05,
+              "Sports": 1.6079116903930156e-05,
+              "Electronics": 2.9242857534502343e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 286.27,
+        "answers": {
+          "category": {
+            "value": "Lighting",
+            "expected": "Lighting",
+            "p": {
+              "Tops": 0.00010133323420673796,
+              "Bottoms": 0.00014410476302036357,
+              "Outerwear": 7.597945426298103e-05,
+              "Footwear": 6.731740397779561e-05,
+              "Accessories": 1.7905783517776564e-05,
+              "Underwear": 1.652053390051825e-05,
+              "Bedding": 1.166215435614259e-05,
+              "Bath": 8.747529340775024e-06,
+              "Cleaning": 6.928136048137664e-05,
+              "Lighting": 0.9986102569572441,
+              "Storage": 2.7941764453677432e-05,
+              "Furniture": 0.0007994562907531655,
+              "Fitness": 5.445177280931889e-06,
+              "Camping": 5.420447772135143e-06,
+              "Sports": 4.709258848502755e-06,
+              "Electronics": 3.391788658300792e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 288.68,
+        "answers": {
+          "category": {
+            "value": "Storage",
+            "expected": "Storage",
+            "p": {
+              "Tops": 0.00013214033925649626,
+              "Bottoms": 0.0001491285308318724,
+              "Outerwear": 7.532461990098033e-05,
+              "Footwear": 0.0003551443734955326,
+              "Accessories": 0.00016805055358455923,
+              "Underwear": 3.255140858091946e-05,
+              "Bedding": 2.5495979000682082e-05,
+              "Bath": 7.457020319740127e-05,
+              "Cleaning": 8.86551159097575e-05,
+              "Lighting": 3.0730185613485166e-05,
+              "Storage": 0.9987508369077891,
+              "Furniture": 5.804028454848871e-05,
+              "Fitness": 1.4721994941112401e-05,
+              "Camping": 9.922100570778338e-06,
+              "Sports": 9.591824481033818e-06,
+              "Electronics": 2.509557829765569e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 286.36,
+        "answers": {
+          "category": {
+            "value": "Storage",
+            "expected": "Furniture",
+            "p": {
+              "Tops": 0.00012361449277342262,
+              "Bottoms": 0.00011269759882838912,
+              "Outerwear": 4.480689347689341e-05,
+              "Footwear": 8.297667845929204e-05,
+              "Accessories": 2.367981075733675e-05,
+              "Underwear": 3.089652114182549e-05,
+              "Bedding": 1.9251751791223488e-05,
+              "Bath": 2.084282471591891e-05,
+              "Cleaning": 3.816641296752485e-05,
+              "Lighting": 4.126033374319191e-05,
+              "Storage": 0.5820372002685864,
+              "Furniture": 0.4173587517453491,
+              "Fitness": 2.721010536308291e-05,
+              "Camping": 1.6598896547514677e-05,
+              "Sports": 9.444669717681675e-06,
+              "Electronics": 1.260099578113432e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 289.48,
+        "answers": {
+          "category": {
+            "value": "Fitness",
+            "expected": "Fitness",
+            "p": {
+              "Tops": 0.0001411485745522182,
+              "Bottoms": 8.932216412411469e-05,
+              "Outerwear": 7.810963803841574e-05,
+              "Footwear": 0.00010882813683537275,
+              "Accessories": 6.585945849929367e-05,
+              "Underwear": 6.695218482236778e-05,
+              "Bedding": 1.4589997121897078e-05,
+              "Bath": 1.377094128178907e-05,
+              "Cleaning": 2.271436288630921e-05,
+              "Lighting": 6.147608190017329e-06,
+              "Storage": 1.883977776433795e-05,
+              "Furniture": 3.3240280610772886e-05,
+              "Fitness": 0.9988346943942332,
+              "Camping": 4.088772523643909e-05,
+              "Sports": 0.0004153809089930574,
+              "Electronics": 4.951384681038747e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 286.19,
+        "answers": {
+          "category": {
+            "value": "Camping",
+            "expected": "Camping",
+            "p": {
+              "Tops": 3.8778136907988954e-05,
+              "Bottoms": 5.9036345228641344e-05,
+              "Outerwear": 0.00020717828068197154,
+              "Footwear": 4.450257934001008e-05,
+              "Accessories": 1.6953147969863818e-05,
+              "Underwear": 0.0001447089428510186,
+              "Bedding": 0.0016004803021832583,
+              "Bath": 1.5114910312850315e-05,
+              "Cleaning": 8.495944861398182e-06,
+              "Lighting": 3.4365666059014435e-06,
+              "Storage": 8.754206678221762e-06,
+              "Furniture": 3.0766620953787016e-05,
+              "Fitness": 1.5371219236075467e-05,
+              "Camping": 0.9977869237256294,
+              "Sports": 6.603517561551542e-06,
+              "Electronics": 1.2895552998210332e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 286.95,
+        "answers": {
+          "category": {
+            "value": "Sports",
+            "expected": "Sports",
+            "p": {
+              "Tops": 9.84331460885544e-05,
+              "Bottoms": 7.963791019538358e-05,
+              "Outerwear": 0.00014582215128627017,
+              "Footwear": 0.00018236602273517688,
+              "Accessories": 0.0027050743523500415,
+              "Underwear": 3.649658549242296e-05,
+              "Bedding": 2.086761979852372e-05,
+              "Bath": 1.3948545219086905e-05,
+              "Cleaning": 1.4552894123673952e-05,
+              "Lighting": 6.173146923214782e-06,
+              "Storage": 1.5195537810152579e-05,
+              "Furniture": 4.634277899697585e-05,
+              "Fitness": 0.0003519833098690714,
+              "Camping": 4.554687397733317e-05,
+              "Sports": 0.9961815539429568,
+              "Electronics": 5.600518217722438e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 294.61,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Electronics",
+            "p": {
+              "Tops": 5.862855198570015e-05,
+              "Bottoms": 4.827420305635056e-05,
+              "Outerwear": 3.639336807563694e-05,
+              "Footwear": 8.466086512002719e-05,
+              "Accessories": 0.0008585907654125749,
+              "Underwear": 2.986308551003288e-05,
+              "Bedding": 1.3885730691518886e-05,
+              "Bath": 7.382044272369575e-06,
+              "Cleaning": 1.9074226320545147e-05,
+              "Lighting": 5.97396131348987e-06,
+              "Storage": 7.130801505173918e-06,
+              "Furniture": 1.4303316754341693e-05,
+              "Fitness": 1.0553124024891604e-05,
+              "Camping": 1.0638642358975692e-05,
+              "Sports": 1.966813079024442e-05,
+              "Electronics": 0.9987749791828082
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:tev1",
+    "task": "clockwork-shopping-type",
+    "items": 16,
+    "errors": 0,
+    "latency_ms_mean": 403.1,
+    "latency_ms_median": 168.1,
+    "latency_ms_p90": 174.6,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 16,
+        "brier": 0.023,
+        "confusion": {
+          "labels": [
+            "Tops",
+            "Bottoms",
+            "Outerwear",
+            "Footwear",
+            "Accessories",
+            "Underwear",
+            "Bedding",
+            "Bath",
+            "Cleaning",
+            "Lighting",
+            "Storage",
+            "Furniture",
+            "Fitness",
+            "Camping",
+            "Sports",
+            "Electronics"
+          ],
+          "counts": {
+            "Tops": {
+              "Tops": 1,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bottoms": {
+              "Tops": 0,
+              "Bottoms": 1,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Outerwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 1,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Footwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 1,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Accessories": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 1,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Underwear": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 1,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bedding": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 1,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Bath": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 1,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Cleaning": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 1,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Lighting": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 1,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Storage": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 1,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Furniture": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 1,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Fitness": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 1,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Camping": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 1,
+              "Sports": 0,
+              "Electronics": 0
+            },
+            "Sports": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 1,
+              "Electronics": 0
+            },
+            "Electronics": {
+              "Tops": 0,
+              "Bottoms": 0,
+              "Outerwear": 0,
+              "Footwear": 0,
+              "Accessories": 0,
+              "Underwear": 0,
+              "Bedding": 0,
+              "Bath": 0,
+              "Cleaning": 0,
+              "Lighting": 0,
+              "Storage": 0,
+              "Furniture": 0,
+              "Fitness": 0,
+              "Camping": 0,
+              "Sports": 0,
+              "Electronics": 1
+            }
+          },
+          "invalid": {
+            "Tops": 0,
+            "Bottoms": 0,
+            "Outerwear": 0,
+            "Footwear": 0,
+            "Accessories": 0,
+            "Underwear": 0,
+            "Bedding": 0,
+            "Bath": 0,
+            "Cleaning": 0,
+            "Lighting": 0,
+            "Storage": 0,
+            "Furniture": 0,
+            "Fitness": 0,
+            "Camping": 0,
+            "Sports": 0,
+            "Electronics": 0
+          },
+          "per_label": {
+            "Tops": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bottoms": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Outerwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Footwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Accessories": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Underwear": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bedding": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bath": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Cleaning": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Lighting": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Storage": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Furniture": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Fitness": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Camping": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Sports": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Electronics": {
+              "support": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 32,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 3923.0,
+        "answers": {
+          "category": {
+            "value": "Tops",
+            "expected": "Tops",
+            "p": {
+              "Tops": 0.9999932653084775,
+              "Bottoms": 3.738488801768102e-06,
+              "Outerwear": 2.588913737474637e-06,
+              "Footwear": 7.618469050162207e-08,
+              "Accessories": 1.0305802542918173e-07,
+              "Underwear": 2.8755297149810814e-08,
+              "Bedding": 2.1958983086721443e-08,
+              "Bath": 1.1719345038460118e-08,
+              "Cleaning": 5.593810642378789e-09,
+              "Lighting": 2.97021299982758e-09,
+              "Storage": 6.176921355472861e-09,
+              "Furniture": 2.6145466747880564e-08,
+              "Fitness": 1.4485184243796326e-08,
+              "Camping": 7.861425723857186e-09,
+              "Sports": 2.6218176227376922e-08,
+              "Electronics": 7.616144432644421e-08
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 170.66,
+        "answers": {
+          "category": {
+            "value": "Bottoms",
+            "expected": "Bottoms",
+            "p": {
+              "Tops": 6.666872550804208e-07,
+              "Bottoms": 0.999996759655686,
+              "Outerwear": 1.5748591523104535e-06,
+              "Footwear": 2.973437504176506e-07,
+              "Accessories": 1.3078390880324253e-07,
+              "Underwear": 7.877457634652695e-08,
+              "Bedding": 7.465300381928391e-08,
+              "Bath": 3.7275401290240425e-08,
+              "Cleaning": 4.568140502171236e-08,
+              "Lighting": 3.23846268651858e-08,
+              "Storage": 5.831551534791899e-08,
+              "Furniture": 4.2194357005867846e-08,
+              "Fitness": 3.915902654780773e-08,
+              "Camping": 2.6696089605022044e-08,
+              "Sports": 4.368030177370862e-08,
+              "Electronics": 9.185594364740936e-08
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 165.31,
+        "answers": {
+          "category": {
+            "value": "Outerwear",
+            "expected": "Outerwear",
+            "p": {
+              "Tops": 1.1522357290772244e-05,
+              "Bottoms": 5.090284352145069e-06,
+              "Outerwear": 0.9999792640439612,
+              "Footwear": 1.3700523525535028e-06,
+              "Accessories": 5.160491169917125e-07,
+              "Underwear": 6.508269289589559e-08,
+              "Bedding": 1.2338822770717436e-07,
+              "Bath": 6.057078320191753e-08,
+              "Cleaning": 8.104199789923516e-08,
+              "Lighting": 2.9307887809251576e-08,
+              "Storage": 6.179265454898378e-08,
+              "Furniture": 5.656564250529272e-08,
+              "Fitness": 1.1043206066777935e-07,
+              "Camping": 2.2091352058697503e-07,
+              "Sports": 8.343377313073945e-07,
+              "Electronics": 5.937797276391153e-07
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 165.08,
+        "answers": {
+          "category": {
+            "value": "Footwear",
+            "expected": "Footwear",
+            "p": {
+              "Tops": 2.5241108321712887e-06,
+              "Bottoms": 2.0968054413463142e-05,
+              "Outerwear": 4.5418962658247585e-06,
+              "Footwear": 0.9999275550658185,
+              "Accessories": 1.3668051346946422e-06,
+              "Underwear": 8.997934636730648e-07,
+              "Bedding": 4.4750277497323996e-07,
+              "Bath": 3.834237726078954e-05,
+              "Cleaning": 3.5641711437773807e-07,
+              "Lighting": 1.1997668948111196e-07,
+              "Storage": 9.456370285258106e-08,
+              "Furniture": 1.510832590720903e-07,
+              "Fitness": 2.988696901230395e-07,
+              "Camping": 1.2633788119312245e-07,
+              "Sports": 1.3108208768385625e-06,
+              "Electronics": 8.96324821432751e-07
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 173.49,
+        "answers": {
+          "category": {
+            "value": "Accessories",
+            "expected": "Accessories",
+            "p": {
+              "Tops": 1.858474139072337e-05,
+              "Bottoms": 1.0213749258177407e-05,
+              "Outerwear": 2.2108940926975992e-05,
+              "Footwear": 7.487390425523406e-06,
+              "Accessories": 0.9989931609428134,
+              "Underwear": 2.587592633684047e-06,
+              "Bedding": 1.899597672551049e-06,
+              "Bath": 2.4114553516451605e-06,
+              "Cleaning": 2.081947108534691e-06,
+              "Lighting": 9.310377452176189e-07,
+              "Storage": 0.0009226394949541743,
+              "Furniture": 3.381493674799281e-06,
+              "Fitness": 1.6062040047357814e-06,
+              "Camping": 3.7607265099109223e-06,
+              "Sports": 3.096216414245017e-06,
+              "Electronics": 4.048469115596196e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 174.59,
+        "answers": {
+          "category": {
+            "value": "Underwear",
+            "expected": "Underwear",
+            "p": {
+              "Tops": 0.00023400510111416467,
+              "Bottoms": 2.6462530825892362e-05,
+              "Outerwear": 5.7522223883176323e-05,
+              "Footwear": 6.987200819789764e-06,
+              "Accessories": 1.4874602094587777e-05,
+              "Underwear": 0.9996327629821455,
+              "Bedding": 5.169313621599421e-06,
+              "Bath": 1.5402804997908422e-06,
+              "Cleaning": 9.83576429393664e-07,
+              "Lighting": 2.3207124655994728e-07,
+              "Storage": 1.8291134654338484e-07,
+              "Furniture": 6.027351399024581e-07,
+              "Fitness": 4.915040940809422e-06,
+              "Camping": 3.6370871943673546e-06,
+              "Sports": 2.586633195158118e-06,
+              "Electronics": 7.535709502835261e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 171.18,
+        "answers": {
+          "category": {
+            "value": "Bedding",
+            "expected": "Bedding",
+            "p": {
+              "Tops": 6.472039108755828e-06,
+              "Bottoms": 5.057976042643333e-06,
+              "Outerwear": 3.748444728847886e-06,
+              "Footwear": 2.714278232267163e-06,
+              "Accessories": 4.638397633937622e-06,
+              "Underwear": 4.3066064142187236e-06,
+              "Bedding": 0.9999634532894692,
+              "Bath": 1.7384339717590811e-06,
+              "Cleaning": 2.3175471418355526e-07,
+              "Lighting": 3.1491988198400094e-07,
+              "Storage": 1.1356344582802019e-07,
+              "Furniture": 2.0504944817987054e-06,
+              "Fitness": 6.280670081108438e-07,
+              "Camping": 3.1643675126406034e-06,
+              "Sports": 5.552406494228518e-07,
+              "Electronics": 8.121267043390147e-07
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 167.35,
+        "answers": {
+          "category": {
+            "value": "Bath",
+            "expected": "Bath",
+            "p": {
+              "Tops": 2.698403639653691e-07,
+              "Bottoms": 1.7538304952913118e-06,
+              "Outerwear": 4.634574399125529e-07,
+              "Footwear": 3.743362483066327e-07,
+              "Accessories": 9.277501720343176e-07,
+              "Underwear": 1.7272846031547248e-07,
+              "Bedding": 5.4139477223086775e-06,
+              "Bath": 0.999990041419964,
+              "Cleaning": 1.8361615726141142e-07,
+              "Lighting": 7.690391000994723e-08,
+              "Storage": 3.578342694440128e-08,
+              "Furniture": 5.885438448436326e-08,
+              "Fitness": 3.577919560342762e-08,
+              "Camping": 1.819808574915073e-08,
+              "Sports": 7.520888321419072e-08,
+              "Electronics": 9.834509040077187e-08
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 165.47,
+        "answers": {
+          "category": {
+            "value": "Cleaning",
+            "expected": "Cleaning",
+            "p": {
+              "Tops": 5.975516444207732e-06,
+              "Bottoms": 1.5689371146076137e-05,
+              "Outerwear": 1.2789108546181379e-05,
+              "Footwear": 8.574728772202361e-06,
+              "Accessories": 1.1437284593933932e-05,
+              "Underwear": 9.612183405885e-06,
+              "Bedding": 7.3142513724427295e-06,
+              "Bath": 0.0013646315801560084,
+              "Cleaning": 0.9985091966617473,
+              "Lighting": 2.3791153824723182e-05,
+              "Storage": 4.455006340668918e-06,
+              "Furniture": 1.1141399023372341e-05,
+              "Fitness": 2.284269735673988e-06,
+              "Camping": 1.679153771046448e-06,
+              "Sports": 4.207341238487917e-06,
+              "Electronics": 7.220989881470168e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 164.29,
+        "answers": {
+          "category": {
+            "value": "Lighting",
+            "expected": "Lighting",
+            "p": {
+              "Tops": 1.346357118085959e-06,
+              "Bottoms": 1.358558584162864e-06,
+              "Outerwear": 1.576129880191198e-06,
+              "Footwear": 1.4340647085016509e-06,
+              "Accessories": 3.3868837302581656e-07,
+              "Underwear": 3.020906841869436e-07,
+              "Bedding": 5.654442534721429e-07,
+              "Bath": 4.015569809324533e-07,
+              "Cleaning": 6.54488727447507e-06,
+              "Lighting": 0.9999354762588669,
+              "Storage": 1.0968732426465163e-06,
+              "Furniture": 4.700397894385479e-05,
+              "Fitness": 3.1553696395814654e-07,
+              "Camping": 1.733136992417659e-07,
+              "Sports": 2.818954541006119e-07,
+              "Electronics": 1.7843649721418895e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 167.07,
+        "answers": {
+          "category": {
+            "value": "Storage",
+            "expected": "Storage",
+            "p": {
+              "Tops": 3.439311631048819e-05,
+              "Bottoms": 3.359165904028516e-05,
+              "Outerwear": 1.9960678409492427e-05,
+              "Footwear": 3.587673195944711e-05,
+              "Accessories": 0.0006944172715167005,
+              "Underwear": 9.701301456975624e-06,
+              "Bedding": 7.221271816066448e-06,
+              "Bath": 1.8855724421451894e-05,
+              "Cleaning": 6.27768756657999e-05,
+              "Lighting": 6.597557908945044e-05,
+              "Storage": 0.9988967811003643,
+              "Furniture": 5.2326936843696804e-05,
+              "Fitness": 1.0744241712293487e-05,
+              "Camping": 9.437483090554015e-06,
+              "Sports": 1.4820111974968606e-05,
+              "Electronics": 3.311991632818138e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 166.69,
+        "answers": {
+          "category": {
+            "value": "Furniture",
+            "expected": "Furniture",
+            "p": {
+              "Tops": 2.5445900313191987e-05,
+              "Bottoms": 1.4353904392827468e-05,
+              "Outerwear": 5.917113467468187e-06,
+              "Footwear": 6.778578080241035e-06,
+              "Accessories": 1.6331785687702825e-05,
+              "Underwear": 1.0067134654134304e-05,
+              "Bedding": 5.669182773462986e-06,
+              "Bath": 8.18363275886764e-06,
+              "Cleaning": 3.1224517817161265e-05,
+              "Lighting": 0.00019270589403527788,
+              "Storage": 0.41434864811997,
+              "Furniture": 0.5852822852663695,
+              "Fitness": 1.9666293374751112e-05,
+              "Camping": 1.3644936912757036e-05,
+              "Sports": 5.667669140442093e-06,
+              "Electronics": 1.3410070252249487e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 169.7,
+        "answers": {
+          "category": {
+            "value": "Fitness",
+            "expected": "Fitness",
+            "p": {
+              "Tops": 4.501045167038102e-05,
+              "Bottoms": 1.3302881822791024e-05,
+              "Outerwear": 1.5955452270078117e-05,
+              "Footwear": 1.0412177516728806e-05,
+              "Accessories": 0.00023798518952466616,
+              "Underwear": 4.317355618370816e-06,
+              "Bedding": 1.8333525375460652e-06,
+              "Bath": 4.168238461113891e-06,
+              "Cleaning": 1.0777174031843754e-05,
+              "Lighting": 4.992083489401259e-06,
+              "Storage": 4.532963169811617e-06,
+              "Furniture": 6.683832540541081e-05,
+              "Fitness": 0.9268033173147769,
+              "Camping": 0.00036333286761521883,
+              "Sports": 0.0723699910984012,
+              "Electronics": 4.323307368850046e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 167.65,
+        "answers": {
+          "category": {
+            "value": "Camping",
+            "expected": "Camping",
+            "p": {
+              "Tops": 6.459369162724923e-07,
+              "Bottoms": 1.3686957510342412e-06,
+              "Outerwear": 4.2780984551877455e-06,
+              "Footwear": 3.4471131851682074e-07,
+              "Accessories": 3.316770320158619e-07,
+              "Underwear": 1.6515692380694313e-07,
+              "Bedding": 8.583089004153837e-06,
+              "Bath": 1.7563300596725182e-07,
+              "Cleaning": 7.961280971534773e-08,
+              "Lighting": 2.082235435744411e-07,
+              "Storage": 1.931417833998156e-07,
+              "Furniture": 3.434034390113578e-07,
+              "Fitness": 6.755997622348203e-07,
+              "Camping": 0.9999823198199843,
+              "Sports": 1.2433880269357094e-07,
+              "Electronics": 1.6286146819028454e-07
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 168.5,
+        "answers": {
+          "category": {
+            "value": "Sports",
+            "expected": "Sports",
+            "p": {
+              "Tops": 0.0003327390858986288,
+              "Bottoms": 9.428919546318476e-05,
+              "Outerwear": 8.699641908064954e-05,
+              "Footwear": 9.293118873028327e-05,
+              "Accessories": 0.08498679012393653,
+              "Underwear": 1.6338225602258044e-05,
+              "Bedding": 3.927600014561665e-06,
+              "Bath": 1.2178555018832825e-05,
+              "Cleaning": 9.834768105797817e-06,
+              "Lighting": 6.135032059135745e-06,
+              "Storage": 4.120861610729756e-06,
+              "Furniture": 4.3088616732661256e-05,
+              "Fitness": 0.0002049570718427687,
+              "Camping": 0.0006817733144213655,
+              "Sports": 0.9133473631675002,
+              "Electronics": 7.65367739824819e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 169.16,
+        "answers": {
+          "category": {
+            "value": "Electronics",
+            "expected": "Electronics",
+            "p": {
+              "Tops": 3.829073748719236e-06,
+              "Bottoms": 2.963001566803228e-06,
+              "Outerwear": 3.054667609086998e-06,
+              "Footwear": 3.9118336114252855e-06,
+              "Accessories": 0.00012569767848696783,
+              "Underwear": 8.458013514691392e-07,
+              "Bedding": 5.153188656511514e-07,
+              "Bath": 3.9769217482608504e-07,
+              "Cleaning": 4.816887453837017e-07,
+              "Lighting": 5.866186482733048e-07,
+              "Storage": 3.4822226917507954e-07,
+              "Furniture": 6.309653341286419e-07,
+              "Fitness": 1.101711496161005e-06,
+              "Camping": 1.328314608866208e-06,
+              "Sports": 3.988890737833576e-05,
+              "Electronics": 0.9998144185041048
+            }
+          }
+        }
+      }
+    ]
+  }
+]

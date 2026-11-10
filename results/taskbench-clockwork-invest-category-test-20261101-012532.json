@@ -1,0 +1,2000 @@
+[
+  {
+    "runner": "rules",
+    "task": "clockwork-invest-category",
+    "items": 12,
+    "errors": 0,
+    "latency_ms_mean": 0.0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "category": {
+        "accuracy": 0.167,
+        "invalid": 0,
+        "n": 12,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "Stocks",
+            "ETFs",
+            "Crypto",
+            "Bonds",
+            "REITs",
+            "Themes"
+          ],
+          "counts": {
+            "Stocks": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "ETFs": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Crypto": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Bonds": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "REITs": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Themes": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            }
+          },
+          "invalid": {
+            "Stocks": 0,
+            "ETFs": 0,
+            "Crypto": 0,
+            "Bonds": 0,
+            "REITs": 0,
+            "Themes": 0
+          },
+          "per_label": {
+            "Stocks": {
+              "support": 2,
+              "precision": 0.167,
+              "recall": 1.0,
+              "f1": 0.286
+            },
+            "ETFs": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Crypto": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Bonds": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "REITs": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Themes": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 18,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.02,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "ETFs",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "ETFs",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Crypto",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Crypto",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Bonds",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Bonds",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "REITs",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "REITs",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Themes",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Themes",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "bayes",
+    "task": "clockwork-invest-category",
+    "items": 12,
+    "errors": 0,
+    "latency_ms_mean": 0.2,
+    "latency_ms_median": 0.2,
+    "latency_ms_p90": 0.2,
+    "questions": {
+      "category": {
+        "accuracy": 0.417,
+        "invalid": 0,
+        "n": 12,
+        "brier": 0.698,
+        "confusion": {
+          "labels": [
+            "Stocks",
+            "ETFs",
+            "Crypto",
+            "Bonds",
+            "REITs",
+            "Themes"
+          ],
+          "counts": {
+            "Stocks": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "ETFs": {
+              "Stocks": 1,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 1,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Crypto": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Bonds": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 2,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "REITs": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Themes": {
+              "Stocks": 1,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 1
+            }
+          },
+          "invalid": {
+            "Stocks": 0,
+            "ETFs": 0,
+            "Crypto": 0,
+            "Bonds": 0,
+            "REITs": 0,
+            "Themes": 0
+          },
+          "per_label": {
+            "Stocks": {
+              "support": 2,
+              "precision": 0.25,
+              "recall": 1.0,
+              "f1": 0.4
+            },
+            "ETFs": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Crypto": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Bonds": {
+              "support": 2,
+              "precision": 0.667,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "REITs": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Themes": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 18,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.34,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Stocks": 0.16666666666666666,
+              "ETFs": 0.16666666666666666,
+              "Crypto": 0.16666666666666666,
+              "Bonds": 0.16666666666666666,
+              "REITs": 0.16666666666666666,
+              "Themes": 0.16666666666666666
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Stocks": 0.16666666666666666,
+              "ETFs": 0.16666666666666666,
+              "Crypto": 0.16666666666666666,
+              "Bonds": 0.16666666666666666,
+              "REITs": 0.16666666666666666,
+              "Themes": 0.16666666666666666
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.16,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "ETFs",
+            "p": {
+              "Stocks": 0.16666666666666666,
+              "ETFs": 0.16666666666666666,
+              "Crypto": 0.16666666666666666,
+              "Bonds": 0.16666666666666666,
+              "REITs": 0.16666666666666666,
+              "Themes": 0.16666666666666666
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.17,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "ETFs",
+            "p": {
+              "Stocks": 0.07010633583718909,
+              "ETFs": 0.05132785302365632,
+              "Crypto": 0.07984332692568759,
+              "Bonds": 0.7018785483234864,
+              "REITs": 0.056359995476955964,
+              "Themes": 0.04048394041302469
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.16,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Crypto",
+            "p": {
+              "Stocks": 0.16666666666666666,
+              "ETFs": 0.16666666666666666,
+              "Crypto": 0.16666666666666666,
+              "Bonds": 0.16666666666666666,
+              "REITs": 0.16666666666666666,
+              "Themes": 0.16666666666666666
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.19,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Crypto",
+            "p": {
+              "Stocks": 0.16666666666666666,
+              "ETFs": 0.16666666666666666,
+              "Crypto": 0.16666666666666666,
+              "Bonds": 0.16666666666666666,
+              "REITs": 0.16666666666666666,
+              "Themes": 0.16666666666666666
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.19,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Stocks": 0.07010633583718909,
+              "ETFs": 0.05132785302365632,
+              "Crypto": 0.07984332692568759,
+              "Bonds": 0.7018785483234864,
+              "REITs": 0.056359995476955964,
+              "Themes": 0.04048394041302469
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.19,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Stocks": 0.0035853029547059725,
+              "ETFs": 0.0014070623686981301,
+              "Crypto": 0.0052962676813548114,
+              "Bonds": 0.9871581615703949,
+              "REITs": 0.0018628028808021862,
+              "Themes": 0.0006904025440438824
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.19,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "REITs",
+            "p": {
+              "Stocks": 0.16666666666666666,
+              "ETFs": 0.16666666666666666,
+              "Crypto": 0.16666666666666666,
+              "Bonds": 0.16666666666666666,
+              "REITs": 0.16666666666666666,
+              "Themes": 0.16666666666666666
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.2,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "REITs",
+            "p": {
+              "Stocks": 0.16666666666666666,
+              "ETFs": 0.16666666666666666,
+              "Crypto": 0.16666666666666666,
+              "Bonds": 0.16666666666666666,
+              "REITs": 0.16666666666666666,
+              "Themes": 0.16666666666666666
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Themes",
+            "p": {
+              "Stocks": 0.16666666666666666,
+              "ETFs": 0.16666666666666666,
+              "Crypto": 0.16666666666666666,
+              "Bonds": 0.16666666666666666,
+              "REITs": 0.16666666666666666,
+              "Themes": 0.16666666666666666
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.18,
+        "answers": {
+          "category": {
+            "value": "Themes",
+            "expected": "Themes",
+            "p": {
+              "Stocks": 0.09520354834784955,
+              "ETFs": 0.06970259789753275,
+              "Crypto": 0.10842626339616201,
+              "Bonds": 0.045387738165835315,
+              "REITs": 0.07653618592670264,
+              "Themes": 0.6047436662659177
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "clockwork-invest-category",
+    "items": 12,
+    "errors": 0,
+    "latency_ms_mean": 1051.3,
+    "latency_ms_median": 143.5,
+    "latency_ms_p90": 179.3,
+    "questions": {
+      "category": {
+        "accuracy": 0.833,
+        "invalid": 0,
+        "n": 12,
+        "brier": 0.246,
+        "confusion": {
+          "labels": [
+            "Stocks",
+            "ETFs",
+            "Crypto",
+            "Bonds",
+            "REITs",
+            "Themes"
+          ],
+          "counts": {
+            "Stocks": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "ETFs": {
+              "Stocks": 0,
+              "ETFs": 2,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Crypto": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 2,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Bonds": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 2,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "REITs": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Themes": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 2
+            }
+          },
+          "invalid": {
+            "Stocks": 0,
+            "ETFs": 0,
+            "Crypto": 0,
+            "Bonds": 0,
+            "REITs": 0,
+            "Themes": 0
+          },
+          "per_label": {
+            "Stocks": {
+              "support": 2,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667
+            },
+            "ETFs": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Crypto": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bonds": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "REITs": {
+              "support": 2,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Themes": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 18,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 10970.75,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Bonds": 0.011067873664768331,
+              "Crypto": 0.011781875581880479,
+              "ETFs": 0.015565155692597142,
+              "REITs": 0.011569529329628965,
+              "Stocks": 0.9292624704581247,
+              "Themes": 0.0207530952730004
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 152.78,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Bonds": 0.011659729731334103,
+              "Crypto": 0.012928244231201794,
+              "ETFs": 0.014541917459775568,
+              "REITs": 0.01088562976217636,
+              "Stocks": 0.934991385749224,
+              "Themes": 0.014993093066288196
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 179.29,
+        "answers": {
+          "category": {
+            "value": "ETFs",
+            "expected": "ETFs",
+            "p": {
+              "Bonds": 0.012238250702942993,
+              "Crypto": 0.009089298097237896,
+              "ETFs": 0.8924085225383152,
+              "REITs": 0.033604565871099654,
+              "Stocks": 0.03528657110211462,
+              "Themes": 0.017372791688289577
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 157.54,
+        "answers": {
+          "category": {
+            "value": "ETFs",
+            "expected": "ETFs",
+            "p": {
+              "Bonds": 0.018876568554680537,
+              "Crypto": 0.007408824775151876,
+              "ETFs": 0.9506858618204176,
+              "REITs": 0.00844264094208037,
+              "Stocks": 0.005424150695880295,
+              "Themes": 0.00916195321178924
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 141.7,
+        "answers": {
+          "category": {
+            "value": "Crypto",
+            "expected": "Crypto",
+            "p": {
+              "Bonds": 0.004349115056512928,
+              "Crypto": 0.9745784254489813,
+              "ETFs": 0.005875195487858227,
+              "REITs": 0.003965910223966314,
+              "Stocks": 0.004947865955780205,
+              "Themes": 0.006283487826901143
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 156.4,
+        "answers": {
+          "category": {
+            "value": "Crypto",
+            "expected": "Crypto",
+            "p": {
+              "Bonds": 0.005550242071020345,
+              "Crypto": 0.9689733798239007,
+              "ETFs": 0.007056973758903168,
+              "REITs": 0.004834545741285293,
+              "Stocks": 0.005988267746164961,
+              "Themes": 0.0075965908587255805
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 143.85,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Bonds": 0.9232362990826831,
+              "Crypto": 0.01117828077457985,
+              "ETFs": 0.016295097440283898,
+              "REITs": 0.011548928154511572,
+              "Stocks": 0.012729616782735547,
+              "Themes": 0.025011777765205974
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 143.24,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Bonds": 0.9473281282234204,
+              "Crypto": 0.007735987490294631,
+              "ETFs": 0.011800613618985241,
+              "REITs": 0.007799353699121245,
+              "Stocks": 0.00819326092446131,
+              "Themes": 0.01714265604371682
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 143.16,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "REITs",
+            "p": {
+              "Bonds": 0.012601132356991332,
+              "Crypto": 0.012031379756516579,
+              "ETFs": 0.015940037404096878,
+              "REITs": 0.036712467752271556,
+              "Stocks": 0.9028835940461167,
+              "Themes": 0.019831388684006905
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 142.69,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "REITs",
+            "p": {
+              "Bonds": 0.015554777344810826,
+              "Crypto": 0.013117530657307669,
+              "ETFs": 0.021969301208765658,
+              "REITs": 0.2017487810204133,
+              "Stocks": 0.721524287709578,
+              "Themes": 0.026085322059124526
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 142.67,
+        "answers": {
+          "category": {
+            "value": "Themes",
+            "expected": "Themes",
+            "p": {
+              "Bonds": 0.008582440861008952,
+              "Crypto": 0.008497609460483191,
+              "ETFs": 0.010439004021544523,
+              "REITs": 0.010623040343242037,
+              "Stocks": 0.010561144152069385,
+              "Themes": 0.951296761161652
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 141.78,
+        "answers": {
+          "category": {
+            "value": "Themes",
+            "expected": "Themes",
+            "p": {
+              "Bonds": 0.008347213686357699,
+              "Crypto": 0.008861491278632467,
+              "ETFs": 0.008919731588872458,
+              "REITs": 0.009224547091112712,
+              "Stocks": 0.008743934745189499,
+              "Themes": 0.9559030816098352
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef",
+    "task": "clockwork-invest-category",
+    "items": 12,
+    "errors": 0,
+    "latency_ms_mean": 2760.4,
+    "latency_ms_median": 1388.7,
+    "latency_ms_p90": 1400.5,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 12,
+        "brier": 0.022,
+        "confusion": {
+          "labels": [
+            "Stocks",
+            "ETFs",
+            "Crypto",
+            "Bonds",
+            "REITs",
+            "Themes"
+          ],
+          "counts": {
+            "Stocks": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "ETFs": {
+              "Stocks": 0,
+              "ETFs": 2,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Crypto": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 2,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Bonds": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 2,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "REITs": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 2,
+              "Themes": 0
+            },
+            "Themes": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 2
+            }
+          },
+          "invalid": {
+            "Stocks": 0,
+            "ETFs": 0,
+            "Crypto": 0,
+            "Bonds": 0,
+            "REITs": 0,
+            "Themes": 0
+          },
+          "per_label": {
+            "Stocks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ETFs": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Crypto": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bonds": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "REITs": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Themes": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 18,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 17830.14,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Bonds": 0.002915574570360204,
+              "Crypto": 0.002394236755659146,
+              "ETFs": 0.0044281558312827705,
+              "REITs": 0.004358847834749706,
+              "Stocks": 0.9804294528020643,
+              "Themes": 0.005473732205884017
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 1391.59,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Bonds": 0.005230840671874321,
+              "Crypto": 0.003982834556941671,
+              "ETFs": 0.011919501901344174,
+              "REITs": 0.005288231854579617,
+              "Stocks": 0.9655944862961332,
+              "Themes": 0.007984104719127083
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 1397.66,
+        "answers": {
+          "category": {
+            "value": "ETFs",
+            "expected": "ETFs",
+            "p": {
+              "Bonds": 0.006097025205415156,
+              "Crypto": 0.004685664375412062,
+              "ETFs": 0.9197178786146174,
+              "REITs": 0.018809600249186657,
+              "Stocks": 0.03497784604364569,
+              "Themes": 0.015711985511723005
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 1386.89,
+        "answers": {
+          "category": {
+            "value": "ETFs",
+            "expected": "ETFs",
+            "p": {
+              "Bonds": 0.053442950054687646,
+              "Crypto": 0.0033919717527758192,
+              "ETFs": 0.918756145555162,
+              "REITs": 0.008051928874670423,
+              "Stocks": 0.005025241462397567,
+              "Themes": 0.01133176230030639
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 1385.56,
+        "answers": {
+          "category": {
+            "value": "Crypto",
+            "expected": "Crypto",
+            "p": {
+              "Bonds": 0.001908134567994566,
+              "Crypto": 0.9879898143003257,
+              "ETFs": 0.002327339836358711,
+              "REITs": 0.0018308171233973928,
+              "Stocks": 0.0025580141230351064,
+              "Themes": 0.003385880048888477
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 1396.19,
+        "answers": {
+          "category": {
+            "value": "Crypto",
+            "expected": "Crypto",
+            "p": {
+              "Bonds": 0.0025856028257134622,
+              "Crypto": 0.9803328209138493,
+              "ETFs": 0.004659936505525818,
+              "REITs": 0.002624548700465537,
+              "Stocks": 0.0051862542405465934,
+              "Themes": 0.004610836813899379
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 1388.22,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Bonds": 0.9754240442329933,
+              "Crypto": 0.0031336942491259337,
+              "ETFs": 0.00487809907248923,
+              "REITs": 0.003716254091105023,
+              "Stocks": 0.004028940257801461,
+              "Themes": 0.008818968096485138
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 1384.75,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Bonds": 0.9845966034130995,
+              "Crypto": 0.0022319078551091163,
+              "ETFs": 0.0034227987842965083,
+              "REITs": 0.0025898029530662114,
+              "Stocks": 0.0026909549629236637,
+              "Themes": 0.0044679320315051336
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 1389.16,
+        "answers": {
+          "category": {
+            "value": "REITs",
+            "expected": "REITs",
+            "p": {
+              "Bonds": 0.011120622739764843,
+              "Crypto": 0.0064131020703752945,
+              "ETFs": 0.015502866507976703,
+              "REITs": 0.6358310604949812,
+              "Stocks": 0.2991218795427118,
+              "Themes": 0.03201046864419017
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 1386.33,
+        "answers": {
+          "category": {
+            "value": "REITs",
+            "expected": "REITs",
+            "p": {
+              "Bonds": 0.00500795289470197,
+              "Crypto": 0.0030057612082394487,
+              "ETFs": 0.006903927881662383,
+              "REITs": 0.9075146433030223,
+              "Stocks": 0.06770888004566261,
+              "Themes": 0.009858834666711216
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 1400.48,
+        "answers": {
+          "category": {
+            "value": "Themes",
+            "expected": "Themes",
+            "p": {
+              "Bonds": 0.012472681902285145,
+              "Crypto": 0.01028808398687002,
+              "ETFs": 0.025294797895069394,
+              "REITs": 0.016460435562355675,
+              "Stocks": 0.020049487366630717,
+              "Themes": 0.9154345132867892
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 1387.66,
+        "answers": {
+          "category": {
+            "value": "Themes",
+            "expected": "Themes",
+            "p": {
+              "Bonds": 0.0033485237701829543,
+              "Crypto": 0.0031435117508778173,
+              "ETFs": 0.005154933485345831,
+              "REITs": 0.004241141477101807,
+              "Stocks": 0.004912230405285253,
+              "Themes": 0.9791996591112062
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "clockwork-invest-category",
+    "items": 12,
+    "errors": 0,
+    "latency_ms_mean": 854.0,
+    "latency_ms_median": 166.4,
+    "latency_ms_p90": 187.4,
+    "questions": {
+      "category": {
+        "accuracy": 0.917,
+        "invalid": 0,
+        "n": 12,
+        "brier": 0.163,
+        "confusion": {
+          "labels": [
+            "Stocks",
+            "ETFs",
+            "Crypto",
+            "Bonds",
+            "REITs",
+            "Themes"
+          ],
+          "counts": {
+            "Stocks": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "ETFs": {
+              "Stocks": 0,
+              "ETFs": 2,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Crypto": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 2,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Bonds": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 2,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "REITs": {
+              "Stocks": 1,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 1,
+              "Themes": 0
+            },
+            "Themes": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 2
+            }
+          },
+          "invalid": {
+            "Stocks": 0,
+            "ETFs": 0,
+            "Crypto": 0,
+            "Bonds": 0,
+            "REITs": 0,
+            "Themes": 0
+          },
+          "per_label": {
+            "Stocks": {
+              "support": 2,
+              "precision": 0.667,
+              "recall": 1.0,
+              "f1": 0.8
+            },
+            "ETFs": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Crypto": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bonds": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "REITs": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667
+            },
+            "Themes": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 18,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 8398.9,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Stocks": 0.9952106088983607,
+              "ETFs": 0.0004906162265290156,
+              "Crypto": 6.952050039577976e-05,
+              "Bonds": 0.0001580188428388541,
+              "REITs": 0.00010523443544415877,
+              "Themes": 0.00396600109643147
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 187.39,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Stocks": 0.9977921791557816,
+              "ETFs": 0.00034038272937446026,
+              "Crypto": 5.8356704886901556e-05,
+              "Bonds": 0.0005606602333981195,
+              "REITs": 4.1400639559340244e-05,
+              "Themes": 0.001207020536999701
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 169.89,
+        "answers": {
+          "category": {
+            "value": "ETFs",
+            "expected": "ETFs",
+            "p": {
+              "Stocks": 0.0023686727087340034,
+              "ETFs": 0.9955314550147785,
+              "Crypto": 0.00014682722608641221,
+              "Bonds": 0.0002905385940053037,
+              "REITs": 0.0012476886659677782,
+              "Themes": 0.0004148177904282211
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 163.57,
+        "answers": {
+          "category": {
+            "value": "ETFs",
+            "expected": "ETFs",
+            "p": {
+              "Stocks": 0.00010710321437280417,
+              "ETFs": 0.9963287762660837,
+              "Crypto": 0.00010716983139500352,
+              "Bonds": 0.0027869289660805716,
+              "REITs": 4.8886241666549435e-05,
+              "Themes": 0.000621135480401439
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 168.06,
+        "answers": {
+          "category": {
+            "value": "Crypto",
+            "expected": "Crypto",
+            "p": {
+              "Stocks": 3.232783486494317e-05,
+              "ETFs": 3.736771166596672e-05,
+              "Crypto": 0.9994113075436832,
+              "Bonds": 7.024952691424517e-05,
+              "REITs": 9.394613185290258e-06,
+              "Themes": 0.00043935276968632434
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 174.15,
+        "answers": {
+          "category": {
+            "value": "Crypto",
+            "expected": "Crypto",
+            "p": {
+              "Stocks": 9.757886187389024e-05,
+              "ETFs": 0.00010002433513007906,
+              "Crypto": 0.9982698884595889,
+              "Bonds": 0.00015996454490644005,
+              "REITs": 2.0556814185114772e-05,
+              "Themes": 0.001351986984315461
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 163.52,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Stocks": 0.00010866318131889539,
+              "ETFs": 0.00021988572589250516,
+              "Crypto": 4.243728831873542e-05,
+              "Bonds": 0.9986588879068697,
+              "REITs": 3.637460012703212e-05,
+              "Themes": 0.0009337512974732748
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 164.47,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Stocks": 5.286136447933423e-05,
+              "ETFs": 0.00010439067249217024,
+              "Crypto": 2.1334266850810352e-05,
+              "Bonds": 0.9992503052263875,
+              "REITs": 1.4540577643669796e-05,
+              "Themes": 0.0005565678921466209
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 164.7,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "REITs",
+            "p": {
+              "Stocks": 0.9837851699258187,
+              "ETFs": 0.0004630016244988623,
+              "Crypto": 0.00015766634122969044,
+              "Bonds": 0.0003277138846992703,
+              "REITs": 0.011718276918435059,
+              "Themes": 0.003548171305318644
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 162.27,
+        "answers": {
+          "category": {
+            "value": "REITs",
+            "expected": "REITs",
+            "p": {
+              "Stocks": 0.0533593000127846,
+              "ETFs": 0.00042120522050565954,
+              "Crypto": 0.000136546322204327,
+              "Bonds": 0.00022413518077962107,
+              "REITs": 0.9452968138552214,
+              "Themes": 0.0005619994085043053
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 163.2,
+        "answers": {
+          "category": {
+            "value": "Themes",
+            "expected": "Themes",
+            "p": {
+              "Stocks": 0.0003863514206589451,
+              "ETFs": 0.0007401245742463985,
+              "Crypto": 9.297962847600283e-05,
+              "Bonds": 0.00027509678098143204,
+              "REITs": 0.00014962801656422694,
+              "Themes": 0.9983558195790729
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 168.38,
+        "answers": {
+          "category": {
+            "value": "Themes",
+            "expected": "Themes",
+            "p": {
+              "Stocks": 0.00014298069874626334,
+              "ETFs": 0.00018563701788072844,
+              "Crypto": 3.159218216277825e-05,
+              "Bonds": 7.564504450251285e-05,
+              "REITs": 5.6661031951287114e-05,
+              "Themes": 0.9995074840247564
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:tev1",
+    "task": "clockwork-invest-category",
+    "items": 12,
+    "errors": 0,
+    "latency_ms_mean": 421.8,
+    "latency_ms_median": 97.1,
+    "latency_ms_p90": 106.4,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 12,
+        "brier": 0.025,
+        "confusion": {
+          "labels": [
+            "Stocks",
+            "ETFs",
+            "Crypto",
+            "Bonds",
+            "REITs",
+            "Themes"
+          ],
+          "counts": {
+            "Stocks": {
+              "Stocks": 2,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "ETFs": {
+              "Stocks": 0,
+              "ETFs": 2,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Crypto": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 2,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "Bonds": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 2,
+              "REITs": 0,
+              "Themes": 0
+            },
+            "REITs": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 2,
+              "Themes": 0
+            },
+            "Themes": {
+              "Stocks": 0,
+              "ETFs": 0,
+              "Crypto": 0,
+              "Bonds": 0,
+              "REITs": 0,
+              "Themes": 2
+            }
+          },
+          "invalid": {
+            "Stocks": 0,
+            "ETFs": 0,
+            "Crypto": 0,
+            "Bonds": 0,
+            "REITs": 0,
+            "Themes": 0
+          },
+          "per_label": {
+            "Stocks": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "ETFs": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Crypto": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Bonds": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "REITs": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Themes": {
+              "support": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 18,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 3988.86,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Stocks": 0.9996175821705651,
+              "ETFs": 7.206060654893578e-05,
+              "Crypto": 2.7038954613282744e-06,
+              "Bonds": 4.4427926650129935e-06,
+              "REITs": 3.993380367144149e-05,
+              "Themes": 0.0002632767310882575
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 97.25,
+        "answers": {
+          "category": {
+            "value": "Stocks",
+            "expected": "Stocks",
+            "p": {
+              "Stocks": 0.9999622838090885,
+              "ETFs": 2.5386508765661535e-05,
+              "Crypto": 1.2580489191173123e-06,
+              "Bonds": 1.865741233654862e-06,
+              "REITs": 1.2888877659548186e-06,
+              "Themes": 7.917004227166838e-06
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 99.01,
+        "answers": {
+          "category": {
+            "value": "ETFs",
+            "expected": "ETFs",
+            "p": {
+              "Stocks": 0.07126921875427743,
+              "ETFs": 0.9286615308576114,
+              "Crypto": 2.4338726554949623e-05,
+              "Bonds": 1.1153372559833476e-05,
+              "REITs": 5.425071990681541e-06,
+              "Themes": 2.8333217005828605e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 95.57,
+        "answers": {
+          "category": {
+            "value": "ETFs",
+            "expected": "ETFs",
+            "p": {
+              "Stocks": 3.152663356713412e-05,
+              "ETFs": 0.9964106748025119,
+              "Crypto": 2.2500019718674642e-05,
+              "Bonds": 0.0033445768765740214,
+              "REITs": 4.801507849781976e-06,
+              "Themes": 0.00018592015977840056
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 94.57,
+        "answers": {
+          "category": {
+            "value": "Crypto",
+            "expected": "Crypto",
+            "p": {
+              "Stocks": 0.00015469878796876268,
+              "ETFs": 0.0001504273201417864,
+              "Crypto": 0.999410853176159,
+              "Bonds": 1.3840361699499637e-05,
+              "REITs": 1.9184850656580043e-06,
+              "Themes": 0.0002682618689651641
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 96.25,
+        "answers": {
+          "category": {
+            "value": "Crypto",
+            "expected": "Crypto",
+            "p": {
+              "Stocks": 0.0020840955552405495,
+              "ETFs": 0.0002109775516284292,
+              "Crypto": 0.9976278171287626,
+              "Bonds": 1.3254001375412012e-05,
+              "REITs": 1.4211733045829217e-06,
+              "Themes": 6.243458968860127e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 95.12,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Stocks": 8.886485106652328e-05,
+              "ETFs": 0.0002897373291568755,
+              "Crypto": 4.56943486776251e-05,
+              "Bonds": 0.9955658043414407,
+              "REITs": 1.096911177027934e-05,
+              "Themes": 0.0039989300178881375
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 96.96,
+        "answers": {
+          "category": {
+            "value": "Bonds",
+            "expected": "Bonds",
+            "p": {
+              "Stocks": 2.411079699897856e-05,
+              "ETFs": 0.0002681190942466074,
+              "Crypto": 1.3866385608215217e-05,
+              "Bonds": 0.9987722592072695,
+              "REITs": 2.2600703802027457e-06,
+              "Themes": 0.0009193844454965151
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 106.38,
+        "answers": {
+          "category": {
+            "value": "REITs",
+            "expected": "REITs",
+            "p": {
+              "Stocks": 0.30957891302866974,
+              "ETFs": 0.00013010434830647614,
+              "Crypto": 1.4913869499134056e-05,
+              "Bonds": 1.3236717426663018e-05,
+              "REITs": 0.6901505804837557,
+              "Themes": 0.00011225155234233759
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 97.64,
+        "answers": {
+          "category": {
+            "value": "REITs",
+            "expected": "REITs",
+            "p": {
+              "Stocks": 0.22733629649338402,
+              "ETFs": 0.00015742926647150057,
+              "Crypto": 2.0340119361501425e-05,
+              "Bonds": 2.4918383344507993e-05,
+              "REITs": 0.7717961359758094,
+              "Themes": 0.0006648797616290664
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 95.31,
+        "answers": {
+          "category": {
+            "value": "Themes",
+            "expected": "Themes",
+            "p": {
+              "Stocks": 0.00019320784739206522,
+              "ETFs": 0.00015635499672452308,
+              "Crypto": 2.536913190761668e-05,
+              "Bonds": 3.1879918628830235e-05,
+              "REITs": 1.227494295566817e-05,
+              "Themes": 0.9995809131623914
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 98.65,
+        "answers": {
+          "category": {
+            "value": "Themes",
+            "expected": "Themes",
+            "p": {
+              "Stocks": 6.912298131926498e-05,
+              "ETFs": 0.0001295771704671793,
+              "Crypto": 1.1048301673108091e-05,
+              "Bonds": 1.5956689027193003e-05,
+              "REITs": 6.090382730706625e-06,
+              "Themes": 0.9997682044747825
+            }
+          }
+        }
+      }
+    ]
+  }
+]

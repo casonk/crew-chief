@@ -1,0 +1,3278 @@
+[
+  {
+    "runner": "rules",
+    "task": "clockwork-watch-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 0.0,
+    "latency_ms_median": 0.0,
+    "latency_ms_p90": 0.0,
+    "questions": {
+      "category": {
+        "accuracy": 0.267,
+        "invalid": 0,
+        "n": 30,
+        "brier": null,
+        "confusion": {
+          "labels": [
+            "Movies",
+            "TV Shows",
+            "Anime",
+            "Documentaries"
+          ],
+          "counts": {
+            "Movies": {
+              "Movies": 8,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "TV Shows": {
+              "Movies": 8,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "Anime": {
+              "Movies": 7,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "Documentaries": {
+              "Movies": 7,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            }
+          },
+          "invalid": {
+            "Movies": 0,
+            "TV Shows": 0,
+            "Anime": 0,
+            "Documentaries": 0
+          },
+          "per_label": {
+            "Movies": {
+              "support": 8,
+              "precision": 0.267,
+              "recall": 1.0,
+              "f1": 0.421
+            },
+            "TV Shows": {
+              "support": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Anime": {
+              "support": 7,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Documentaries": {
+              "support": 7,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.01,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": null
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 0.0,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": null
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "bayes",
+    "task": "clockwork-watch-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 0.1,
+    "latency_ms_median": 0.1,
+    "latency_ms_p90": 0.1,
+    "questions": {
+      "category": {
+        "accuracy": 0.267,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.726,
+        "confusion": {
+          "labels": [
+            "Movies",
+            "TV Shows",
+            "Anime",
+            "Documentaries"
+          ],
+          "counts": {
+            "Movies": {
+              "Movies": 8,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "TV Shows": {
+              "Movies": 8,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "Anime": {
+              "Movies": 7,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "Documentaries": {
+              "Movies": 7,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            }
+          },
+          "invalid": {
+            "Movies": 0,
+            "TV Shows": 0,
+            "Anime": 0,
+            "Documentaries": 0
+          },
+          "per_label": {
+            "Movies": {
+              "support": 8,
+              "precision": 0.267,
+              "recall": 1.0,
+              "f1": 0.421
+            },
+            "TV Shows": {
+              "support": 8,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Anime": {
+              "support": 7,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            },
+            "Documentaries": {
+              "support": 7,
+              "precision": null,
+              "recall": 0.0,
+              "f1": null
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 0.19,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.35041551246537395,
+              "TV Shows": 0.35041551246537395,
+              "Anime": 0.024930747922437664,
+              "Documentaries": 0.2742382271468144
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.35041551246537395,
+              "TV Shows": 0.35041551246537395,
+              "Anime": 0.024930747922437664,
+              "Documentaries": 0.2742382271468144
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.35041551246537395,
+              "TV Shows": 0.35041551246537395,
+              "Anime": 0.024930747922437664,
+              "Documentaries": 0.2742382271468144
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 0.1,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.35041551246537395,
+              "TV Shows": 0.35041551246537395,
+              "Anime": 0.024930747922437664,
+              "Documentaries": 0.2742382271468144
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 0.27,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.35041551246537395,
+              "TV Shows": 0.35041551246537395,
+              "Anime": 0.024930747922437664,
+              "Documentaries": 0.2742382271468144
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.35041551246537395,
+              "TV Shows": 0.35041551246537395,
+              "Anime": 0.024930747922437664,
+              "Documentaries": 0.2742382271468144
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 0.08,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.35041551246537395,
+              "TV Shows": 0.35041551246537395,
+              "Anime": 0.024930747922437664,
+              "Documentaries": 0.2742382271468144
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 0.12,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.25,
+              "TV Shows": 0.25,
+              "Anime": 0.25,
+              "Documentaries": 0.25
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 0.09,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.35041551246537395,
+              "TV Shows": 0.35041551246537395,
+              "Anime": 0.024930747922437664,
+              "Documentaries": 0.2742382271468144
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef-flash",
+    "task": "clockwork-watch-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 581.7,
+    "latency_ms_median": 117.5,
+    "latency_ms_p90": 137.2,
+    "questions": {
+      "category": {
+        "accuracy": 0.933,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.083,
+        "confusion": {
+          "labels": [
+            "Movies",
+            "TV Shows",
+            "Anime",
+            "Documentaries"
+          ],
+          "counts": {
+            "Movies": {
+              "Movies": 8,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "TV Shows": {
+              "Movies": 0,
+              "TV Shows": 7,
+              "Anime": 1,
+              "Documentaries": 0
+            },
+            "Anime": {
+              "Movies": 0,
+              "TV Shows": 0,
+              "Anime": 7,
+              "Documentaries": 0
+            },
+            "Documentaries": {
+              "Movies": 1,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 6
+            }
+          },
+          "invalid": {
+            "Movies": 0,
+            "TV Shows": 0,
+            "Anime": 0,
+            "Documentaries": 0
+          },
+          "per_label": {
+            "Movies": {
+              "support": 8,
+              "precision": 0.889,
+              "recall": 1.0,
+              "f1": 0.941
+            },
+            "TV Shows": {
+              "support": 8,
+              "precision": 1.0,
+              "recall": 0.875,
+              "f1": 0.933
+            },
+            "Anime": {
+              "support": 7,
+              "precision": 0.875,
+              "recall": 1.0,
+              "f1": 0.933
+            },
+            "Documentaries": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 0.857,
+              "f1": 0.923
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 13970.27,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.01538360881220534,
+              "Documentaries": 0.006890550444797204,
+              "Movies": 0.9684336343090365,
+              "TV Shows": 0.00929220643396107
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 137.76,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.009674958694573684,
+              "Documentaries": 0.0061778760603575,
+              "Movies": 0.9742339454280743,
+              "TV Shows": 0.009913219816994563
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 137.25,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.015854907144906824,
+              "Documentaries": 0.011967723477729102,
+              "Movies": 0.02603812562650039,
+              "TV Shows": 0.9461392437508637
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 147.39,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.01367763921395525,
+              "Documentaries": 0.01168106089517615,
+              "Movies": 0.01942643644641218,
+              "TV Shows": 0.9552148634444565
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 124.22,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.8604218341178341,
+              "Documentaries": 0.011518754008538735,
+              "Movies": 0.08021340225335126,
+              "TV Shows": 0.04784600962027603
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 114.05,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.7078202542428611,
+              "Documentaries": 0.009344415473413038,
+              "Movies": 0.2611817252316043,
+              "TV Shows": 0.021653605052121574
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 117.65,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.017361841616837154,
+              "Documentaries": 0.857452695244779,
+              "Movies": 0.10145729833742832,
+              "TV Shows": 0.02372816480095564
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 117.56,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.018966388746786966,
+              "Documentaries": 0.8994948720809846,
+              "Movies": 0.056600151234411845,
+              "TV Shows": 0.024938587937816538
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 117.57,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.013733026338292228,
+              "Documentaries": 0.010032116160302057,
+              "Movies": 0.9637430950705748,
+              "TV Shows": 0.012491762430830946
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 117.14,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.012008391445347086,
+              "Documentaries": 0.018480084953366102,
+              "Movies": 0.9587636117498556,
+              "TV Shows": 0.010747911851431272
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 118.47,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.010822342204971103,
+              "Documentaries": 0.007405341020558588,
+              "Movies": 0.9711352169170806,
+              "TV Shows": 0.010637099857389648
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 116.59,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.021751657987542066,
+              "Documentaries": 0.007994548829126123,
+              "Movies": 0.957908305234066,
+              "TV Shows": 0.01234548794926565
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 120.33,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.013208091421856782,
+              "Documentaries": 0.008019146060829924,
+              "Movies": 0.9679144014667312,
+              "TV Shows": 0.010858361050582034
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 115.72,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.03694200004083096,
+              "Documentaries": 0.006169131147283862,
+              "Movies": 0.9418056417646657,
+              "TV Shows": 0.015083227047219447
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 116.76,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.013039026777405795,
+              "Documentaries": 0.010816471879318657,
+              "Movies": 0.017739215088786845,
+              "TV Shows": 0.9584052862544887
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 116.51,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.014504845995016722,
+              "Documentaries": 0.012058397802374925,
+              "Movies": 0.023917607042232815,
+              "TV Shows": 0.9495191491603755
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 116.48,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.01429108218888691,
+              "Documentaries": 0.01454185751407892,
+              "Movies": 0.033516214838014174,
+              "TV Shows": 0.9376508454590201
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 116.52,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.0145994721028995,
+              "Documentaries": 0.012051005011875494,
+              "Movies": 0.01921188567221423,
+              "TV Shows": 0.9541376372130107
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 116.69,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.5889419970198726,
+              "Documentaries": 0.007739563785609573,
+              "Movies": 0.20792815867368605,
+              "TV Shows": 0.19539028052083168
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 116.39,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.014197670341832383,
+              "Documentaries": 0.011604610495713569,
+              "Movies": 0.02836352614298774,
+              "TV Shows": 0.9458341930194664
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 117.4,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.9490683350161058,
+              "Documentaries": 0.008667631949881354,
+              "Movies": 0.021624654480177828,
+              "TV Shows": 0.020639378553835044
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 117.03,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.9126607456700597,
+              "Documentaries": 0.010201994689927928,
+              "Movies": 0.058106158438520114,
+              "TV Shows": 0.019031101201492207
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 122.18,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.9543486120435312,
+              "Documentaries": 0.007803548295572214,
+              "Movies": 0.019744982820084876,
+              "TV Shows": 0.018102856840811653
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 117.59,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.9451194286761578,
+              "Documentaries": 0.007983103331054143,
+              "Movies": 0.025022147799145862,
+              "TV Shows": 0.021875320193642144
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 116.82,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.9223600258489993,
+              "Documentaries": 0.010817705633801753,
+              "Movies": 0.044499479455982906,
+              "TV Shows": 0.022322789061216042
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 116.02,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.01814501637736944,
+              "Documentaries": 0.4680881598682073,
+              "Movies": 0.48366942040557115,
+              "TV Shows": 0.030097403348852227
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 120.22,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.01660386789479249,
+              "Documentaries": 0.6560063349612097,
+              "Movies": 0.1676165988387867,
+              "TV Shows": 0.159773198305211
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 117.72,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.022035408595690646,
+              "Documentaries": 0.9032416170664777,
+              "Movies": 0.05021517208100602,
+              "TV Shows": 0.024507802256825622
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 117.47,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.018467105109739205,
+              "Documentaries": 0.8507498756585768,
+              "Movies": 0.10218947108628205,
+              "TV Shows": 0.028593548145402003
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 117.99,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.01988760299019546,
+              "Documentaries": 0.523718155277556,
+              "Movies": 0.4313465467565232,
+              "TV Shows": 0.02504769497572528
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:clef",
+    "task": "clockwork-watch-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 1358.1,
+    "latency_ms_median": 717.9,
+    "latency_ms_p90": 726.3,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.016,
+        "confusion": {
+          "labels": [
+            "Movies",
+            "TV Shows",
+            "Anime",
+            "Documentaries"
+          ],
+          "counts": {
+            "Movies": {
+              "Movies": 8,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "TV Shows": {
+              "Movies": 0,
+              "TV Shows": 8,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "Anime": {
+              "Movies": 0,
+              "TV Shows": 0,
+              "Anime": 7,
+              "Documentaries": 0
+            },
+            "Documentaries": {
+              "Movies": 0,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 7
+            }
+          },
+          "invalid": {
+            "Movies": 0,
+            "TV Shows": 0,
+            "Anime": 0,
+            "Documentaries": 0
+          },
+          "per_label": {
+            "Movies": {
+              "support": 8,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "TV Shows": {
+              "support": 8,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Anime": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Documentaries": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 19901.06,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.02173942622900846,
+              "Documentaries": 0.005975911228738124,
+              "Movies": 0.9624589315661283,
+              "TV Shows": 0.009825730976125225
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 717.65,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.007484757297014508,
+              "Documentaries": 0.00366601978828992,
+              "Movies": 0.9838119174643187,
+              "TV Shows": 0.0050373054503768
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 713.76,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.009541947311813901,
+              "Documentaries": 0.007860724499983856,
+              "Movies": 0.012457926457508263,
+              "TV Shows": 0.970139401730694
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 724.31,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.006468390191212721,
+              "Documentaries": 0.005705223971961368,
+              "Movies": 0.006333463539873193,
+              "TV Shows": 0.9814929222969527
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 733.38,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.8615778239910391,
+              "Documentaries": 0.008069835392207946,
+              "Movies": 0.06539093695130027,
+              "TV Shows": 0.0649614036654528
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 712.17,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.7600944990766793,
+              "Documentaries": 0.005635502322369092,
+              "Movies": 0.2249160329010838,
+              "TV Shows": 0.009353965699867807
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 717.68,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.013474267387773804,
+              "Documentaries": 0.9157300788099781,
+              "Movies": 0.039942576990472156,
+              "TV Shows": 0.030853076811776153
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 719.12,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.014733792720173684,
+              "Documentaries": 0.9231380517457326,
+              "Movies": 0.0510999798483677,
+              "TV Shows": 0.011028175685726001
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 716.04,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.021539005684656085,
+              "Documentaries": 0.009529533516312912,
+              "Movies": 0.959318733006777,
+              "TV Shows": 0.009612727792253941
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 712.5,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.015938969126225343,
+              "Documentaries": 0.012802345250727064,
+              "Movies": 0.9627013391834389,
+              "TV Shows": 0.008557346439608681
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 718.43,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.010375033041599604,
+              "Documentaries": 0.004499207612960423,
+              "Movies": 0.9784881460127048,
+              "TV Shows": 0.006637613332735254
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 714.92,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.013816402085800905,
+              "Documentaries": 0.0046941314046178035,
+              "Movies": 0.9743976940431398,
+              "TV Shows": 0.007091772466441451
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 714.65,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.010617526921751575,
+              "Documentaries": 0.0049768472868485176,
+              "Movies": 0.9779282115988404,
+              "TV Shows": 0.006477414192559472
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 715.43,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Anime": 0.02669017443663627,
+              "Documentaries": 0.004323445342040181,
+              "Movies": 0.9620050372717227,
+              "TV Shows": 0.0069813429496009575
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 717.04,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.006388232191619479,
+              "Documentaries": 0.006974295909109775,
+              "Movies": 0.006180103619665152,
+              "TV Shows": 0.9804573682796056
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 715.0,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.007943987062152153,
+              "Documentaries": 0.0077734194210802915,
+              "Movies": 0.007924264802064684,
+              "TV Shows": 0.9763583287147028
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 716.22,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.011116063708112496,
+              "Documentaries": 0.011677403785712042,
+              "Movies": 0.015525004412174529,
+              "TV Shows": 0.961681528094001
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 718.19,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.006363589716436153,
+              "Documentaries": 0.00565074676549816,
+              "Movies": 0.006076565007222367,
+              "TV Shows": 0.9819090985108433
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 715.87,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.034525722052331585,
+              "Documentaries": 0.005466252802017818,
+              "Movies": 0.012962184504226395,
+              "TV Shows": 0.9470458406414242
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 720.35,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Anime": 0.007265781252648912,
+              "Documentaries": 0.006099436436296391,
+              "Movies": 0.007909914530663241,
+              "TV Shows": 0.9787248677803916
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 721.55,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.9675455357059997,
+              "Documentaries": 0.005103520366037506,
+              "Movies": 0.01227670856182979,
+              "TV Shows": 0.01507423536613316
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 719.8,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.9302004478325622,
+              "Documentaries": 0.0043484783388875676,
+              "Movies": 0.05856958746072554,
+              "TV Shows": 0.006881486367824857
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 726.34,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.9702073187346575,
+              "Documentaries": 0.00485138094644819,
+              "Movies": 0.011547236303762495,
+              "TV Shows": 0.013394064015131874
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 718.39,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.9640633930328717,
+              "Documentaries": 0.004634030476800538,
+              "Movies": 0.014884710596819842,
+              "TV Shows": 0.016417865893508115
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 718.46,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Anime": 0.8707126652155333,
+              "Documentaries": 0.007297167439554925,
+              "Movies": 0.10914012025391227,
+              "TV Shows": 0.012850047090999484
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 720.27,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.0208418687555753,
+              "Documentaries": 0.7020711234193556,
+              "Movies": 0.1858167796907377,
+              "TV Shows": 0.09127022813433155
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 727.67,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.019845498072349033,
+              "Documentaries": 0.8341035510421032,
+              "Movies": 0.06882385213253198,
+              "TV Shows": 0.07722709875301574
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 723.6,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.019305294806043552,
+              "Documentaries": 0.9370093380679517,
+              "Movies": 0.030563894483695845,
+              "TV Shows": 0.013121472642308844
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 715.29,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.027301589196753774,
+              "Documentaries": 0.7714817312615678,
+              "Movies": 0.1561751122061316,
+              "TV Shows": 0.04504156733554674
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 717.08,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Anime": 0.01322489768672053,
+              "Documentaries": 0.9215531285056202,
+              "Movies": 0.05571289967509312,
+              "TV Shows": 0.00950907413256625
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:nimble",
+    "task": "clockwork-watch-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 410.2,
+    "latency_ms_median": 120.2,
+    "latency_ms_p90": 137.6,
+    "questions": {
+      "category": {
+        "accuracy": 1.0,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.018,
+        "confusion": {
+          "labels": [
+            "Movies",
+            "TV Shows",
+            "Anime",
+            "Documentaries"
+          ],
+          "counts": {
+            "Movies": {
+              "Movies": 8,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "TV Shows": {
+              "Movies": 0,
+              "TV Shows": 8,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "Anime": {
+              "Movies": 0,
+              "TV Shows": 0,
+              "Anime": 7,
+              "Documentaries": 0
+            },
+            "Documentaries": {
+              "Movies": 0,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 7
+            }
+          },
+          "invalid": {
+            "Movies": 0,
+            "TV Shows": 0,
+            "Anime": 0,
+            "Documentaries": 0
+          },
+          "per_label": {
+            "Movies": {
+              "support": 8,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "TV Shows": {
+              "support": 8,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Anime": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Documentaries": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 8718.74,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.985321118739956,
+              "TV Shows": 0.003249879277319857,
+              "Anime": 0.0027409929013958445,
+              "Documentaries": 0.008688009081328461
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 118.61,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.998022178348212,
+              "TV Shows": 0.0005740925891346775,
+              "Anime": 0.00015724617117560352,
+              "Documentaries": 0.001246482891477534
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 118.92,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.0010755088721741126,
+              "TV Shows": 0.9965342227646972,
+              "Anime": 0.00026273987401690557,
+              "Documentaries": 0.0021275284891117906
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 118.04,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.00010920585351632985,
+              "TV Shows": 0.9987833123549217,
+              "Anime": 9.596633861148836e-05,
+              "Documentaries": 0.0010115154529504963
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 120.58,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.030279760682097617,
+              "TV Shows": 0.04400665347849881,
+              "Anime": 0.9220241755527573,
+              "Documentaries": 0.0036894102866462312
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 115.71,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.013757994537061849,
+              "TV Shows": 0.00048092206731906254,
+              "Anime": 0.9845879767661052,
+              "Documentaries": 0.0011731066295140302
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 122.27,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.007109476555354861,
+              "TV Shows": 0.000676220327822255,
+              "Anime": 0.00012260829154025433,
+              "Documentaries": 0.9920916948252825
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 125.39,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.001848867254330569,
+              "TV Shows": 0.00046447526224104767,
+              "Anime": 9.629498589679818e-05,
+              "Documentaries": 0.9975903624975316
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 118.32,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9846697992956062,
+              "TV Shows": 0.004260512617172715,
+              "Anime": 0.0006524392738154366,
+              "Documentaries": 0.010417248813405508
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 118.99,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9892530663963296,
+              "TV Shows": 0.0007006272765033065,
+              "Anime": 0.00017143087720635357,
+              "Documentaries": 0.009874875449960695
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 119.97,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9985405423175032,
+              "TV Shows": 0.00038042943457029983,
+              "Anime": 0.00012007330886172675,
+              "Documentaries": 0.0009589549390647797
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 117.98,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9964212919391284,
+              "TV Shows": 0.00129667205782668,
+              "Anime": 0.0007096684563237435,
+              "Documentaries": 0.001572367546721025
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 118.07,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9980232111513585,
+              "TV Shows": 0.0004888042874539821,
+              "Anime": 0.0001487099678893156,
+              "Documentaries": 0.0013392745932980336
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 120.51,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9576951570242167,
+              "TV Shows": 0.002648618104637287,
+              "Anime": 0.0374234024716259,
+              "Documentaries": 0.002232822399520211
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 118.67,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.00011444164519925533,
+              "TV Shows": 0.9979075847314394,
+              "Anime": 9.922893931428981e-05,
+              "Documentaries": 0.0018787446840467666
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 124.81,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.00018199899596707254,
+              "TV Shows": 0.9988714224855206,
+              "Anime": 0.00010161873947405094,
+              "Documentaries": 0.0008449597790380738
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 139.52,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.06583293873963066,
+              "TV Shows": 0.8692472265589637,
+              "Anime": 0.004140601558411082,
+              "Documentaries": 0.06077923314299457
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 135.5,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 7.63226285445933e-05,
+              "TV Shows": 0.9984754233719018,
+              "Anime": 7.666491004510574e-05,
+              "Documentaries": 0.0013715890895084784
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 138.78,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.02017526346625836,
+              "TV Shows": 0.831207289129932,
+              "Anime": 0.14491211045794616,
+              "Documentaries": 0.0037053369458634913
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 137.1,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.00023715555848099416,
+              "TV Shows": 0.9985398991076111,
+              "Anime": 0.00011858077579394718,
+              "Documentaries": 0.0011043645581138213
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 137.62,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.00022173717693430866,
+              "TV Shows": 0.0036532856231651792,
+              "Anime": 0.9953045875093824,
+              "Documentaries": 0.0008203896905182298
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 136.9,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.0012302601213190572,
+              "TV Shows": 0.00012369122426747413,
+              "Anime": 0.9981605497367098,
+              "Documentaries": 0.000485498917703624
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 127.38,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.00040325406629961,
+              "TV Shows": 0.0058572964426554155,
+              "Anime": 0.9927678245031505,
+              "Documentaries": 0.0009716249878944704
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 119.26,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.0038337309743947945,
+              "TV Shows": 0.04752733498449315,
+              "Anime": 0.9458454404734044,
+              "Documentaries": 0.002793493567707743
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 118.39,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.0032671108651399403,
+              "TV Shows": 0.00021525599017645965,
+              "Anime": 0.995792765636344,
+              "Documentaries": 0.0007248675083396909
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 119.38,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.45974710314316597,
+              "TV Shows": 0.005925599771793561,
+              "Anime": 0.0005625447092834,
+              "Documentaries": 0.533764752375757
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 120.66,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.0009312634240387334,
+              "TV Shows": 0.03785293909891311,
+              "Anime": 0.0002593068381606822,
+              "Documentaries": 0.9609564906388874
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 119.27,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.0026419301190946467,
+              "TV Shows": 0.0002223484130531736,
+              "Anime": 0.00010922168294289062,
+              "Documentaries": 0.9970264997849093
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 118.65,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.010314327244459251,
+              "TV Shows": 0.0011707046207131576,
+              "Anime": 0.0002169083042957201,
+              "Documentaries": 0.988298059830532
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 120.5,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.0069818012815232,
+              "TV Shows": 0.0002187896061562119,
+              "Anime": 8.302479624517938e-05,
+              "Documentaries": 0.9927163843160753
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "runner": "systemone:tev1",
+    "task": "clockwork-watch-category",
+    "items": 30,
+    "errors": 0,
+    "latency_ms_mean": 189.4,
+    "latency_ms_median": 71.9,
+    "latency_ms_p90": 85.3,
+    "questions": {
+      "category": {
+        "accuracy": 0.867,
+        "invalid": 0,
+        "n": 30,
+        "brier": 0.147,
+        "confusion": {
+          "labels": [
+            "Movies",
+            "TV Shows",
+            "Anime",
+            "Documentaries"
+          ],
+          "counts": {
+            "Movies": {
+              "Movies": 8,
+              "TV Shows": 0,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "TV Shows": {
+              "Movies": 0,
+              "TV Shows": 8,
+              "Anime": 0,
+              "Documentaries": 0
+            },
+            "Anime": {
+              "Movies": 0,
+              "TV Shows": 0,
+              "Anime": 7,
+              "Documentaries": 0
+            },
+            "Documentaries": {
+              "Movies": 2,
+              "TV Shows": 2,
+              "Anime": 0,
+              "Documentaries": 3
+            }
+          },
+          "invalid": {
+            "Movies": 0,
+            "TV Shows": 0,
+            "Anime": 0,
+            "Documentaries": 0
+          },
+          "per_label": {
+            "Movies": {
+              "support": 8,
+              "precision": 0.8,
+              "recall": 1.0,
+              "f1": 0.889
+            },
+            "TV Shows": {
+              "support": 8,
+              "precision": 0.8,
+              "recall": 1.0,
+              "f1": 0.889
+            },
+            "Anime": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "Documentaries": {
+              "support": 7,
+              "precision": 1.0,
+              "recall": 0.429,
+              "f1": 0.6
+            }
+          }
+        }
+      }
+    },
+    "protocol": {
+      "split": "test",
+      "train_examples": 12,
+      "zero_shot": false,
+      "leave_one_out": false
+    },
+    "rows": [
+      {
+        "item": 0,
+        "ms": 3535.33,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9991460408700052,
+              "TV Shows": 0.0004443353313094298,
+              "Anime": 0.0003791637729938971,
+              "Documentaries": 3.046002569136473e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 1,
+        "ms": 68.94,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9997760964723605,
+              "TV Shows": 0.00014870813254725437,
+              "Anime": 4.9697012331071286e-05,
+              "Documentaries": 2.549838276122389e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 2,
+        "ms": 69.4,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.0032403259938873752,
+              "TV Shows": 0.9964520391898032,
+              "Anime": 0.0002169016456387101,
+              "Documentaries": 9.073317067092553e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 3,
+        "ms": 68.14,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.0002549699581812213,
+              "TV Shows": 0.999696418293035,
+              "Anime": 2.3385701939055326e-05,
+              "Documentaries": 2.5226046844728013e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 4,
+        "ms": 70.01,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.12432462529270207,
+              "TV Shows": 0.3792867784399184,
+              "Anime": 0.4963068651937618,
+              "Documentaries": 8.173107361772186e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 5,
+        "ms": 65.48,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.03254578546608687,
+              "TV Shows": 0.00030686250729448103,
+              "Anime": 0.9670898483562561,
+              "Documentaries": 5.750367036270334e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 6,
+        "ms": 68.42,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.20940839698536132,
+              "TV Shows": 0.0010279763266379585,
+              "Anime": 0.00010827250405570982,
+              "Documentaries": 0.7894553541839451
+            }
+          }
+        }
+      },
+      {
+        "item": 7,
+        "ms": 68.25,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.1124499824332347,
+              "TV Shows": 0.0003814794502233717,
+              "Anime": 0.00021442243209812272,
+              "Documentaries": 0.8869541156844438
+            }
+          }
+        }
+      },
+      {
+        "item": 8,
+        "ms": 68.38,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9992280189797426,
+              "TV Shows": 0.0006241465271265154,
+              "Anime": 8.40747625804482e-05,
+              "Documentaries": 6.375973055044918e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 9,
+        "ms": 67.86,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9997574649673913,
+              "TV Shows": 0.00010005680921214542,
+              "Anime": 1.4646573825722688e-05,
+              "Documentaries": 0.00012783164957083336
+            }
+          }
+        }
+      },
+      {
+        "item": 10,
+        "ms": 69.77,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9997910800338251,
+              "TV Shows": 0.00012195795159341393,
+              "Anime": 7.140442619631245e-05,
+              "Documentaries": 1.5557588385144623e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 11,
+        "ms": 68.35,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9979501422524631,
+              "TV Shows": 0.0016361166793931198,
+              "Anime": 0.0003310577983438764,
+              "Documentaries": 8.268326980003004e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 12,
+        "ms": 69.22,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9998242578009362,
+              "TV Shows": 0.00012535916787098127,
+              "Anime": 3.210316317492732e-05,
+              "Documentaries": 1.8279868017944793e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 13,
+        "ms": 71.77,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Movies",
+            "p": {
+              "Movies": 0.9899930219329378,
+              "TV Shows": 0.0007019488495097958,
+              "Anime": 0.009271599028064825,
+              "Documentaries": 3.3430189487449945e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 14,
+        "ms": 74.14,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.001177848883909735,
+              "TV Shows": 0.9987217412484788,
+              "Anime": 3.447377495575628e-05,
+              "Documentaries": 6.593609265581935e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 15,
+        "ms": 73.7,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.0024548604281288055,
+              "TV Shows": 0.9974152191384944,
+              "Anime": 8.118274458589736e-05,
+              "Documentaries": 4.873768879111475e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 16,
+        "ms": 75.37,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.020354063257997625,
+              "TV Shows": 0.9794817623906126,
+              "Anime": 0.00011025323352625235,
+              "Documentaries": 5.392111786354659e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 17,
+        "ms": 73.52,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.0003918565216459415,
+              "TV Shows": 0.9995091594502605,
+              "Anime": 3.724953758767814e-05,
+              "Documentaries": 6.173449050595733e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 18,
+        "ms": 77.17,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.05746195026211825,
+              "TV Shows": 0.8101645243752098,
+              "Anime": 0.13232233577525482,
+              "Documentaries": 5.118958741705942e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 19,
+        "ms": 74.67,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "TV Shows",
+            "p": {
+              "Movies": 0.00022780497201760436,
+              "TV Shows": 0.9996618866003996,
+              "Anime": 5.133563763453592e-05,
+              "Documentaries": 5.89727899482789e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 20,
+        "ms": 76.13,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.0005261926484614857,
+              "TV Shows": 0.003349409823825857,
+              "Anime": 0.996085845581462,
+              "Documentaries": 3.855194625067867e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 21,
+        "ms": 83.6,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.004027940114579476,
+              "TV Shows": 0.0001259652933189548,
+              "Anime": 0.9958007234252912,
+              "Documentaries": 4.5371166810196064e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 22,
+        "ms": 95.72,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.001638922829983341,
+              "TV Shows": 0.0029774691745602815,
+              "Anime": 0.9953125196286933,
+              "Documentaries": 7.108836676312288e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 23,
+        "ms": 83.62,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.008502882440063064,
+              "TV Shows": 0.035156926144876526,
+              "Anime": 0.9562537623668308,
+              "Documentaries": 8.64290482296655e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 24,
+        "ms": 85.34,
+        "answers": {
+          "category": {
+            "value": "Anime",
+            "expected": "Anime",
+            "p": {
+              "Movies": 0.008250045140906857,
+              "TV Shows": 0.00019055228487117423,
+              "Anime": 0.9915106344733258,
+              "Documentaries": 4.8768100896316805e-05
+            }
+          }
+        }
+      },
+      {
+        "item": 25,
+        "ms": 86.39,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.2903184380822274,
+              "TV Shows": 0.36753347831379013,
+              "Anime": 0.0001274289803942576,
+              "Documentaries": 0.34202065462358827
+            }
+          }
+        }
+      },
+      {
+        "item": 26,
+        "ms": 84.32,
+        "answers": {
+          "category": {
+            "value": "TV Shows",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.09365917845304092,
+              "TV Shows": 0.8803909013243143,
+              "Anime": 0.0002830224955914335,
+              "Documentaries": 0.025666897727053255
+            }
+          }
+        }
+      },
+      {
+        "item": 27,
+        "ms": 71.95,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.5606342289610492,
+              "TV Shows": 0.0015135253814830053,
+              "Anime": 0.026130744698295363,
+              "Documentaries": 0.4117215009591724
+            }
+          }
+        }
+      },
+      {
+        "item": 28,
+        "ms": 68.49,
+        "answers": {
+          "category": {
+            "value": "Documentaries",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.009387522583223047,
+              "TV Shows": 0.00046345092431222476,
+              "Anime": 0.0002568823839539904,
+              "Documentaries": 0.9898921441085108
+            }
+          }
+        }
+      },
+      {
+        "item": 29,
+        "ms": 69.97,
+        "answers": {
+          "category": {
+            "value": "Movies",
+            "expected": "Documentaries",
+            "p": {
+              "Movies": 0.6177710901772397,
+              "TV Shows": 0.000679995793395517,
+              "Anime": 0.00017800978203907442,
+              "Documentaries": 0.3813709042473257
+            }
+          }
+        }
+      }
+    ]
+  }
+]

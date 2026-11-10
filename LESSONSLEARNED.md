@@ -54,6 +54,19 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
   prompt order. Check the prompt and read the confusion matrix before blaming
   the model.
 
+- **Grow a decision benchmark by freezing its train split and baseline.** Add
+  new examples only to the held-out test split and do not teach the keyword
+  rules their vocabulary. Otherwise the expansion tunes the benchmark to its
+  answers instead of measuring generalization on more cases.
+
+- **An OCR benchmark must start from pixels.** Receipt category and schema
+  extraction suites receive text after recognition, so they cannot measure
+  character loss, digit substitutions, reading order, rotation, blur, or
+  multilingual glyphs. Score transcription with CER/WER, score reviewed
+  business fields separately, and keep engine errors separate from bad output.
+  Synthetic images are a safe repeatable baseline, not a substitute for an
+  ignored, consented, redacted real-scan calibration set.
+
 - **Historical test replay needs three independent checks.** Run the old suite
   on the before commit (green), apply only selected tests from the after commit
   to old source (red), and run the same suite at the after commit (green).
@@ -61,6 +74,11 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
   scoring edits, and reject any agent change to tests or unapproved paths.
   Report tool-use failures, agent errors, and timeouts separately from a
   completed code edit that leaves tests failing.
+
+- **A historical-replay task may claim only what its selected tests enforce.** A
+  reference commit can contain a broader integration fix than its regression
+  test. Name and prompt the benchmark around the observable assertions; do not
+  score an untested call site by implication from the reference diff.
 
 - **Probe each installed model tag for structured tool calls before a coding
   sweep.** Use the same Ollama provider and a tiny tool schema, then check the

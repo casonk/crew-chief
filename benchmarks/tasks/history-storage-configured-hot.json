@@ -1,0 +1,11 @@
+{
+  "name": "Configured hot storage avoids a Podman volume lookup",
+  "prompt": "New model-storage tests were added to an older crew-chief checkout. Fix tier loading so an explicitly configured hot path is used without consulting Podman, while a missing hot path still uses the existing discovery callback. Preserve tier ordering and path expansion. Make the full test suite pass. You may edit only src/crew_chief/model_storage.py.",
+  "evolution": {
+    "before": "736d113802937868506465e8c870f386785945b1",
+    "after": "9976a541b434cfd147e034182be39558c9ce05d7",
+    "test_paths": ["tests/test_model_storage_edges.py"]
+  },
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/crew_chief/model_storage.py"]
+}

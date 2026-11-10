@@ -1,0 +1,11 @@
+{
+  "name": "Listener config rejects misleading TOML types",
+  "prompt": "New configuration validation tests were added to an older crew-chief checkout. Make listener configuration loading reject booleans where numbers are required and reject non-table top-level sections with ConfigError messages that identify the bad section. Preserve valid configuration and defaults. Make the full test suite pass. You may edit only src/crew_chief/config_loader.py.",
+  "evolution": {
+    "before": "53244d21b90d940c1dc47fc956910438571d8bcf",
+    "after": "bc2827b13c7577995d4af8c14ded09326ad3b091",
+    "test_paths": ["tests/test_config_loader_validation.py"]
+  },
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/crew_chief/config_loader.py"]
+}

@@ -17,6 +17,7 @@ venv/
 # Test and lint caches
 .pytest_cache/
 /results/test-bench-*
+/results/ocr-bench-*
 .ruff_cache/
 .mypy_cache/
 htmlcov/

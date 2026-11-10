@@ -1,0 +1,11 @@
+{
+  "name": "File tools confine untrusted paths to allowed directories",
+  "prompt": "New confinement tests were added to an older crew-chief checkout. Make the read and write tools enforce allowed directories after resolving path components and symlinks, without confusing sibling prefixes for children or crashing on invalid paths. Preserve unrestricted behavior when no allowed paths are configured. Make the full test suite pass. You may edit only src/crew_chief/tools.py.",
+  "evolution": {
+    "before": "03b5dfb6b9f81905fb51bfcb4bad6f7874f4e98b",
+    "after": "53244d21b90d940c1dc47fc956910438571d8bcf",
+    "test_paths": ["tests/test_tools_confinement.py"]
+  },
+  "test_command": ["pytest", "-q"],
+  "editable_paths": ["src/crew_chief/tools.py"]
+}

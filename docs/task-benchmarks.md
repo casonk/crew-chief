@@ -71,15 +71,15 @@ to sort items into those categories. The `clockwork-*` suites measure how well a
 model does that, one suite per list, each with a single `category` choice
 question whose options are the list's real categories:
 
-| Suite | Labels |
-|---|---|
-| `clockwork-grocery-type` | 12 grocery types (Meat ... Frozen), as in `_ai_categorize` |
-| `clockwork-shopping-type` | 16 consumer-goods types (Tops ... Electronics) |
-| `clockwork-watch-category` | Movies, TV Shows, Anime, Documentaries |
-| `clockwork-listen-category` | Albums, Podcasts, Audiobooks, Radio, Artists |
-| `clockwork-read-category` | Books, Articles, Papers, Comics |
-| `clockwork-todo-category` | Tasks, Projects, Errands, Goals, Hardware |
-| `clockwork-invest-category` | Stocks, ETFs, Crypto, Bonds, REITs, Themes |
+| Suite | Labels | Test items |
+|---|---|---:|
+| `clockwork-grocery-type` | 12 grocery types (Meat ... Frozen), as in `_ai_categorize` | 24 |
+| `clockwork-shopping-type` | 16 consumer-goods types (Tops ... Electronics) | 16 |
+| `clockwork-watch-category` | Movies, TV Shows, Anime, Documentaries | 30 |
+| `clockwork-listen-category` | Albums, Podcasts, Audiobooks, Radio, Artists | 30 |
+| `clockwork-read-category` | Books, Articles, Papers, Comics | 30 |
+| `clockwork-todo-category` | Tasks, Projects, Errands, Goals, Hardware | 30 |
+| `clockwork-invest-category` | Stocks, ETFs, Crypto, Bonds, REITs, Themes | 30 |
 
 Every label has train and test items. Items are generic names or well-known
 public titles, never entries from a real list; keep it that way. If a Clockwork
@@ -116,8 +116,10 @@ better; it rewards being confident only when right).
 
 ## Backlog triage
 
-`backlog-triage.json` has two questions per entry, `group` and `repo`, each with an `unknown` option, and
-models Clockwork's To Code auto-sorting. See [decision-model-selection.md](decision-model-selection.md#backlog-triage-sorting-an-entry-into-a-group-and-a-repository).
+`backlog-triage.json` has one `repo` question with an `unknown` option and
+models Clockwork's To Code auto-sorting. A group follows from the selected
+repository rather than being inferred separately. Its test split has 78
+entries. See [decision-model-selection.md](decision-model-selection.md#backlog-triage-sorting-an-entry-into-a-repository).
 
 ## Aggregate score
 

@@ -77,6 +77,12 @@ class ClockworkSuiteTests(unittest.TestCase):
                         {i["expected"]["category"] for i in chosen.items}, labels, split
                     )
 
+    def test_each_to_list_has_at_least_thirty_held_out_items(self):
+        for name in ("todo", "watch", "read", "listen", "invest"):
+            with self.subTest(list=name):
+                task = tb.load_task(TASK_FILE.parent / f"clockwork-{name}-category.json")
+                self.assertGreaterEqual(len(task.select("test").items), 30)
+
 
 class BacklogTriageSuiteTests(unittest.TestCase):
     PATH = TASK_FILE.parent / "backlog-triage.json"
@@ -90,6 +96,7 @@ class BacklogTriageSuiteTests(unittest.TestCase):
         for split in tb.SPLITS:
             chosen = task.select(split)
             self.assertEqual({i["expected"]["repo"] for i in chosen.items}, labels, split)
+        self.assertGreaterEqual(len(task.select("test").items), 30)
 
     def test_the_active_sorting_variants_are_gone_because_train_is_always_in_the_prompt(self):
         self.assertEqual(list(TASK_FILE.parent.glob("backlog-triage-active-*.json")), [])
