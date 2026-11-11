@@ -10,16 +10,16 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
-- [ ] [manual:2026-11-10] **Rerun the 300 s coding sweep on an idle GPU.**
-  `results/test-bench-300s-20261110.json` removed every timeout (2/9 passed) but
-  `ecu` reported contention in 416 of 1,080 samples. Rerun with `--runs 3` while
-  nothing else uses the GPU, then diagnose the failures that never edited
-  (service reply loop guard, Signal one-time-code) and the invalid edit attempts
-  (Gmail one-time-code, Archility shell tokens).
+- [ ] [manual:2026-11-10] **Repeat the 300 s coding sweep to separate noise from skill.**
+  Two 300 s runs of `qwen3.5:27b` gave 2/9 and 0/9 with different cases passing, so one run
+  cannot rank models. Run `--runs 3` through the lease (it now resumes with `--resume` and
+  reuses the case reviews), then diagnose the trials that never edited (service reply loop
+  guard, Signal and Gmail one-time-code) and the invalid edit attempts (Archility shell tokens).
 
 - [ ] [manual:2026-11-10] **Time the vision OCR run under an ecu lease.** The first
   `qwen3.5:27b` run took a median 42 s per image with no GPU sampling during it. Run
-  it through the lease with a warm-up call, and compare smaller vision models.
+  it through `ecu run --own-gpu-process ollama --own-gpu-process llama-server` after a
+  warm-up call, and compare smaller vision models.
 
 - [ ] [manual:2026-11-10] **Calibrate OCR on consented real scans.** The
   synthetic receipt suite is reproducible and safe to publish, but does not

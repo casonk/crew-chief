@@ -41,3 +41,39 @@ def test_launcher_refuses_unregistered_gpu_work(monkeypatch):
         lambda *args, **kwargs: subprocess.CompletedProcess(args[0], 0, "", ""),
     )
     assert launcher.quiet_gpu() == (True, "GPU is idle")
+
+
+def test_launcher_names_its_own_ollama_processes_and_bounds_the_wait(tmp_path, monkeypatch):
+    source = tmp_path / "src"
+    (source / "central_ecu").mkdir(parents=True)
+    (source / "central_ecu" / "__main__.py").write_text("")
+    monkeypatch.setattr(launcher.shutil, "which", lambda name: None)
+
+    command, _ = launcher.lease_command(SCRIPT, [], {"CENTRAL_ECU_SOURCE": str(source)})
+
+    options = command[: command.index("--")]
+    owned = [options[i + 1] for i, part in enumerate(options) if part == "--own-gpu-process"]
+    assert owned == ["ollama", "llama-server"]
+    assert options[options.index("--max-wait") + 1] == "2h"
+    assert options[options.index("--on-busy") + 1] == "fail"
+
+    command, _ = launcher.lease_command(
+        SCRIPT,
+        [],
+        {"CENTRAL_ECU_SOURCE": str(source), "CREW_CHIEF_LEASE_MAX_WAIT": "30min"},
+    )
+    assert command[command.index("--max-wait") + 1] == "30min"
+
+
+def test_the_ollama_runner_is_not_unregistered_gpu_work(monkeypatch):
+    monkeypatch.setattr(launcher.shutil, "which", lambda name: "/usr/bin/nvidia-smi")
+
+    def holders(output):
+        return lambda *args, **kwargs: subprocess.CompletedProcess(args[0], 0, output, "")
+
+    monkeypatch.setattr(launcher.subprocess, "run", holders("/usr/lib/ollama/llama-server\n"))
+    assert launcher.quiet_gpu() == (True, "GPU is idle")
+    monkeypatch.setattr(
+        launcher.subprocess, "run", holders("/usr/lib/ollama/llama-server\n/usr/bin/ffmpeg\n")
+    )
+    assert launcher.quiet_gpu() == (False, "GPU still in use by: /usr/bin/ffmpeg")
