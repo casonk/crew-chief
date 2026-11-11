@@ -60,9 +60,9 @@ def test_launcher_names_its_own_ollama_processes_and_bounds_the_wait(tmp_path, m
     command, _ = launcher.lease_command(
         SCRIPT,
         [],
-        {"CENTRAL_ECU_SOURCE": str(source), "CREW_CHIEF_LEASE_MAX_WAIT": "30min"},
+        {"CENTRAL_ECU_SOURCE": str(source), "CREW_CHIEF_LEASE_MAX_WAIT": "30m"},
     )
-    assert command[command.index("--max-wait") + 1] == "30min"
+    assert command[command.index("--max-wait") + 1] == "30m"
 
 
 def test_the_ollama_runner_is_not_unregistered_gpu_work(monkeypatch):
