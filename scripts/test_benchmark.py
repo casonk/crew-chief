@@ -149,8 +149,48 @@ def load_suite(
     return cases
 
 
+REVIEW_CACHE_TTL_SECONDS = 14 * 24 * 3600
+REVIEW_SUITES = ("old_suite", "new_tests_on_old_source", "reference_suite")
+
+
+def write_json_atomic(path: pathlib.Path, document: dict) -> None:
+    """Replace ``path`` in one step, so an interrupted write never leaves half a file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    pending = path.with_name(f".{path.name}.{uuid.uuid4().hex}")
+    pending.write_text(json.dumps(document, indent=2) + "\n")
+    os.replace(pending, path)
+
+
+def load_review_cache(path: pathlib.Path | None) -> dict | None:
+    """Reviews already done for the same commits, tests and Python; None disables caching."""
+    if path is None:
+        return None
+    try:
+        cache = json.loads(path.read_text())
+    except (OSError, ValueError):
+        return {}
+    return cache if isinstance(cache, dict) else {}
+
+
+def review_key(before: str, after: str, test_patch_sha256: str, task: dict) -> str:
+    """What the three review test runs depend on."""
+    identity = {
+        "before": before,
+        "after": after,
+        "test_patch": test_patch_sha256,
+        "test_command": task["test_command"],
+        "editable_paths": task["editable_paths"],
+        "python": list(sys.version_info[:2]),
+    }
+    return hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+
+
 def prepare_evolution(
-    repo: pathlib.Path, task: dict, patch_dir: pathlib.Path, test_timeout: int
+    repo: pathlib.Path,
+    task: dict,
+    patch_dir: pathlib.Path,
+    test_timeout: int,
+    cache: dict | None = None,
 ) -> dict:
     """Review a real before/after change without exposing the source fix to the agent."""
     evolution = task["evolution"]
@@ -187,6 +227,20 @@ def prepare_evolution(
         "test_patch_sha256": hashlib.sha256(diff).hexdigest(),
         "test_command": task["test_command"],
     }
+    key = review_key(before, after, review["test_patch_sha256"], task)
+    cached = (cache or {}).get(key)
+    if (
+        isinstance(cached, dict)
+        and time.time() - cached.get("created", 0) < REVIEW_CACHE_TTL_SECONDS
+        and all(name in cached for name in REVIEW_SUITES)
+    ):
+        # The three review runs repeat for every sweep over the same commits; the
+        # injected failure, the green old suite and the green reference are facts
+        # about those commits, so reuse them rather than re-run several minutes.
+        review.update({name: cached[name] for name in REVIEW_SUITES})
+        review["cached_from"] = cached["created"]
+        task["history_review"] = review
+        return review
     with tempfile.TemporaryDirectory(prefix="crew-chief-evolution-review-") as temporary:
         old = pathlib.Path(temporary) / "before"
         new = pathlib.Path(temporary) / "after"
@@ -233,6 +287,8 @@ def prepare_evolution(
             "counts": test_counts(reference_output),
             "seconds": round(reference_seconds, 2),
         }
+    if cache is not None:
+        cache[key] = {"created": time.time(), **{name: review[name] for name in REVIEW_SUITES}}
     task["history_review"] = review
     return review
 
@@ -535,6 +591,32 @@ the fixed test command to pass after an allowed code edit.</p>
     )
 
 
+def resume_from(partial: pathlib.Path, report: dict, args: argparse.Namespace) -> str | None:
+    """Load recorded trials into ``report``; return why they cannot be trusted, if so."""
+    try:
+        prior = json.loads(partial.read_text())
+    except (OSError, ValueError) as exc:
+        return f"unreadable ({exc})"
+    if not isinstance(prior, dict) or not isinstance(prior.get("results"), list):
+        return "not a benchmark report"
+    for field in ("agent_timeout_seconds", "test_timeout_seconds"):
+        if prior.get(field) != report[field]:
+            return f"{field} was {prior.get(field)}, now {report[field]}; timing tiers differ"
+    current = {task["name"]: task for task in report["tasks"]}
+    before = {task.get("name"): task for task in prior.get("tasks", [])}
+    for result in prior["results"]:
+        name = result.get("task")
+        if result.get("model") not in args.models or name not in current:
+            return f"recorded trial for {result.get('model')!r} on {name!r} is not in this run"
+        for field in ("base_commit", "task_patch_sha256"):
+            if before.get(name, {}).get(field) != current[name][field]:
+                return f"{name!r} changed ({field}); its recorded trials no longer apply"
+    report["results"] = prior["results"]
+    report["created_at"] = prior.get("created_at", report["created_at"])
+    report["resumed_trials"] = len(prior["results"])
+    return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=pathlib.Path)
@@ -555,11 +637,27 @@ def main() -> int:
     parser.add_argument("--test-timeout", type=int, default=180)
     parser.add_argument("--url", default="http://127.0.0.1:11434")
     parser.add_argument("--out", type=pathlib.Path)
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="continue the partial report next to --out, skipping trials already recorded",
+    )
+    parser.add_argument(
+        "--review-cache",
+        type=pathlib.Path,
+        default=pathlib.Path("results") / ".review-cache.json",
+        help="reuse historical-case reviews for unchanged commits (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--no-review-cache", action="store_true", help="re-run every historical-case review"
+    )
     args = parser.parse_args()
     if args.agent_timeout < 1 or args.test_timeout < 1 or args.runs < 1:
         parser.error("timeouts and runs must be positive")
     if args.router_only and not args.router_model:
         parser.error("--router-only requires --router-model")
+    if args.resume and (not args.out or args.router_model):
+        parser.error("--resume requires --out and does not support routing")
     if args.router_model and (
         len(set(args.models)) < 2
         or len(set(args.models)) != len(args.models)
@@ -584,6 +682,17 @@ def main() -> int:
         cases = [(repo.name, repo, load_task(path.resolve())) for path in args.task]
     if len({task["name"] for _, _, task in cases}) != len(cases):
         parser.error("task names must be unique in one report")
+    out = args.out or pathlib.Path("results") / (
+        "test-bench-" + datetime.now().strftime("%Y%m%d-%H%M%S") + ".json"
+    )
+    partial = out.with_suffix(".partial.json")
+    if partial.exists() and not args.resume:
+        print(
+            f"error: an interrupted run left {partial}; add --resume to continue it, "
+            "or delete the file to start over",
+            file=sys.stderr,
+        )
+        return 2
     report = {
         "schema_version": 3,
         "created_at": datetime.now(timezone.utc).isoformat(),
@@ -635,11 +744,18 @@ def main() -> int:
         }
     except OSError:
         report["ollama_version"] = "unavailable"
+    cache = None if args.no_review_cache else load_review_cache(args.review_cache)
     with tempfile.TemporaryDirectory(prefix="crew-chief-benchmark-patches-") as temporary:
         for repo_name, repo, task in cases:
             if "evolution" in task:
                 print(f"Reviewing historical case: {task['name']} ...", flush=True)
-                review = prepare_evolution(repo, task, pathlib.Path(temporary), args.test_timeout)
+                review = prepare_evolution(
+                    repo, task, pathlib.Path(temporary), args.test_timeout, cache
+                )
+                if "cached_from" in review:
+                    print("  review reused from the cache", flush=True)
+                elif cache is not None:
+                    write_json_atomic(args.review_cache, cache)
                 review["repo"] = repo_name
                 report["case_reviews"].append(review)
             else:
@@ -656,9 +772,19 @@ def main() -> int:
                     ).hexdigest(),
                 }
             )
+        if args.resume and partial.exists():
+            problem = resume_from(partial, report, args)
+            if problem:
+                print(f"error: cannot resume {partial}: {problem}", file=sys.stderr)
+                return 2
+            print(f"Resuming with {len(report['results'])} recorded trial(s)", flush=True)
+        recorded = {(r["model"], r["task"], r["trial"]) for r in report["results"]}
         for repo_name, repo, task in cases:
             for model in [] if args.router_only else args.models:
                 for trial in range(1, args.runs + 1):
+                    if (model, task["name"], trial) in recorded:
+                        print(f"{model} trial {trial}: {task['name']} (recorded)", flush=True)
+                        continue
                     print(f"{model} trial {trial}: {task['name']} ...", flush=True)
                     result = benchmark_one(
                         repo,
@@ -672,6 +798,9 @@ def main() -> int:
                     result["trial"] = trial
                     result["repo"] = repo_name
                     report["results"].append(result)
+                    # Keep every finished trial on disk: a lease preemption or a
+                    # crash must cost one trial, not the whole sweep.
+                    write_json_atomic(partial, {**report, "partial": True})
                     print(
                         f"  {result['status']}: {result.get('error', result.get('final_counts', {}))}"
                     )
@@ -709,11 +838,8 @@ def main() -> int:
                     print(
                         f"  {result['status']}: {result.get('error', result.get('final_counts', {}))}"
                     )
-    out = args.out or pathlib.Path("results") / (
-        "test-bench-" + datetime.now().strftime("%Y%m%d-%H%M%S") + ".json"
-    )
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(report, indent=2) + "\n")
+    write_json_atomic(out, report)
+    partial.unlink(missing_ok=True)
     page = out.with_suffix(".html")
     page.write_text(render_html(report))
     for artifact in () if args.no_latest else (out, page):

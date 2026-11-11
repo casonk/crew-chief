@@ -7,11 +7,26 @@ uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 - Record the first live coding and OCR results for `qwen3.5:27b`. The nine-case repair sweep
-  passed 1/9 at a 120 s agent cap (six timeouts) and 2/9 at 300 s with no timeouts; the 300 s
-  run is marked contaminated because `ecu` saw other GPU processes in 416 of 1,080 samples
-  (the first three cases started with an external compute process), so its latencies are not
-  clean timing evidence. On the six-case synthetic OCR suite the vision model passed 6/6 and
-  Tesseract 3/6.
+  passed 1/9 at a 120 s agent cap (six timeouts), 2/9 at 300 s and 0/9 in a second 300 s run
+  (one timeout, four trials that never edited). Only the first 300 s run is contaminated, and
+  only for its first three cases: `ecu leases` shows an `ffmpeg` stream overlapping its first six
+  minutes of agent time. In the second run the only outside process (`ffmpeg`) ran in the first
+  47 s, during preflight, so its timing is clean. About 95% of the contention `ecu` reported in
+  both runs was the benchmark's own Ollama runner (`llama-server`), which the lease did not
+  know was its own. The same pair of 300 s runs, with different cases passing, shows that one run
+  is too noisy to rank models. On the six-case synthetic OCR suite the vision model passed 6/6
+  and Tesseract 3/6.
+- The benchmark launcher passes `--own-gpu-process ollama --own-gpu-process llama-server` and
+  `--max-wait 2h --on-busy fail` to `ecu run` (`CREW_CHIEF_LEASE_MAX_WAIT` changes the limit), so
+  its own model is no longer reported as contention and a busy GPU ends in a clear failure
+  instead of a hang. Its quiet-GPU check ignores the Ollama runner for the same reason.
+- `scripts/test_benchmark.py` saves every finished trial to `<out>.partial.json`, and
+  `--resume` (with the same `--out`) continues from it instead of repeating the sweep. Resuming
+  refuses trials recorded under another timing tier or for a changed task, and a fresh run
+  refuses to overwrite a leftover partial file.
+- Historical-case reviews (three test runs per case, about 9 minutes for the public suite) are
+  cached for 14 days in `results/.review-cache.json`, keyed by the commits, test patch, test
+  command and Python version. `--no-review-cache` forces a fresh review.
 - Add a pixel-first OCR benchmark with a six-case reviewed synthetic receipt
   suite, Tesseract and Ollama vision runners, CER/WER plus field scoring, and
   separate infrastructure-error reporting.

@@ -293,6 +293,16 @@ at `--agent-timeout 300` and save to a separate `--out` path with `--no-latest`.
 The longer result is a different timing tier and should not replace the 120-second
 comparison. Run timing trials when the GPU is otherwise idle.
 
+The launcher runs the sweep under `ecu run --wait`, naming Ollama and its runner as the
+workload's own processes and waiting at most two hours (`CREW_CHIEF_LEASE_MAX_WAIT`) for a
+stream or other higher-priority work. The lease cannot stop someone starting a stream partway
+through, so `ecu leases` is the way to check afterwards what overlapped a run and when: it traces
+the lease's contention log to process names and times. A sweep takes about 37 minutes at a 300 s
+cap, of which about 9 are case reviews; the reviews are cached in `results/.review-cache.json`
+(`--no-review-cache` to redo them). Every finished trial is saved to `<out>.partial.json`, so an
+interrupted sweep continues with the same command plus `--resume` instead of starting over. Run
+`ecu leases --clear-stale` first if a crashed lease left services yielded.
+
 An experimental local SystemOne model can choose among eligible coding models
 before each test repair. The router sees the task instructions, test command,
 selected test paths, added test names and assertion counts, old-source failure

@@ -53,3 +53,5 @@ config/env
 /.portfolio
 coverage.xml
 .coverage.*
+/results/.review-cache.json
+/results/*.partial.json
