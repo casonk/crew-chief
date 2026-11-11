@@ -10,16 +10,18 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
-- [ ] [manual:2026-11-10] **Repeat the 300 s coding sweep to separate noise from skill.**
-  Two 300 s runs of `qwen3.5:27b` gave 2/9 and 0/9 with different cases passing, so one run
-  cannot rank models. Run `--runs 3` through the lease (it now resumes with `--resume` and
-  reuses the case reviews), then diagnose the trials that never edited (service reply loop
-  guard, Signal and Gmail one-time-code) and the invalid edit attempts (Archility shell tokens).
+- [ ] [manual:2026-11-10] **Diagnose the coding failures from the saved results, then change something.**
+  Two identical 300 s runs of `qwen3.5:27b` gave 2/9 and 0/9, so a third identical run would
+  only add noise. Read the saved patches and tool traces for the trials that never edited
+  (service reply loop guard, Signal and Gmail one-time-code) and the invalid edit attempts
+  (Archility shell tokens), and form a hypothesis. Run the next sweep only for a new model, a
+  new task, or a changed parameter (prompt, tool set, `max_iterations`, context size,
+  temperature), and use `--resume` and the review cache.
 
 - [ ] [manual:2026-11-10] **Time the vision OCR run under an ecu lease.** The first
   `qwen3.5:27b` run took a median 42 s per image with no GPU sampling during it. Run
   it through `ecu run --own-gpu-process ollama --own-gpu-process llama-server` after a
-  warm-up call, and compare smaller vision models.
+  warm-up call (a changed measurement condition, not a repeat), and compare smaller vision models.
 
 - [ ] [manual:2026-11-10] **Calibrate OCR on consented real scans.** The
   synthetic receipt suite is reproducible and safe to publish, but does not
