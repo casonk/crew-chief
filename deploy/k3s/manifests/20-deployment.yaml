@@ -1,0 +1,50 @@
+# The listener runs with no Kubernetes API access, no capabilities and a read-only root filesystem.
+# Its configuration and credentials come from two Secrets that apply.sh creates from local files;
+# nothing private is stored in this tracked manifest.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crew-chief-listener
+  namespace: crew-chief-listener
+  labels: {app: crew-chief-listener}
+spec:
+  replicas: 1
+  strategy: {type: Recreate}      # never two listeners polling the same mailbox
+  selector:
+    matchLabels: {app: crew-chief-listener}
+  template:
+    metadata:
+      labels: {app: crew-chief-listener}
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: listener
+          image: localhost/crew-chief-listener:pilot
+          imagePullPolicy: Never   # imported into K3s's containerd by build-image.sh
+          args: ["listen", "--config", "/etc/crew-chief/config.toml", "--log-level", "INFO"]
+          envFrom:
+            - secretRef: {name: listener-env}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: ["ALL"]}
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {cpu: "1", memory: 512Mi}
+          volumeMounts:
+            - {name: config, mountPath: /etc/crew-chief, readOnly: true}
+            - {name: gmail-config, mountPath: /opt/shock-relay/config, readOnly: true}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: config
+          secret: {secretName: listener-config, defaultMode: 0440, items: [{key: config.toml, path: config.toml}]}
+        - name: gmail-config
+          secret: {secretName: listener-gmail, defaultMode: 0440, items: [{key: config.local.yaml, path: gmail-imap.config.local.yaml}]}
+        - name: tmp
+          emptyDir: {medium: Memory, sizeLimit: 64Mi}
