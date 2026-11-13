@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- Add a prepared K3s and Cilium pilot for the listener (`deploy/k3s/`, `docs/k3s-cilium-pilot.md`):
+  an unprivileged pod with default-deny egress to four named hosts, a confined command allowlist,
+  and credentials held in Secrets read once from the vault. Not yet run on a cluster.
 - Record the first live coding and OCR results for `qwen3.5:27b`. The nine-case repair sweep
   passed 1/9 at a 120 s agent cap (six timeouts), 2/9 at 300 s and 0/9 in a second 300 s run
   (one timeout, four trials that never edited). Only the first 300 s run is contaminated, and

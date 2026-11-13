@@ -1,0 +1,10 @@
+# Listener image for the K3s pilot. Built from a staged tree by build-image.sh, so it holds only the
+# crew-chief package and the shock-relay Gmail scripts, never the rest of the portfolio.
+FROM docker.io/library/python:3.12-slim
+RUN useradd --uid 10001 --user-group --no-create-home --shell /usr/sbin/nologin listener
+COPY stage/crew-chief/src /opt/crew-chief/src
+COPY stage/shock-relay /opt/shock-relay
+ENV PYTHONPATH=/opt/crew-chief/src PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 \
+    XDG_RUNTIME_DIR=/tmp HOME=/tmp
+USER 10001:10001
+ENTRYPOINT ["python3", "-m", "crew_chief"]
