@@ -130,3 +130,12 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 - **Same-address self-email is architecturally ambiguous.** When an inbox receives mail from its own address, crew-chief cannot distinguish a legitimate user command from an intake notification or its own loop reply based on sender alone. The reply marker and auto-reply header guards stop crew-chief's own replies; subject-prefix or Gmail-label filtering is needed to stop third-party pipelines using the same address.
 - **Do not re-run a benchmark whose model, task and parameters are unchanged.** An identical rerun costs GPU time (about 40 minutes for the coding sweep) and, for a stochastic agent, only adds a second noisy number: two identical 300 s runs scored 2/9 and 0/9 with different cases passing. Re-bench only for a new model, a new task, or a deliberately changed parameter, and record which one changed. Use `--resume` and the review cache so that even a justified run repeats nothing.
 - **Check what a lease's contention report counts before distrusting a run.** `ecu` flagged the benchmark's own Ollama runner (`llama-server`) as 95% of the contention, which led to discarding a valid run. Trace the report with `ecu leases` (process names and times against the agent phase) and pass `--own-gpu-process` for the workload's own processes.
+
+- A verification script must fail when it cannot run its probes. The K3s pilot's `verify.sh` printed
+  `ok` for every "should be blocked" probe against a cluster with no pod, because a failed `kubectl
+  exec` looked the same as a blocked connection. Report "closed" only when the probe ran and the
+  connection was refused, and exit non-zero when there was nothing to probe. Give every verifier a test
+  against a fake tool that does nothing.
+- Binding a Kubernetes API server to loopback breaks the cluster: pods reach it at the node address
+  through the `kubernetes` service. Keep it off the LAN with the firewall (and a guard that fails if a
+  zone opens its port), not with `--bind-address`.
