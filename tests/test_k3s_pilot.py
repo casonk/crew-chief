@@ -138,9 +138,8 @@ def test_the_network_policy_denies_by_default_and_names_every_destination():
         "smtp.gmail.com",
     ]
     for rule in spec["egress"]:
-        assert (
-            "toCIDR" not in rule and "toEntities" not in rule
-        ), "no address-range or entity allows"
+        # No address-range or entity allows: every destination is a hostname or cluster DNS.
+        assert not {"toCIDR", "toEntities"} & set(rule)
         assert "toFQDNs" in rule or "toEndpoints" in rule
         for port in (p for tp in rule.get("toPorts", []) for p in tp["ports"]):
             assert port["port"] in {"53", "443", "465", "587", "993"}
