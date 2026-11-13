@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+
 try:
     import tomllib  # Python 3.11+
 except ImportError:  # pragma: no cover - 3.10
@@ -44,12 +45,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--listener-config", type=Path, required=True)
     parser.add_argument("--gmail-config", type=Path, required=True)
     parser.add_argument("--crew-chief-src", type=Path, required=True)
-    parser.add_argument("--gmail-dir", type=Path, required=True, help="shock-relay services/gmail-imap")
+    parser.add_argument(
+        "--gmail-dir", type=Path, required=True, help="shock-relay services/gmail-imap"
+    )
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
 
     sys.path[:0] = [str(args.crew_chief_src), str(args.gmail_dir)]
     from common import load_config  # shock-relay's own resolver  # noqa: PLC0415
+
     from crew_chief.providers import _resolve_api_key  # noqa: PLC0415
 
     listener = tomllib.loads(args.listener_config.read_text(encoding="utf-8"))
@@ -63,7 +67,10 @@ def main(argv: list[str] | None = None) -> int:
         value = _resolve_api_key(var, llm.get(entry_key, ""), env_file)
         if value:
             lines.append(f"{var}={value}")
-    if not any(line.startswith("ANTHROPIC_API_KEY=") or line.startswith("OPENAI_API_KEY=") for line in lines):
+    if not any(
+        line.startswith("ANTHROPIC_API_KEY=") or line.startswith("OPENAI_API_KEY=")
+        for line in lines
+    ):
         print("warning: no cloud API key resolved; the pod would have no LLM", file=sys.stderr)
 
     gmail = load_config(str(args.gmail_config))

@@ -53,9 +53,17 @@ def test_the_confined_config_drops_everything_the_pod_cannot_or_must_not_do():
 
     assert cfg["signal"]["enabled"] is False
     assert cfg["dispatch"]["allowed_commands"] == load("make_config").CONFINED_COMMANDS
-    assert not any(c.split()[0].rstrip("*") in {"git", "systemctl", "journalctl"} for c in cfg["dispatch"]["allowed_commands"])
+    assert not any(
+        c.split()[0].rstrip("*") in {"git", "systemctl", "journalctl"}
+        for c in cfg["dispatch"]["allowed_commands"]
+    )
     assert cfg["llm"]["fallback_chain"] == ["anthropic", "openai"] == cfg["agent"]["fallback_chain"]
-    for key in ("auto_pass_env_file", "anthropic_api_key_auto_pass_entry", "ollama_model_chain", "claude_cli_allowed_tools"):
+    for key in (
+        "auto_pass_env_file",
+        "anthropic_api_key_auto_pass_entry",
+        "ollama_model_chain",
+        "claude_cli_allowed_tools",
+    ):
         assert key not in cfg["llm"]
     assert cfg["agent"]["allowed_paths"] == ["/tmp"]
     assert cfg["gmail"]["shock_relay_dir"].startswith("/opt/shock-relay/")
@@ -73,7 +81,11 @@ def test_the_confined_config_is_valid_toml_that_round_trips():
 def test_the_gmail_config_carries_no_vault_entries_only_environment_names():
     live = {
         "keepass_profile": "p",
-        "imap": {"host": "imap.gmail.com", "username_keepass_entry": "x#u", "password_keepass_entry": "x#p"},
+        "imap": {
+            "host": "imap.gmail.com",
+            "username_keepass_entry": "x#u",
+            "password_keepass_entry": "x#p",
+        },
         "smtp": {"password_keepass_entry": "x#s"},
         "paths": {"data_dir": "./d"},
     }
@@ -119,9 +131,16 @@ def test_the_network_policy_denies_by_default_and_names_every_destination():
     assert spec["ingressDeny"] == [{"fromEntities": ["all"]}]
     assert {"host", "kube-apiserver"} <= set(spec["egressDeny"][0]["toEntities"])
     allowed = [n["matchName"] for rule in spec["egress"] for n in rule.get("toFQDNs", [])]
-    assert sorted(allowed) == ["api.anthropic.com", "api.openai.com", "imap.gmail.com", "smtp.gmail.com"]
+    assert sorted(allowed) == [
+        "api.anthropic.com",
+        "api.openai.com",
+        "imap.gmail.com",
+        "smtp.gmail.com",
+    ]
     for rule in spec["egress"]:
-        assert "toCIDR" not in rule and "toEntities" not in rule, "no address-range or entity allows"
+        assert (
+            "toCIDR" not in rule and "toEntities" not in rule
+        ), "no address-range or entity allows"
         assert "toFQDNs" in rule or "toEndpoints" in rule
         for port in (p for tp in rule.get("toPorts", []) for p in tp["ports"]):
             assert port["port"] in {"53", "443", "465", "587", "993"}

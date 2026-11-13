@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+
 try:
     import tomllib  # Python 3.11+
 except ImportError:  # pragma: no cover - 3.10
@@ -82,8 +83,12 @@ def dumps(config: dict) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--source", type=Path, required=True, help="live config/listener/config.toml")
-    parser.add_argument("--out", type=Path, required=True, help="where to write the confined config")
+    parser.add_argument(
+        "--source", type=Path, required=True, help="live config/listener/config.toml"
+    )
+    parser.add_argument(
+        "--out", type=Path, required=True, help="where to write the confined config"
+    )
     args = parser.parse_args(argv)
     confined = confine(tomllib.loads(args.source.read_text(encoding="utf-8")))
     args.out.parent.mkdir(parents=True, exist_ok=True)
