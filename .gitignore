@@ -55,3 +55,6 @@ coverage.xml
 .coverage.*
 /results/.review-cache.json
 /results/*.partial.json
+
+# K3s pilot: generated from the live config, holds private values
+/deploy/k3s/*.generated.*

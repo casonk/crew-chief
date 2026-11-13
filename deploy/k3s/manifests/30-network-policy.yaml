@@ -1,0 +1,42 @@
+# Default-deny for the listener pod, then only what its Gmail channel and LLM fallback need.
+# Cilium evaluates deny rules before allow rules, so the explicit denies hold even if an allow is
+# added later by mistake. Hostnames are public service endpoints, not private data.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: listener-egress
+  namespace: crew-chief-listener
+spec:
+  endpointSelector:
+    matchLabels: {app: crew-chief-listener}
+  ingressDeny:
+    - fromEntities: [all]
+  egressDeny:
+    - toEntities: [host, remote-node, kube-apiserver, health]
+    - toCIDR: ["169.254.0.0/16"]   # link-local, including cloud metadata addresses
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports: [{port: "53", protocol: ANY}]
+          rules:
+            dns:
+              - matchName: imap.gmail.com
+              - matchName: smtp.gmail.com
+              - matchName: api.anthropic.com
+              - matchName: api.openai.com
+    - toFQDNs:
+        - matchName: imap.gmail.com
+      toPorts:
+        - ports: [{port: "993", protocol: TCP}]
+    - toFQDNs:
+        - matchName: smtp.gmail.com
+      toPorts:
+        - ports: [{port: "465", protocol: TCP}, {port: "587", protocol: TCP}]
+    - toFQDNs:
+        - matchName: api.anthropic.com
+        - matchName: api.openai.com
+      toPorts:
+        - ports: [{port: "443", protocol: TCP}]

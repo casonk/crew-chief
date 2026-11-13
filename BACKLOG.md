@@ -10,6 +10,11 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
+- [ ] [manual:2026-11-13] **Run the K3s and Cilium listener pilot on a real cluster.** Files and tests are in
+  `deploy/k3s/` and `docs/k3s-cilium-pilot.md`. Needs root once: `sudo K3S_VERSION=... CILIUM_VERSION=...
+  deploy/k3s/install-cluster.sh`, then `build-image.sh`, stop the host listener, `apply.sh`, and
+  `verify.sh` (every probe `ok`). Record the versions in the doc. Phase 2: Signal, and a route to the
+  host's local models.
 - [ ] [manual:2026-11-10] **Diagnose the coding failures from the saved results, then change something.**
   Two identical 300 s runs of `qwen3.5:27b` gave 2/9 and 0/9, so a third identical run would
   only add noise. Read the saved patches and tool traces for the trials that never edited
