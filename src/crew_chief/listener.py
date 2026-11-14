@@ -359,6 +359,38 @@ def _excerpt(text: str, limit: int = 400) -> str:
     return f"{compact[: limit - 3]}..."
 
 
+_LOGGED_ONCE_LIMIT = 4096
+_logged_once: dict[tuple[str, str], None] = {}
+
+
+def _raw_message_key(msg_raw: dict[str, Any]) -> str:
+    """Return a stable id for a raw check_inbox message, whatever fields it carries."""
+    message_id = str(msg_raw.get("message_id") or "").strip()
+    if message_id:
+        return f"message_id:{message_id}"
+    mailbox, uid = str(msg_raw.get("mailbox") or ""), str(msg_raw.get("uid") or "")
+    if mailbox and uid:
+        return f"uid:{mailbox}:{uid}"
+    return "|".join(
+        str(msg_raw.get(k) or "").strip().lower() for k in ("from", "subject", "timestamp")
+    )
+
+
+def _log_once(msg_raw: dict[str, Any], level: int, fmt: str, *args: object) -> None:
+    """Log a decision about an inbox message the first time only.
+
+    An ignored message stays unread, so the poll sees it again every cycle. Repeating its
+    decision buries real events, and repeated warnings would also keep the log policy at DEBUG.
+    """
+    key = (fmt, _raw_message_key(msg_raw))
+    if key in _logged_once:
+        return
+    if len(_logged_once) >= _LOGGED_ONCE_LIMIT:
+        _logged_once.clear()
+    _logged_once[key] = None
+    log.log(level, fmt, *args)
+
+
 def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
     """Fetch unseen Gmail messages and return those from trusted senders.
 
@@ -435,12 +467,16 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
         sender_raw = msg.get("from", "")
         sender = _extract_email_address(sender_raw)
         if sender not in trusted_lower:
-            log.debug("Gmail: ignoring message from untrusted sender %s", sender)
+            _log_once(
+                msg, logging.DEBUG, "Gmail: ignoring message from untrusted sender %s", sender
+            )
             continue
 
         # Loop guard 2: honour standard email auto-reply headers.
         if _is_auto_reply(msg):
-            log.warning(
+            _log_once(
+                msg,
+                logging.WARNING,
                 "Gmail: dropping auto-reply from %s (subject=%r) — loop guard.",
                 sender,
                 msg.get("subject", ""),
@@ -452,12 +488,14 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
         # Replies to personal-finance two-factor prompts belong to the downloader waiting
         # for the code, not to the command dispatcher.
         if OTP_EMAIL_SUBJECT_TAG in subject.lower():
-            log.debug("Gmail: leaving 2FA email %r to the downloader.", subject)
+            _log_once(msg, logging.DEBUG, "Gmail: leaving 2FA email %r to the downloader.", subject)
             continue
 
         # Subject exclusion filter: drop emails from pipelines that share the inbox.
         if _subject_is_excluded(subject, cfg.subject_exclude_patterns):
-            log.info(
+            _log_once(
+                msg,
+                logging.INFO,
                 "Gmail: skipping email from %s with excluded subject %r.",
                 sender,
                 subject,
@@ -471,7 +509,9 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
         intent = _gmail_intent(msg)
         service_name = _gmail_service_name(msg)
         if service_name and intent != _CREW_CHIEF_REQUEST_INTENT:
-            log.info(
+            _log_once(
+                msg,
+                logging.INFO,
                 "Gmail: skipping email from %s for service=%s without request intent (intent=%r).",
                 sender,
                 service_name,
@@ -479,7 +519,9 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
             )
             continue
         if intent and intent != _CREW_CHIEF_REQUEST_INTENT:
-            log.info(
+            _log_once(
+                msg,
+                logging.INFO,
                 "Gmail: skipping email from %s with non-request intent %r (service=%s).",
                 sender,
                 intent,
@@ -495,7 +537,9 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
         # Loop guard 1: same-address Gmail is ambiguous unless the message
         # explicitly declares itself as a request to crew-chief.
         if own_address and sender == own_address and not explicit_request:
-            log.warning(
+            _log_once(
+                msg,
+                logging.WARNING,
                 "Gmail: dropping same-address message from %s without crew-chief request intent.",
                 sender,
             )
@@ -503,7 +547,9 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
 
         # Loop guard 3: drop messages containing crew-chief's own reply marker.
         if any(_REPLY_LOOP_MARKER in candidate for candidate in _gmail_body_candidates(msg)):
-            log.warning(
+            _log_once(
+                msg,
+                logging.WARNING,
                 "Gmail: dropping message from %s containing crew-chief marker — loop guard.",
                 sender,
             )
@@ -767,7 +813,13 @@ def _claim_gmail_message(msg: IncomingMessage, seen_fingerprints: set[str]) -> b
     """Return ``True`` only the first time a Gmail message is observed."""
     fingerprint = _gmail_message_fingerprint(msg)
     if fingerprint in seen_fingerprints:
-        log.info("Gmail: skipping already-processed message %s from %s.", fingerprint, msg.sender)
+        _log_once(
+            msg.raw if isinstance(msg.raw, dict) else {},
+            logging.INFO,
+            "Gmail: skipping already-processed message %s from %s.",
+            fingerprint,
+            msg.sender,
+        )
         return False
     seen_fingerprints.add(fingerprint)
     return True
