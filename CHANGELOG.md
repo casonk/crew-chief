@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- Fix the K3s pilot after its first run: the API server no longer binds loopback only (Cilium's pods could
+  not reach it), `apply.sh` refuses to run on a cluster that is not ready, and `verify.sh` fails instead of
+  reporting blocked probes `ok` when it has no pod to probe.
 - Add a prepared K3s and Cilium pilot for the listener (`deploy/k3s/`, `docs/k3s-cilium-pilot.md`):
   an unprivileged pod with default-deny egress to four named hosts, a confined command allowlist,
   and credentials held in Secrets read once from the vault. Not yet run on a cluster.

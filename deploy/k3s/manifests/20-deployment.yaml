@@ -22,6 +22,7 @@ spec:
         runAsNonRoot: true
         runAsUser: 10001
         runAsGroup: 10001
+        fsGroup: 10001   # Secret files are root-owned 0440; the group bit lets uid 10001 read them
         seccompProfile: {type: RuntimeDefault}
       containers:
         - name: listener
