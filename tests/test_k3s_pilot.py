@@ -143,3 +143,66 @@ def test_the_network_policy_denies_by_default_and_names_every_destination():
         assert "toFQDNs" in rule or "toEndpoints" in rule
         for port in (p for tp in rule.get("toPorts", []) for p in tp["ports"]):
             assert port["port"] in {"53", "443", "465", "587", "993"}
+
+
+def run_verify(tmp_path, kubectl_body):
+    """Run verify.sh with a fake kubectl first on PATH."""
+    import os
+    import subprocess
+
+    fake = tmp_path / "kubectl"
+    fake.write_text("#!/usr/bin/env bash\n" + kubectl_body + "\n")
+    fake.chmod(0o755)
+    env = {**os.environ, "PATH": f"{tmp_path}:{os.environ['PATH']}"}
+    return subprocess.run(
+        ["bash", str(DEPLOY / "verify.sh")], capture_output=True, text=True, env=env, timeout=30
+    )
+
+
+def test_verify_fails_when_there_is_no_pod_instead_of_calling_blocked_probes_ok(tmp_path):
+    done = run_verify(tmp_path, "exit 0")  # every kubectl call prints nothing
+
+    assert done.returncode != 0
+    assert "ok " not in done.stdout and "nothing was verified" in done.stdout
+
+
+def test_verify_fails_every_probe_it_could_not_run(tmp_path):
+    body = (
+        'case "$*" in *"get pod"*) echo listener-0;; '
+        '*" exec "*) exit 1;; *"get node"*) echo 10.0.0.1;; esac'
+    )
+    done = run_verify(tmp_path, body)
+
+    assert done.returncode == 1
+    assert "ok " not in done.stdout.split("--- no API token")[0]
+    probes = [
+        ln for ln in (DEPLOY / "verify.sh").read_text().splitlines() if ln.startswith("probe ")
+    ]
+    assert done.stdout.count("could not run") == len(probes) > 0
+
+
+def test_the_cluster_install_leaves_the_api_server_reachable_by_pods():
+    script = (DEPLOY / "install-cluster.sh").read_text()
+    flags = "\n".join(line for line in script.splitlines() if not line.lstrip().startswith("#"))
+
+    assert "--bind-address" not in flags, "pods reach the API at the node address, not loopback"
+    assert "6443" in script and "firewall-cmd" in script, "the firewall guard stays"
+
+
+def test_apply_checks_the_cluster_is_ready_before_creating_anything():
+    script = (DEPLOY / "apply.sh").read_text()
+
+    first_create = script.index("kubectl apply -f")
+    assert script.index("--for=condition=Ready") < first_create
+    assert script.index("ciliumnetworkpolicies.cilium.io") < first_create
+
+
+def test_the_pod_can_read_the_group_readable_secret_files_it_mounts():
+    (deployment,) = docs("20-deployment.yaml")
+    spec = deployment["spec"]["template"]["spec"]
+    modes = [v["secret"]["defaultMode"] for v in spec["volumes"] if "secret" in v]
+    assert modes
+    group = spec["securityContext"]["fsGroup"]
+    # Mounted secrets are root-owned; a mode without world-read is only readable through fsGroup.
+    assert group == spec["securityContext"]["runAsGroup"]
+    assert all(mode & 0o040 for mode in modes)
