@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- Add a log degradation policy to the listener (`crew_chief.log_policy`): it starts at DEBUG
+  (`--log-start`), steps down one level after each 24 hours (`--log-degrade-after`) without a warning
+  or error, never goes below `--log-level`, and returns to DEBUG on any warning or error.
 - Fix the K3s pilot after its first run: the API server no longer binds loopback only (Cilium's pods could
   not reach it), `apply.sh` refuses to run on a cluster that is not ready, and `verify.sh` fails instead of
   reporting blocked probes `ok` when it has no pod to probe.
