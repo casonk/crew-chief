@@ -206,3 +206,20 @@ def test_the_pod_can_read_the_group_readable_secret_files_it_mounts():
     # Mounted secrets are root-owned; a mode without world-read is only readable through fsGroup.
     assert group == spec["securityContext"]["runAsGroup"]
     assert all(mode & 0o040 for mode in modes)
+
+
+def test_the_confined_commands_allow_arguments_but_not_lookalike_programs():
+    from crew_chief.dispatcher import Dispatcher
+
+    module = load("make_config")
+    dispatcher = Dispatcher(module.CONFINED_COMMANDS)
+    assert dispatcher.is_allowed("date")
+    assert dispatcher.is_allowed("date +%Y-%m-%d")
+    assert dispatcher.is_allowed("hostname")
+    assert not dispatcher.is_allowed("datefoo")
+    assert not dispatcher.is_allowed("cat /etc/passwd")
+
+
+def test_the_pod_names_a_claude_model_because_ollamas_default_404s_on_anthropic():
+    cfg = load("make_config").confine(LIVE)
+    assert cfg["llm"]["model"].startswith("claude-")
