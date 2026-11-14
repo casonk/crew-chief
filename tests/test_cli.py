@@ -154,12 +154,15 @@ class ListenTests(CliCase):
     def test_a_good_config_starts_the_listener_and_honours_once(self) -> None:
         load = self.patch("crew_chief.config_loader.load", return_value="CFG")
         listener = self.patch("crew_chief.listener.run")
-        run("listen", "--config", "x.toml", "--once", "--log-level", "DEBUG")
+        policy = self.patch("crew_chief.log_policy.LogLevelPolicy", return_value="POLICY")
+        run("listen", "--config", "x.toml", "--once", "--log-level", "WARNING")
         load.assert_called_once_with("x.toml")
-        listener.assert_called_once_with("CFG", once=True)
+        listener.assert_called_once_with("CFG", once=True, log_policy="POLICY")
+        policy.assert_called_once_with(start="DEBUG", floor="WARNING", degrade_after=86400.0)
         self.assertEqual(self.basic_config.call_args.kwargs["level"], cli.logging.DEBUG)
-        run("l", "--config", "x.toml")
-        listener.assert_called_with("CFG", once=False)
+        run("l", "--config", "x.toml", "--log-start", "INFO", "--log-degrade-after", "60")
+        listener.assert_called_with("CFG", once=False, log_policy="POLICY")
+        policy.assert_called_with(start="INFO", floor="INFO", degrade_after=60.0)
 
 
 class CodeTests(CliCase):

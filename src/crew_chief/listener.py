@@ -945,7 +945,7 @@ def _process_message(
     return True
 
 
-def run(cfg: ListenerConfig, *, once: bool = False) -> None:
+def run(cfg: ListenerConfig, *, once: bool = False, log_policy=None) -> None:
     """Start the listener polling loop.
 
     Parameters
@@ -955,6 +955,8 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
     once:
         If ``True``, run a single poll cycle and return.  Useful for testing
         and one-shot invocations.
+    log_policy:
+        Optional :class:`~crew_chief.log_policy.LogLevelPolicy`, ticked once per cycle.
     """
     llm_client = CrewChiefClient(
         base_url=cfg.llm.base_url,
@@ -1070,6 +1072,9 @@ def run(cfg: ListenerConfig, *, once: bool = False) -> None:
 
         if once:
             break
+
+        if log_policy is not None:
+            log_policy.tick()
 
         elapsed = time.monotonic() - cycle_start
         sleep_for = max(0.0, cfg.poll_interval_seconds - elapsed)
