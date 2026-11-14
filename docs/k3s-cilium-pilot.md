@@ -69,5 +69,5 @@ Pick the current stable versions first and record them in the table below.
 
 | Component | Version | Date checked |
 |---|---|---|
-| K3s | _not yet chosen_ | |
-| Cilium | _not yet chosen_ | |
+| K3s | v1.36.6+k3s1 | 2026-11-13 |
+| Cilium | 1.20.4 | 2026-11-13 |
