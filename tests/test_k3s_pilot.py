@@ -195,3 +195,14 @@ def test_apply_checks_the_cluster_is_ready_before_creating_anything():
     first_create = script.index("kubectl apply -f")
     assert script.index("--for=condition=Ready") < first_create
     assert script.index("ciliumnetworkpolicies.cilium.io") < first_create
+
+
+def test_the_pod_can_read_the_group_readable_secret_files_it_mounts():
+    (deployment,) = docs("20-deployment.yaml")
+    spec = deployment["spec"]["template"]["spec"]
+    modes = [v["secret"]["defaultMode"] for v in spec["volumes"] if "secret" in v]
+    assert modes
+    group = spec["securityContext"]["fsGroup"]
+    # Mounted secrets are root-owned; a mode without world-read is only readable through fsGroup.
+    assert group == spec["securityContext"]["runAsGroup"]
+    assert all(mode & 0o040 for mode in modes)
