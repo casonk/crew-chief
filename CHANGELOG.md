@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- Log what the listener decides about an ignored or already-handled email once per process instead of on
+  every poll. Ignored mail stays unread, so it came back every 30 seconds, and its repeated warnings would
+  have held the log policy at DEBUG for good.
 - Add a log degradation policy to the listener (`crew_chief.log_policy`): it starts at DEBUG
   (`--log-start`), steps down one level after each 24 hours (`--log-degrade-after`) without a warning
   or error, never goes below `--log-level`, and returns to DEBUG on any warning or error.
