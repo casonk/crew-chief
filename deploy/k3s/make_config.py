@@ -18,7 +18,7 @@ except ImportError:  # pragma: no cover - 3.10
     import tomli as tomllib  # type: ignore[no-redef]
 from pathlib import Path
 
-CONFINED_COMMANDS = ["date", "hostname", "uname*", "whoami", "df*"]
+CONFINED_COMMANDS = ["date", "date *", "hostname", "hostname *", "uname*", "whoami", "df*"]
 CONTAINER_GMAIL_DIR = "/opt/shock-relay/services/gmail-imap"
 CONTAINER_GMAIL_CONFIG = "/opt/shock-relay/config/gmail-imap.config.local.yaml"
 HOST_ONLY_LLM_KEYS = (
@@ -29,6 +29,8 @@ HOST_ONLY_LLM_KEYS = (
     "ollama_model_chain",
 )
 CLOUD_CHAIN = ["anthropic", "openai"]
+# llm.model is the Anthropic model once Ollama is out of the chain; the host's Ollama name 404s there.
+CLOUD_MODEL = "claude-sonnet-5-5"
 
 
 def confine(config: dict) -> dict:
@@ -41,6 +43,7 @@ def confine(config: dict) -> dict:
     for key in HOST_ONLY_LLM_KEYS:
         llm.pop(key, None)
     llm["provider"] = "fallback"
+    llm["model"] = CLOUD_MODEL
     llm["fallback_chain"] = list(CLOUD_CHAIN)
     llm["base_url"] = "http://127.0.0.1:1"  # no local backend in the pod; refused, not reached
     llm.pop("task_chains", None)
