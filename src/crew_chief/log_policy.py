@@ -67,5 +67,7 @@ class LogLevelPolicy:
             self.level = LADDER[LADDER.index(self.level) + 1]
             self._since = now
             self._apply()
-            self._logger.info("No issues for %ds; log level lowered to %s.", self.degrade_after, self.level)
+            self._logger.info(
+                "No issues for %ds; log level lowered to %s.", self.degrade_after, self.level
+            )
         return self.level
