@@ -62,7 +62,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--log-level",
         default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR"],
-        help="Logging verbosity (default: INFO).",
+        help="Quietest level the listener may degrade to (default: INFO).",
+    )
+    listen_p.add_argument(
+        "--log-start",
+        default="DEBUG",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        help="Level the listener starts at and returns to after a warning or error "
+        "(default: DEBUG).",
+    )
+    listen_p.add_argument(
+        "--log-degrade-after",
+        type=float,
+        default=86400.0,
+        metavar="SECONDS",
+        help="Lower the level one step after this long without a warning or error "
+        "(default: 86400).",
     )
 
     agent_p = sub.add_parser(
@@ -411,11 +426,16 @@ def main(argv: list[str] | None = None) -> None:
 
     elif args.command in ("listen", "l"):
         logging.basicConfig(
-            level=getattr(logging, args.log_level),
+            level=getattr(logging, args.log_start),
             format="%(asctime)s %(levelname)s %(name)s: %(message)s",
         )
         from crew_chief.config_loader import ConfigError, load
         from crew_chief.listener import run
+        from crew_chief.log_policy import LogLevelPolicy
+
+        log_policy = LogLevelPolicy(
+            start=args.log_start, floor=args.log_level, degrade_after=args.log_degrade_after
+        )
 
         try:
             cfg = load(args.config)
@@ -423,7 +443,7 @@ def main(argv: list[str] | None = None) -> None:
             print(f"Error: {exc}", file=sys.stderr)
             sys.exit(2)
 
-        run(cfg, once=args.once)
+        run(cfg, once=args.once, log_policy=log_policy)
 
     elif args.command in ("code", "c"):
         from crew_chief.code_launcher import (
