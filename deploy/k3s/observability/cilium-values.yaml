@@ -1,0 +1,23 @@
+# Observability for Cilium: the Hubble UI, Hubble flow metrics, and Prometheus endpoints for the agent,
+# operator and Envoy. Applied on top of the existing release by observability.sh (--reuse-values), and
+# passed to install-cluster.sh so a fresh install has the same settings.
+# Nothing here is exposed outside the cluster: the UI is a ClusterIP service reached by port-forward.
+hubble:
+  ui:
+    enabled: true
+  metrics:
+    enabled:
+      - dns:query;ignoreAAAA   # query counts by name, without doubling them for IPv6 lookups
+      - drop                   # denied flows by reason: the policy-tuning signal
+      - tcp
+      - flow
+      - port-distribution
+      - icmp
+prometheus:
+  enabled: true                # agent, :9962
+operator:
+  prometheus:
+    enabled: true              # operator, :9963
+envoy:
+  prometheus:
+    enabled: true              # envoy, :9964

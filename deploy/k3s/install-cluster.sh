@@ -10,6 +10,7 @@
 #                                                    listen there; firewalld keeps port 6443 off the LAN (checked below).
 #   --secrets-encryption                             Secrets (mailbox and API credentials) are encrypted at rest.
 set -euo pipefail
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 [ "$(id -u)" = 0 ] || { echo "run as root"; exit 1; }
 : "${K3S_VERSION:?set K3S_VERSION, e.g. the current stable v1.x.y+k3s1}"
 : "${CILIUM_VERSION:?set CILIUM_VERSION, e.g. the current stable 1.x.y}"
@@ -51,7 +52,9 @@ helm upgrade --install cilium cilium/cilium --version "$CILIUM_VERSION" --namesp
   --set ipam.operator.clusterPoolIPv4PodCIDRList=10.42.0.0/16 \
   --set kubeProxyReplacement=false \
   --set hubble.enabled=true --set hubble.relay.enabled=true \
-  --set policyEnforcementMode=default
+  --set policyEnforcementMode=default \
+  -f "$HERE/observability/cilium-values.yaml"
 kubectl -n kube-system rollout status ds/cilium --timeout=300s
 kubectl wait --for=condition=Ready node --all --timeout=180s
-echo "K3s and Cilium are up. Next, as your user: deploy/k3s/build-image.sh then deploy/k3s/apply.sh"
+echo "K3s and Cilium are up. Next, as your user: deploy/k3s/build-image.sh, deploy/k3s/apply.sh,"
+echo "then deploy/k3s/observability.sh (Prometheus) and deploy/k3s/install-hubble-cli.sh"
