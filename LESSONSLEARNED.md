@@ -139,3 +139,12 @@ Unlike `CHATHISTORY.md`, this file should keep only reusable lessons that should
 - Binding a Kubernetes API server to loopback breaks the cluster: pods reach it at the node address
   through the `kubernetes` service. Keep it off the LAN with the firewall (and a guard that fails if a
   zone opens its port), not with `--bind-address`.
+
+### 2026-11-15 — Reading back what is actually in effect after a hand-over
+
+- A hand-over that reports success can leave the old thing running. Read the effective state afterwards (for a
+  systemd unit, `systemctl --user show UNIT -p ExecStart`) instead of trusting that the step you ran took effect.
+- When a pod's network policy drops traffic you expected to be allowed, read Hubble's verdict first ("denied by
+  denylist" names the cause). On a single node, Cilium's `cluster` and `kube-apiserver` entities include the host.
+- Run a deploy only on purpose. A deploy command that appears inside prose (a backlog entry, a doc) must never be
+  executed by the shell that writes it: write such text with a file tool or a quoted heredoc.
