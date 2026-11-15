@@ -27,6 +27,14 @@ bash scripts/pull_model.sh
 bash scripts/status.sh
 ```
 
+## Ways to run the listener
+
+One command, one setting: `deploy/deploy.sh up`. The mode is `dev` (foreground, Python only, the default),
+`host` (the Clockwork systemd service) or `k3s` (a pod in K3s with default-deny egress, optional). Only `k3s`
+needs a cluster, and switching never leaves two listeners answering one mailbox. Choose with `--mode`,
+`CREW_CHIEF_DEPLOY_MODE`, or `config/deploy.example.env` copied to `config/deploy.local.env`. Full guide:
+[`docs/deployment.md`](docs/deployment.md).
+
 ## Python client
 
 Install into the consuming repo's virtualenv:

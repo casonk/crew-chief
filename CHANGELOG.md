@@ -6,6 +6,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- Deployment modes for the listener behind one setting: `deploy/deploy.sh [--mode dev|host|k3s] up|down|status|verify|mode`, with the mode from `--mode`, `CREW_CHIEF_DEPLOY_MODE`, or `config/deploy.local.env` (example: `config/deploy.example.env`, gitignored), defaulting to `dev`. Only `k3s` touches kubectl, podman or a cluster. `k3s up` stops the host listener first (two listeners would answer every email twice) and restores it if any step fails; `build-image.sh` refuses uncommitted `src/`. `docs/deployment.md` explains each mode and how to switch.
 - Deliver images to K3s through an in-cluster registry instead of `sudo k3s ctr images import`:
   `deploy/k3s/install-registry.sh`, a one-time `enable-registry-mirror.sh`, and `push-image.sh`. Only the node
   may reach the registry. `build-image.sh` now pushes with no sudo, and the listener pulls

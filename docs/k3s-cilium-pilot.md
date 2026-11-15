@@ -71,6 +71,9 @@ Pick the current stable versions first and record them in the table below.
 **Rollback**: `kubectl delete ns crew-chief-listener` and
 `systemctl --user start crew-chief-listener.service`. The host unit is untouched throughout.
 
+> The listener steps below are what `deploy/deploy.sh --mode k3s up` runs for you, in order, and it restores
+> the host listener if one fails. See [`deployment.md`](deployment.md) for modes and switching.
+
 ## What "done" means
 
 - `verify.sh` passes: allowed hosts open, everything else closed, no API token, restricted context.
