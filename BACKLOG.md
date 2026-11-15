@@ -10,10 +10,11 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
-- [ ] [manual:2026-11-13] **Finish the K3s and Cilium listener pilot.** Running since 2026-11-13 (K3s
-  v1.36.6+k3s1, Cilium 1.20.4); `verify.sh` passes every probe. Still to do: send a trusted and an untrusted
-  test email, disable the host `crew-chief-listener.service` so it cannot poll the same mailbox, then
-  phase 2: Signal, and a route to the host's local models.
+- [ ] [manual:2026-11-13] **K3s and Cilium listener pilot, phase 2.** Phase 1 is proven (2026-11-15):
+  `verify.sh` passes all nine probes, a trusted request is answered from the pod, an untrusted sender is
+  ignored. Open: disable the host `crew-chief-listener.service` so it cannot poll the same mailbox, find the
+  cause of the intermittent 30 s `check_inbox` timeouts (about 20 on 2026-11-14), then Signal and a route to
+  the host's local models.
 - [ ] [manual:2026-11-10] **Diagnose the coding failures from the saved results, then change something.**
   Two identical 300 s runs of `qwen3.5:27b` gave 2/9 and 0/9, so a third identical run would
   only add noise. Read the saved patches and tool traces for the trials that never edited
