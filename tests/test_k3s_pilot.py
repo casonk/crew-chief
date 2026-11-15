@@ -223,3 +223,40 @@ def test_the_confined_commands_allow_arguments_but_not_lookalike_programs():
 def test_the_pod_names_a_claude_model_because_ollamas_default_404s_on_anthropic():
     cfg = load("make_config").confine(LIVE)
     assert cfg["llm"]["model"].startswith("claude-")
+
+
+def test_observability_is_enabled_in_cilium_and_installed_by_a_fresh_cluster():
+    values = yaml.safe_load((DEPLOY / "observability" / "cilium-values.yaml").read_text())
+    assert values["hubble"]["ui"]["enabled"] is True
+    assert "drop" in values["hubble"]["metrics"]["enabled"]
+    assert values["prometheus"]["enabled"] is True
+    assert values["operator"]["prometheus"]["enabled"] is True
+    assert "observability/cilium-values.yaml" in (DEPLOY / "install-cluster.sh").read_text()
+
+
+def test_prometheus_is_unprivileged_and_never_exposed_beyond_the_cluster():
+    docs_ = list(yaml.safe_load_all((DEPLOY / "observability" / "prometheus.yaml").read_text()))
+    kinds = {d["kind"] for d in docs_}
+    assert {"Namespace", "Deployment", "Service", "Role", "RoleBinding"} <= kinds
+    (namespace,) = [d for d in docs_ if d["kind"] == "Namespace"]
+    assert namespace["metadata"]["labels"]["pod-security.kubernetes.io/enforce"] == "restricted"
+    for service in (d for d in docs_ if d["kind"] == "Service"):
+        assert service["spec"]["type"] == "ClusterIP"
+    (deploy,) = [d for d in docs_ if d["kind"] == "Deployment"]
+    pod = deploy["spec"]["template"]["spec"]
+    assert pod["securityContext"]["runAsNonRoot"] is True
+    container = pod["containers"][0]
+    assert container["securityContext"]["readOnlyRootFilesystem"] is True
+    assert container["securityContext"]["capabilities"]["drop"] == ["ALL"]
+    assert ":" in container["image"] and not container["image"].endswith(":latest")
+    (role,) = [d for d in docs_ if d["kind"] == "Role"]
+    assert role["metadata"]["namespace"] == "kube-system", "discovery is limited to one namespace"
+    assert all(rule["verbs"] == ["get", "list", "watch"] for rule in role["rules"])
+
+
+def test_port_forwards_listen_on_localhost_only_and_the_scripts_fail_fast():
+    forward = (DEPLOY / "forward.sh").read_text()
+    assert forward.count("--address 127.0.0.1") == 3
+    for name in ("forward.sh", "observability.sh", "install-hubble-cli.sh"):
+        assert "set -euo pipefail" in (DEPLOY / name).read_text()
+    assert "sha256sum -c" in (DEPLOY / "install-hubble-cli.sh").read_text()
