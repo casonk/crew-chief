@@ -34,6 +34,8 @@ config/listener/config.toml
 
 # Local clockwork manifests (contain machine-specific absolute paths)
 config/clockwork/*.local.toml
+# Which way the listener runs on this machine (deploy/deploy.sh)
+config/deploy.local.env
 
 # Local API keys env file (contains ANTHROPIC_API_KEY, OPENAI_API_KEY, etc.)
 config/env
