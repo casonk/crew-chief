@@ -262,7 +262,9 @@ def test_port_forwards_listen_on_localhost_only_and_the_scripts_fail_fast():
     assert "sha256sum -c" in (DEPLOY / "install-hubble-cli.sh").read_text()
 
 
-def test_the_hubble_ui_forward_does_not_take_the_auto_pass_port():
+def test_the_forward_defaults_avoid_ports_other_services_on_the_host_hold():
     forward = (DEPLOY / "forward.sh").read_text()
-    assert 'UI_PORT="${HUBBLE_UI_PORT:-8091}"' in forward
-    assert "8081" not in forward.replace("8081 belongs to the Auto Pass", "")
+    assert 'UI_PORT="${HUBBLE_UI_PORT:-8195}"' in forward
+    assert 'PROM_PORT="${PROMETHEUS_PORT:-9190}"' in forward
+    for taken in ("8081", "8090", "8091", ":9090"):
+        assert f"127.0.0.1{taken if taken.startswith(':') else ':' + taken}" not in forward
