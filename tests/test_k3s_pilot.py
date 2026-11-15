@@ -260,3 +260,9 @@ def test_port_forwards_listen_on_localhost_only_and_the_scripts_fail_fast():
     for name in ("forward.sh", "observability.sh", "install-hubble-cli.sh"):
         assert "set -euo pipefail" in (DEPLOY / name).read_text()
     assert "sha256sum -c" in (DEPLOY / "install-hubble-cli.sh").read_text()
+
+
+def test_the_hubble_ui_forward_does_not_take_the_auto_pass_port():
+    forward = (DEPLOY / "forward.sh").read_text()
+    assert 'UI_PORT="${HUBBLE_UI_PORT:-8091}"' in forward
+    assert "8081" not in forward.replace("8081 belongs to the Auto Pass", "")
