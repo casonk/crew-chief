@@ -1,0 +1,91 @@
+# An in-cluster image registry, so images reach K3s with `podman push` instead of a sudo import.
+# Reachable only from the node itself (podman push, containerd pulls) at the fixed ClusterIP below; no pod
+# may talk to it and it has no egress. Pods pull it as localhost:5000/<name> through a containerd mirror
+# (enable-registry-mirror.sh, run once as root).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: registry
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: registry-data
+  namespace: registry
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: {requests: {storage: 10Gi}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: registry
+spec:
+  replicas: 1
+  strategy: {type: Recreate}   # one writer for the volume
+  selector:
+    matchLabels: {app: registry}
+  template:
+    metadata:
+      labels: {app: registry}
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: registry
+          image: docker.io/library/registry:3.0.0
+          ports: [{name: http, containerPort: 5000}]
+          env:
+            - {name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY, value: /var/lib/registry}
+            - {name: REGISTRY_STORAGE_DELETE_ENABLED, value: "true"}   # lets old tags be removed and collected
+          readinessProbe: {httpGet: {path: /v2/, port: http}}
+          resources:
+            requests: {cpu: 20m, memory: 64Mi}
+            limits: {memory: 512Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: data, mountPath: /var/lib/registry}
+      volumes:
+        - name: data
+          persistentVolumeClaim: {claimName: registry-data}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry
+  namespace: registry
+spec:
+  type: ClusterIP
+  clusterIP: 10.43.0.50   # fixed: the containerd mirror and push-image.sh both name it
+  selector: {app: registry}
+  ports: [{name: http, port: 5000, targetPort: http}]
+---
+# Only the node (podman push, containerd pulls) may reach the registry. Pods cannot push or pull, so a
+# compromised workload cannot plant an image another workload would later run. It also has no egress.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: registry-node-only
+  namespace: registry
+spec:
+  endpointSelector:
+    matchLabels: {app: registry}
+  ingress:
+    - fromEntities: [host]
+      toPorts:
+        - ports: [{port: "5000", protocol: TCP}]
+  egressDeny:
+    - toEntities: [all]

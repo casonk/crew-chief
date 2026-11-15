@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- Deliver images to K3s through an in-cluster registry instead of `sudo k3s ctr images import`:
+  `deploy/k3s/install-registry.sh`, a one-time `enable-registry-mirror.sh`, and `push-image.sh`. Only the node
+  may reach the registry. `build-image.sh` now pushes with no sudo, and the listener pulls
+  `localhost:5000/crew-chief-listener:pilot`.
 - Add observability for the K3s cluster: the Hubble UI, Hubble and Cilium Prometheus metrics, a small
   Prometheus that scrapes them, the Hubble CLI installer, and a localhost-only port-forward helper
   (`deploy/k3s/observability.sh`, `forward.sh`, `install-hubble-cli.sh`). Nothing is exposed on the network.
