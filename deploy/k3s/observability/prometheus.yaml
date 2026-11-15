@@ -1,0 +1,138 @@
+# A single small Prometheus that scrapes Cilium and Hubble. ClusterIP only: reach it with
+# `deploy/k3s/forward.sh prometheus`. Scrapes the host-network Cilium pods by pod IP (the node address).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: monitoring
+---
+# Service discovery needs to list pods, in kube-system only.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-discovery
+  namespace: kube-system
+rules:
+  - apiGroups: [""]
+    resources: [pods]
+    verbs: [get, list, watch]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-discovery
+  namespace: kube-system
+roleRef: {apiGroup: rbac.authorization.k8s.io, kind: Role, name: prometheus-discovery}
+subjects:
+  - {kind: ServiceAccount, name: prometheus, namespace: monitoring}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 30s
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets: ["localhost:9090"]
+      - job_name: cilium-agent
+        kubernetes_sd_configs: [{role: pod, namespaces: {names: [kube-system]}}]
+        relabel_configs:
+          - {source_labels: [__meta_kubernetes_pod_label_k8s_app], regex: cilium, action: keep}
+          - {source_labels: [__meta_kubernetes_pod_node_name], target_label: node}
+          - {source_labels: [__meta_kubernetes_pod_ip], replacement: "$1:9962", target_label: __address__}
+      - job_name: hubble
+        kubernetes_sd_configs: [{role: pod, namespaces: {names: [kube-system]}}]
+        relabel_configs:
+          - {source_labels: [__meta_kubernetes_pod_label_k8s_app], regex: cilium, action: keep}
+          - {source_labels: [__meta_kubernetes_pod_node_name], target_label: node}
+          - {source_labels: [__meta_kubernetes_pod_ip], replacement: "$1:9965", target_label: __address__}
+      - job_name: cilium-operator
+        kubernetes_sd_configs: [{role: pod, namespaces: {names: [kube-system]}}]
+        relabel_configs:
+          - {source_labels: [__meta_kubernetes_pod_label_io_cilium_app], regex: operator, action: keep}
+          - {source_labels: [__meta_kubernetes_pod_ip], replacement: "$1:9963", target_label: __address__}
+      - job_name: cilium-envoy
+        kubernetes_sd_configs: [{role: pod, namespaces: {names: [kube-system]}}]
+        relabel_configs:
+          - {source_labels: [__meta_kubernetes_pod_label_k8s_app], regex: cilium-envoy, action: keep}
+          - {source_labels: [__meta_kubernetes_pod_ip], replacement: "$1:9964", target_label: __address__}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-data
+  namespace: monitoring
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: {requests: {storage: 5Gi}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  replicas: 1
+  strategy: {type: Recreate}   # one writer for the volume
+  selector:
+    matchLabels: {app: prometheus}
+  template:
+    metadata:
+      labels: {app: prometheus}
+    spec:
+      serviceAccountName: prometheus
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: prometheus
+          image: quay.io/prometheus/prometheus:v3.16.0
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.tsdb.path=/prometheus
+            - --storage.tsdb.retention.time=15d
+            - --web.listen-address=0.0.0.0:9090
+          ports: [{name: web, containerPort: 9090}]
+          readinessProbe: {httpGet: {path: /-/ready, port: web}}
+          resources:
+            requests: {cpu: 50m, memory: 256Mi}
+            limits: {memory: 1Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: config, mountPath: /etc/prometheus, readOnly: true}
+            - {name: data, mountPath: /prometheus}
+      volumes:
+        - name: config
+          configMap: {name: prometheus-config}
+        - name: data
+          persistentVolumeClaim: {claimName: prometheus-data}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  selector: {app: prometheus}
+  ports: [{name: web, port: 9090, targetPort: web}]

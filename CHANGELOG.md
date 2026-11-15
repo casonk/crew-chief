@@ -6,6 +6,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and 
 uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+- Add observability for the K3s cluster: the Hubble UI, Hubble and Cilium Prometheus metrics, a small
+  Prometheus that scrapes them, the Hubble CLI installer, and a localhost-only port-forward helper
+  (`deploy/k3s/observability.sh`, `forward.sh`, `install-hubble-cli.sh`). Nothing is exposed on the network.
 - Log what the listener decides about an ignored or already-handled email once per process instead of on
   every poll. Ignored mail stays unread, so it came back every 30 seconds, and its repeated warnings would
   have held the log policy at DEBUG for good.
