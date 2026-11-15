@@ -57,8 +57,8 @@ Pick the current stable versions first and record them in the table below.
 6. **Observe** (once, as your user, no sudo): `deploy/k3s/observability.sh` adds the Hubble UI, Hubble and
    Cilium Prometheus metrics, and a small Prometheus in the `monitoring` namespace.
    `deploy/k3s/install-hubble-cli.sh` installs the `hubble` CLI (checksum verified).
-   `deploy/k3s/forward.sh ui|prometheus|relay` opens a localhost-only port (UI on 8091, set
-   `HUBBLE_UI_PORT` to change it); nothing is exposed on the LAN.
+   `deploy/k3s/forward.sh ui|prometheus|relay` opens a localhost-only port (UI on 8195 and Prometheus on 9190; set
+   `HUBBLE_UI_PORT` or `PROMETHEUS_PORT` to change them); nothing is exposed on the LAN.
    Useful: `hubble observe --server 127.0.0.1:4245 --verdict DROPPED` (with `forward.sh relay` running), and
    `sum by (reason) (rate(hubble_drop_total[5m]))` in Prometheus. Metrics are kept 15 days on a 5 GiB volume.
 
