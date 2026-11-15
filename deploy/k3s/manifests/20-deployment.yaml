@@ -26,8 +26,8 @@ spec:
         seccompProfile: {type: RuntimeDefault}
       containers:
         - name: listener
-          image: localhost/crew-chief-listener:pilot
-          imagePullPolicy: Never   # imported into K3s's containerd by build-image.sh
+          image: localhost:5000/crew-chief-listener:pilot
+          imagePullPolicy: Always   # from the in-cluster registry; a restart picks up the latest push
           args: ["listen", "--config", "/etc/crew-chief/config.toml", "--log-level", "INFO"]
           envFrom:
             - secretRef: {name: listener-env}

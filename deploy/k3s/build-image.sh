@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# build-image.sh — build the listener image from a staged tree and import it into K3s.
-# Run as the normal user; the final import step uses sudo.
+# build-image.sh — build the listener image from a staged tree and push it to the in-cluster registry.
+# Run as the normal user, no sudo. Needs deploy/k3s/install-registry.sh (and, once, enable-registry-mirror.sh).
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CREW="$(cd "$HERE/../.." && pwd)"
@@ -16,5 +16,5 @@ cp -r "$SHOCK/services/gmail-imap" "$WORK/stage/shock-relay/services/gmail-imap"
 find "$WORK/stage" \( -name '__pycache__' -o -name 'config.local.yaml' -o -name '*.pyc' \) -prune -exec rm -rf {} +
 cp "$HERE/Containerfile.listener" "$WORK/Containerfile"
 podman build -t "$IMAGE" -f "$WORK/Containerfile" "$WORK"
-echo "Importing $IMAGE into K3s (needs sudo)"
-podman save "$IMAGE" | sudo k3s ctr images import -
+"$HERE/push-image.sh" "$IMAGE" crew-chief-listener:pilot
+echo "Roll it out: kubectl -n crew-chief-listener rollout restart deploy/crew-chief-listener"
