@@ -10,6 +10,29 @@ Mark items `[x]` when complete and move them to Done.
 
 ## Pending
 
+- [ ] [manual:2026-11-15] **Watch the first scheduled K3s-trigger runs, then close this.** The daily FRED refresh
+  (Monday 07:27), the Schwab token feeder (Monday 16:15) and the tradility refresh that follows it (about 16:34),
+  and the weekly Zillow refresh with its README pull request (Saturday 08:00) have only been run by hand so far.
+  Check `journalctl --user -u <unit>` for a "started job" and a "succeeded" line, the data files' modification times,
+  and, for Zillow, that the publish post-step still opens its PR. The hourly shock-relay digest and the 30-minute poll
+  have already fired on schedule.
+- [ ] [manual:2026-11-15] **Name the trigger drop-in `zz-k3s-run.conf` and check the effective `ExecStart` in the
+  zillow-public-data, fred-public-data and shock-relay hand-overs.** They still install `20-k3s-run.conf` without the
+  check that `handover.sh pod-on` in tradility now has (copy it from the `triggered` scaffold in traction-control). A later
+  `local.conf` that sets `ExecStart` would silently beat the old name, as it did once for tradility. About 20 minutes
+  each; re-run `deploy/deploy.sh --mode k3s up` in the repository afterwards.
+- [ ] [manual:2026-11-15] **Reboot once and confirm everything comes back.** K3s and Cilium, the registry mirror, the
+  loopback forwarders and bridges (GPS trace, intake extractor, torrent web UI and its Transmission RPC forwarder), the
+  trigger drop-ins and timers, and the Schwab token feeder. Then `deploy/deploy.sh --mode k3s status` in each repository
+  and its `verify.sh`. Also covers the pending check that the SSH key loader unit starts at login.
+- [ ] [manual:2026-11-15] **Torrent web UI in K3s: confirm from the phone, and decide on the restart button.** The pod
+  reaches Transmission through a user socket on the pod-network address; adding a magnet and pausing a torrent should
+  work as before. The "Restart Transmission service" button is hidden in K3s mode because it needs host `sudo`; if it
+  is missed, add a narrow host-side helper rather than giving the pod privileges.
+- [ ] [manual:2026-11-15] **Candidates not yet investigated for K3s:** the Stratum proxy (see bit-byte-block's backlog)
+  and the daily career job (see career's). Everything else reviewed stays on the host on purpose: it reads or controls
+  the machine (hardware monitors, VPN, ingress, the SMB share), runs AI agents with repository write access, needs
+  host-labelled folders (the intake report's receipts), or measures the host itself (the network snapshot).
 - [ ] [manual:2026-11-13] **K3s and Cilium listener pilot, phase 2.** Phase 1 is proven (2026-11-15):
   `verify.sh` passes all nine probes, a trusted request is answered from the pod, an untrusted sender is
   ignored. Open: disable the host `crew-chief-listener.service` so it cannot poll the same mailbox, find the
