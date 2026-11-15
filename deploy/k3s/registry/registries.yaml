@@ -1,0 +1,6 @@
+# K3s containerd mirror: a pod image named localhost:5000/<name> is fetched from the in-cluster registry's
+# fixed ClusterIP over plain HTTP. Installed by enable-registry-mirror.sh as /etc/rancher/k3s/registries.yaml.
+mirrors:
+  "localhost:5000":
+    endpoint:
+      - "http://10.43.0.50:5000"

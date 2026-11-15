@@ -45,7 +45,13 @@ Pick the current stable versions first and record them in the table below.
    `sudo K3S_VERSION=<v> CILIUM_VERSION=<v> deploy/k3s/install-cluster.sh`
    It opens the pod and service ranges in firewalld, installs K3s without Flannel and without its own
    network policy, binds the API to loopback, encrypts Secrets, and installs Cilium with Hubble.
-2. **Image**: `deploy/k3s/build-image.sh` (builds from a staged tree, then imports with `sudo`).
+2. **Registry** (once): `deploy/k3s/install-registry.sh` starts an in-cluster image registry at the fixed
+   ClusterIP `10.43.0.50:5000`, and `sudo deploy/k3s/enable-registry-mirror.sh` lets K3s pull
+   `localhost:5000/<name>` from it (it writes `/etc/rancher/k3s/registries.yaml` and restarts K3s). Only the
+   node can reach the registry: Cilium denies every pod, and it has no egress.
+   **Image**: `deploy/k3s/build-image.sh` builds from a staged tree and pushes with `podman push`, no sudo.
+   `deploy/k3s/push-image.sh <local-image> [name:tag]` does the same for any other image. Roll a new push
+   out with `kubectl -n <ns> rollout restart deploy/<name>`.
 3. **Stop the host listener first.** Two listeners on one mailbox would both answer:
    `systemctl --user stop crew-chief-listener.service`
 4. **Deploy**: `export KUBECONFIG=$HOME/.kube/k3s.yaml && deploy/k3s/apply.sh`

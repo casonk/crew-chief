@@ -268,3 +268,37 @@ def test_the_forward_defaults_avoid_ports_other_services_on_the_host_hold():
     assert 'PROM_PORT="${PROMETHEUS_PORT:-9190}"' in forward
     for taken in ("8081", "8090", "8091", ":9090"):
         assert f"127.0.0.1{taken if taken.startswith(':') else ':' + taken}" not in forward
+
+
+def test_the_registry_is_reachable_only_from_the_node_and_cannot_reach_out():
+    docs_ = list(yaml.safe_load_all((DEPLOY / "registry" / "registry.yaml").read_text()))
+    (policy,) = [d for d in docs_ if d["kind"] == "CiliumNetworkPolicy"]
+    assert policy["spec"]["ingress"] == [
+        {"fromEntities": ["host"], "toPorts": [{"ports": [{"port": "5000", "protocol": "TCP"}]}]}
+    ]
+    assert policy["spec"]["egressDeny"] == [{"toEntities": ["all"]}]
+    (service,) = [d for d in docs_ if d["kind"] == "Service"]
+    assert service["spec"]["type"] == "ClusterIP"
+    ip = service["spec"]["clusterIP"]
+    assert ip.startswith("10.43."), "inside the K3s service range"
+    mirror = yaml.safe_load((DEPLOY / "registry" / "registries.yaml").read_text())
+    assert mirror["mirrors"]["localhost:5000"]["endpoint"] == [f"http://{ip}:5000"]
+    assert f"REGISTRY_IP={ip}" in (DEPLOY / "push-image.sh").read_text()
+    (deploy,) = [d for d in docs_ if d["kind"] == "Deployment"]
+    pod = deploy["spec"]["template"]["spec"]
+    assert pod["securityContext"]["runAsNonRoot"] is True
+    assert pod["containers"][0]["securityContext"]["readOnlyRootFilesystem"] is True
+    assert not pod["containers"][0]["image"].endswith(":latest")
+
+
+def test_images_are_delivered_by_push_without_sudo_and_the_pod_pulls_from_the_registry():
+    for name in ("build-image.sh", "push-image.sh"):
+        assert "sudo " not in "\n".join(
+            line for line in (DEPLOY / name).read_text().splitlines() if not line.startswith("#")
+        )
+    (deployment,) = docs("20-deployment.yaml")
+    container = deployment["spec"]["template"]["spec"]["containers"][0]
+    assert container["image"] == "localhost:5000/crew-chief-listener:pilot"
+    assert container["imagePullPolicy"] == "Always"
+    # The mirror step refuses to overwrite settings it does not own.
+    assert "differs" in (DEPLOY / "enable-registry-mirror.sh").read_text()
