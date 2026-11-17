@@ -1,0 +1,682 @@
+[
+  {
+    "model": "mistral:latest",
+    "prompt_name": "latency",
+    "ttft_ms": 60.9,
+    "tokens_per_sec": 139.8,
+    "total_tokens": 119,
+    "total_time_ms": 879.1,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "mistral:latest",
+    "prompt_name": "reasoning",
+    "ttft_ms": 29.7,
+    "tokens_per_sec": 146.8,
+    "total_tokens": 35,
+    "total_time_ms": 268.2,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "mistral:latest",
+    "prompt_name": "codegen",
+    "ttft_ms": 29.0,
+    "tokens_per_sec": 142.9,
+    "total_tokens": 77,
+    "total_time_ms": 567.6,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "mistral:latest",
+    "prompt_name": "summarise",
+    "ttft_ms": 32.5,
+    "tokens_per_sec": 148.4,
+    "total_tokens": 26,
+    "total_time_ms": 203.8,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "deepseek-coder:6.7b",
+    "prompt_name": "latency",
+    "ttft_ms": 4536.7,
+    "tokens_per_sec": 221.1,
+    "total_tokens": 4,
+    "total_time_ms": 33.8,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "deepseek-coder:6.7b",
+    "prompt_name": "reasoning",
+    "ttft_ms": 6430.8,
+    "tokens_per_sec": 165.7,
+    "total_tokens": 55,
+    "total_time_ms": 355.9,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "deepseek-coder:6.7b",
+    "prompt_name": "codegen",
+    "ttft_ms": 78.6,
+    "tokens_per_sec": 164.1,
+    "total_tokens": 90,
+    "total_time_ms": 573.0,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "deepseek-coder:6.7b",
+    "prompt_name": "summarise",
+    "ttft_ms": 90.5,
+    "tokens_per_sec": 169.1,
+    "total_tokens": 28,
+    "total_time_ms": 191.3,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "codellama:latest",
+    "prompt_name": "latency",
+    "ttft_ms": 48.0,
+    "tokens_per_sec": 222.2,
+    "total_tokens": 4,
+    "total_time_ms": 34.7,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "codellama:latest",
+    "prompt_name": "reasoning",
+    "ttft_ms": 34.2,
+    "tokens_per_sec": 166.3,
+    "total_tokens": 41,
+    "total_time_ms": 271.5,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "codellama:latest",
+    "prompt_name": "codegen",
+    "ttft_ms": 70.0,
+    "tokens_per_sec": 163.8,
+    "total_tokens": 63,
+    "total_time_ms": 408.4,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "codellama:latest",
+    "prompt_name": "summarise",
+    "ttft_ms": 68.2,
+    "tokens_per_sec": 168.6,
+    "total_tokens": 28,
+    "total_time_ms": 190.8,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "clef:latest",
+    "prompt_name": "latency",
+    "ttft_ms": 1.9,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "clef:latest",
+    "prompt_name": "reasoning",
+    "ttft_ms": 2.6,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "clef:latest",
+    "prompt_name": "codegen",
+    "ttft_ms": 1.9,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "clef:latest",
+    "prompt_name": "summarise",
+    "ttft_ms": 2.1,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "clef-flash:latest",
+    "prompt_name": "latency",
+    "ttft_ms": 2.0,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "clef-flash:latest",
+    "prompt_name": "reasoning",
+    "ttft_ms": 1.9,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "clef-flash:latest",
+    "prompt_name": "codegen",
+    "ttft_ms": 2.2,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "clef-flash:latest",
+    "prompt_name": "summarise",
+    "ttft_ms": 1.9,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "tev1:latest",
+    "prompt_name": "latency",
+    "ttft_ms": 2.0,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "tev1:latest",
+    "prompt_name": "reasoning",
+    "ttft_ms": 2.0,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "tev1:latest",
+    "prompt_name": "codegen",
+    "ttft_ms": 2.3,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "tev1:latest",
+    "prompt_name": "summarise",
+    "ttft_ms": 1.9,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "nimble:latest",
+    "prompt_name": "latency",
+    "ttft_ms": 2.3,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "nimble:latest",
+    "prompt_name": "reasoning",
+    "ttft_ms": 1.8,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "nimble:latest",
+    "prompt_name": "codegen",
+    "ttft_ms": 2.3,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "nimble:latest",
+    "prompt_name": "summarise",
+    "ttft_ms": 1.8,
+    "tokens_per_sec": 0,
+    "total_tokens": 0,
+    "total_time_ms": 0,
+    "vram_delta_mb": -1,
+    "error": "HTTP Error 400: Bad Request"
+  },
+  {
+    "model": "gemma3:27b-it-qat",
+    "prompt_name": "latency",
+    "ttft_ms": 102.1,
+    "tokens_per_sec": 53.1,
+    "total_tokens": 3,
+    "total_time_ms": 180.0,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "gemma3:27b-it-qat",
+    "prompt_name": "reasoning",
+    "ttft_ms": 106.5,
+    "tokens_per_sec": 41.4,
+    "total_tokens": 22,
+    "total_time_ms": 716.5,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "gemma3:27b-it-qat",
+    "prompt_name": "codegen",
+    "ttft_ms": 139.5,
+    "tokens_per_sec": 39.5,
+    "total_tokens": 84,
+    "total_time_ms": 2319.1,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "gemma3:27b-it-qat",
+    "prompt_name": "summarise",
+    "ttft_ms": 236.2,
+    "tokens_per_sec": 41.5,
+    "total_tokens": 20,
+    "total_time_ms": 669.1,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3.5:27b",
+    "prompt_name": "latency",
+    "ttft_ms": 5639.5,
+    "tokens_per_sec": 35.5,
+    "total_tokens": 132,
+    "total_time_ms": 4115.4,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3.5:27b",
+    "prompt_name": "reasoning",
+    "ttft_ms": 8895.8,
+    "tokens_per_sec": 35.2,
+    "total_tokens": 391,
+    "total_time_ms": 11640.3,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3.5:27b",
+    "prompt_name": "codegen",
+    "ttft_ms": 135988.5,
+    "tokens_per_sec": 32.8,
+    "total_tokens": 4501,
+    "total_time_ms": 137840.4,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3.5:27b",
+    "prompt_name": "summarise",
+    "ttft_ms": 107653.8,
+    "tokens_per_sec": 32.5,
+    "total_tokens": 1508,
+    "total_time_ms": 47028.2,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:14b-q8_0",
+    "prompt_name": "latency",
+    "ttft_ms": 5831.5,
+    "tokens_per_sec": 46.6,
+    "total_tokens": 186,
+    "total_time_ms": 4049.1,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:14b-q8_0",
+    "prompt_name": "reasoning",
+    "ttft_ms": 5052.3,
+    "tokens_per_sec": 45.7,
+    "total_tokens": 230,
+    "total_time_ms": 5169.4,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:14b-q8_0",
+    "prompt_name": "codegen",
+    "ttft_ms": 67696.1,
+    "tokens_per_sec": 42.5,
+    "total_tokens": 3398,
+    "total_time_ms": 80351.3,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:14b-q8_0",
+    "prompt_name": "summarise",
+    "ttft_ms": 6905.2,
+    "tokens_per_sec": 43.2,
+    "total_tokens": 300,
+    "total_time_ms": 7086.9,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.2:3b-instruct-q8_0",
+    "prompt_name": "latency",
+    "ttft_ms": 15.9,
+    "tokens_per_sec": 263.9,
+    "total_tokens": 3,
+    "total_time_ms": 23.5,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.2:3b-instruct-q8_0",
+    "prompt_name": "reasoning",
+    "ttft_ms": 15.7,
+    "tokens_per_sec": 178.0,
+    "total_tokens": 24,
+    "total_time_ms": 158.6,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.2:3b-instruct-q8_0",
+    "prompt_name": "codegen",
+    "ttft_ms": 22.3,
+    "tokens_per_sec": 171.1,
+    "total_tokens": 68,
+    "total_time_ms": 420.8,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.2:3b-instruct-q8_0",
+    "prompt_name": "summarise",
+    "ttft_ms": 27.4,
+    "tokens_per_sec": 171.2,
+    "total_tokens": 34,
+    "total_time_ms": 223.4,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:32b",
+    "prompt_name": "latency",
+    "ttft_ms": 9877.9,
+    "tokens_per_sec": 6.9,
+    "total_tokens": 138,
+    "total_time_ms": 20429.2,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:32b",
+    "prompt_name": "reasoning",
+    "ttft_ms": 44295.3,
+    "tokens_per_sec": 6.3,
+    "total_tokens": 262,
+    "total_time_ms": 42124.7,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:32b",
+    "prompt_name": "codegen",
+    "ttft_ms": 699970.8,
+    "tokens_per_sec": 5.7,
+    "total_tokens": 3693,
+    "total_time_ms": 645434.4,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:32b",
+    "prompt_name": "summarise",
+    "ttft_ms": 108390.8,
+    "tokens_per_sec": 6.1,
+    "total_tokens": 296,
+    "total_time_ms": 49146.6,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:14b",
+    "prompt_name": "latency",
+    "ttft_ms": 9371.4,
+    "tokens_per_sec": 58.0,
+    "total_tokens": 137,
+    "total_time_ms": 10967.8,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:14b",
+    "prompt_name": "reasoning",
+    "ttft_ms": 12991.7,
+    "tokens_per_sec": 57.4,
+    "total_tokens": 242,
+    "total_time_ms": 14678.2,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:14b",
+    "prompt_name": "codegen",
+    "ttft_ms": 72448.4,
+    "tokens_per_sec": 55.4,
+    "total_tokens": 2043,
+    "total_time_ms": 37365.7,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen3:14b",
+    "prompt_name": "summarise",
+    "ttft_ms": 5506.4,
+    "tokens_per_sec": 56.4,
+    "total_tokens": 187,
+    "total_time_ms": 3430.5,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "aya-expanse:8b",
+    "prompt_name": "latency",
+    "ttft_ms": 23.8,
+    "tokens_per_sec": 235.3,
+    "total_tokens": 2,
+    "total_time_ms": 25.4,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "aya-expanse:8b",
+    "prompt_name": "reasoning",
+    "ttft_ms": 24.3,
+    "tokens_per_sec": 109.6,
+    "total_tokens": 32,
+    "total_time_ms": 330.1,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "aya-expanse:8b",
+    "prompt_name": "codegen",
+    "ttft_ms": 28.8,
+    "tokens_per_sec": 99.4,
+    "total_tokens": 96,
+    "total_time_ms": 1005.2,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "aya-expanse:8b",
+    "prompt_name": "summarise",
+    "ttft_ms": 46.7,
+    "tokens_per_sec": 103.7,
+    "total_tokens": 24,
+    "total_time_ms": 269.8,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_name": "latency",
+    "ttft_ms": 20.6,
+    "tokens_per_sec": 202.5,
+    "total_tokens": 3,
+    "total_time_ms": 29.1,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_name": "reasoning",
+    "ttft_ms": 20.4,
+    "tokens_per_sec": 127.8,
+    "total_tokens": 24,
+    "total_time_ms": 220.1,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_name": "codegen",
+    "ttft_ms": 26.1,
+    "tokens_per_sec": 112.7,
+    "total_tokens": 75,
+    "total_time_ms": 698.9,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "qwen2.5-coder:7b",
+    "prompt_name": "summarise",
+    "ttft_ms": 30.3,
+    "tokens_per_sec": 128.2,
+    "total_tokens": 25,
+    "total_time_ms": 227.9,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.1:8b",
+    "prompt_name": "latency",
+    "ttft_ms": 28.4,
+    "tokens_per_sec": 258.2,
+    "total_tokens": 2,
+    "total_time_ms": 26.5,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.1:8b",
+    "prompt_name": "reasoning",
+    "ttft_ms": 24.7,
+    "tokens_per_sec": 123.2,
+    "total_tokens": 24,
+    "total_time_ms": 227.2,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.1:8b",
+    "prompt_name": "codegen",
+    "ttft_ms": 29.6,
+    "tokens_per_sec": 108.5,
+    "total_tokens": 69,
+    "total_time_ms": 669.8,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.1:8b",
+    "prompt_name": "summarise",
+    "ttft_ms": 35.2,
+    "tokens_per_sec": 120.4,
+    "total_tokens": 32,
+    "total_time_ms": 300.1,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.2:latest",
+    "prompt_name": "latency",
+    "ttft_ms": 14.7,
+    "tokens_per_sec": 308.7,
+    "total_tokens": 4,
+    "total_time_ms": 22.3,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.2:latest",
+    "prompt_name": "reasoning",
+    "ttft_ms": 14.9,
+    "tokens_per_sec": 233.1,
+    "total_tokens": 24,
+    "total_time_ms": 119.6,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.2:latest",
+    "prompt_name": "codegen",
+    "ttft_ms": 21.2,
+    "tokens_per_sec": 224.9,
+    "total_tokens": 68,
+    "total_time_ms": 318.9,
+    "vram_delta_mb": -1,
+    "error": null
+  },
+  {
+    "model": "llama3.2:latest",
+    "prompt_name": "summarise",
+    "ttft_ms": 28.7,
+    "tokens_per_sec": 229.8,
+    "total_tokens": 34,
+    "total_time_ms": 164.3,
+    "vram_delta_mb": -1,
+    "error": null
+  }
+]
