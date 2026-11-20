@@ -63,7 +63,7 @@ from crew_chief.tools import build_tools
 
 log = logging.getLogger(__name__)
 
-# Subject tag of the 2FA prompt emails finance-repo sends (scripts/shared/otp_email.py).
+# Subject tag of the 2FA prompt emails the finance downloader sends.
 OTP_EMAIL_SUBJECT_TAG = "[pf-2fa]"
 _SIGNAL_PROTOCOL_KEYS = frozenset({"cc-service", "cc-intent", "cc-target"})
 _SIGNAL_PROTOCOL_LINE_RE = re.compile(r"\s*(cc-[a-z0-9-]+)\s*:\s*(.+?)\s*$", re.IGNORECASE)
@@ -197,7 +197,7 @@ def signal_otp_in_progress(now: float | None = None) -> bool:
     """True while a downloader is waiting on Signal for a one-time code.
 
     `signal-cli receive` hands each message to whichever process asks first, so reading Signal
-    while a downloader waits for its 2FA reply would eat the reply. The downloader (finance-repo
+    while a downloader waits for its 2FA reply would eat the reply. The downloader (in the finance repo,
     `scripts/shared/signal_otp_marker.py`) writes `$XDG_RUNTIME_DIR/portfolio-signal-otp.json`
     with an `expires_epoch`; until then this listener leaves Signal alone.
     """
@@ -485,7 +485,7 @@ def poll_gmail(cfg: GmailConfig) -> list[IncomingMessage]:
 
         subject = msg.get("subject", "")
 
-        # Replies to finance-repo two-factor prompts belong to the downloader waiting
+        # Replies to the finance downloader's two-factor prompts belong to the downloader waiting
         # for the code, not to the command dispatcher.
         if OTP_EMAIL_SUBJECT_TAG in subject.lower():
             _log_once(msg, logging.DEBUG, "Gmail: leaving 2FA email %r to the downloader.", subject)
