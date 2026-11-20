@@ -23,7 +23,7 @@ import tempfile
 import time
 import urllib.request
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "src"))
 from crew_chief import theme
@@ -695,7 +695,7 @@ def main() -> int:
         return 2
     report = {
         "schema_version": 3,
-        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_at": datetime.now(UTC).isoformat(),
         "agent_timeout_seconds": args.agent_timeout,
         "test_timeout_seconds": args.test_timeout,
         "router": (
