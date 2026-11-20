@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Local Ollama LLM service and Python client for portfolio-wide trivial inference tasks."
 readme = "README.md"
 license = { text = "MIT" }
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [
   { name = "Cason Konzer", email = "casonk@umich.edu" },
 ]
@@ -55,7 +55,7 @@ pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
@@ -67,7 +67,7 @@ indent-style = "space"
 
 [tool.black]
 line-length = 100
-target-version = ["py310"]
+target-version = ["py311"]
 
 [tool.coverage.run]
 # the vendored portfolio seam is tested at its source (traction-control)
