@@ -17,7 +17,7 @@ import sys
 import urllib.error
 import urllib.request
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -178,7 +178,7 @@ def record_session(
         "base_url": base_url,
         "model": model,
         "cwd": cwd,
-        "started_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "started_at": datetime.now(UTC).isoformat(timespec="seconds"),
     }
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
     with os.fdopen(fd, "a") as fh:

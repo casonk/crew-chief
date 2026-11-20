@@ -25,7 +25,7 @@ import time
 import unicodedata
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 DEFAULT_OLLAMA_URL = os.environ.get("CREW_CHIEF_URL", "http://localhost:11434")
@@ -429,7 +429,7 @@ def main(argv: list[str] | None = None) -> int:
                     flush=True,
                 )
 
-    created = datetime.now(timezone.utc)
+    created = datetime.now(UTC)
     report = {
         "schema_version": 1,
         "created_at": created.isoformat(),
