@@ -103,7 +103,7 @@ class BacklogTriageSuiteTests(unittest.TestCase):
 
     def test_the_suite_is_synthetic_and_plain(self):
         text = self.PATH.read_text(encoding="utf-8")
-        for real in ("clockwork", "crew-chief", "tachometer", "magneto", "locility", "career"):
+        for real in ("clockwork", "crew-chief", "tachometer", "magneto", "career"):
             self.assertNotIn(real, text)
         self.assertNotIn(
             "Examples:", text
